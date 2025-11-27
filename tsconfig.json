@@ -1,5 +1,35 @@
 {
-  "extends": "@react-native/typescript-config",
-  "include": ["**/*.ts", "**/*.tsx"],
-  "exclude": ["**/node_modules", "**/Pods"]
+  "extends": "@react-native/typescript-config/tsconfig.json",
+  "compilerOptions": {
+    "target": "ES2020",
+    "useDefineForClassFields": true,
+    "lib": ["ES2020", "DOM", "DOM.Iterable"],
+    "module": "ESNext",
+    "skipLibCheck": true,
+    "moduleResolution": "bundler",
+    "allowImportingTsExtensions": true,
+    "resolveJsonModule": true,
+    "isolatedModules": true,
+    "noEmit": true,
+    "jsx": "react-jsx",
+    "strict": true,
+    "noUnusedLocals": true,
+    "noUnusedParameters": true,
+    "noFallthroughCasesInSwitch": true,
+    "baseUrl": ".",
+    "paths": {
+      "@assets": ["./src/assets/index.ts"],
+      "@components": ["./src/components/index.ts"],
+      "@constants": ["./src/constants/index.ts"],
+      "@helpers": ["./src/helpers/index.ts"],
+      "@hooks": ["./src/hooks/index.ts"],
+      "@navigation": ["./src/navigation/index.ts"],
+      "@services": ["./src/services/index.ts"],
+      "@styles": ["./src/styles/index.ts"],
+      "@types": ["./src/types/index.ts"],
+      "@ui": ["./src/ui/index.ts"],
+      "@store": ["./src/store/index.ts"],
+      "@modules/common": ["./src/modules/common/index.ts"],
+    }
+  }
 }
