@@ -3230,10 +3230,12 @@ __metadata:
     react-native-bootsplash: ^6.3.11
     react-native-dotenv: ^3.4.11
     react-native-gesture-handler: ^2.29.1
+    react-native-keyboard-aware-scroll-view: ^0.9.5
     react-native-mmkv: ^4.0.1
     react-native-nitro-modules: ^0.31.10
     react-native-safe-area-context: ^5.5.2
     react-native-screens: ^4.18.0
+    react-native-sticky-range-slider: ^0.1.7
     react-native-svg: ^15.15.0
     react-test-renderer: 19.1.1
     typescript: ^5.8.3
@@ -8951,7 +8953,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"prop-types@npm:^15.8.1":
+"prop-types@npm:^15.6.2, prop-types@npm:^15.8.1":
   version: 15.8.1
   resolution: "prop-types@npm:15.8.1"
   dependencies:
@@ -9148,6 +9150,15 @@ __metadata:
   languageName: node
   linkType: hard
 
+"react-native-iphone-x-helper@npm:^1.0.3":
+  version: 1.3.1
+  resolution: "react-native-iphone-x-helper@npm:1.3.1"
+  peerDependencies:
+    react-native: ">=0.42.0"
+  checksum: 024376646009a966e33e12fc2358751830818b0fb73b1c601a64eb5e490d2dc43eec23668991b985a8c412a84d087f20eb45bb9b593567c08b66e741b7bddda5
+  languageName: node
+  linkType: hard
+
 "react-native-is-edge-to-edge@npm:^1.2.1":
   version: 1.2.1
   resolution: "react-native-is-edge-to-edge@npm:1.2.1"
@@ -9155,6 +9166,18 @@ __metadata:
     react: "*"
     react-native: "*"
   checksum: 8fb6d8ab7b953c7d7cec8c987cef24f1c5348a293a85cb49c7c53b54ef110c0ca746736ae730e297603c8c76020df912e93915fb17518c4f2f91143757177aba
+  languageName: node
+  linkType: hard
+
+"react-native-keyboard-aware-scroll-view@npm:^0.9.5":
+  version: 0.9.5
+  resolution: "react-native-keyboard-aware-scroll-view@npm:0.9.5"
+  dependencies:
+    prop-types: ^15.6.2
+    react-native-iphone-x-helper: ^1.0.3
+  peerDependencies:
+    react-native: ">=0.48.4"
+  checksum: 5eec2aedb886213dfed4c8428a443b565dce80ba9fcf5897171e4c8829d4dd64c5011ac004d93f29adfc83ad6f88c2838d1a5b45255dc4a49bd1c0a169245800
   languageName: node
   linkType: hard
 
@@ -9199,6 +9222,16 @@ __metadata:
     react: "*"
     react-native: "*"
   checksum: b7942efe7bf316ad66aabf6e3b8b999268d3b88b3d23affb0f90f627d8dd980172f79b48abf476d10c3466ba5123240ee3f18f8d0ff7db5b79b9772cb520afa0
+  languageName: node
+  linkType: hard
+
+"react-native-sticky-range-slider@npm:^0.1.7":
+  version: 0.1.7
+  resolution: "react-native-sticky-range-slider@npm:0.1.7"
+  peerDependencies:
+    react: "*"
+    react-native: "*"
+  checksum: 51dccf5f76aa3ef7d992989606d46ad4b6d0470ef9500aeb3bfabcd17b68e45679734ace08fea40738e181626b12850771ab3847b75c9a3ac83902eb93fb39af
   languageName: node
   linkType: hard
 

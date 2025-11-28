@@ -13,7 +13,10 @@ export const RootStackNavigator = () => {
       screenOptions={{ headerShown: false }}
     >
       <RootStack.Screen name={Screens.First} component={FirstScreen} />
-      <RootStack.Screen name={Screens.SelectRole} component={SelectRoleScreen} />
+      <RootStack.Screen
+        name={Screens.SelectRole}
+        component={SelectRoleScreen}
+      />
     </RootStack.Navigator>
   );
 };

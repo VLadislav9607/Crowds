@@ -6,7 +6,7 @@ import { AppText } from '../AppText';
 
 import { ButtonProps } from './types';
 import { styles } from './styles';
-import { ICON_SIZES, SIZES, VARIANTS } from './constants';
+import { ICON_SIZES, SIZES, VARIANTS, LOADING_SIZES } from './constants';
 
 export const AppButton = ({
   title,
@@ -25,7 +25,7 @@ export const AppButton = ({
   children,
 }: ButtonProps) => {
   const adaptiveIconSize = ICON_SIZES[size];
-
+  const loadingSize = LOADING_SIZES[size];
   const { buttonStyles, textStyles, disabledButton, disabledText } =
     VARIANTS[variant];
 
@@ -55,7 +55,7 @@ export const AppButton = ({
       disabled={isDisabled || isLoading}
     >
       {isLoading ? (
-        <ActivityIndicator color="white" />
+        <ActivityIndicator color="white" size={loadingSize} />
       ) : (
         <>
           <If condition={!!icon}>
