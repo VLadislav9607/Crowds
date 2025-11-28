@@ -7,6 +7,7 @@ import { AppText } from '@ui';
 import { COLORS, TYPOGRAPHY } from '@styles';
 import { CardSelector } from '@components';
 import { Role } from '@modules/common';
+import { goToScreen, Screens } from '@navigation';
 
 export const SelectRoleScreen = () => {
   const { top, bottom } = useSafeAreaInsets();
@@ -36,7 +37,7 @@ export const SelectRoleScreen = () => {
           },
         ]}
         selectedValue={Role.ORGANIZATION}
-        onSelect={() => {}}
+        onSelect={() => goToScreen(Screens.BottomTabs)}
         cardStyles={styles.card}
         cardTextStyles={styles.cardText}
       />

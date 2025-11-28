@@ -32,8 +32,6 @@ export const AppHeader = ({
     ...headerStyles,
   };
 
-  const showOverlay = headerImageBg === 'purple';
-
   return (
     <>
       <If condition={headerVariant === 'withLogo'}>
@@ -44,13 +42,13 @@ export const AppHeader = ({
       </If>
 
       <If condition={headerVariant === 'withTitle'}>
-        <View style={[headerStyle, styles.withTitle]}>
+        <View style={[headerStyle, styles.withTitle, styles.headerContainer]}>
           <HeaderContent
             title={title}
-            rightIcons={rightIcons}
             showBackButton
             onBackPress={handleBackPress}
           />
+          {rightIcons && <RightIcons rightIcons={rightIcons} />}
         </View>
         {customElement}
       </If>
@@ -61,14 +59,16 @@ export const AppHeader = ({
           source={headerImageBgMap[headerImageBg || 'purple']}
           style={[headerStyle, styles.withTitleAndImageBg]}
         >
-          {showOverlay && <View style={styles.overlay} />}
-          <HeaderContent
-            title={title}
-            rightIcons={rightIcons}
-            showBackButton
-            onBackPress={handleBackPress}
-          />
-          {customElement}
+          <View style={styles.overlay} />
+          <View style={[styles.contentWrapper, styles.headerContainer]}>
+            <HeaderContent
+              title={title}
+              showBackButton
+              onBackPress={handleBackPress}
+            />
+            {rightIcons && <RightIcons rightIcons={rightIcons} />}
+            {customElement}
+          </View>
         </ImageBackground>
       </If>
 
@@ -78,10 +78,12 @@ export const AppHeader = ({
           source={headerImageBgMap[headerImageBg || 'purple']}
           style={[headerStyle, styles.withTitleAndImageBg]}
         >
-          {showOverlay && <View style={styles.overlay} />}
-          <SvgXml xml={ICONS.fullLogo()} width={164} height={34} />
-          <RightIconComponent rightIcons={rightIcons} />
-          {customElement}
+          <View style={styles.overlay} />
+          <View style={[styles.contentWrapperLogo, styles.headerContainer]}>
+            <SvgXml xml={ICONS.fullLogo()} width={182} height={42} />
+            {rightIcons && <RightIcons rightIcons={rightIcons} />}
+            {customElement}
+          </View>
         </ImageBackground>
       </If>
     </>
@@ -90,15 +92,10 @@ export const AppHeader = ({
 
 const HeaderContent = ({
   title,
-  rightIcons,
   showBackButton,
   onBackPress,
 }: {
   title?: string;
-  rightIcons?: {
-    icon: () => string | null;
-    onPress: () => void;
-  }[];
   showBackButton?: boolean;
   onBackPress?: () => void;
 }) => (
@@ -113,11 +110,10 @@ const HeaderContent = ({
         {title}
       </AppText>
     )}
-    <RightIconComponent rightIcons={rightIcons} />
   </>
 );
 
-const RightIconComponent = ({
+const RightIcons = ({
   rightIcons,
 }: {
   rightIcons?: {
@@ -129,7 +125,7 @@ const RightIconComponent = ({
   return (
     <View style={styles.rightIconsWrapper}>
       {rightIcons.map(({ icon, onPress }) => (
-        <Pressable key={icon()} onPress={onPress}>
+        <Pressable key={icon()} hitSlop={10} onPress={onPress}>
           <SvgXml xml={icon()} width={24} height={24} />
         </Pressable>
       ))}
