@@ -1,15 +1,23 @@
-import { Text, TextProps } from 'react-native';
+import { Text } from 'react-native';
 
-import { COLORS, ColorsKeys } from '@styles';
+import { COLORS, TYPOGRAPHY } from '@styles';
+import { AppTextProps } from './types';
 
-interface IProps extends TextProps {
-  color?: ColorsKeys;
-  children: React.ReactNode;
-}
-
-export const AppText = ({ color = 'black', children, ...props }: IProps) => {
+export const AppText = ({
+  color = 'black',
+  children,
+  typography,
+  ...props
+}: AppTextProps) => {
   return (
-    <Text {...props} style={[{ color: COLORS[color] }, props.style]}>
+    <Text
+      {...props}
+      style={[
+        { color: COLORS[color] },
+        typography && TYPOGRAPHY[typography],
+        props.style,
+      ]}
+    >
       {children}
     </Text>
   );
