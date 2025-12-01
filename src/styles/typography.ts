@@ -64,3 +64,5 @@ export const TYPOGRAPHY = {
   regular_9: createStyle(FONTS.Inter_400, 9),
   regular_8: createStyle(FONTS.Inter_400, 8),
 };
+
+export type TypographyKeysType = keyof typeof TYPOGRAPHY;
