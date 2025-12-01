@@ -7,8 +7,9 @@ import {
 import ReactBootSplash from 'react-native-bootsplash';
 
 import { COLORS } from '@styles';
-import { RootStackNavigator } from '../navigationStacks';
-import { RootStackParamList } from '../types';
+
+import { RootStackNavigator } from './navigationStacks';
+import { RootStackParamList } from './types';
 
 export const navigationRef = createNavigationContainerRef<RootStackParamList>();
 

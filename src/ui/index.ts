@@ -6,3 +6,4 @@ export * from './AppCheckbox';
 export * from './AppSearchInputPrimary';
 export * from './AppSearchInputSecondary';
 export * from './AppTextarea';
+export * from './AppHeader';

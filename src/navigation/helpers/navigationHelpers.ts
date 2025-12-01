@@ -1,12 +1,14 @@
-import { Screens } from '../constants';
+import { navigationRef } from '../AppNavigation';
+import { RootStackParamList } from '../types';
 
-import { navigationRef } from '../AppNavigation/AppNavigation';
-
-export const goToScreen = (screen: Screens, params?: any) => {
+export function goToScreen<T extends keyof RootStackParamList>(
+  screen: T,
+  params?: RootStackParamList[T],
+): void {
   if (navigationRef.isReady()) {
-    navigationRef.navigate(screen, params);
+    (navigationRef.navigate as any)(screen, params);
   }
-};
+}
 
 export const goBack = () => {
   if (navigationRef.isReady()) {

@@ -23,11 +23,13 @@
     "react-native-bootsplash": "^6.3.11",
     "react-native-dotenv": "^3.4.11",
     "react-native-gesture-handler": "^2.29.1",
+    "react-native-keyboard-aware-scroll-view": "^0.9.5",
     "react-native-mmkv": "^4.0.1",
     "react-native-nitro-modules": "^0.31.10",
     "react-native-reanimated": "^4.1.5",
     "react-native-safe-area-context": "^5.5.2",
     "react-native-screens": "^4.18.0",
+    "react-native-sticky-range-slider": "^0.1.7",
     "react-native-svg": "^15.15.0",
     "react-native-worklets": "^0.6.1",
     "zustand": "^5.0.8"
