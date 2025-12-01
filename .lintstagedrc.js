@@ -1,4 +1,4 @@
 module.exports = {
-  "**/*.{js,jsx,ts,tsx,css,scss,md,html,json}": "prettier --check .",
-  "**/*.{js,jsx,ts,tsx}": "eslint --max-warnings 10 ."
+  '**/*.{js,jsx,ts,tsx,css,scss,md,html,json}': 'prettier --check .',
+  '**/*.{js,jsx,ts,tsx}': 'eslint --max-warnings 10 .',
 };

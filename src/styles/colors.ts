@@ -1,5 +1,6 @@
 export const COLORS = {
   main: '#430B70',
+  ligth_primary: '#65558F',
   white: '#FFFFFF',
   black: '#000000',
   typography_black: '#20222C',
@@ -9,11 +10,15 @@ export const COLORS = {
   grayscale_500: '#888888',
   dark_gray: '#4E4E4E',
   light_gray: '#DAD9D2',
+  gray_100: '#F0F0F0',
   green: '#187B49',
   vivid_green: '#62BABE',
   yellow: '#FFE500',
   cyan: '#62BABE',
   transparent: 'transparent',
+  black_40: 'rgba(0, 0, 0, 0.4)',
+  black_50: 'rgba(0, 0, 0, 0.5)',
+  black_20: 'rgba(0, 0, 0, 0.2)',
 };
 
 export type ColorsKeys = keyof typeof COLORS;
