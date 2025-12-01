@@ -1,0 +1,77 @@
+import { StyleSheet, View } from 'react-native';
+
+import { ScreenWithScrollWrapper } from '@components';
+import { AppText, IAppHeaderProps } from '@ui';
+import { COLORS, TYPOGRAPHY } from '@styles';
+
+import { ForwardBackArrows } from '../../components';
+
+interface IOnboardingScreenLayoutProps {
+  title: string;
+  label?: string;
+  stepsCount: number;
+  headerProps?: IAppHeaderProps;
+  currentStep: number;
+  children: React.ReactNode;
+  onBackPress: () => void;
+  onForwardPress: () => void;
+}
+
+export const OnboardingScreenLayout = ({
+  title,
+  label,
+  stepsCount,
+  headerProps,
+  currentStep,
+  children,
+  onBackPress,
+  onForwardPress,
+}: IOnboardingScreenLayoutProps) => {
+  return (
+    <ScreenWithScrollWrapper
+      headerVariant="withLogo"
+      colorHeader="main"
+      {...headerProps}
+      footer={
+        <ForwardBackArrows
+          steps={stepsCount}
+          currentStep={currentStep}
+          onBackPress={onBackPress}
+          onForwardPress={onForwardPress}
+        />
+      }
+    >
+      <View style={styles.titleContainer}>
+        <AppText style={styles.title}>{title}</AppText>
+        <AppText renderIf={!!label} style={styles.label}>
+          {label}
+        </AppText>
+      </View>
+
+      {children}
+    </ScreenWithScrollWrapper>
+  );
+};
+
+const styles = StyleSheet.create({
+  title: {
+    ...TYPOGRAPHY.semibold_20,
+  },
+  titleContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+    gap: 10,
+    marginTop: 24,
+    marginBottom: 34,
+  },
+  label: {
+    paddingHorizontal: 10,
+    paddingVertical: 3,
+    borderRadius: 40,
+    ...TYPOGRAPHY.bold_9,
+    color: COLORS.main,
+    backgroundColor: COLORS.main10,
+    textAlign: 'center',
+  },
+});

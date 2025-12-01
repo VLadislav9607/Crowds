@@ -39,6 +39,7 @@ export const TYPOGRAPHY = {
   bold_12: createStyle(FONTS.Inter_700, 12),
   bold_10_4: createStyle(FONTS.Inter_700, 10.4),
   bold_10: createStyle(FONTS.Inter_700, 10),
+  bold_9: createStyle(FONTS.Inter_700, 9),
   bold_8: createStyle(FONTS.Inter_700, 8),
 
   semibold_20: createStyle(FONTS.Inter_600, 20),
