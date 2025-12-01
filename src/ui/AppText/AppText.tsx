@@ -5,10 +5,13 @@ import { AppTextProps } from './types';
 
 export const AppText = ({
   color = 'black',
+  renderIf = true,
   children,
   typography,
   ...props
 }: AppTextProps) => {
+  if (!renderIf) return null;
+
   return (
     <Text
       {...props}

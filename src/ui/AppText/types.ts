@@ -5,4 +5,5 @@ export interface AppTextProps extends TextProps {
   color?: ColorsKeys;
   typography?: TypographyKeysType;
   children: React.ReactNode;
+  renderIf?: boolean;
 }
