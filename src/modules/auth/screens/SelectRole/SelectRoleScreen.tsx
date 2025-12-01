@@ -1,5 +1,4 @@
 import { ImageBackground, StyleSheet } from 'react-native';
-import { useState } from 'react';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { SvgXml } from 'react-native-svg';
 
@@ -7,10 +6,11 @@ import { ICONS, IMAGES } from '@assets';
 import { AppText } from '@ui';
 import { COLORS, TYPOGRAPHY } from '@styles';
 import { CardSelector } from '@components';
+import { Role } from '@modules/common';
+import { goToScreen, Screens } from '@navigation';
 
 export const SelectRoleScreen = () => {
   const { top, bottom } = useSafeAreaInsets();
-  const [selectedValue, setSelectedValue] = useState('organization');
 
   return (
     <ImageBackground
@@ -29,15 +29,15 @@ export const SelectRoleScreen = () => {
         cards={[
           {
             title: 'Be the crowd',
-            value: 'organization',
+            value: Role.ORGANIZATION,
           },
           {
             title: 'Find a crowd',
-            value: 'talent',
+            value: Role.TALENT,
           },
         ]}
-        selectedValue={selectedValue}
-        onSelect={setSelectedValue}
+        selectedValue={Role.ORGANIZATION}
+        onSelect={() => goToScreen(Screens.BottomTabs)}
         cardStyles={styles.card}
         cardTextStyles={styles.cardText}
       />
