@@ -6,6 +6,9 @@ import { chevronDown } from './chevronDown';
 import { search } from './search';
 import { searchShort } from './searchShort';
 import { goBackArrow } from './goBackArrow';
+import { arrowLeft } from './arrowLeft';
+import { arrowRight } from './arrowRight';
+
 import { BOTTOM_TABS } from './bottomTabs';
 
 export const ICONS = {
@@ -18,4 +21,6 @@ export const ICONS = {
   search,
   searchShort,
   goBackArrow,
+  arrowLeft,
+  arrowRight,
 };

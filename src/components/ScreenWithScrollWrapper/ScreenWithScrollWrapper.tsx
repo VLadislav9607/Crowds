@@ -1,6 +1,13 @@
-import { View, StyleSheet, StyleProp, ViewStyle } from 'react-native';
+import {
+  View,
+  StyleSheet,
+  StyleProp,
+  ViewStyle,
+  KeyboardAvoidingView,
+  Platform,
+  ScrollView,
+} from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
-import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 
 import { AppHeader, IAppHeaderProps } from '@ui';
 
@@ -28,7 +35,11 @@ export const ScreenWithScrollWrapper = ({
   const { bottom } = useSafeAreaInsets();
 
   return (
-    <View style={styles.wrapper}>
+    <KeyboardAvoidingView
+      style={styles.wrapper}
+      behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+      keyboardVerticalOffset={Platform.OS === 'ios' ? 0 : 20}
+    >
       {headerVariant && (
         <AppHeader
           headerVariant={headerVariant}
@@ -42,23 +53,28 @@ export const ScreenWithScrollWrapper = ({
         />
       )}
 
-      <KeyboardAwareScrollView
+      <ScrollView
         style={styles.scrollView}
-        contentContainerStyle={[
-          styles.contentContainer,
-          { paddingBottom: bottom || 16 },
-          contentContainerStyle,
-        ]}
+        contentContainerStyle={[styles.contentContainer, contentContainerStyle]}
         showsVerticalScrollIndicator={showsVerticalScrollIndicator}
-        enableOnAndroid
-        enableAutomaticScroll
         keyboardShouldPersistTaps="handled"
       >
         {children}
+      </ScrollView>
 
-        {footer}
-      </KeyboardAwareScrollView>
-    </View>
+      {footer && (
+        <View
+          style={[
+            styles.footer,
+            {
+              paddingBottom: bottom || 16,
+            },
+          ]}
+        >
+          {footer}
+        </View>
+      )}
+    </KeyboardAvoidingView>
   );
 };
 
@@ -71,5 +87,8 @@ const styles = StyleSheet.create({
   },
   contentContainer: {
     flexGrow: 1,
+  },
+  footer: {
+    backgroundColor: 'transparent',
   },
 });
