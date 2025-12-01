@@ -12,6 +12,7 @@ interface IOnboardingScreenLayoutProps {
   stepsCount: number;
   headerProps?: IAppHeaderProps;
   currentStep: number;
+  withFooter?: boolean;
   children: React.ReactNode;
   onBackPress: () => void;
   onForwardPress: () => void;
@@ -23,22 +24,26 @@ export const OnboardingScreenLayout = ({
   stepsCount,
   headerProps,
   currentStep,
+  withFooter = true,
   children,
   onBackPress,
   onForwardPress,
 }: IOnboardingScreenLayoutProps) => {
   return (
     <ScreenWithScrollWrapper
+      contentContainerStyle={styles.contentContainer}
       headerVariant="withLogo"
       colorHeader="main"
       {...headerProps}
       footer={
-        <ForwardBackArrows
-          steps={stepsCount}
-          currentStep={currentStep}
-          onBackPress={onBackPress}
-          onForwardPress={onForwardPress}
-        />
+        withFooter ? (
+          <ForwardBackArrows
+            steps={stepsCount}
+            currentStep={currentStep}
+            onBackPress={onBackPress}
+            onForwardPress={onForwardPress}
+          />
+        ) : null
       }
     >
       <View style={styles.titleContainer}>
@@ -56,6 +61,9 @@ export const OnboardingScreenLayout = ({
 const styles = StyleSheet.create({
   title: {
     ...TYPOGRAPHY.semibold_20,
+  },
+  contentContainer: {
+    paddingHorizontal: 20,
   },
   titleContainer: {
     flexDirection: 'row',
