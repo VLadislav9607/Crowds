@@ -7,13 +7,14 @@ const createStyle = (
 ) => ({
   fontFamily,
   fontSize: size,
-  lineHeight: lineHeight || size,
+  lineHeight: lineHeight ? lineHeight : size * 1.22,
   letterSpacing: 0,
 });
 
 export const TYPOGRAPHY = {
   // HEADINGS
   h1: createStyle(FONTS.Inter_700, 32),
+  h1_mob: createStyle(FONTS.Inter_600, 28, 36),
   h2: createStyle(FONTS.Inter_700, 28),
   h3: createStyle(FONTS.Inter_700, 24),
   h3_mob: createStyle(FONTS.Inter_600, 20, 28),
@@ -58,6 +59,7 @@ export const TYPOGRAPHY = {
   medium_9: createStyle(FONTS.Inter_500, 9),
   medium_8: createStyle(FONTS.Inter_500, 8),
 
+  regular_18: createStyle(FONTS.Inter_400, 18),
   regular_16: createStyle(FONTS.Inter_400, 16),
   regular_14: createStyle(FONTS.Inter_400, 14),
   regular_12: createStyle(FONTS.Inter_400, 12),

@@ -1,6 +1,11 @@
 import { createStackNavigator } from '@react-navigation/stack';
 
 import { FirstScreen, SelectRoleScreen } from '../../modules/auth';
+import {
+  CongratulationsScreen,
+  OnboardingSingleOrgScreen,
+  TermsAndPrivacyScreen,
+} from '../../modules/onboarding';
 
 import { RootStackParamList } from '../types';
 import { Screens } from '../constants';
@@ -22,6 +27,21 @@ export const RootStackNavigator = () => {
       <RootStack.Screen
         name={Screens.BottomTabs}
         component={BottomTabsNavigator}
+      />
+
+      <RootStack.Screen
+        name={Screens.OnboardingSingleOrganization}
+        component={OnboardingSingleOrgScreen}
+      />
+
+      <RootStack.Screen
+        name={Screens.TermsAndPrivacy}
+        component={TermsAndPrivacyScreen}
+      />
+
+      <RootStack.Screen
+        name={Screens.Congratulations}
+        component={CongratulationsScreen}
       />
     </RootStack.Navigator>
   );
