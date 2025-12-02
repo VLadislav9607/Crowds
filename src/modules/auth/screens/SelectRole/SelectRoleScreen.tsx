@@ -14,7 +14,7 @@ export const SelectRoleScreen = () => {
 
   return (
     <ImageBackground
-      source={IMAGES.selectRoleBg}
+      source={IMAGES.blackCrowdBg}
       style={[styles.container, { paddingTop: top, paddingBottom: bottom }]}
     >
       <SvgXml
@@ -37,7 +37,7 @@ export const SelectRoleScreen = () => {
           },
         ]}
         selectedValue={Role.ORGANIZATION}
-        onSelect={() => goToScreen(Screens.BottomTabs)}
+        onSelect={() => goToScreen(Screens.OnboardingSingleOrganization)}
         cardStyles={styles.card}
         cardTextStyles={styles.cardText}
       />

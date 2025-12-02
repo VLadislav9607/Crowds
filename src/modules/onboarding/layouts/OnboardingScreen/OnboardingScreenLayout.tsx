@@ -31,7 +31,6 @@ export const OnboardingScreenLayout = ({
 }: IOnboardingScreenLayoutProps) => {
   return (
     <ScreenWithScrollWrapper
-      contentContainerStyle={styles.contentContainer}
       headerVariant="withLogo"
       colorHeader="main"
       {...headerProps}
@@ -47,23 +46,21 @@ export const OnboardingScreenLayout = ({
       }
     >
       <View style={styles.titleContainer}>
-        <AppText style={styles.title}>{title}</AppText>
+        <AppText typography="semibold_20">{title}</AppText>
         <AppText renderIf={!!label} style={styles.label}>
           {label}
         </AppText>
       </View>
 
-      {children}
+      <View style={styles.contentContainer}>{children}</View>
     </ScreenWithScrollWrapper>
   );
 };
 
 const styles = StyleSheet.create({
-  title: {
-    ...TYPOGRAPHY.semibold_20,
-  },
   contentContainer: {
     paddingHorizontal: 20,
+    gap: 24,
   },
   titleContainer: {
     flexDirection: 'row',
@@ -71,7 +68,7 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     gap: 10,
     marginTop: 24,
-    marginBottom: 34,
+    marginBottom: 32,
   },
   label: {
     paddingHorizontal: 10,
@@ -81,5 +78,6 @@ const styles = StyleSheet.create({
     color: COLORS.main,
     backgroundColor: COLORS.main10,
     textAlign: 'center',
+    textTransform: 'uppercase',
   },
 });

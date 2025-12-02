@@ -3,6 +3,11 @@ export enum Screens {
   First = 'First',
   SelectRole = 'SelectRole',
 
+  // Onboarding
+  OnboardingSingleOrganization = 'OnboardingSingleOrganization',
+  TermsAndPrivacy = 'TermsAndPrivacy',
+  Congratulations = 'Congratulations',
+
   //Bottom Tabs
   BottomTabs = 'BottomTabs',
   Home = 'Home',

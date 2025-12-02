@@ -17,6 +17,7 @@ export const COLORS = {
   yellow: '#FFE500',
   cyan: '#62BABE',
   transparent: 'transparent',
+  dark_blue: '#192B43',
   black_40: 'rgba(0, 0, 0, 0.4)',
   black_50: 'rgba(0, 0, 0, 0.5)',
   black_20: 'rgba(0, 0, 0, 0.2)',
