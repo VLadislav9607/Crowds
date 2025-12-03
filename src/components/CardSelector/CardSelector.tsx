@@ -91,6 +91,8 @@ const styles = StyleSheet.create({
   },
   title: {
     ...TYPOGRAPHY.medium_16,
+    lineHeight: 24,
+    textAlign: 'center',
   },
   selectedCardText: {
     color: COLORS.white,
@@ -99,5 +101,6 @@ const styles = StyleSheet.create({
     ...TYPOGRAPHY.regular_10,
     opacity: 0.6,
     marginTop: 10,
+    textAlign: 'center',
   },
 });

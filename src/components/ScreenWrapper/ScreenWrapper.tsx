@@ -3,37 +3,19 @@ import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import { AppHeader, IAppHeaderProps } from '@ui';
 
-interface ScreenWrapper extends IAppHeaderProps {
+interface IScreenWrapperProps extends IAppHeaderProps {
   children: React.ReactNode;
 }
 
 export const ScreenWrapper = ({
   children,
-  headerVariant,
-  title,
-  customElement,
-  headerImageBg,
-  headerStyles,
-  colorHeader,
-  rightIcons,
-  goBackCallback,
-}: ScreenWrapper) => {
+  ...headerProps
+}: IScreenWrapperProps) => {
   const { bottom } = useSafeAreaInsets();
 
   return (
     <View style={[styles.wrapper, { paddingBottom: bottom || 16 }]}>
-      {headerVariant && (
-        <AppHeader
-          rightIcons={rightIcons}
-          headerVariant={headerVariant}
-          title={title}
-          customElement={customElement}
-          headerImageBg={headerImageBg}
-          headerStyles={headerStyles}
-          colorHeader={colorHeader}
-          goBackCallback={goBackCallback}
-        />
-      )}
+      {headerProps.headerVariant && <AppHeader {...headerProps} />}
 
       {children}
     </View>

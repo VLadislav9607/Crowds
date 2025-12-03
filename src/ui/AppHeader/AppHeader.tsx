@@ -102,7 +102,7 @@ const HeaderContent = ({
   <>
     {showBackButton && onBackPress && (
       <Pressable onPress={onBackPress}>
-        <SvgXml xml={ICONS.goBackArrow()} style={styles.backIcon} />
+        <SvgXml xml={ICONS.goBackArrow()} style={styles.backButton} />
       </Pressable>
     )}
     {title && (
