@@ -6,4 +6,10 @@ export interface AppTextProps extends TextProps {
   typography?: TypographyKeysType;
   children: React.ReactNode;
   renderIf?: boolean;
+  margin?: {
+    top?: number;
+    bottom?: number;
+    left?: number;
+    right?: number;
+  };
 }
