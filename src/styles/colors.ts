@@ -11,6 +11,7 @@ export const COLORS = {
   grayscale_500: '#888888',
   dark_gray: '#4E4E4E',
   light_gray: '#DAD9D2',
+  light_gray2: '#DDDDDD',
   gray_100: '#F0F0F0',
   green: '#187B49',
   vivid_green: '#62BABE',

@@ -24,13 +24,13 @@ export const styles = StyleSheet.create({
     paddingTop: 0,
     overflow: 'hidden',
   },
+  backButton: {
+    marginTop: -2,
+  },
   title: {
     ...TYPOGRAPHY.bold_24,
     color: COLORS.white,
     flex: 1,
-  },
-  backIcon: {
-    marginBottom: 5,
   },
   overlay: {
     ...StyleSheet.absoluteFill,
