@@ -11,7 +11,6 @@ export type RootStackParamList = {
   [Screens.SelectRole]: undefined;
   [Screens.BottomTabs]: NavigatorScreenParams<BottomStackScreens>;
   [Screens.OnboardingTalent]: undefined;
-  [Screens.CreatePassword]: undefined;
   [Screens.TalentProfileSetup]: undefined;
 
   // Bottom Tabs

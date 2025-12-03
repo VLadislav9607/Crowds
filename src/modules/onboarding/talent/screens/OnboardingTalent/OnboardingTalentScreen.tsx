@@ -1,11 +1,12 @@
 import { OnboardingScreenLayout } from '../../../layouts';
 import { COLORS } from '@styles';
-import { View } from 'react-native';
+import { Alert, View } from 'react-native';
 import { styles } from './styles';
-import { TalentNameForm } from './components/TalentNameForm';
+import { TalentNameForm } from '../../forms/TalentNameForm';
 import { If } from '@components';
 import { CreatePasswordForm } from '../../../components';
 import { useOnboardingTalentScreen } from './useOnboardingTalentScreen';
+import { UINSaveConfirmationModal } from '../../../modals';
 
 export const OnboardingTalentScreen = () => {
   const {
@@ -13,15 +14,19 @@ export const OnboardingTalentScreen = () => {
     createPasswordFormRef,
     step,
     data,
+    uin,
+    isUINConfirmationModalVisible,
+    setUIN,
     goToNextStep,
     goToPreviousStep,
+    toggleUINConfirmationModalVisible,
   } = useOnboardingTalentScreen();
 
   return (
     <OnboardingScreenLayout
       title="What's your name?"
       stepsCount={2}
-      currentStep={0}
+      currentStep={step}
       onBackPress={goToPreviousStep}
       onForwardPress={goToNextStep}
       headerProps={{
@@ -42,9 +47,19 @@ export const OnboardingTalentScreen = () => {
           <CreatePasswordForm
             defaultValues={data.createPasswordFormData}
             ref={createPasswordFormRef}
+            onGenerateUIN={() =>
+              setUIN(Math.random().toString(36).substring(2, 15))
+            }
+            uin={uin}
           />
         </If>
       </View>
+
+      <UINSaveConfirmationModal
+        isVisible={isUINConfirmationModalVisible}
+        onClose={toggleUINConfirmationModalVisible}
+        onConfirm={() => Alert.alert('SUCCESS!')}
+      />
     </OnboardingScreenLayout>
   );
 };

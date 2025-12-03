@@ -6,6 +6,7 @@ import { AppButton, AppText } from '@ui';
 import { ICONS } from '@assets';
 
 export const UINSaveConfirmationModal = ({
+  onConfirm,
   ...props
 }: UINSaveConfirmationModalProps) => {
   return (
@@ -29,6 +30,7 @@ export const UINSaveConfirmationModal = ({
           variant="primary"
           size="60"
           wrapperStyles={styles.yesSavedProceedButton}
+          onPress={onConfirm}
         />
         <AppButton
           title="Copy UIN"
