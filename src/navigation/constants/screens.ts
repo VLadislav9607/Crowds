@@ -3,7 +3,6 @@ export enum Screens {
   First = 'First',
   SelectRole = 'SelectRole',
   OnboardingTalent = 'OnboardingTalent',
-  CreatePassword = 'CreatePassword',
   OrganizationOnboarding = 'OrganizationOnboarding',
   TalentProfileSetup = 'TalentProfileSetup',
 

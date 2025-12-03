@@ -29,15 +29,21 @@ export const SelectRoleScreen = () => {
         cards={[
           {
             title: 'Be the crowd',
-            value: Role.ORGANIZATION,
+            value: Role.TALENT,
           },
           {
             title: 'Find a crowd',
-            value: Role.TALENT,
+            value: Role.ORGANIZATION,
           },
         ]}
-        selectedValue={Role.ORGANIZATION}
-        onSelect={() => goToScreen(Screens.OnboardingTalent)}
+        selectedValue={Role.TALENT}
+        onSelect={value =>
+          goToScreen(
+            value === Role.ORGANIZATION
+              ? Screens.OnboardingSingleOrganization
+              : Screens.OnboardingTalent,
+          )
+        }
         cardStyles={styles.card}
         cardTextStyles={styles.cardText}
       />
