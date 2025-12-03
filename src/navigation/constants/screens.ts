@@ -2,6 +2,10 @@ export enum Screens {
   // Authorization
   First = 'First',
   SelectRole = 'SelectRole',
+  OnboardingTalent = 'OnboardingTalent',
+  CreatePassword = 'CreatePassword',
+  OrganizationOnboarding = 'OrganizationOnboarding',
+  TalentProfileSetup = 'TalentProfileSetup',
 
   // Onboarding
   OnboardingSingleOrganization = 'OnboardingSingleOrganization',
