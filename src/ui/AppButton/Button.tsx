@@ -1,9 +1,7 @@
 import { TouchableOpacity, ActivityIndicator, View } from 'react-native';
 import { SvgXml } from 'react-native-svg';
-
 import { If } from '@components';
 import { AppText } from '../AppText';
-
 import { ButtonProps } from './types';
 import { styles } from './styles';
 import { ICON_SIZES, SIZES, VARIANTS, LOADING_SIZES } from './constants';
