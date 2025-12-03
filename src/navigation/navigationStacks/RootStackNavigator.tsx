@@ -4,6 +4,11 @@ import { FirstScreen, SelectRoleScreen } from '../../modules/auth';
 import { OnboardingTalentScreen } from '../../modules/onboarding/talent/screens';
 import { CreatePasswordScreen } from '../../modules/onboarding/screens';
 import { TalentProfileSetupScreen } from '../../modules/profile/talent/screens';
+import {
+  CongratulationsScreen,
+  OnboardingSingleOrgScreen,
+  TermsAndPrivacyScreen,
+} from '../../modules/onboarding';
 
 import { RootStackParamList } from '../types';
 import { Screens } from '../constants';
@@ -37,6 +42,20 @@ export const RootStackNavigator = () => {
       <RootStack.Screen
         name={Screens.TalentProfileSetup}
         component={TalentProfileSetupScreen}
+
+      <RootStack.Screen
+        name={Screens.OnboardingSingleOrganization}
+        component={OnboardingSingleOrgScreen}
+      />
+
+      <RootStack.Screen
+        name={Screens.TermsAndPrivacy}
+        component={TermsAndPrivacyScreen}
+      />
+
+      <RootStack.Screen
+        name={Screens.Congratulations}
+        component={CongratulationsScreen}
       />
     </RootStack.Navigator>
   );

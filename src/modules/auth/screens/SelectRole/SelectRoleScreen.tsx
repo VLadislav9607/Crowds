@@ -14,7 +14,7 @@ export const SelectRoleScreen = () => {
 
   return (
     <ImageBackground
-      source={IMAGES.selectRoleBg}
+      source={IMAGES.blackCrowdBg}
       style={[styles.container, { paddingTop: top, paddingBottom: bottom }]}
     >
       <SvgXml
