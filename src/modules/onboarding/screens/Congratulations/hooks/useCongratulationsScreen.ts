@@ -8,7 +8,7 @@ export const useCongratulationsScreen = () => {
   const organizationButtons = [
     {
       title: 'Invite Member',
-      onPress: () => goToScreen(Screens.BottomTabs),
+      onPress: () => goToScreen(Screens.InviteNewMember),
     },
     {
       title: 'No thanks, skip',
