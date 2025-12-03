@@ -2,17 +2,26 @@ import { useRef, useState } from 'react';
 import {
   TalentNameFormData,
   TalentNameFormRef,
-} from './components/TalentNameForm/types';
+} from '../../forms/TalentNameForm/types';
 import {
   CreatePasswordFormData,
   CreatePasswordFormRef,
 } from '../../../components';
+import { goBack } from '@navigation';
+import { useBoolean } from '@hooks';
 
 export const useOnboardingTalentScreen = () => {
   const talentNameFormRef = useRef<TalentNameFormRef>(null);
   const createPasswordFormRef = useRef<CreatePasswordFormRef>(null);
 
-  const [step, _setStep] = useState(0);
+  const {
+    value: isUINConfirmationModalVisible,
+    toggle: toggleUINConfirmationModalVisible,
+  } = useBoolean();
+
+  const [step, setStep] = useState(0);
+
+  const [uin, setUIN] = useState<string>('');
 
   const [data, setData] = useState<{
     talentNameFormData?: TalentNameFormData;
@@ -28,22 +37,28 @@ export const useOnboardingTalentScreen = () => {
     !step &&
       talentNameFormRef.current?.handleSubmit(formData => {
         onChangeData('talentNameFormData', formData);
-        _setStep(1);
+        setStep(1);
       })();
 
     step === 1 &&
       createPasswordFormRef.current?.handleSubmit(formData => {
         onChangeData('createPasswordFormData', formData);
+        toggleUINConfirmationModalVisible();
       })();
   };
 
   const goToPreviousStep = () => {
+    if (!step) {
+      goBack();
+      return;
+    }
+
     if (step === 1) {
       onChangeData(
         'createPasswordFormData',
         createPasswordFormRef.current?.getValues(),
       );
-      _setStep(0);
+      setStep(0);
     }
   };
 
@@ -52,8 +67,12 @@ export const useOnboardingTalentScreen = () => {
     createPasswordFormRef,
     step,
     data,
+    uin,
+    isUINConfirmationModalVisible,
+    toggleUINConfirmationModalVisible,
     onChangeData,
     goToNextStep,
     goToPreviousStep,
+    setUIN,
   };
 };

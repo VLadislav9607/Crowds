@@ -2,7 +2,6 @@ import { createStackNavigator } from '@react-navigation/stack';
 
 import { FirstScreen, SelectRoleScreen } from '../../modules/auth';
 import { OnboardingTalentScreen } from '../../modules/onboarding/talent/screens';
-import { CreatePasswordScreen } from '../../modules/onboarding/screens';
 import { TalentProfileSetupScreen } from '../../modules/profile/talent/screens';
 import {
   CongratulationsScreen,
@@ -35,14 +34,11 @@ export const RootStackNavigator = () => {
         name={Screens.OnboardingTalent}
         component={OnboardingTalentScreen}
       />
-      <RootStack.Screen
-        name={Screens.CreatePassword}
-        component={CreatePasswordScreen}
-      />
+
       <RootStack.Screen
         name={Screens.TalentProfileSetup}
         component={TalentProfileSetupScreen}
-
+      />
       <RootStack.Screen
         name={Screens.OnboardingSingleOrganization}
         component={OnboardingSingleOrgScreen}
