@@ -9,6 +9,10 @@ export type RootStackParamList = {
   // Authorization
   [Screens.First]: undefined;
   [Screens.SelectRole]: undefined;
+  [Screens.BottomTabs]: NavigatorScreenParams<BottomStackScreens>;
+  [Screens.OnboardingTalent]: undefined;
+  [Screens.CreatePassword]: undefined;
+  [Screens.TalentProfileSetup]: undefined;
 
   // Bottom Tabs
   [Screens.BottomTabs]: NavigatorScreenParams<BottomStackScreenParams>;

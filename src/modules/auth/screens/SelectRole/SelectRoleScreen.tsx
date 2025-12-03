@@ -37,7 +37,7 @@ export const SelectRoleScreen = () => {
           },
         ]}
         selectedValue={Role.ORGANIZATION}
-        onSelect={() => goToScreen(Screens.OnboardingSingleOrganization)}
+        onSelect={() => goToScreen(Screens.OnboardingTalent)}
         cardStyles={styles.card}
         cardTextStyles={styles.cardText}
       />

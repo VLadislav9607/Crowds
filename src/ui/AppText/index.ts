@@ -1,2 +1,2 @@
 export * from './AppText';
-export * from './types';
+export type { AppTextProps } from './types';
