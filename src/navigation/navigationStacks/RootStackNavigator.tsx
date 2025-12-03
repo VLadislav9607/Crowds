@@ -13,6 +13,11 @@ import { RootStackParamList } from '../types';
 import { Screens } from '../constants';
 import { BottomTabsNavigator } from './BottomTabsNavigator';
 
+import {
+  CopyInviteLinkScreen,
+  InviteNewMemberScreen,
+} from '../../modules/invite-member';
+
 const RootStack = createStackNavigator<RootStackParamList>();
 
 export const RootStackNavigator = () => {
@@ -52,6 +57,16 @@ export const RootStackNavigator = () => {
       <RootStack.Screen
         name={Screens.Congratulations}
         component={CongratulationsScreen}
+      />
+
+      <RootStack.Screen
+        name={Screens.InviteNewMember}
+        component={InviteNewMemberScreen}
+      />
+
+      <RootStack.Screen
+        name={Screens.CopyInviteLink}
+        component={CopyInviteLinkScreen}
       />
     </RootStack.Navigator>
   );

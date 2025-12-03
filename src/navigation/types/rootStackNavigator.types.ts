@@ -9,7 +9,7 @@ export type RootStackParamList = {
   // Authorization
   [Screens.First]: undefined;
   [Screens.SelectRole]: undefined;
-  [Screens.BottomTabs]: NavigatorScreenParams<BottomStackScreens>;
+  [Screens.BottomTabs]: NavigatorScreenParams<BottomStackScreenParams>;
   [Screens.OnboardingTalent]: undefined;
   [Screens.TalentProfileSetup]: undefined;
 
@@ -20,4 +20,8 @@ export type RootStackParamList = {
   [Screens.OnboardingSingleOrganization]: { name: string };
   [Screens.TermsAndPrivacy]: undefined;
   [Screens.Congratulations]: { role: Role };
+
+  // Invite Member
+  [Screens.InviteNewMember]: undefined;
+  [Screens.CopyInviteLink]: undefined;
 };

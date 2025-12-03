@@ -7,6 +7,7 @@ import { If } from '../If';
 export const CheckboxList = ({
   items,
   label,
+  labelStyle,
   errorMessage,
   errorMessageProps,
   checkedValues,
@@ -37,7 +38,11 @@ export const CheckboxList = ({
   return (
     <View style={containerStyle}>
       <If condition={!!label}>
-        <AppText color="black_50" typography="medium_14" style={styles.label}>
+        <AppText
+          color="black_50"
+          typography="medium_14"
+          style={[styles.label, labelStyle]}
+        >
           {label}
         </AppText>
       </If>

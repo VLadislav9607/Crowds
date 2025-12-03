@@ -13,7 +13,6 @@ export const COLORS = {
   light_gray: '#DAD9D2',
   light_gray2: '#DDDDDD',
   gray_100: '#F0F0F0',
-  dark_blue: '#192B43',
   green: '#187B49',
   vivid_green: '#62BABE',
   yellow: '#FFE500',

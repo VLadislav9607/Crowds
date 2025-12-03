@@ -11,6 +11,10 @@ export enum Screens {
   TermsAndPrivacy = 'TermsAndPrivacy',
   Congratulations = 'Congratulations',
 
+  // Invite Member
+  InviteNewMember = 'InviteNewMember',
+  CopyInviteLink = 'CopyInviteLink',
+
   //Bottom Tabs
   BottomTabs = 'BottomTabs',
   Home = 'Home',
