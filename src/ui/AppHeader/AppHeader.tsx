@@ -27,7 +27,7 @@ export const AppHeader = ({
 
   const headerStyle = {
     ...styles.header,
-    paddingTop: 8,
+    paddingTop: 20,
     backgroundColor: COLORS[colorHeader || 'main'],
     ...headerStyles,
   };

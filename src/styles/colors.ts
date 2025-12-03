@@ -12,6 +12,7 @@ export const COLORS = {
   dark_gray: '#4E4E4E',
   light_gray: '#DAD9D2',
   gray_100: '#F0F0F0',
+  dark_blue: '#192B43',
   green: '#187B49',
   vivid_green: '#62BABE',
   yellow: '#FFE500',
@@ -19,7 +20,9 @@ export const COLORS = {
   transparent: 'transparent',
   black_40: 'rgba(0, 0, 0, 0.4)',
   black_50: 'rgba(0, 0, 0, 0.5)',
+  black_60: 'rgba(0, 0, 0, 0.6)',
   black_20: 'rgba(0, 0, 0, 0.2)',
+  light_purple: '#F2EBF7',
 };
 
 export type ColorsKeys = keyof typeof COLORS;

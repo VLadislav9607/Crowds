@@ -8,7 +8,11 @@ import { searchShort } from './searchShort';
 import { goBackArrow } from './goBackArrow';
 import { arrowLeft } from './arrowLeft';
 import { arrowRight } from './arrowRight';
-
+import { closeIcon } from './close';
+import { calendarIcon } from './calendar';
+import { calendarWithDays } from './calendarWithDays';
+import { checked } from './checked';
+import { copyIcon } from './copy';
 import { BOTTOM_TABS } from './bottomTabs';
 
 export const ICONS = {
@@ -23,4 +27,9 @@ export const ICONS = {
   goBackArrow,
   arrowLeft,
   arrowRight,
+  closeIcon,
+  calendarIcon,
+  calendarWithDays,
+  checked,
+  copyIcon,
 };
