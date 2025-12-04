@@ -5,17 +5,14 @@ import { AppInput } from '@ui';
 import { Gender } from '@modules/common';
 import { CheckboxList } from '@components';
 
-import { SingleOrganizationFormData } from '../../hooks';
+import { SingleOrgFormData } from '../../hooks';
 
-interface YourInformationStepProps {
-  control: Control<SingleOrganizationFormData>;
-  errors: FieldErrors<SingleOrganizationFormData>;
+interface IProps {
+  control: Control<SingleOrgFormData>;
+  errors: FieldErrors<SingleOrgFormData>;
 }
 
-export const YourInformationStep = ({
-  control,
-  errors,
-}: YourInformationStepProps) => {
+export const YourInformationStep = ({ control, errors }: IProps) => {
   return (
     <>
       <View style={styles.nameInputs}>

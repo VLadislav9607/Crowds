@@ -6,17 +6,14 @@ import { CardSelector } from '@components';
 import { TYPOGRAPHY } from '@styles';
 import { OrganizationType } from '@modules/common';
 
-import { SingleOrganizationFormData } from '../../hooks';
+import { SingleOrgFormData } from '../../hooks';
 
-interface OrganizationNameStepProps {
-  control: Control<SingleOrganizationFormData>;
-  errors: FieldErrors<SingleOrganizationFormData>;
+interface IProps {
+  control: Control<SingleOrgFormData>;
+  errors: FieldErrors<SingleOrgFormData>;
 }
 
-export const OrganizationNameStep = ({
-  control,
-  errors,
-}: OrganizationNameStepProps) => {
+export const OrganizationNameStep = ({ control, errors }: IProps) => {
   return (
     <>
       <Controller

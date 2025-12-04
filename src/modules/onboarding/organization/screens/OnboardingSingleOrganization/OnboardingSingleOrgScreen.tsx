@@ -1,4 +1,5 @@
 import { If } from '@components';
+import { goToScreen, Screens } from '@navigation';
 
 import { OnboardingScreenLayout } from '../../../layouts';
 import {
@@ -7,12 +8,21 @@ import {
   YourInformationStep,
 } from '../../components';
 import { singleOrganizationConfig } from '../../configs';
-import { useSingleOrgScreen } from './hooks';
+import { useCreatePassword, useSingleOrgScreen } from './hooks';
+import { CreatePasswordForm } from '../../../components';
+import { UINSaveConfirmationModal } from '../../../modals';
 
 export const OnboardingSingleOrgScreen = () => {
   const { currentStep, totalSteps, handleNext, handleBack, formData } =
     useSingleOrgScreen();
 
+  const {
+    createPasswordFormRef,
+    handleCreatePassword,
+    uin,
+    confirmationModalOpen,
+    onConfirmationModalClose,
+  } = useCreatePassword();
   return (
     <OnboardingScreenLayout
       title={singleOrganizationConfig[currentStep - 1].title}
@@ -42,6 +52,23 @@ export const OnboardingSingleOrgScreen = () => {
           errors={formData.formState.errors}
         />
       </If>
+
+      <If condition={currentStep === 4}>
+        <CreatePasswordForm
+          ref={createPasswordFormRef}
+          onGenerateUIN={() => handleCreatePassword(formData.getValues())}
+          uin={uin}
+        />
+      </If>
+
+      <UINSaveConfirmationModal
+        isVisible={confirmationModalOpen}
+        onClose={onConfirmationModalClose}
+        onConfirm={() => {
+          onConfirmationModalClose();
+          goToScreen(Screens.TermsAndPrivacy);
+        }}
+      />
     </OnboardingScreenLayout>
   );
 };

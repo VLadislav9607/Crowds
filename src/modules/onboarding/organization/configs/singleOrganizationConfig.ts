@@ -11,4 +11,7 @@ export const singleOrganizationConfig = [
     label: 'Single Country',
     description: 'Enter the secondary location of your organization',
   },
+  {
+    title: 'Create a password',
+  },
 ];
