@@ -5,17 +5,14 @@ import { AppInput, AppText } from '@ui';
 import { TYPOGRAPHY } from '@styles';
 import { CheckboxList } from '@components';
 
-import { SingleOrganizationFormData } from '../../hooks';
+import { SingleOrgFormData } from '../../hooks';
 
-interface PrimaryLocationStepProps {
-  control: Control<SingleOrganizationFormData>;
-  errors: FieldErrors<SingleOrganizationFormData>;
+interface IProps {
+  control: Control<SingleOrgFormData>;
+  errors: FieldErrors<SingleOrgFormData>;
 }
 
-export const PrimaryLocationStep = ({
-  control,
-  errors,
-}: PrimaryLocationStepProps) => {
+export const PrimaryLocationStep = ({ control, errors }: IProps) => {
   return (
     <>
       <AppText style={styles.organizationDetails}>Organization Details</AppText>
