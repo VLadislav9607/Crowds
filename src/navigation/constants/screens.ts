@@ -7,7 +7,7 @@ export enum Screens {
   TalentProfileSetup = 'TalentProfileSetup',
 
   // Onboarding
-  OnboardingSingleOrganization = 'OnboardingSingleOrganization',
+  OnboardingOrganization = 'OnboardingOrganization',
   TermsAndPrivacy = 'TermsAndPrivacy',
   Congratulations = 'Congratulations',
 

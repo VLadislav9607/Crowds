@@ -6,11 +6,11 @@ import { CardSelector } from '@components';
 import { TYPOGRAPHY } from '@styles';
 import { OrganizationType } from '@modules/common';
 
-import { SingleOrgFormData } from '../../hooks';
+import { OrganizationFormData } from '../../validation';
 
 interface IProps {
-  control: Control<SingleOrgFormData>;
-  errors: FieldErrors<SingleOrgFormData>;
+  control: Control<OrganizationFormData>;
+  errors: FieldErrors<OrganizationFormData>;
 }
 
 export const OrganizationNameStep = ({ control, errors }: IProps) => {

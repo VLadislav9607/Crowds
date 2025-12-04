@@ -5,37 +5,38 @@ import { AppInput, AppText } from '@ui';
 import { TYPOGRAPHY } from '@styles';
 import { CheckboxList } from '@components';
 
-import { SingleOrgFormData } from '../../hooks';
+import { OrganizationFormData } from '../../validation';
 
 interface IProps {
-  control: Control<SingleOrgFormData>;
-  errors: FieldErrors<SingleOrgFormData>;
+  control: Control<OrganizationFormData>;
+  errors: FieldErrors<OrganizationFormData>;
 }
 
-export const PrimaryLocationStep = ({ control, errors }: IProps) => {
+export const HeadOfficeGlobalStep = ({ control, errors }: IProps) => {
+  console.log('errors', errors);
   return (
     <>
       <AppText style={styles.organizationDetails}>Organization Details</AppText>
 
       <Controller
         control={control}
-        name="country"
+        name="headOfficeLocation"
         render={({ field: { onChange, value } }) => (
           <AppInput
-            placeholder="Country/Region"
-            value={value}
+            placeholder="Search head office location"
+            value={value || ''}
             onChangeText={onChange}
-            errorMessage={errors.country?.message}
+            errorMessage={errors.headOfficeLocation?.message}
           />
         )}
       />
 
       <Controller
         control={control}
-        name="isHeadOffice"
+        name="haveBranches"
         render={({ field: { onChange, value } }) => (
           <CheckboxList
-            label="Is this location a head office?"
+            label="Do you have branches?"
             items={[
               { label: 'Yes', value: 'yes' },
               { label: 'No', value: 'no' },
