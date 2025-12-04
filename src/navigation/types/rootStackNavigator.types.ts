@@ -1,6 +1,6 @@
 import { NavigatorScreenParams } from '@react-navigation/native';
 
-import { Role } from '@modules/common';
+import { Role, OrganizationType } from '@modules/common';
 
 import { Screens } from '../constants';
 import { BottomStackScreenParams } from './bottomStackNavigator.types';
@@ -17,7 +17,9 @@ export type RootStackParamList = {
   [Screens.BottomTabs]: NavigatorScreenParams<BottomStackScreenParams>;
 
   // Onboarding
-  [Screens.OnboardingSingleOrganization]: { name: string };
+  [Screens.OnboardingOrganization]: {
+    flow: OrganizationType;
+  };
   [Screens.TermsAndPrivacy]: undefined;
   [Screens.Congratulations]: { role: Role };
 

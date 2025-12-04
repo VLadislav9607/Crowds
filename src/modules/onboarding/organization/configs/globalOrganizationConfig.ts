@@ -1,11 +1,11 @@
 import {
   OrganizationNameStep,
-  PrimaryLocationStep,
   YourInformationStep,
+  HeadOfficeGlobalStep,
 } from '../forms';
 import { StepConfig } from './types';
 
-export const singleOrganizationConfig: StepConfig[] = [
+export const globalOrganizationConfig: StepConfig[] = [
   {
     title: 'Organization Details',
     component: OrganizationNameStep,
@@ -14,16 +14,16 @@ export const singleOrganizationConfig: StepConfig[] = [
     },
   },
   {
-    title: 'Primary Location',
-    label: 'Single Country',
-    component: PrimaryLocationStep,
+    title: 'Primary Information',
+    label: 'Global',
+    component: HeadOfficeGlobalStep,
     validate: async formData => {
-      return await formData.trigger('country');
+      return await formData.trigger('headOfficeLocation');
     },
   },
   {
     title: 'Your Information',
-    label: 'Single Country',
+    label: 'Global',
     description: 'Enter the secondary location of your organization',
     component: YourInformationStep,
     validate: async formData => {
@@ -31,11 +31,11 @@ export const singleOrganizationConfig: StepConfig[] = [
         'firstName',
         'lastName',
         'positionInCompany',
+        'gender',
       ]);
     },
   },
   {
     title: 'Create a password',
-    // Password step doesn't need validation here, handled by CreatePasswordForm
   },
 ];

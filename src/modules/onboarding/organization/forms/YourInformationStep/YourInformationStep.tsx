@@ -5,11 +5,11 @@ import { AppInput } from '@ui';
 import { Gender } from '@modules/common';
 import { CheckboxList } from '@components';
 
-import { SingleOrgFormData } from '../../hooks';
+import { OrganizationFormData } from '../../validation';
 
 interface IProps {
-  control: Control<SingleOrgFormData>;
-  errors: FieldErrors<SingleOrgFormData>;
+  control: Control<OrganizationFormData>;
+  errors: FieldErrors<OrganizationFormData>;
 }
 
 export const YourInformationStep = ({ control, errors }: IProps) => {

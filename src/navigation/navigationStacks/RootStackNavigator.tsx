@@ -5,7 +5,7 @@ import { OnboardingTalentScreen } from '../../modules/onboarding/talent/screens'
 import { TalentProfileSetupScreen } from '../../modules/profile/talent/screens';
 import {
   CongratulationsScreen,
-  OnboardingSingleOrgScreen,
+  OnboardingOrganizationScreen,
   TermsAndPrivacyScreen,
 } from '../../modules/onboarding';
 
@@ -45,8 +45,8 @@ export const RootStackNavigator = () => {
         component={TalentProfileSetupScreen}
       />
       <RootStack.Screen
-        name={Screens.OnboardingSingleOrganization}
-        component={OnboardingSingleOrgScreen}
+        name={Screens.OnboardingOrganization}
+        component={OnboardingOrganizationScreen}
       />
 
       <RootStack.Screen

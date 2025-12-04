@@ -2,19 +2,13 @@ import { If } from '@components';
 import { goToScreen, Screens } from '@navigation';
 
 import { OnboardingScreenLayout } from '../../../layouts';
-import {
-  OrganizationNameStep,
-  PrimaryLocationStep,
-  YourInformationStep,
-} from '../../components';
-import { singleOrganizationConfig } from '../../configs';
-import { useCreatePassword, useSingleOrgScreen } from './hooks';
+import { useCreatePassword, useOnboardingOrgScreen } from './hooks';
 import { CreatePasswordForm } from '../../../components';
 import { UINSaveConfirmationModal } from '../../../modals';
 
-export const OnboardingSingleOrgScreen = () => {
-  const { currentStep, totalSteps, handleNext, handleBack, formData } =
-    useSingleOrgScreen();
+export const OnboardingOrganizationScreen = () => {
+  const { currentStep, totalSteps, handleNext, handleBack, formData, config } =
+    useOnboardingOrgScreen();
 
   const {
     createPasswordFormRef,
@@ -23,37 +17,30 @@ export const OnboardingSingleOrgScreen = () => {
     confirmationModalOpen,
     onConfirmationModalClose,
   } = useCreatePassword();
+
+  const currentStepConfig = config[currentStep - 1];
+
   return (
     <OnboardingScreenLayout
-      title={singleOrganizationConfig[currentStep - 1].title}
-      label={currentStep === 2 ? 'Single Country' : undefined}
+      title={currentStepConfig.title}
+      label={currentStepConfig.label}
       stepsCount={totalSteps}
       currentStep={currentStep - 1}
       onBackPress={handleBack}
       onForwardPress={handleNext}
     >
-      <If condition={currentStep === 1}>
-        <OrganizationNameStep
-          control={formData.control}
-          errors={formData.formState.errors}
-        />
-      </If>
+      {currentStepConfig.component &&
+        (() => {
+          const CurrentStep = currentStepConfig.component;
+          return (
+            <CurrentStep
+              control={formData.control}
+              errors={formData.formState.errors}
+            />
+          );
+        })()}
 
-      <If condition={currentStep === 2}>
-        <PrimaryLocationStep
-          control={formData.control}
-          errors={formData.formState.errors}
-        />
-      </If>
-
-      <If condition={currentStep === 3}>
-        <YourInformationStep
-          control={formData.control}
-          errors={formData.formState.errors}
-        />
-      </If>
-
-      <If condition={currentStep === 4}>
+      <If condition={currentStep === config.length}>
         <CreatePasswordForm
           ref={createPasswordFormRef}
           onGenerateUIN={() => handleCreatePassword(formData.getValues())}
