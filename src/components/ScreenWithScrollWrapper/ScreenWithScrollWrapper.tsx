@@ -14,25 +14,36 @@ import { AppHeader, IAppHeaderProps } from '@ui';
 interface IScreenWithScrollWrapperProps extends IAppHeaderProps {
   children: React.ReactNode;
   footer?: React.ReactNode;
+  isFloatFooter?: boolean;
+  footerStyle?: StyleProp<ViewStyle>;
   contentContainerStyle?: StyleProp<ViewStyle>;
   showsVerticalScrollIndicator?: boolean;
 }
 
 export const ScreenWithScrollWrapper = ({
   children,
-  headerVariant,
-  title,
-  customElement,
-  headerImageBg,
-  headerStyles,
-  colorHeader,
   footer = null,
+  isFloatFooter = true,
+  footerStyle,
   contentContainerStyle,
   showsVerticalScrollIndicator = false,
-  rightIcons,
-  goBackCallback,
+  ...headerProps
 }: IScreenWithScrollWrapperProps) => {
   const { bottom } = useSafeAreaInsets();
+
+  const FooterComponent = (
+    <View
+      style={[
+        styles.footer,
+        {
+          paddingBottom: bottom || 16,
+          ...footerStyle,
+        },
+      ]}
+    >
+      {footer}
+    </View>
+  );
 
   return (
     <KeyboardAvoidingView
@@ -40,18 +51,7 @@ export const ScreenWithScrollWrapper = ({
       behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
       keyboardVerticalOffset={Platform.OS === 'ios' ? 0 : 20}
     >
-      {headerVariant && (
-        <AppHeader
-          headerVariant={headerVariant}
-          title={title}
-          customElement={customElement}
-          headerImageBg={headerImageBg}
-          rightIcons={rightIcons}
-          headerStyles={headerStyles}
-          colorHeader={colorHeader}
-          goBackCallback={goBackCallback}
-        />
-      )}
+      {headerProps.headerVariant && <AppHeader {...headerProps} />}
 
       <ScrollView
         style={styles.scrollView}
@@ -60,20 +60,11 @@ export const ScreenWithScrollWrapper = ({
         keyboardShouldPersistTaps="handled"
       >
         {children}
+
+        {!isFloatFooter && footer && FooterComponent}
       </ScrollView>
 
-      {footer && (
-        <View
-          style={[
-            styles.footer,
-            {
-              paddingBottom: bottom || 16,
-            },
-          ]}
-        >
-          {footer}
-        </View>
-      )}
+      {isFloatFooter && footer && FooterComponent}
     </KeyboardAvoidingView>
   );
 };

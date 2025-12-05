@@ -15,6 +15,8 @@ import { checked } from './checked';
 import { copyIcon } from './copy';
 import { avatar } from './avatar';
 import { camera } from './camera';
+import { copyInvitation } from './copyInvitation';
+import { plusSquare } from './plusSquare';
 
 import { BOTTOM_TABS } from './bottomTabs';
 
@@ -37,4 +39,6 @@ export const ICONS = {
   copyIcon,
   avatar,
   camera,
+  copyInvitation,
+  plusSquare,
 };

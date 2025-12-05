@@ -6,3 +6,4 @@ export * from './AppSearchInputPrimary';
 export * from './AppSearchInputSecondary';
 export * from './AppTextarea';
 export * from './AppHeader';
+export * from './IconButton';

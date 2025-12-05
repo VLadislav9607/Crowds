@@ -1,23 +1,28 @@
 import { NavigatorScreenParams } from '@react-navigation/native';
 
-import { Role } from '@modules/common';
+import { Role, OrganizationType } from '@modules/common';
 
 import { Screens } from '../constants';
-import { BottomStackScreenParams } from './bottomStackNavigator.types';
+import { BottomTabsParamList } from './bottomStackNavigator.types';
 
 export type RootStackParamList = {
   // Authorization
   [Screens.First]: undefined;
   [Screens.SelectRole]: undefined;
-  [Screens.BottomTabs]: NavigatorScreenParams<BottomStackScreens>;
   [Screens.OnboardingTalent]: undefined;
   [Screens.TalentProfileSetup]: undefined;
 
   // Bottom Tabs
-  [Screens.BottomTabs]: NavigatorScreenParams<BottomStackScreenParams>;
+  [Screens.BottomTabs]: NavigatorScreenParams<BottomTabsParamList>;
 
   // Onboarding
-  [Screens.OnboardingSingleOrganization]: { name: string };
+  [Screens.OnboardingOrganization]: {
+    flow: OrganizationType;
+  };
   [Screens.TermsAndPrivacy]: undefined;
   [Screens.Congratulations]: { role: Role };
+
+  // Invite Member
+  [Screens.InviteNewMember]: undefined;
+  [Screens.CopyInviteLink]: undefined;
 };
