@@ -20,6 +20,7 @@ module.exports = {
           "@ui": "./src/ui",
           "@store": "./src/store",
           "@modules/common": "./src/modules/common",
+          "@modules/profile": "./src/modules/profile",
         }
       }
     ],

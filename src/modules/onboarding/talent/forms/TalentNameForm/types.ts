@@ -1,4 +1,4 @@
-import { Gender } from '@modules/common';
+import { Gender } from '@modules/profile';
 import { UseFormGetValues, UseFormHandleSubmit } from 'react-hook-form';
 import { ViewStyle } from 'react-native';
 import { z } from 'zod';

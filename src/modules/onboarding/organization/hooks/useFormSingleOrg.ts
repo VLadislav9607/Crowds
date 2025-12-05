@@ -1,7 +1,8 @@
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
-import { Gender, OrganizationType } from '@modules/common';
+import { OrganizationType } from '@modules/common';
+import { Gender } from '@modules/profile';
 
 const singleOrgFormSchema = z.object({
   organizationName: z.string().min(1, 'Company/business name is required'),

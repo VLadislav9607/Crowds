@@ -4,7 +4,7 @@ import { Alert, View } from 'react-native';
 import { styles } from './styles';
 import { TalentNameForm } from '../../forms/TalentNameForm';
 import { If } from '@components';
-import { CreatePasswordForm } from '../../../components';
+import { CreatePasswordForm } from '../../../forms';
 import { useOnboardingTalentScreen } from './useOnboardingTalentScreen';
 import { UINSaveConfirmationModal } from '../../../modals';
 
