@@ -1,8 +1,8 @@
 import { ViewStyle } from 'react-native';
-import { AppTextProps } from '../AppText/types';
+import { AppTextProps } from '@ui';
 import { BottomSheetModal, BottomSheetProps } from '@gorhom/bottom-sheet';
 
-export interface AppBottomSelectProps {
+export interface BottomSheetFieldProps {
   label?: string;
   errorMessage?: string;
   labelProps?: Partial<AppTextProps>;
@@ -16,6 +16,6 @@ export interface AppBottomSelectProps {
     | React.ReactNode
     | ((props: { onClose: () => void }) => React.ReactNode);
   bottomSheetRef?: React.RefObject<BottomSheetModal>;
-  bottomSheetProps?: BottomSheetProps;
+  bottomSheetProps?: Partial<BottomSheetProps>;
   disableRenderWhenClosed?: boolean;
 }

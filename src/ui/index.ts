@@ -1,7 +1,6 @@
 export * from './AppText';
 export * from './AppButton';
 export * from './AppInput';
-export * from './AppBottomSelect';
 export * from './AppCheckbox';
 export * from './AppSearchInputPrimary';
 export * from './AppSearchInputSecondary';

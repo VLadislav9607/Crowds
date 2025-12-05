@@ -3,10 +3,7 @@ import {
   TalentNameFormData,
   TalentNameFormRef,
 } from '../../forms/TalentNameForm/types';
-import {
-  CreatePasswordFormData,
-  CreatePasswordFormRef,
-} from '../../../components';
+import { CreatePasswordFormData, CreatePasswordFormRef } from '../../../forms';
 import { goBack } from '@navigation';
 import { useBoolean } from '@hooks';
 

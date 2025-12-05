@@ -1,6 +1,6 @@
 import { TouchableOpacity, View } from 'react-native';
-import { AppText } from '../AppText';
-import { AppBottomSelectProps } from './types';
+import { AppText } from '@ui';
+import { BottomSheetFieldProps } from './types';
 import { ICONS } from '@assets';
 import { SvgXml } from 'react-native-svg';
 import { useCallback, useRef, useState } from 'react';
@@ -12,7 +12,7 @@ import {
   BottomSheetBackdropProps,
 } from '@gorhom/bottom-sheet';
 
-export const AppBottomSelect = ({
+export const BottomSheetField = ({
   value,
   label,
   errorMessage,
@@ -26,7 +26,7 @@ export const AppBottomSelect = ({
   bottomSheetRef: externalBottomSheetRef,
   bottomSheetProps,
   disableRenderWhenClosed,
-}: AppBottomSelectProps) => {
+}: BottomSheetFieldProps) => {
   const internalBottomSheetRef = useRef<BottomSheetModal>(null);
   const bottomSheetRef = externalBottomSheetRef || internalBottomSheetRef;
 

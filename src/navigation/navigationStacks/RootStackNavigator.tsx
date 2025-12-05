@@ -43,6 +43,9 @@ export const RootStackNavigator = () => {
       <RootStack.Screen
         name={Screens.TalentProfileSetup}
         component={TalentProfileSetupScreen}
+        options={{
+          gestureEnabled: false,
+        }}
       />
       <RootStack.Screen
         name={Screens.OnboardingOrganization}
