@@ -1,13 +1,18 @@
 import { StyleSheet } from 'react-native';
-import { COLORS, TYPOGRAPHY } from '@styles';
+import { COLORS } from '@styles';
 
 export const styles = StyleSheet.create({
   container: {
     width: '100%',
-    marginBottom: 14,
+  },
+  sliderContainer: {
+    flexDirection: 'row',
+    gap: 10,
   },
   slider: {
-    height: 40,
+    flex: 1,
+    height: 17,
+    justifyContent: 'center',
   },
   rail: {
     flex: 1,
@@ -29,12 +34,15 @@ export const styles = StyleSheet.create({
     backgroundColor: COLORS.white,
   },
   value: {
-    ...TYPOGRAPHY.bold_12,
-    top: 50,
-    color: COLORS.dark_gray,
+    top: 5,
   },
   label: {
-    ...TYPOGRAPHY.h5,
     marginBottom: 14,
+  },
+  labelsContainer: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    marginTop: 2,
+    paddingHorizontal: 2,
   },
 });

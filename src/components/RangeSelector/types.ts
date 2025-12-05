@@ -1,14 +1,24 @@
-export type Measure = 'km' | 'Kg' | 'Ft';
+import { AppTextProps } from '@ui';
+import { StyleProp, ViewStyle } from 'react-native';
 
 export interface IRangeSelectorProps {
   min: number;
   max: number;
   minValue: number;
   maxValue: number;
-  measure: Measure;
   containerStyles?: StyleProp<ViewStyle>;
   label?: string;
   onValueChange: (low: number, high: number) => void;
   step?: number;
-  disabled?: boolean;
+  disableRange?: boolean;
+  labelProps?: Partial<AppTextProps>;
+  measure?: string;
+  lowValueLabel?: string;
+  highValueLabel?: string;
+  bottonLabels?: {
+    minValueLabel: string;
+    maxValueLabel: string;
+    containerStyles?: StyleProp<ViewStyle>;
+    labelProps?: Partial<AppTextProps>;
+  };
 }
