@@ -5,7 +5,7 @@ import { OnboardingTalentScreen } from '../../modules/onboarding/talent/screens'
 import { TalentProfileSetupScreen } from '../../modules/profile/talent/screens';
 import {
   CongratulationsScreen,
-  OnboardingSingleOrgScreen,
+  OnboardingOrganizationScreen,
   TermsAndPrivacyScreen,
 } from '../../modules/onboarding';
 
@@ -13,12 +13,17 @@ import { RootStackParamList } from '../types';
 import { Screens } from '../constants';
 import { BottomTabsNavigator } from './BottomTabsNavigator';
 
+import {
+  CopyInviteLinkScreen,
+  InviteNewMemberScreen,
+} from '../../modules/invite-member';
+
 const RootStack = createStackNavigator<RootStackParamList>();
 
 export const RootStackNavigator = () => {
   return (
     <RootStack.Navigator
-      initialRouteName={Screens.First}
+      initialRouteName={Screens.BottomTabs}
       screenOptions={{ headerShown: false }}
     >
       <RootStack.Screen name={Screens.First} component={FirstScreen} />
@@ -43,8 +48,8 @@ export const RootStackNavigator = () => {
         }}
       />
       <RootStack.Screen
-        name={Screens.OnboardingSingleOrganization}
-        component={OnboardingSingleOrgScreen}
+        name={Screens.OnboardingOrganization}
+        component={OnboardingOrganizationScreen}
       />
 
       <RootStack.Screen
@@ -55,6 +60,16 @@ export const RootStackNavigator = () => {
       <RootStack.Screen
         name={Screens.Congratulations}
         component={CongratulationsScreen}
+      />
+
+      <RootStack.Screen
+        name={Screens.InviteNewMember}
+        component={InviteNewMemberScreen}
+      />
+
+      <RootStack.Screen
+        name={Screens.CopyInviteLink}
+        component={CopyInviteLinkScreen}
       />
     </RootStack.Navigator>
   );

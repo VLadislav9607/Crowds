@@ -1,2 +1,2 @@
-export * from './OnboardingSingleOrganization';
+export * from './OnboardingOrganization';
 export * from './TermsAndPrivacy';
