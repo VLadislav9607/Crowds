@@ -1,25 +1,36 @@
 import { ComponentType } from 'react';
 
-import { CompositeNavigationProp } from '@react-navigation/native';
-import { StackNavigationProp } from '@react-navigation/stack';
-import { RootStackParamList } from './RootStackNavigator.types';
 import { Screens } from '../constants';
+import { Role } from '@modules/common';
 
-export type BottomStackScreenParams = {
-  [Screens.Home]?: undefined;
-  [Screens.Events]?: undefined;
-  [Screens.Chats]?: undefined;
-  [Screens.Settings]?: undefined;
-  [Screens.Profile]?: undefined;
+export type OrgTabParams = {
+  [Screens.HomeOrganization]: undefined;
+  [Screens.EventsOrganization]: undefined;
+  [Screens.ChatsOrganization]: undefined;
+  [Screens.SettingsOrganization]: undefined;
+  [Screens.ProfileOrganization]: undefined;
 };
 
-export interface BottomTabScreenType {
-  name: keyof BottomStackScreenParams;
-  component: ComponentType<BottomStackScreenParams>;
+export type TalentTabParams = {
+  [Screens.HomeTalent]: undefined;
+  [Screens.EventsTalent]: undefined;
+  [Screens.ChatsTalent]: undefined;
+  [Screens.SettingsTalent]: undefined;
+  [Screens.ProfileTalent]: undefined;
+};
+export interface BottomTabScreen<RoleParams> {
+  name: keyof RoleParams;
+  component: ComponentType<any>;
   icon: (opacity: number) => string;
 }
 
-export type BottomStackNavigationType = CompositeNavigationProp<
-  StackNavigationProp<BottomStackScreenParams>,
-  StackNavigationProp<RootStackParamList>
->;
+export type BottomTabsParamList = OrgTabParams | TalentTabParams;
+
+type RoleTabParams = {
+  [Role.ORGANIZATION]: OrgTabParams;
+  [Role.TALENT]: TalentTabParams;
+};
+
+export type BottomTabsConfigType = {
+  [R in keyof RoleTabParams]: Array<BottomTabScreen<RoleTabParams[R]>>;
+};

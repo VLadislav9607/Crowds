@@ -15,11 +15,19 @@ export enum Screens {
   InviteNewMember = 'InviteNewMember',
   CopyInviteLink = 'CopyInviteLink',
 
-  //Bottom Tabs
+  //Bottom Tabs Organization
   BottomTabs = 'BottomTabs',
-  Home = 'Home',
-  Events = 'Events',
-  Chats = 'Chats',
-  Settings = 'Settings',
-  Profile = 'Profile',
+
+  HomeOrganization = 'HomeOrganization',
+  EventsOrganization = 'EventsOrganization',
+  ChatsOrganization = 'ChatsOrganization',
+  SettingsOrganization = 'SettingsOrganization',
+  ProfileOrganization = 'ProfileOrganization',
+
+  //Bottom Tabs Talent
+  HomeTalent = 'HomeTalent',
+  EventsTalent = 'EventsTalent',
+  ChatsTalent = 'ChatsTalent',
+  SettingsTalent = 'SettingsTalent',
+  ProfileTalent = 'ProfileTalent',
 }

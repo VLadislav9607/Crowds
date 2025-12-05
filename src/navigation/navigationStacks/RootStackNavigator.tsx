@@ -23,7 +23,7 @@ const RootStack = createStackNavigator<RootStackParamList>();
 export const RootStackNavigator = () => {
   return (
     <RootStack.Navigator
-      initialRouteName={Screens.First}
+      initialRouteName={Screens.BottomTabs}
       screenOptions={{ headerShown: false }}
     >
       <RootStack.Screen name={Screens.First} component={FirstScreen} />
