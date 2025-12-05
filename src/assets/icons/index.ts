@@ -13,6 +13,8 @@ import { calendarIcon } from './calendar';
 import { calendarWithDays } from './calendarWithDays';
 import { checked } from './checked';
 import { copyIcon } from './copy';
+import { avatar } from './avatar';
+import { camera } from './camera';
 import { copyInvitation } from './copyInvitation';
 import { plusSquare } from './plusSquare';
 
@@ -35,6 +37,8 @@ export const ICONS = {
   calendarWithDays,
   checked,
   copyIcon,
+  avatar,
+  camera,
   copyInvitation,
   plusSquare,
 };

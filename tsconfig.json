@@ -29,7 +29,8 @@
       "@types": ["./src/types/index.ts"],
       "@ui": ["./src/ui/index.ts"],
       "@store": ["./src/store/index.ts"],
-      "@modules/common": ["./src/modules/common/index.ts"]
+      "@modules/common": ["./src/modules/common/index.ts"],
+      "@modules/profile": ["./src/modules/profile/index.ts"]
     }
   }
 }

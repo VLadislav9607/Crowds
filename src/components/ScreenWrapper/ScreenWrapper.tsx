@@ -16,12 +16,7 @@ export const ScreenWrapper = ({
   const { bottom } = useSafeAreaInsets();
 
   return (
-    <View
-      style={[
-        styles.wrapper,
-        { paddingBottom: bottom || 16 },
-      ]}
-    >
+    <View style={[styles.wrapper, { paddingBottom: bottom || 16 }]}>
       {headerProps.headerVariant && <AppHeader {...headerProps} />}
 
       <View style={[styles.contentContainer, contentContainerStyle]}>

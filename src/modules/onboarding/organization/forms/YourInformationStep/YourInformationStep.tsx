@@ -2,7 +2,7 @@ import { StyleSheet, View } from 'react-native';
 import { Controller, Control, FieldErrors } from 'react-hook-form';
 
 import { AppInput } from '@ui';
-import { Gender } from '@modules/common';
+import { Gender } from '@modules/profile';
 import { CheckboxList } from '@components';
 
 import { OrganizationFormData } from '../../validation';

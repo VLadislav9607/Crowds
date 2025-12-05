@@ -2,7 +2,7 @@ import { AppInput, AppText } from '@ui';
 import { AppDateInput, CheckboxList } from '@components';
 import { View } from 'react-native';
 import { Controller, useForm } from 'react-hook-form';
-import { Gender } from '@modules/common';
+import { Gender } from '@modules/profile';
 import { styles } from './styles';
 import {
   TalentNameFormData,
