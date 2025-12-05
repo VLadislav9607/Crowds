@@ -14,6 +14,7 @@ import { calendarWithDays } from './calendarWithDays';
 import { checked } from './checked';
 import { copyIcon } from './copy';
 import { copyInvitation } from './copyInvitation';
+import { plusSquare } from './plusSquare';
 
 import { BOTTOM_TABS } from './bottomTabs';
 
@@ -35,4 +36,5 @@ export const ICONS = {
   checked,
   copyIcon,
   copyInvitation,
+  plusSquare,
 };
