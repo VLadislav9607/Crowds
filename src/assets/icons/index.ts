@@ -17,11 +17,13 @@ import { avatar } from './avatar';
 import { camera } from './camera';
 import { copyInvitation } from './copyInvitation';
 import { plusSquare } from './plusSquare';
+import { clockIcon } from './clock';
 
 import { BOTTOM_TABS } from './bottomTabs';
 
 export const ICONS = {
   BOTTOM_TABS,
+
   firstScreenLogo,
   fullLogo,
   eyeIcon,
@@ -36,6 +38,7 @@ export const ICONS = {
   calendarIcon,
   calendarWithDays,
   checked,
+  clockIcon,
   copyIcon,
   avatar,
   camera,

@@ -15,6 +15,9 @@ export enum Screens {
   InviteNewMember = 'InviteNewMember',
   CopyInviteLink = 'CopyInviteLink',
 
+  // Create Event
+  CreateEvent = 'CreateEvent',
+
   //Bottom Tabs Organization
   BottomTabs = 'BottomTabs',
 
