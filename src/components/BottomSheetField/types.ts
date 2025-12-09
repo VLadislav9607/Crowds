@@ -11,6 +11,7 @@ export interface BottomSheetFieldProps {
   disabled?: boolean;
   placeholderText?: string;
   placeholderTextProps?: Partial<AppTextProps>;
+  leftIcon?: React.ReactNode;
   value?: string;
   children?:
     | React.ReactNode

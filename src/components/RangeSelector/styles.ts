@@ -9,6 +9,9 @@ export const styles = StyleSheet.create({
     flexDirection: 'row',
     gap: 10,
   },
+  flex1: {
+    flex: 1,
+  },
   slider: {
     flex: 1,
     height: 17,
@@ -16,12 +19,12 @@ export const styles = StyleSheet.create({
   },
   rail: {
     flex: 1,
-    height: 3,
+    height: 2,
     borderRadius: 2,
     backgroundColor: COLORS.gray,
   },
   railSelected: {
-    height: 4,
+    height: 2,
     borderRadius: 2,
     backgroundColor: COLORS.main,
   },

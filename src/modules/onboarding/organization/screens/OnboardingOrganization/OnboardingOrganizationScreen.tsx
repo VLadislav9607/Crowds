@@ -3,7 +3,7 @@ import { goToScreen, Screens } from '@navigation';
 
 import { OnboardingScreenLayout } from '../../../layouts';
 import { useCreatePassword, useOnboardingOrgScreen } from './hooks';
-import { CreatePasswordForm } from '../../../components';
+import { CreatePasswordForm } from '@modules/onboarding';
 import { UINSaveConfirmationModal } from '../../../modals';
 
 export const OnboardingOrganizationScreen = () => {

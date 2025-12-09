@@ -1,6 +1,7 @@
 import { StyleProp, ViewStyle } from 'react-native';
 import { IMAGES } from '@assets';
 import { ColorsKeys } from '@styles';
+import { SvgProps } from 'react-native-svg';
 
 export type HeaderVariant =
   | 'withTitle'
@@ -21,6 +22,7 @@ export interface IAppHeaderProps {
   headerVariant?: HeaderVariant;
   headerImageBg?: HeaderImageBgType;
   customElement?: React.ReactNode;
+  logoProps?: Partial<SvgProps>;
   headerStyles?: StyleProp<ViewStyle>;
   rightIcons?: {
     icon: () => string | null;

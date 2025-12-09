@@ -1,7 +1,8 @@
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 
-import { Gender, OrganizationType } from '@modules/common';
+import { OrganizationType } from '@modules/common';
+import { Gender } from '@modules/profile';
 
 import { OrganizationFormData, organizationFormSchema } from '../validation';
 

@@ -1,4 +1,4 @@
-import { Gender } from '@modules/common';
+import { Gender } from '@modules/profile';
 import { OrganizationType } from '@modules/common';
 import z from 'zod';
 

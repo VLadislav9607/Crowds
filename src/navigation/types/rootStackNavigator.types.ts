@@ -7,6 +7,8 @@ export type RootStackParamList = {
   // Authorization
   [Screens.First]: undefined;
   [Screens.SelectRole]: undefined;
+  [Screens.SignIn]: undefined;
+  [Screens.ForgotPassword]: undefined;
   [Screens.OnboardingTalent]: undefined;
   [Screens.TalentProfileSetup]: undefined;
 

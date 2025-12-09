@@ -31,7 +31,7 @@ export const FirstScreen = () => {
       />
       <AppButton
         title="Login"
-        onPress={() => {}}
+        onPress={() => goToScreen(Screens.SignIn)}
         variant="withBorder"
         size="56"
         wrapperStyles={styles.loginButton}

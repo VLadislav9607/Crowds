@@ -1,4 +1,4 @@
-import { TouchableOpacity, View } from 'react-native';
+import { Dimensions, TouchableOpacity, View } from 'react-native';
 import { AppText } from '@ui';
 import { BottomSheetFieldProps } from './types';
 import { ICONS } from '@assets';
@@ -14,6 +14,7 @@ import {
 
 export const BottomSheetField = ({
   value,
+  leftIcon,
   label,
   errorMessage,
   labelProps,
@@ -27,6 +28,8 @@ export const BottomSheetField = ({
   bottomSheetProps,
   disableRenderWhenClosed,
 }: BottomSheetFieldProps) => {
+  const MAX_DYNAMIC_CONTENT_SIZE = Dimensions.get('window').height * 0.9;
+
   const internalBottomSheetRef = useRef<BottomSheetModal>(null);
   const bottomSheetRef = externalBottomSheetRef || internalBottomSheetRef;
 
@@ -93,9 +96,13 @@ export const BottomSheetField = ({
           onPress={handleOpenSheet}
         >
           {!!value && (
-            <AppText typography="regular_14" color="black">
-              {value}
-            </AppText>
+            <View style={styles.valueContainer}>
+              {leftIcon}
+
+              <AppText typography="regular_14" color="black">
+                {value}
+              </AppText>
+            </View>
           )}
 
           {placeholderText && !value && (
@@ -126,6 +133,7 @@ export const BottomSheetField = ({
       <BottomSheetModal
         ref={bottomSheetRef}
         snapPoints={['90%']}
+        maxDynamicContentSize={MAX_DYNAMIC_CONTENT_SIZE}
         onChange={handleSheetChanges}
         enablePanDownToClose
         enableDynamicSizing={false}
