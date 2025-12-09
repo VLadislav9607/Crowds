@@ -1,7 +1,5 @@
 import { NavigatorScreenParams } from '@react-navigation/native';
-
 import { Role, OrganizationType } from '@modules/common';
-
 import { Screens } from '../constants';
 import { BottomTabsParamList } from './bottomStackNavigator.types';
 
@@ -24,7 +22,9 @@ export type RootStackParamList = {
   [Screens.TermsAndPrivacy]: undefined;
   [Screens.Congratulations]: { role: Role };
 
-  // Invite Member
+  // Organization screens
+  [Screens.CreateEvent]: undefined;
+  [Screens.EventsDashboard]: undefined;
   [Screens.InviteNewMember]: undefined;
   [Screens.CopyInviteLink]: undefined;
 };

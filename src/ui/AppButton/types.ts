@@ -8,6 +8,7 @@ export interface ButtonProps {
   title: string;
   onPress?: () => void;
   mb?: number;
+  width?: number;
   size?: ButtonSize;
   variant?: ButtonVariant;
   isDisabled?: boolean;

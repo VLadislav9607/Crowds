@@ -3,6 +3,8 @@ import { AppTextProps } from '../../ui/AppText/types';
 
 export interface AppDateInputProps {
   label?: string;
+  mode?: 'date' | 'time';
+  customIcon?: string;
   placeholder?: string;
   errorMessage?: string;
   labelProps?: Partial<AppTextProps>;

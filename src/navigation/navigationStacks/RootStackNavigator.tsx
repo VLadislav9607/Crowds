@@ -22,6 +22,7 @@ import {
   CopyInviteLinkScreen,
   InviteNewMemberScreen,
 } from '../../modules/invite-member';
+import { CreateEventScreen } from '../../modules/create-event';
 
 const RootStack = createStackNavigator<RootStackParamList>();
 
@@ -80,6 +81,11 @@ export const RootStackNavigator = () => {
       <RootStack.Screen
         name={Screens.CopyInviteLink}
         component={CopyInviteLinkScreen}
+      />
+
+      <RootStack.Screen
+        name={Screens.CreateEvent}
+        component={CreateEventScreen}
       />
     </RootStack.Navigator>
   );

@@ -25,7 +25,7 @@ export const AppInput = ({
           color={props.disabled ? 'black_40' : 'black_50'}
           typography="medium_14"
           {...labelProps}
-          style={[styles.label, styles.label]}
+          style={[styles.label, styles.label, labelProps?.style]}
         >
           {label}
         </AppText>

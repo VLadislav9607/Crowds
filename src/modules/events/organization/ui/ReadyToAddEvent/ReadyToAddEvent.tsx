@@ -3,6 +3,7 @@ import { StyleSheet, View } from 'react-native';
 import { AppText, IconButton } from '@ui';
 import { TYPOGRAPHY } from '@styles';
 import { ICONS } from '@assets';
+import { goToScreen, Screens } from '@navigation';
 
 export const ReadyToAddEvent = () => {
   return (
@@ -14,7 +15,11 @@ export const ReadyToAddEvent = () => {
         Tap the “+” and Let’s Get Started!
       </AppText>
 
-      <IconButton icon={ICONS.plusSquare()} iconSize={112} onPress={() => {}} />
+      <IconButton
+        icon={ICONS.plusSquare()}
+        iconSize={112}
+        onPress={() => goToScreen(Screens.CreateEvent)}
+      />
     </View>
   );
 };

@@ -4,8 +4,8 @@ import { Screens } from '../constants';
 import { Role } from '@modules/common';
 
 export type OrgTabParams = {
-  [Screens.HomeOrganization]: undefined;
-  [Screens.EventsOrganization]: undefined;
+  [Screens.EventsDashboard]: undefined;
+  [Screens.UpcomingEvents]: undefined;
   [Screens.ChatsOrganization]: undefined;
   [Screens.SettingsOrganization]: undefined;
   [Screens.ProfileOrganization]: undefined;

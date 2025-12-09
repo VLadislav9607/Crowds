@@ -16,7 +16,8 @@ export const AppDateInput = ({
   errorMessageProps,
   placeholder,
   value,
-  useDefaultIcon = false,
+  customIcon,
+  mode = 'date',
   defaultIconPosition = 'left',
   fieldStyle,
   placeholderProps,
@@ -54,8 +55,12 @@ export const AppDateInput = ({
           onPress={() => setShowDatePicker(true)}
           style={[styles.field, fieldStyle]}
         >
-          <If condition={useDefaultIcon && defaultIconPosition === 'left'}>
-            <SvgXml xml={ICONS.calendarIcon('main')} width={20} height={20} />
+          <If condition={defaultIconPosition === 'left'}>
+            <SvgXml
+              xml={customIcon || ICONS.calendarIcon('main')}
+              width={20}
+              height={20}
+            />
           </If>
 
           <If condition={!value && !!placeholder}>
@@ -79,8 +84,12 @@ export const AppDateInput = ({
             </AppText>
           </If>
 
-          <If condition={useDefaultIcon && defaultIconPosition === 'right'}>
-            <SvgXml xml={ICONS.calendarWithDays()} width={20} height={20} />
+          <If condition={defaultIconPosition === 'right'}>
+            <SvgXml
+              xml={customIcon || ICONS.calendarWithDays()}
+              width={20}
+              height={20}
+            />
           </If>
         </TouchableOpacity>
 
@@ -98,7 +107,7 @@ export const AppDateInput = ({
 
       <DatePicker
         modal
-        mode="date"
+        mode={mode}
         open={showDatePicker}
         date={value || new Date()}
         onConfirm={onConfirm}
