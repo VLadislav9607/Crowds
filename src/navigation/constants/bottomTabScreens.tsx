@@ -2,7 +2,11 @@ import { ICONS } from '@assets';
 import { Role } from '@modules/common';
 import { Screens } from './screens';
 
-import { HomeOrganizationTabScreen, HomeTabScreen } from '../../modules/home';
+import {
+  HomeOrganizationTabScreen,
+  HomeTabScreen,
+  HomeTalentTabScreen,
+} from '../../modules/home';
 import { BottomTabsConfigType } from '../types';
 
 export const BottomTabsConfig: BottomTabsConfigType = {
@@ -37,7 +41,7 @@ export const BottomTabsConfig: BottomTabsConfigType = {
   [Role.TALENT]: [
     {
       name: Screens.HomeTalent,
-      component: HomeOrganizationTabScreen,
+      component: HomeTalentTabScreen,
       icon: (opacity: number) => ICONS.BOTTOM_TABS.home(opacity),
     },
     {

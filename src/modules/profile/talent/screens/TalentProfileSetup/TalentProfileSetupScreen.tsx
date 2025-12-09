@@ -1,157 +1,82 @@
-import {
-  RangeSelector,
-  ScreenWithScrollWrapper,
-  SelectOptionField,
-  SelectOptionFieldItem,
-} from '@components';
-import { COLORS } from '@styles';
-import { View } from 'react-native';
-import { AppText } from '@ui';
+import { ScreenWithScrollWrapper } from '@components';
 import { ProfileSetupHeader } from '../../../components';
-import { styles } from './styles';
+import { TalentProfileSetupForm } from '../../forms';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import {
-  ethnicityOptions,
-  eyeColourOptions,
-  facialAttributesOptions,
-  hairColourOptions,
-  tattooSpotOptions,
-} from '../../../constants';
-import { useState } from 'react';
+  useSharedValue,
+  useAnimatedStyle,
+  useAnimatedScrollHandler,
+} from 'react-native-reanimated';
+import Animated from 'react-native-reanimated';
+import { styles } from './styles';
 
 export const TalentProfileSetupScreen = () => {
-  const [hairColour, setHairColour] = useState<SelectOptionFieldItem>();
-  const [hairStyle, setHairStyle] = useState<SelectOptionFieldItem>();
-  const [facialAttributes, setFacialAttributes] = useState<
-    SelectOptionFieldItem[]
-  >([]);
-  const [tattooSpot, setTattooSpot] = useState<SelectOptionFieldItem[]>([]);
-  const [ethnicity, setEthnicity] = useState<SelectOptionFieldItem>();
+  const insets = useSafeAreaInsets();
+  const headerOpacity = useSharedValue(1);
+  const headerTranslateY = useSharedValue(0);
+  const headerHeight = useSharedValue(120);
 
-  const [build, setBuild] = useState<number>(70);
-  const [height, setHeight] = useState<number>(5);
+  const scrollHandler = useAnimatedScrollHandler({
+    onScroll: event => {
+      const ANIMATION_START_LIMIT = 20;
+      const ANIMATION_END_LIMIT = 40;
+      const currentScrollY = event.contentOffset.y;
+
+      if (currentScrollY <= ANIMATION_START_LIMIT) {
+        //first 20px - header stays in place
+        headerTranslateY.value = 0;
+        headerOpacity.value = 1;
+        headerHeight.value = 120;
+      } else if (currentScrollY <= ANIMATION_END_LIMIT) {
+        //next 20px (20-40) - gradual disappearance and movement up
+        headerHeight.value = 120;
+
+        const scrollProgress = currentScrollY - ANIMATION_START_LIMIT;
+        headerTranslateY.value = -scrollProgress;
+        headerOpacity.value =
+          1 - scrollProgress / (ANIMATION_END_LIMIT - ANIMATION_START_LIMIT);
+        // const heightProgress = scrollProgress / (ANIMATION_END_LIMIT - ANIMATION_START_LIMIT);
+        // headerHeight.value = 120 * (1 - heightProgress);
+      } else {
+        //after 40px - fully hidden
+        headerTranslateY.value = -(ANIMATION_END_LIMIT - ANIMATION_START_LIMIT);
+        headerOpacity.value = 0;
+        headerHeight.value = 0;
+      }
+    },
+  });
+
+  const animatedHeaderStyle = useAnimatedStyle(() => {
+    return {
+      opacity: headerOpacity.value,
+      transform: [{ translateY: headerTranslateY.value }],
+      height: headerHeight.value,
+    };
+  });
 
   return (
     <ScreenWithScrollWrapper
       title="Setup My Profile"
       headerVariant="withTitle"
-      headerStyles={{
-        backgroundColor: COLORS.black,
-      }}
+      contentContainerStyle={[
+        { paddingBottom: insets.bottom || 10 },
+        styles.contentContainer,
+      ]}
+      headerStyles={styles.headerStyles}
+      animatedScrollHandler={scrollHandler}
+      useAnimatedScrollView={true}
       customElement={
-        <ProfileSetupHeader
-          showCircleBadge
-          showUnverifiedBadge
-          showCamera
-          showCnBadge
-          containerStyle={{ paddingHorizontal: 20 }}
-        />
+        <Animated.View style={[styles.headerContainer, animatedHeaderStyle]}>
+          <ProfileSetupHeader
+            showCircleBadge
+            showUnverifiedBadge
+            showCamera
+            showCnBadge
+          />
+        </Animated.View>
       }
     >
-      <View style={styles.container}>
-        <AppText color="black" typography="semibold_18" margin={{ bottom: 16 }}>
-          Physical Details
-        </AppText>
-
-        <View style={styles.physicalDetailsContainer}>
-          <SelectOptionField
-            fieldProps={{
-              label: 'Hair Colour',
-              placeholderText: 'Pick hair colour',
-              labelProps: { color: 'main' },
-              value: hairColour?.label,
-            }}
-            options={hairColourOptions}
-            selectedValues={hairColour?.value}
-            onOptionSelect={setHairColour}
-          />
-
-          <SelectOptionField
-            fieldProps={{
-              label: 'Eye Colour',
-              placeholderText: 'Pick eye colour',
-              labelProps: { color: 'main' },
-            }}
-            options={eyeColourOptions}
-            selectedValues={hairStyle?.value}
-            onOptionSelect={setHairStyle}
-          />
-
-          <RangeSelector
-            disableRange
-            min={20}
-            max={150}
-            minValue={build}
-            maxValue={150}
-            onValueChange={low => setBuild(low)}
-            label="Set Build"
-            labelProps={{ color: 'main' }}
-            bottonLabels={{
-              minValueLabel: '20 Kg',
-              maxValueLabel: '150 Kg',
-            }}
-            measure="Kg"
-            highValueLabel={`${build} Kg`}
-          />
-
-          <RangeSelector
-            min={2}
-            max={8}
-            minValue={height}
-            maxValue={8}
-            step={0.1}
-            onValueChange={low => setHeight(low)}
-            label="Set Height"
-            labelProps={{ color: 'main' }}
-            bottonLabels={{
-              minValueLabel: '2 Feet',
-              maxValueLabel: '8 Feet',
-            }}
-            measure="Ft"
-            highValueLabel={`${Math.floor(height)} Foot ${Math.round(
-              (height - Math.floor(height)) * 12,
-            )} Inch`}
-          />
-
-          <SelectOptionField
-            fieldProps={{
-              label: 'Facial Attributes',
-              placeholderText: 'Select facial attributes',
-              labelProps: { color: 'main' },
-              value: facialAttributes.map(o => o.label).join(', '),
-            }}
-            options={facialAttributesOptions}
-            enableAutoClose={false}
-            selectedValues={facialAttributes.map(o => o.value)}
-            onSelectedOptionsChange={setFacialAttributes}
-          />
-
-          <SelectOptionField
-            fieldProps={{
-              label: 'Tattoo Spot',
-              placeholderText: 'Pick tattoo spots',
-              labelProps: { color: 'main' },
-              value: tattooSpot.map(o => o.label).join(', '),
-            }}
-            options={tattooSpotOptions}
-            enableAutoClose={false}
-            selectedValues={tattooSpot.map(o => o.value)}
-            onSelectedOptionsChange={setTattooSpot}
-          />
-
-          <SelectOptionField
-            fieldProps={{
-              label: 'Ethnicity',
-              placeholderText: 'Select ethnicity',
-              labelProps: { color: 'main' },
-              value: ethnicity?.label,
-            }}
-            options={ethnicityOptions}
-            enableAutoClose={false}
-            selectedValues={ethnicity?.value}
-            onOptionSelect={setEthnicity}
-          />
-        </View>
-      </View>
+      <TalentProfileSetupForm />
     </ScreenWithScrollWrapper>
   );
 };

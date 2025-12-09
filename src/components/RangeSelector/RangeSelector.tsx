@@ -15,8 +15,9 @@ export const RangeSelector = ({
   step = 1,
   disableRange = false,
   labelProps,
-  bottonLabels,
+  bottomLabels,
   measure,
+  value,
   onValueChange,
 }: IRangeSelectorProps) => {
   return (
@@ -32,7 +33,7 @@ export const RangeSelector = ({
       )}
 
       <View style={styles.sliderContainer}>
-        <View style={{ flex: 1 }}>
+        <View style={styles.flex1}>
           <RangeSlider
             style={styles.slider}
             min={min}
@@ -49,26 +50,26 @@ export const RangeSelector = ({
             disableRange={disableRange}
           />
 
-          <If condition={!!bottonLabels}>
+          <If condition={!!bottomLabels}>
             <View
-              style={[styles.labelsContainer, bottonLabels?.containerStyles]}
+              style={[styles.labelsContainer, bottomLabels?.containerStyles]}
             >
-              {bottonLabels?.minValueLabel && (
+              {bottomLabels?.minValueLabel && (
                 <AppText
                   typography="regular_10"
                   color="black_50"
-                  {...bottonLabels?.labelProps}
+                  {...bottomLabels?.labelProps}
                 >
-                  {bottonLabels?.minValueLabel}
+                  {bottomLabels?.minValueLabel}
                 </AppText>
               )}
-              {bottonLabels?.maxValueLabel && (
+              {bottomLabels?.maxValueLabel && (
                 <AppText
                   typography="regular_10"
                   color="black_50"
-                  {...bottonLabels?.labelProps}
+                  {...bottomLabels?.labelProps}
                 >
-                  {bottonLabels?.maxValueLabel}
+                  {bottomLabels?.maxValueLabel}
                 </AppText>
               )}
             </View>
@@ -81,6 +82,10 @@ export const RangeSelector = ({
           </AppText>
         </If>
       </View>
+
+      <AppText color="black" typography="semibold_14" margin={{ top: 10 }}>
+        {value}
+      </AppText>
     </View>
   );
 };

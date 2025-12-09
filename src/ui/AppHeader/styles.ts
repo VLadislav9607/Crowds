@@ -3,16 +3,39 @@ import { COLORS, TYPOGRAPHY } from '@styles';
 
 export const styles = StyleSheet.create({
   header: {
-    height: 156,
+    // height: 156,
+    paddingBottom: 24,
     paddingHorizontal: 16,
     borderBottomRightRadius: 25,
     borderBottomLeftRadius: 25,
     flexDirection: 'row',
     justifyContent: 'center',
+    // alignItems: 'center',
+  },
+  logoHeaderInner: {
+    width: '100%',
     alignItems: 'center',
   },
+  titleHeaderInner: {
+    width: '100%',
+  },
+  contentWrapperColumn: {
+    flexDirection: 'row',
+    gap: 14,
+  },
+  headerContentRow: {
+    flexDirection: 'row',
+    gap: 4,
+  },
   headerWithLogo: {
-    alignItems: 'center',
+    flexDirection: 'column',
+    alignItems: 'flex-start',
+    justifyContent: 'flex-start',
+  },
+  headerWithTitle: {
+    flexDirection: 'column',
+    alignItems: 'flex-start',
+    justifyContent: 'flex-start',
   },
   withTitle: {
     flexDirection: 'row',
@@ -21,7 +44,7 @@ export const styles = StyleSheet.create({
   withTitleAndImageBg: {
     flexDirection: 'row',
     gap: 14,
-    paddingTop: 0,
+    // paddingTop: 0,
     overflow: 'hidden',
   },
   backButton: {

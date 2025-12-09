@@ -33,4 +33,9 @@ export const styles = StyleSheet.create({
   bottomSheetContent: {
     flex: 1,
   },
+  valueContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 10,
+  },
 });
