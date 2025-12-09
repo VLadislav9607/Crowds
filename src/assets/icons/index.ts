@@ -22,6 +22,8 @@ import { clockIcon } from './clock';
 import { plus } from './plus';
 import { locationMap } from './locationMap';
 import { chevronRight } from './chevronRight';
+import { calendarV2 } from './calendarV2';
+import { clockV2 } from './clockV2';
 
 import { BOTTOM_TABS } from './bottomTabs';
 
@@ -43,6 +45,8 @@ export const ICONS = {
   calendarWithDays,
   checked,
   clockIcon,
+  calendarV2,
+  clockV2,
   copyIcon,
   avatar,
   camera,

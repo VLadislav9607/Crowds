@@ -3,23 +3,16 @@ import { FlashList } from '@shopify/flash-list';
 
 import { AppText } from '@ui';
 
-import { OrganizationEventCard } from '../../ui';
+import { OrganizationEventCard, EventCardType, IEventData } from '../../ui';
 
 interface IProps {
-  events: any[];
+  events: IEventData[];
+  cardType: EventCardType;
 }
 
-export const OrganizationEventsList = ({ events }: IProps) => {
-  const renderEventCard = ({ item }: any) => (
-    <OrganizationEventCard
-      name={item.name}
-      location={item.location}
-      image={item.image}
-      startDate={item.startDate}
-      isDraft={item.isDraft}
-      participants={item.participants}
-      maxParticipants={item.maxParticipants}
-    />
+export const OrganizationEventsList = ({ events, cardType }: IProps) => {
+  const renderEventCard = ({ item }: { item: IEventData }) => (
+    <OrganizationEventCard event={item} cardType={cardType} />
   );
 
   return (
