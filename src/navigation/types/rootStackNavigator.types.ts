@@ -20,10 +20,9 @@ export type RootStackParamList = {
   [Screens.TermsAndPrivacy]: undefined;
   [Screens.Congratulations]: { role: Role };
 
-  // Invite Member
+  // Organization screens
+  [Screens.CreateEvent]: undefined;
+  [Screens.EventsDashboard]: undefined;
   [Screens.InviteNewMember]: undefined;
   [Screens.CopyInviteLink]: undefined;
-
-  // Create Event
-  [Screens.CreateEvent]: undefined;
 };

@@ -11,26 +11,25 @@ export enum Screens {
   TermsAndPrivacy = 'TermsAndPrivacy',
   Congratulations = 'Congratulations',
 
-  // Invite Member
-  InviteNewMember = 'InviteNewMember',
-  CopyInviteLink = 'CopyInviteLink',
-
-  // Create Event
-  CreateEvent = 'CreateEvent',
-
   //Bottom Tabs Organization
   BottomTabs = 'BottomTabs',
 
-  HomeOrganization = 'HomeOrganization',
-  EventsOrganization = 'EventsOrganization',
+  EventsDashboard = 'EventsDashboard',
+  UpcomingEvents = 'UpcomingEvents',
   ChatsOrganization = 'ChatsOrganization',
   SettingsOrganization = 'SettingsOrganization',
   ProfileOrganization = 'ProfileOrganization',
 
   //Bottom Tabs Talent
+
   HomeTalent = 'HomeTalent',
   EventsTalent = 'EventsTalent',
   ChatsTalent = 'ChatsTalent',
   SettingsTalent = 'SettingsTalent',
   ProfileTalent = 'ProfileTalent',
+
+  // Organization screens
+  CreateEvent = 'CreateEvent',
+  InviteNewMember = 'InviteNewMember',
+  CopyInviteLink = 'CopyInviteLink',
 }
