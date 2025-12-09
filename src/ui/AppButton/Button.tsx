@@ -10,6 +10,7 @@ export const AppButton = ({
   title,
   onPress,
   size = '56',
+  width,
   mb = 0,
   variant = 'primary',
   isDisabled = false,
@@ -46,7 +47,8 @@ export const AppButton = ({
         buttonSizeStyle,
         { marginBottom: mb },
         wrapperStyles,
-        // eslint-disable-next-line react-native/no-inline-styles
+        /* eslint-disable react-native/no-inline-styles */
+        width ? { width, paddingHorizontal: 0 } : {},
         { flexDirection: iconPlace === 'right' ? 'row-reverse' : 'row' },
       ]}
       onPress={onPress}

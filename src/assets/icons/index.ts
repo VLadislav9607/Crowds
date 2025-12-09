@@ -18,6 +18,9 @@ import { camera } from './camera';
 import { copyInvitation } from './copyInvitation';
 import { plusSquare } from './plusSquare';
 import { clockIcon } from './clock';
+import { plus } from './plus';
+import { locationMap } from './locationMap';
+import { chevronRight } from './chevronRight';
 
 import { BOTTOM_TABS } from './bottomTabs';
 
@@ -44,4 +47,7 @@ export const ICONS = {
   camera,
   copyInvitation,
   plusSquare,
+  plus,
+  locationMap,
+  chevronRight,
 };

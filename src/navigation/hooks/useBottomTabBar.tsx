@@ -1,8 +1,8 @@
 import { StyleSheet } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
+import { BottomTabBar } from '@react-navigation/bottom-tabs';
 
 import { COLORS } from '@styles';
-import { BottomTabBar } from '@react-navigation/bottom-tabs';
 
 const BOTTOM_TAB_HEIGHT = 51;
 

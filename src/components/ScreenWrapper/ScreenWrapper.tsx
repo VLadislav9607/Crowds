@@ -5,18 +5,25 @@ import { AppHeader, IAppHeaderProps } from '@ui';
 
 interface IScreenWrapperProps extends IAppHeaderProps {
   children: React.ReactNode;
+  witBottomTab?: boolean;
   contentContainerStyle?: StyleProp<ViewStyle>;
 }
 
 export const ScreenWrapper = ({
   children,
   contentContainerStyle,
+  witBottomTab = false,
   ...headerProps
 }: IScreenWrapperProps) => {
   const { bottom } = useSafeAreaInsets();
 
   return (
-    <View style={[styles.wrapper, { paddingBottom: bottom || 16 }]}>
+    <View
+      style={[
+        styles.wrapper,
+        { paddingBottom: witBottomTab ? 16 : bottom || 16 },
+      ]}
+    >
       {headerProps.headerVariant && <AppHeader {...headerProps} />}
 
       <View style={[styles.contentContainer, contentContainerStyle]}>
