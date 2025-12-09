@@ -10,3 +10,4 @@ export * from './AppModal';
 export * from './CheckboxList';
 export * from './BottomSheetField';
 export * from './SelectOptionField';
+export * from './Skeleton';

@@ -5,13 +5,14 @@ import { Role } from '@modules/common';
 
 import { BottomTabsConfig } from '../constants';
 import { useBottomTabBar } from '../hooks';
+import { StyleSheet } from 'react-native';
 
 const Tab = createBottomTabNavigator();
 
 export const BottomTabsNavigator = () => {
   const { tabBarOptions } = useBottomTabBar();
 
-  const role = Role.ORGANIZATION;
+  const role = Role.TALENT;
   const screensByRole = BottomTabsConfig[role];
 
   return (
@@ -41,7 +42,13 @@ const renderTabBarIcon = (
       xml={icon(focused ? 1 : 0.3)}
       width={20}
       height={20}
-      style={{ marginTop: 8 }}
+      style={styles.tabBarIcon}
     />
   );
 };
+
+const styles = StyleSheet.create({
+  tabBarIcon: {
+    marginTop: 8,
+  },
+});

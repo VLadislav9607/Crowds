@@ -23,7 +23,7 @@ export const styles = StyleSheet.create({
   imageContainer: {
     width: 148,
     height: 148,
-    backgroundColor: COLORS.gray_50,
+    backgroundColor: COLORS.gray_bg,
     borderRadius: 20,
     shadowColor: '#000000',
     shadowOffset: { width: 0, height: 4.16 },
@@ -53,6 +53,9 @@ export const styles = StyleSheet.create({
     position: 'absolute',
     right: 5,
     bottom: 29,
+  },
+  circleBadgeUnverified: {
+    bottom: 5,
   },
   nameContainer: {
     flexDirection: 'row',

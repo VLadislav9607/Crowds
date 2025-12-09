@@ -17,6 +17,7 @@ import { avatar } from './avatar';
 import { camera } from './camera';
 import { copyInvitation } from './copyInvitation';
 import { plusSquare } from './plusSquare';
+import { manScan } from './manScan';
 
 import { BOTTOM_TABS } from './bottomTabs';
 
@@ -41,4 +42,5 @@ export const ICONS = {
   camera,
   copyInvitation,
   plusSquare,
+  manScan,
 };

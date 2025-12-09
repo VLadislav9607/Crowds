@@ -21,6 +21,7 @@ module.exports = {
           "@store": "./src/store",
           "@modules/common": "./src/modules/common",
           "@modules/profile": "./src/modules/profile",
+          "@modules/onboarding": "./src/modules/onboarding",
         }
       }
     ],

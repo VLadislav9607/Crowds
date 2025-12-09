@@ -13,9 +13,8 @@ export interface IRangeSelectorProps {
   disableRange?: boolean;
   labelProps?: Partial<AppTextProps>;
   measure?: string;
-  lowValueLabel?: string;
-  highValueLabel?: string;
-  bottonLabels?: {
+  value?: string | number;
+  bottomLabels?: {
     minValueLabel: string;
     maxValueLabel: string;
     containerStyles?: StyleProp<ViewStyle>;

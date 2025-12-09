@@ -1,5 +1,5 @@
 import { useRef, useState } from 'react';
-import { CreatePasswordFormRef } from '../../../../components';
+import { CreatePasswordFormRef } from '@modules/onboarding';
 
 export const useCreatePassword = () => {
   const [uin, setUIN] = useState('');
