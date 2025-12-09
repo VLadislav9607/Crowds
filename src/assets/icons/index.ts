@@ -18,11 +18,16 @@ import { camera } from './camera';
 import { copyInvitation } from './copyInvitation';
 import { plusSquare } from './plusSquare';
 import { manScan } from './manScan';
+import { clockIcon } from './clock';
+import { plus } from './plus';
+import { locationMap } from './locationMap';
+import { chevronRight } from './chevronRight';
 
 import { BOTTOM_TABS } from './bottomTabs';
 
 export const ICONS = {
   BOTTOM_TABS,
+
   firstScreenLogo,
   fullLogo,
   eyeIcon,
@@ -37,10 +42,14 @@ export const ICONS = {
   calendarIcon,
   calendarWithDays,
   checked,
+  clockIcon,
   copyIcon,
   avatar,
   camera,
   copyInvitation,
   plusSquare,
   manScan,
+  plus,
+  locationMap,
+  chevronRight,
 };

@@ -1,5 +1,5 @@
+import { StyleProp, TextProps, TextStyle } from 'react-native';
 import { ColorsKeys, TypographyKeysType } from '@styles';
-import { TextProps } from 'react-native';
 
 export interface AppTextProps extends TextProps {
   color?: ColorsKeys;
@@ -12,4 +12,5 @@ export interface AppTextProps extends TextProps {
     left?: number;
     right?: number;
   };
+  style?: StyleProp<TextStyle>;
 }

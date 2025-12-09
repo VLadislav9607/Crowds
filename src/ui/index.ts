@@ -7,3 +7,5 @@ export * from './AppSearchInputSecondary';
 export * from './AppTextarea';
 export * from './AppHeader';
 export * from './IconButton';
+export * from './IconText';
+export * from './GridBoard';

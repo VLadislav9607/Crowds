@@ -1,30 +1,36 @@
 import { ICONS } from '@assets';
 import { Role } from '@modules/common';
-import { Screens } from './screens';
 
 import {
   HomeOrganizationTabScreen,
   HomeTabScreen,
   HomeTalentTabScreen,
 } from '../../modules/home';
+import { HomeTabScreen } from '../../modules/home';
+import {
+  EventsDashboardTabScreen,
+  UpcomingEventsTabScreen,
+} from '../../modules/events';
+
 import { BottomTabsConfigType } from '../types';
+import { Screens } from './screens';
 
 export const BottomTabsConfig: BottomTabsConfigType = {
   [Role.ORGANIZATION]: [
     {
-      name: Screens.HomeOrganization,
-      component: HomeOrganizationTabScreen,
+      name: Screens.EventsDashboard,
+      component: EventsDashboardTabScreen,
       icon: (opacity: number) => ICONS.BOTTOM_TABS.home(opacity),
+    },
+    {
+      name: Screens.UpcomingEvents,
+      component: UpcomingEventsTabScreen,
+      icon: (opacity: number) => ICONS.BOTTOM_TABS.events(opacity),
     },
     {
       name: Screens.ChatsOrganization,
       component: HomeTabScreen,
       icon: (opacity: number) => ICONS.BOTTOM_TABS.chats(opacity),
-    },
-    {
-      name: Screens.EventsOrganization,
-      component: HomeTabScreen,
-      icon: (opacity: number) => ICONS.BOTTOM_TABS.events(opacity),
     },
     {
       name: Screens.SettingsOrganization,
@@ -42,6 +48,7 @@ export const BottomTabsConfig: BottomTabsConfigType = {
     {
       name: Screens.HomeTalent,
       component: HomeTalentTabScreen,
+      component: HomeTabScreen,
       icon: (opacity: number) => ICONS.BOTTOM_TABS.home(opacity),
     },
     {
