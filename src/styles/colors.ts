@@ -26,6 +26,8 @@ export const COLORS = {
   black_50: 'rgba(0, 0, 0, 0.5)',
   black_60: 'rgba(0, 0, 0, 0.6)',
   black_20: 'rgba(0, 0, 0, 0.2)',
+  black_10: 'rgba(0, 0, 0, 0.1)',
+  white_30: 'rgba(255, 255, 255, 0.3)',
   light_purple: '#F2EBF7',
 };
 

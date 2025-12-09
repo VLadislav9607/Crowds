@@ -1,9 +1,22 @@
 import { useEffect, useRef, useState } from 'react';
 import { View, ScrollView, Animated, LayoutChangeEvent } from 'react-native';
-import { IAppTabSelectorProps } from './types';
+import { IAppTabSelectorProps, TabSelectorTheme } from './types';
+import { COLORS } from '@styles';
 
 import { styles } from './styles';
 import { Tab, TabsLabel } from './ui';
+
+const BORDER_RADIUS = 32;
+
+const INDICATOR_COLORS: Record<TabSelectorTheme, string> = {
+  white: COLORS.black,
+  black: COLORS.white,
+};
+
+const CONTAINER_COLORS: Record<TabSelectorTheme, string> = {
+  white: COLORS.white,
+  black: COLORS.black,
+};
 
 export const AppTabSelector = ({
   options,
@@ -11,9 +24,12 @@ export const AppTabSelector = ({
   onSelect,
   label,
   badgeLabel,
+  theme = 'white',
 }: IAppTabSelectorProps) => {
   const animatedValue = useRef(new Animated.Value(0)).current;
   const animatedWidth = useRef(new Animated.Value(0)).current;
+  const animatedLeftRadius = useRef(new Animated.Value(BORDER_RADIUS)).current;
+  const animatedRightRadius = useRef(new Animated.Value(0)).current;
   const scrollViewRef = useRef<ScrollView>(null);
   const [tabPositions, setTabPositions] = useState<Record<string, number>>({});
   const [tabWidths, setTabWidths] = useState<Record<string, number>>({});
@@ -33,6 +49,12 @@ export const AppTabSelector = ({
       const targetPosition = tabPositions[selectedValue];
       const targetWidth = tabWidths[selectedValue];
 
+      const isFirst = selectedIndex === 0;
+      const isLast = selectedIndex === options.length - 1;
+
+      const leftRadius = isFirst ? BORDER_RADIUS : 0;
+      const rightRadius = isLast ? BORDER_RADIUS : 0;
+
       Animated.parallel([
         Animated.timing(animatedValue, {
           toValue: targetPosition,
@@ -41,6 +63,16 @@ export const AppTabSelector = ({
         }),
         Animated.timing(animatedWidth, {
           toValue: targetWidth,
+          duration: 150,
+          useNativeDriver: false,
+        }),
+        Animated.timing(animatedLeftRadius, {
+          toValue: leftRadius,
+          duration: 150,
+          useNativeDriver: false,
+        }),
+        Animated.timing(animatedRightRadius, {
+          toValue: rightRadius,
           duration: 150,
           useNativeDriver: false,
         }),
@@ -63,6 +95,8 @@ export const AppTabSelector = ({
     tabWidths,
     animatedValue,
     animatedWidth,
+    animatedLeftRadius,
+    animatedRightRadius,
     shouldScroll,
     containerWidth,
   ]);
@@ -74,7 +108,7 @@ export const AppTabSelector = ({
   };
 
   const renderTabs = () => {
-    return options.map(option => {
+    return options.map((option, index) => {
       const isActive = selectedValue === option.value;
       return (
         <Tab
@@ -85,6 +119,8 @@ export const AppTabSelector = ({
           onPress={() => onSelect(option.value)}
           shouldScroll={shouldScroll}
           totalOptions={options.length}
+          index={index}
+          theme={theme}
         />
       );
     });
@@ -98,12 +134,19 @@ export const AppTabSelector = ({
           {
             width: animatedWidth,
             transform: [{ translateX: animatedValue }],
+            borderTopLeftRadius: animatedLeftRadius,
+            borderBottomLeftRadius: animatedLeftRadius,
+            borderTopRightRadius: animatedRightRadius,
+            borderBottomRightRadius: animatedRightRadius,
+            backgroundColor: INDICATOR_COLORS[theme],
           },
         ]}
       />
       {renderTabs()}
     </>
   );
+
+  const containerStyle = { backgroundColor: CONTAINER_COLORS[theme] };
 
   if (shouldScroll) {
     return (
@@ -119,7 +162,7 @@ export const AppTabSelector = ({
             ref={scrollViewRef}
             horizontal
             showsHorizontalScrollIndicator={false}
-            contentContainerStyle={styles.scrollContent}
+            contentContainerStyle={[styles.scrollContent, containerStyle]}
           >
             {tabsContent}
           </ScrollView>
@@ -131,7 +174,7 @@ export const AppTabSelector = ({
   return (
     <>
       <TabsLabel label={label} badgeLabel={badgeLabel} />
-      <View style={styles.container}>{tabsContent}</View>
+      <View style={[styles.container, containerStyle]}>{tabsContent}</View>
     </>
   );
 };

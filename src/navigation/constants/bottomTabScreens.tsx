@@ -1,12 +1,7 @@
 import { ICONS } from '@assets';
 import { Role } from '@modules/common';
 
-import {
-  HomeOrganizationTabScreen,
-  HomeTabScreen,
-  HomeTalentTabScreen,
-} from '../../modules/home';
-import { HomeTabScreen } from '../../modules/home';
+import { HomeTabScreen, HomeTalentTabScreen } from '../../modules/home';
 import {
   EventsDashboardTabScreen,
   UpcomingEventsTabScreen,
@@ -48,7 +43,6 @@ export const BottomTabsConfig: BottomTabsConfigType = {
     {
       name: Screens.HomeTalent,
       component: HomeTalentTabScreen,
-      component: HomeTabScreen,
       icon: (opacity: number) => ICONS.BOTTOM_TABS.home(opacity),
     },
     {
