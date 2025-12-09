@@ -17,6 +17,7 @@ import { avatar } from './avatar';
 import { camera } from './camera';
 import { copyInvitation } from './copyInvitation';
 import { plusSquare } from './plusSquare';
+import { manScan } from './manScan';
 import { clockIcon } from './clock';
 import { plus } from './plus';
 import { locationMap } from './locationMap';
@@ -47,6 +48,7 @@ export const ICONS = {
   camera,
   copyInvitation,
   plusSquare,
+  manScan,
   plus,
   locationMap,
   chevronRight,

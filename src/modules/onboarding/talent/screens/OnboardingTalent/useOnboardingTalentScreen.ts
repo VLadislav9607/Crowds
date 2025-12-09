@@ -6,11 +6,11 @@ import {
 import { CreatePasswordFormData, CreatePasswordFormRef } from '../../../forms';
 import { goBack } from '@navigation';
 import { useBoolean } from '@hooks';
+import { TalentLocationSetupFormData } from '@modules/profile';
 
 export const useOnboardingTalentScreen = () => {
   const talentNameFormRef = useRef<TalentNameFormRef>(null);
   const createPasswordFormRef = useRef<CreatePasswordFormRef>(null);
-
   const {
     value: isUINConfirmationModalVisible,
     toggle: toggleUINConfirmationModalVisible,
@@ -23,6 +23,7 @@ export const useOnboardingTalentScreen = () => {
   const [data, setData] = useState<{
     talentNameFormData?: TalentNameFormData;
     createPasswordFormData?: CreatePasswordFormData;
+    talentLocationSetupFormData?: TalentLocationSetupFormData;
   }>({});
 
   const onChangeData = <K extends keyof typeof data>(
@@ -42,6 +43,12 @@ export const useOnboardingTalentScreen = () => {
         onChangeData('createPasswordFormData', formData);
         toggleUINConfirmationModalVisible();
       })();
+
+    // step === 2 &&
+    //   talentLocationSetupFormRef.current?.handleSubmit(formData => {
+    //     onChangeData('talentLocationSetupFormData', formData);
+    //     setStep(3);
+    //   })();
   };
 
   const goToPreviousStep = () => {
@@ -71,5 +78,6 @@ export const useOnboardingTalentScreen = () => {
     goToNextStep,
     goToPreviousStep,
     setUIN,
+    setStep,
   };
 };

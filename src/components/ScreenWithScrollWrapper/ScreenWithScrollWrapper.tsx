@@ -6,8 +6,11 @@ import {
   KeyboardAvoidingView,
   Platform,
   ScrollView,
+  NativeSyntheticEvent,
+  NativeScrollEvent,
 } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
+import Animated from 'react-native-reanimated';
 
 import { AppHeader, IAppHeaderProps } from '@ui';
 
@@ -18,6 +21,9 @@ interface IScreenWithScrollWrapperProps extends IAppHeaderProps {
   footerStyle?: StyleProp<ViewStyle>;
   contentContainerStyle?: StyleProp<ViewStyle>;
   showsVerticalScrollIndicator?: boolean;
+  onScroll?: (event: NativeSyntheticEvent<NativeScrollEvent>) => void;
+  animatedScrollHandler?: (event: any) => void;
+  useAnimatedScrollView?: boolean;
 }
 
 export const ScreenWithScrollWrapper = ({
@@ -27,6 +33,9 @@ export const ScreenWithScrollWrapper = ({
   footerStyle,
   contentContainerStyle,
   showsVerticalScrollIndicator = false,
+  onScroll,
+  animatedScrollHandler,
+  useAnimatedScrollView = false,
   ...headerProps
 }: IScreenWithScrollWrapperProps) => {
   const { bottom } = useSafeAreaInsets();
@@ -45,6 +54,14 @@ export const ScreenWithScrollWrapper = ({
     </View>
   );
 
+  const ScrollViewComponent = useAnimatedScrollView
+    ? Animated.ScrollView
+    : ScrollView;
+  const scrollProps =
+    useAnimatedScrollView && animatedScrollHandler
+      ? { onScroll: animatedScrollHandler, scrollEventThrottle: 16 }
+      : { onScroll, scrollEventThrottle: 16 };
+
   return (
     <KeyboardAvoidingView
       style={styles.wrapper}
@@ -53,16 +70,17 @@ export const ScreenWithScrollWrapper = ({
     >
       {headerProps.headerVariant && <AppHeader {...headerProps} />}
 
-      <ScrollView
+      <ScrollViewComponent
         style={styles.scrollView}
         contentContainerStyle={[styles.contentContainer, contentContainerStyle]}
         showsVerticalScrollIndicator={showsVerticalScrollIndicator}
         keyboardShouldPersistTaps="handled"
+        {...scrollProps}
       >
         {children}
 
         {!isFloatFooter && footer && FooterComponent}
-      </ScrollView>
+      </ScrollViewComponent>
 
       {isFloatFooter && footer && FooterComponent}
     </KeyboardAvoidingView>

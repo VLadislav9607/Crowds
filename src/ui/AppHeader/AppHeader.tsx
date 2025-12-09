@@ -9,6 +9,7 @@ import { If } from '@components';
 
 import { headerImageBgMap, IAppHeaderProps } from './types';
 import { styles } from './styles';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 export const AppHeader = ({
   title,
@@ -17,9 +18,11 @@ export const AppHeader = ({
   headerStyles,
   colorHeader,
   headerVariant,
+  logoProps,
   rightIcons,
   goBackCallback,
 }: IAppHeaderProps) => {
+  const insets = useSafeAreaInsets();
   const handleBackPress = () => {
     goBack();
     goBackCallback?.();
@@ -27,7 +30,7 @@ export const AppHeader = ({
 
   const headerStyle = {
     ...styles.header,
-    paddingTop: 20,
+    paddingTop: insets.top || 24,
     backgroundColor: COLORS[colorHeader || 'main'],
     ...headerStyles,
   };
@@ -36,21 +39,26 @@ export const AppHeader = ({
     <>
       <If condition={headerVariant === 'withLogo'}>
         <View style={[headerStyle, styles.headerWithLogo]}>
-          <SvgXml xml={ICONS.fullLogo()} />
+          <View style={styles.logoHeaderInner}>
+            <SvgXml xml={ICONS.fullLogo()} {...logoProps} />
+            {rightIcons && <RightIcons rightIcons={rightIcons} />}
+          </View>
           {customElement}
         </View>
       </If>
 
       <If condition={headerVariant === 'withTitle'}>
-        <View style={[headerStyle, styles.withTitle, styles.headerContainer]}>
-          <HeaderContent
-            title={title}
-            showBackButton
-            onBackPress={handleBackPress}
-          />
-          {rightIcons && <RightIcons rightIcons={rightIcons} />}
+        <View style={[headerStyle, styles.headerWithTitle]}>
+          <View style={styles.titleHeaderInner}>
+            <HeaderContent
+              title={title}
+              showBackButton
+              onBackPress={handleBackPress}
+            />
+            {rightIcons && <RightIcons rightIcons={rightIcons} />}
+          </View>
+          {customElement}
         </View>
-        {customElement}
       </If>
 
       <If condition={headerVariant === 'withTitleAndImageBg'}>
@@ -60,13 +68,15 @@ export const AppHeader = ({
           style={[headerStyle, styles.withTitleAndImageBg]}
         >
           <View style={styles.overlay} />
-          <View style={[styles.contentWrapper, styles.headerContainer]}>
-            <HeaderContent
-              title={title}
-              showBackButton
-              onBackPress={handleBackPress}
-            />
-            {rightIcons && <RightIcons rightIcons={rightIcons} />}
+          <View style={[styles.contentWrapperColumn, styles.headerContainer]}>
+            <View style={styles.titleHeaderInner}>
+              <HeaderContent
+                title={title}
+                showBackButton
+                onBackPress={handleBackPress}
+              />
+              {rightIcons && <RightIcons rightIcons={rightIcons} />}
+            </View>
             {customElement}
           </View>
         </ImageBackground>
@@ -80,8 +90,10 @@ export const AppHeader = ({
         >
           <View style={styles.overlay} />
           <View style={[styles.contentWrapperLogo, styles.headerContainer]}>
-            <SvgXml xml={ICONS.fullLogo()} width={182} height={42} />
-            {rightIcons && <RightIcons rightIcons={rightIcons} />}
+            <View style={styles.logoHeaderInner}>
+              <SvgXml xml={ICONS.fullLogo()} width={182} height={42} />
+              {rightIcons && <RightIcons rightIcons={rightIcons} />}
+            </View>
             {customElement}
           </View>
         </ImageBackground>
@@ -99,7 +111,7 @@ const HeaderContent = ({
   showBackButton?: boolean;
   onBackPress?: () => void;
 }) => (
-  <>
+  <View style={styles.headerContentRow}>
     {showBackButton && onBackPress && (
       <Pressable onPress={onBackPress}>
         <SvgXml xml={ICONS.goBackArrow()} style={styles.backButton} />
@@ -110,7 +122,7 @@ const HeaderContent = ({
         {title}
       </AppText>
     )}
-  </>
+  </View>
 );
 
 const RightIcons = ({

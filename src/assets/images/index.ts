@@ -3,6 +3,7 @@ import splash from './splash.png';
 import headerPurpleBg from './headerPurpleBg.png';
 import headerCrowdBg from './headerCrowdBg.png';
 import blackCrowdBg from './blackCrowdBg.png';
+import userWithGrayBg from './userWithGrayBg.png';
 
 export const IMAGES = {
   logo,
@@ -10,4 +11,5 @@ export const IMAGES = {
   blackCrowdBg,
   headerPurpleBg,
   headerCrowdBg,
+  userWithGrayBg,
 };

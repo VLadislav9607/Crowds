@@ -82,18 +82,18 @@ export const tattooSpotOptions = [
 ];
 
 export const skinToneOptions = [
-  { label: 'Porcelain', value: SkinTone.PORCELAIN },
-  { label: 'Ivory', value: SkinTone.IVORY },
-  { label: 'Warm Ivory', value: SkinTone.WARM_IVORY },
-  { label: 'Sand', value: SkinTone.SAND },
-  { label: 'Beige', value: SkinTone.BEIGE },
-  { label: 'Warm Beige', value: SkinTone.WARM_BEIGE },
-  { label: 'Natural', value: SkinTone.NATURAL },
-  { label: 'Honey', value: SkinTone.HONEY },
-  { label: 'Golden', value: SkinTone.GOLDEN },
-  { label: 'Almond', value: SkinTone.ALMOND },
-  { label: 'Chestnut', value: SkinTone.CHESTNUT },
-  { label: 'Espresso', value: SkinTone.ESPRESSO },
+  { label: 'Porcelain', value: SkinTone.PORCELAIN, hex: '#F4D4BB' },
+  { label: 'Ivory', value: SkinTone.IVORY, hex: '#EFCFA9' },
+  { label: 'Warm Ivory', value: SkinTone.WARM_IVORY, hex: '#F2C490' },
+  { label: 'Sand', value: SkinTone.SAND, hex: '#DBBA91' },
+  { label: 'Beige', value: SkinTone.BEIGE, hex: '#E5CB9A' },
+  { label: 'Warm Beige', value: SkinTone.WARM_BEIGE, hex: '#DEB37E' },
+  { label: 'Natural', value: SkinTone.NATURAL, hex: '#DCA974' },
+  { label: 'Honey', value: SkinTone.HONEY, hex: '#D19556' },
+  { label: 'Golden', value: SkinTone.GOLDEN, hex: '#C7924E' },
+  { label: 'Almond', value: SkinTone.ALMOND, hex: '#BC7F49' },
+  { label: 'Chestnut', value: SkinTone.CHESTNUT, hex: '#AD703A' },
+  { label: 'Espresso', value: SkinTone.ESPRESSO, hex: '#855227' },
 ];
 
 export const genderOptions = [

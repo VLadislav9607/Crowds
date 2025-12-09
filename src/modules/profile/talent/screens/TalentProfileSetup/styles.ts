@@ -1,12 +1,19 @@
+import { COLORS } from '@styles';
 import { StyleSheet } from 'react-native';
 
 export const styles = StyleSheet.create({
-  container: {
-    flex: 1,
+  headerContainer: {
+    position: 'absolute',
+    bottom: -120,
+    zIndex: 100,
+    width: '100%',
     paddingHorizontal: 20,
-    paddingTop: 32,
   },
-  physicalDetailsContainer: {
-    gap: 16,
+  contentContainer: {
+    paddingTop: 120,
+  },
+  headerStyles: {
+    backgroundColor: COLORS.black,
+    paddingBottom: 55,
   },
 });
