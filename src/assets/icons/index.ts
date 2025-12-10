@@ -25,6 +25,9 @@ import { chevronRight } from './chevronRight';
 import { calendarV2 } from './calendarV2';
 import { clockV2 } from './clockV2';
 import { edit } from './edit';
+import { calendarV3 } from './calendarV3';
+import { checkedCircle } from './checkedCircle';
+import { plane } from './plane';
 
 import { BOTTOM_TABS } from './bottomTabs';
 
@@ -58,4 +61,7 @@ export const ICONS = {
   locationMap,
   chevronRight,
   edit,
+  calendarV3,
+  checkedCircle,
+  plane,
 };
