@@ -8,6 +8,7 @@ import {
 } from '../../modules/auth';
 import { OnboardingTalentScreen } from '../../modules/onboarding/talent/screens';
 import { TalentProfileSetupScreen } from '../../modules/profile/talent/screens';
+import { AvailabilitySetupScreen } from '../../modules/talent-availability';
 import {
   CongratulationsScreen,
   OnboardingOrganizationScreen,
@@ -92,6 +93,11 @@ export const RootStackNavigator = () => {
       <RootStack.Screen
         name={Screens.ManageEvent}
         component={ManageEventScreen}
+      />
+
+      <RootStack.Screen
+        name={Screens.AvailabilitySetup}
+        component={AvailabilitySetupScreen}
       />
     </RootStack.Navigator>
   );

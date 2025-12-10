@@ -4,12 +4,10 @@ export enum Screens {
   SignIn = 'SignIn',
   ForgotPassword = 'ForgotPassword',
   SelectRole = 'SelectRole',
-  OnboardingTalent = 'OnboardingTalent',
-  OrganizationOnboarding = 'OrganizationOnboarding',
-  TalentProfileSetup = 'TalentProfileSetup',
 
   // Onboarding
   OnboardingOrganization = 'OnboardingOrganization',
+  OnboardingTalent = 'OnboardingTalent',
   TermsAndPrivacy = 'TermsAndPrivacy',
   Congratulations = 'Congratulations',
 
@@ -34,4 +32,8 @@ export enum Screens {
   InviteNewMember = 'InviteNewMember',
   CopyInviteLink = 'CopyInviteLink',
   ManageEvent = 'ManageEvent',
+
+  // Talent screens
+  AvailabilitySetup = 'AvailabilitySetup',
+  TalentProfileSetup = 'TalentProfileSetup',
 }
