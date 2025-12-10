@@ -13,9 +13,9 @@ export enum Screens {
   TermsAndPrivacy = 'TermsAndPrivacy',
   Congratulations = 'Congratulations',
 
-  //Bottom Tabs Organization
   BottomTabs = 'BottomTabs',
 
+  //Bottom Tabs Organization
   EventsDashboard = 'EventsDashboard',
   UpcomingEvents = 'UpcomingEvents',
   ChatsOrganization = 'ChatsOrganization',
@@ -23,7 +23,6 @@ export enum Screens {
   ProfileOrganization = 'ProfileOrganization',
 
   //Bottom Tabs Talent
-
   HomeTalent = 'HomeTalent',
   EventsTalent = 'EventsTalent',
   ChatsTalent = 'ChatsTalent',
@@ -34,4 +33,5 @@ export enum Screens {
   CreateEvent = 'CreateEvent',
   InviteNewMember = 'InviteNewMember',
   CopyInviteLink = 'CopyInviteLink',
+  ManageEvent = 'ManageEvent',
 }

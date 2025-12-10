@@ -2,6 +2,7 @@ import { View } from 'react-native';
 
 import { AppButton, AppText } from '@ui';
 import { ICONS } from '@assets';
+import { goToScreen, Screens } from '@navigation';
 
 import { BaseEventCard, IBaseEventCardProps, cardStyles } from '../../ui';
 
@@ -13,10 +14,6 @@ export const ActiveUpcomingEventCard = ({
   event,
   showParticipants = true,
 }: IActiveUpcomingEventCardProps) => {
-  const handleManageEvent = () => {
-    // TODO: Navigate to manage event
-  };
-
   const handleViewApplicants = () => {
     // TODO: Navigate to view applicants
   };
@@ -35,7 +32,7 @@ export const ActiveUpcomingEventCard = ({
         icon={ICONS.chevronRight('main')}
         iconPlace="right"
         width={141}
-        onPress={handleManageEvent}
+        onPress={() => goToScreen(Screens.ManageEvent)}
         wrapperStyles={cardStyles.primaryButton}
         titleStyles={cardStyles.primaryButtonText}
       />
