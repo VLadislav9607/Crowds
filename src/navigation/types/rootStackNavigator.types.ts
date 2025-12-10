@@ -27,4 +27,5 @@ export type RootStackParamList = {
   [Screens.EventsDashboard]: undefined;
   [Screens.InviteNewMember]: undefined;
   [Screens.CopyInviteLink]: undefined;
+  [Screens.ManageEvent]: undefined;
 };

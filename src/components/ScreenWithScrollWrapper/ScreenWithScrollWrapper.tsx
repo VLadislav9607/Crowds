@@ -24,6 +24,7 @@ interface IScreenWithScrollWrapperProps extends IAppHeaderProps {
   onScroll?: (event: NativeSyntheticEvent<NativeScrollEvent>) => void;
   animatedScrollHandler?: (event: any) => void;
   useAnimatedScrollView?: boolean;
+  keyboardAvoidingEnabled?: boolean;
 }
 
 export const ScreenWithScrollWrapper = ({
@@ -36,6 +37,7 @@ export const ScreenWithScrollWrapper = ({
   onScroll,
   animatedScrollHandler,
   useAnimatedScrollView = false,
+  keyboardAvoidingEnabled = true,
   ...headerProps
 }: IScreenWithScrollWrapperProps) => {
   const { bottom } = useSafeAreaInsets();
@@ -44,10 +46,8 @@ export const ScreenWithScrollWrapper = ({
     <View
       style={[
         styles.footer,
-        {
-          paddingBottom: bottom || 16,
-          ...footerStyle,
-        },
+        footerStyle,
+        isFloatFooter && { paddingBottom: bottom || 16 },
       ]}
     >
       {footer}
@@ -67,12 +67,17 @@ export const ScreenWithScrollWrapper = ({
       style={styles.wrapper}
       behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
       keyboardVerticalOffset={Platform.OS === 'ios' ? 0 : 20}
+      enabled={keyboardAvoidingEnabled}
     >
       {headerProps.headerVariant && <AppHeader {...headerProps} />}
 
       <ScrollViewComponent
         style={styles.scrollView}
-        contentContainerStyle={[styles.contentContainer, contentContainerStyle]}
+        contentContainerStyle={[
+          styles.contentContainer,
+          { paddingBottom: bottom || 16 },
+          contentContainerStyle,
+        ]}
         showsVerticalScrollIndicator={showsVerticalScrollIndicator}
         keyboardShouldPersistTaps="handled"
         {...scrollProps}

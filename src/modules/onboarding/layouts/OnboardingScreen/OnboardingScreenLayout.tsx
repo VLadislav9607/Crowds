@@ -12,7 +12,6 @@ interface IOnboardingScreenLayoutProps {
   stepsCount: number;
   headerProps?: IAppHeaderProps;
   currentStep: number;
-  withFooter?: boolean;
   children: React.ReactNode;
   onBackPress: () => void;
   onForwardPress: () => void;
@@ -24,7 +23,6 @@ export const OnboardingScreenLayout = ({
   stepsCount,
   headerProps,
   currentStep,
-  withFooter = true,
   children,
   onBackPress,
   onForwardPress,
@@ -33,17 +31,16 @@ export const OnboardingScreenLayout = ({
     <ScreenWithScrollWrapper
       headerVariant="withLogo"
       colorHeader="main"
-      {...headerProps}
+      keyboardAvoidingEnabled={false}
       footer={
-        withFooter ? (
-          <ForwardBackArrows
-            steps={stepsCount}
-            currentStep={currentStep}
-            onBackPress={onBackPress}
-            onForwardPress={onForwardPress}
-          />
-        ) : null
+        <ForwardBackArrows
+          steps={stepsCount}
+          currentStep={currentStep}
+          onBackPress={onBackPress}
+          onForwardPress={onForwardPress}
+        />
       }
+      {...headerProps}
     >
       <View style={styles.titleContainer}>
         <AppText typography="semibold_20">{title}</AppText>

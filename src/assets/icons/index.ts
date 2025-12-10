@@ -24,6 +24,7 @@ import { locationMap } from './locationMap';
 import { chevronRight } from './chevronRight';
 import { calendarV2 } from './calendarV2';
 import { clockV2 } from './clockV2';
+import { edit } from './edit';
 
 import { BOTTOM_TABS } from './bottomTabs';
 
@@ -56,4 +57,5 @@ export const ICONS = {
   plus,
   locationMap,
   chevronRight,
+  edit,
 };

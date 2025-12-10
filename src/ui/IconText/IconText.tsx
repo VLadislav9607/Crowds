@@ -1,7 +1,5 @@
-import { Pressable, StyleSheet } from 'react-native';
+import { StyleSheet, TouchableOpacity } from 'react-native';
 import { SvgXml } from 'react-native-svg';
-
-import { COLORS, TYPOGRAPHY } from '@styles';
 
 import { AppText } from '../AppText';
 import { IconTextProps } from './types';
@@ -15,17 +13,23 @@ export const IconText = ({
   ...props
 }: IconTextProps) => {
   return (
-    <Pressable
+    <TouchableOpacity
       hitSlop={10}
+      activeOpacity={0.8}
       disabled={!props.onPress}
       {...props}
       style={[styles.container, { gap }, { ...props?.style }]}
     >
       <SvgXml xml={icon} width={iconSize} height={iconSize} />
-      <AppText style={styles.text} {...textProps}>
+      <AppText
+        typography="medium_10"
+        color="black_50"
+        {...textProps}
+        style={textProps?.style}
+      >
         {text}
       </AppText>
-    </Pressable>
+    </TouchableOpacity>
   );
 };
 
@@ -34,9 +38,5 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     gap: 8,
-  },
-  text: {
-    ...TYPOGRAPHY.medium_10,
-    color: COLORS.black_50,
   },
 });
