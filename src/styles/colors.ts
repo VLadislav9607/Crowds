@@ -1,6 +1,7 @@
 export const COLORS = {
   main: '#430B70',
-  main10: '#430B701A',
+  main_05: '#430B700D',
+  main_10: '#430B701A',
   light_primary: '#65558F',
   white: '#FFFFFF',
   black: '#000000',

@@ -36,4 +36,7 @@ export enum Screens {
   // Talent screens
   AvailabilitySetup = 'AvailabilitySetup',
   TalentProfileSetup = 'TalentProfileSetup',
+
+  // Chat screens
+  ChatRoom = 'ChatRoom',
 }

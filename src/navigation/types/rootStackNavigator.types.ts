@@ -29,4 +29,7 @@ export type RootStackParamList = {
   // Talent screens
   [Screens.AvailabilitySetup]: undefined;
   [Screens.TalentProfileSetup]: undefined;
+
+  // Chat screens
+  [Screens.ChatRoom]: { chatId: string };
 };

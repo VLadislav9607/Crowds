@@ -8,6 +8,7 @@ export const ScreenWrapper = ({
   children,
   contentContainerStyle,
   withBottomTabBar = false,
+  wrapperStyle,
   ...headerProps
 }: IScreenWrapperProps) => {
   const { bottom } = useSafeAreaInsets();
@@ -17,6 +18,7 @@ export const ScreenWrapper = ({
       style={[
         styles.wrapper,
         { paddingBottom: withBottomTabBar ? 0 : bottom || 16 },
+        wrapperStyle,
       ]}
     >
       {headerProps.headerVariant && <AppHeader {...headerProps} />}

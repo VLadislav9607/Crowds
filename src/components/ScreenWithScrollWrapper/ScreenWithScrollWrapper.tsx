@@ -31,8 +31,8 @@ export const ScreenWithScrollWrapper = ({
     <View
       style={[
         styles.footer,
-        footerStyle,
         isFloatFooter && { paddingBottom: bottom || 16 },
+        footerStyle,
       ]}
     >
       {footer}

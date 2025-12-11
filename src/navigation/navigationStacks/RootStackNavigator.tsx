@@ -25,6 +25,7 @@ import {
 } from '../../modules/invite-member';
 import { CreateEventScreen } from '../../modules/create-event';
 import { ManageEventScreen } from '../../modules/event-management';
+import { ChatRoomScreen } from '../../modules/chats';
 
 const RootStack = createStackNavigator<RootStackParamList>();
 
@@ -99,6 +100,8 @@ export const RootStackNavigator = () => {
         name={Screens.AvailabilitySetup}
         component={AvailabilitySetupScreen}
       />
+
+      <RootStack.Screen name={Screens.ChatRoom} component={ChatRoomScreen} />
     </RootStack.Navigator>
   );
 };
