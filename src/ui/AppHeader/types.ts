@@ -19,6 +19,7 @@ export const headerImageBgMap = {
 export interface IAppHeaderProps {
   title?: string;
   colorHeader?: ColorsKeys;
+  avatarUrl?: string;
   headerVariant?: HeaderVariant;
   headerImageBg?: HeaderImageBgType;
   customElement?: React.ReactNode;

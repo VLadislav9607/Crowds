@@ -73,7 +73,7 @@ const styles = StyleSheet.create({
     borderRadius: 40,
     ...TYPOGRAPHY.bold_9,
     color: COLORS.main,
-    backgroundColor: COLORS.main10,
+    backgroundColor: COLORS.main_10,
     textAlign: 'center',
     textTransform: 'uppercase',
   },

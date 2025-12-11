@@ -56,7 +56,7 @@ export const cardStyles = StyleSheet.create({
     justifyContent: 'space-between',
   },
   primaryButton: {
-    backgroundColor: COLORS.main10,
+    backgroundColor: COLORS.main_10,
   },
   primaryButtonText: {
     color: COLORS.main,

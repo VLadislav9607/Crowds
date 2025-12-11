@@ -6,6 +6,7 @@ import {
   EventsDashboardTabScreen,
   UpcomingEventsTabScreen,
 } from '../../modules/events';
+import { ChatsTabScreen } from '../../modules/chats';
 
 import { BottomTabsConfigType } from '../types';
 import { Screens } from './screens';
@@ -24,7 +25,7 @@ export const BottomTabsConfig: BottomTabsConfigType = {
     },
     {
       name: Screens.ChatsOrganization,
-      component: HomeTabScreen,
+      component: ChatsTabScreen,
       icon: (opacity: number) => ICONS.BOTTOM_TABS.chats(opacity),
     },
     {
@@ -47,7 +48,7 @@ export const BottomTabsConfig: BottomTabsConfigType = {
     },
     {
       name: Screens.ChatsTalent,
-      component: HomeTabScreen,
+      component: ChatsTabScreen,
       icon: (opacity: number) => ICONS.BOTTOM_TABS.chats(opacity),
     },
     {

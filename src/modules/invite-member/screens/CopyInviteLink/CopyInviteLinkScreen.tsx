@@ -84,7 +84,7 @@ const styles = StyleSheet.create({
     textAlign: 'center',
     borderRadius: 10,
     padding: 10,
-    backgroundColor: COLORS.main10,
+    backgroundColor: COLORS.main_10,
     color: COLORS.main,
   },
   noteTextBold: {

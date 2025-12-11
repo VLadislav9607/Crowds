@@ -9,3 +9,4 @@ export * from './AppHeader';
 export * from './IconButton';
 export * from './IconText';
 export * from './GridBoard';
+export * from './Avatar';
