@@ -1,21 +1,8 @@
+import { IAppHeaderProps } from '@ui';
 import { StyleProp, ViewStyle } from 'react-native';
-import { ColorsKeys } from '@styles';
 
-export type HeaderVariant =
-  | 'withTitle'
-  | 'withLogo'
-  | 'withTitleAndImageBg'
-  | 'withLogoAndImageBg';
-
-export type HeaderImageBgType = 'purple' | 'crowd';
-
-export interface IScreenWrapperProps {
+export interface IScreenWrapperProps extends IAppHeaderProps {
   children: React.ReactNode;
-  title?: string;
-  colorHeader?: ColorsKeys;
-  headerVariant?: HeaderVariant;
-  headerImageBg?: HeaderImageBgType;
-  customElement?: React.ReactNode;
-  headerStyles?: StyleProp<ViewStyle>;
-  goBackCallback?: () => void;
+  withBottomTabBar?: boolean;
+  contentContainerStyle?: StyleProp<ViewStyle>;
 }

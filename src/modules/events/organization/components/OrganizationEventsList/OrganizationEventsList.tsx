@@ -1,7 +1,4 @@
-import { StyleSheet, View } from 'react-native';
-import { FlashList } from '@shopify/flash-list';
-
-import { AppText } from '@ui';
+import { AppFlashList } from '@components';
 
 import { OrganizationEventCard, EventCardType, IEventData } from '../../ui';
 
@@ -16,39 +13,13 @@ export const OrganizationEventsList = ({ events, cardType }: IProps) => {
   );
 
   return (
-    <FlashList
+    <AppFlashList
       data={events}
       keyExtractor={item => item.id}
-      contentContainerStyle={
-        events.length === 0 ? styles.centerContent : styles.container
-      }
-      showsVerticalScrollIndicator={false}
-      ItemSeparatorComponent={ItemSeparator}
       renderItem={renderEventCard}
-      ListEmptyComponent={
-        <AppText typography="medium_14" color="gray" style={styles.emptyText}>
-          No events found
-        </AppText>
-      }
+      gap={16}
+      emptyText="No events found"
+      withBottomTab
     />
   );
 };
-
-const ItemSeparator = () => <View style={styles.separator} />;
-
-const styles = StyleSheet.create({
-  container: {
-    padding: 2,
-  },
-  centerContent: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  separator: {
-    height: 16,
-  },
-  emptyText: {
-    textAlign: 'center',
-  },
-});

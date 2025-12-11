@@ -18,6 +18,16 @@ export const formatDate = (date: Date): string => {
   });
 };
 
+const formatTime = (date: Date): string => {
+  return date
+    .toLocaleTimeString('en-US', {
+      hour: 'numeric',
+      minute: '2-digit',
+      hour12: true,
+    })
+    .toLowerCase();
+};
+
 export const formatCustomTime = (
   schedule: IDaySchedule | IDateSchedule,
 ): string | undefined => {
@@ -26,17 +36,9 @@ export const formatCustomTime = (
     schedule.customFrom &&
     schedule.customTo
   ) {
-    const from = schedule.customFrom.toLocaleTimeString('en-US', {
-      hour: 'numeric',
-      minute: '2-digit',
-      hour12: true,
-    });
-    const to = schedule.customTo.toLocaleTimeString('en-US', {
-      hour: 'numeric',
-      minute: '2-digit',
-      hour12: true,
-    });
-    return `Custom (${from}-${to})`;
+    const from = formatTime(schedule.customFrom);
+    const to = formatTime(schedule.customTo);
+    return `${from}-${to}`;
   }
   return undefined;
 };
