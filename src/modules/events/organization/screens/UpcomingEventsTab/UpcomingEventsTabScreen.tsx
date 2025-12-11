@@ -70,7 +70,7 @@ export const UpcomingEventsTabScreen = () => {
   return (
     <ScreenWrapper
       headerVariant="withLogoAndImageBg"
-      witBottomTab={true}
+      withBottomTabBar={true}
       contentContainerStyle={styles.contentContainer}
     >
       <AppText typography="extra_bold_18" margin={{ bottom: 16 }}>
