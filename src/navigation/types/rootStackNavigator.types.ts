@@ -25,7 +25,7 @@ export type RootStackParamList = {
   [Screens.EventsDashboard]: undefined;
   [Screens.InviteNewMember]: undefined;
   [Screens.ManageEvent]: undefined;
-
+  [Screens.EventParticipants]: undefined;
   // Talent screens
   [Screens.AvailabilitySetup]: undefined;
   [Screens.TalentProfileSetup]: undefined;

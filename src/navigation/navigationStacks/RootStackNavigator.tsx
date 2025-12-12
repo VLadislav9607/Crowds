@@ -26,6 +26,7 @@ import {
 import { CreateEventScreen } from '../../modules/create-event';
 import { ManageEventScreen } from '../../modules/event-management';
 import { ChatRoomScreen } from '../../modules/chats';
+import { EventParticipantsScreen } from '../../modules/event-participants';
 
 const RootStack = createStackNavigator<RootStackParamList>();
 
@@ -94,6 +95,11 @@ export const RootStackNavigator = () => {
       <RootStack.Screen
         name={Screens.ManageEvent}
         component={ManageEventScreen}
+      />
+
+      <RootStack.Screen
+        name={Screens.EventParticipants}
+        component={EventParticipantsScreen}
       />
 
       <RootStack.Screen

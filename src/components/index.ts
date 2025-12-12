@@ -12,3 +12,4 @@ export * from './BottomSheetField';
 export * from './SelectOptionField';
 export * from './Skeleton';
 export * from './AppFlashList';
+export * from './PopupMenu';

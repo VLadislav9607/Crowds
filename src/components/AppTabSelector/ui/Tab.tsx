@@ -22,7 +22,7 @@ const THEME_COLORS = {
     border: COLORS.black_50,
     badge: {
       inactive: { bg: COLORS.black_10, text: COLORS.dark_gray },
-      active: { bg: COLORS.main, text: COLORS.white },
+      active: { bg: COLORS.white, text: COLORS.black },
     },
   },
   black: {

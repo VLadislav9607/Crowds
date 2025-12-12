@@ -1,6 +1,6 @@
 import { StyleSheet } from 'react-native';
-import { TypographyKeysType } from '@styles';
-import { AvatarSize } from './types';
+import { ColorsKeys, TypographyKeysType } from '@styles';
+import { AvatarFlag, AvatarSize } from './types';
 
 export const AVATAR_TYPOGRAPHY: Record<AvatarSize, TypographyKeysType> = {
   20: 'bold_8',
@@ -13,9 +13,16 @@ export const AVATAR_TYPOGRAPHY: Record<AvatarSize, TypographyKeysType> = {
   80: 'bold_24',
 };
 
+export const AVATAR_FLAG_COLOR: Record<AvatarFlag, ColorsKeys> = {
+  green: 'green',
+  red: 'red',
+  yellow: 'yellow',
+  black: 'black',
+};
+
 export const styles = StyleSheet.create({
   avatar: {
-    overflow: 'hidden',
+    position: 'relative',
   },
   image: {
     width: '100%',
@@ -28,5 +35,14 @@ export const styles = StyleSheet.create({
   },
   initials: {
     color: '#12051F',
+  },
+  flag: {
+    position: 'absolute',
+    top: 1,
+    left: 1,
+    width: 11,
+    height: 11,
+    borderRadius: 100,
+    zIndex: 1,
   },
 });

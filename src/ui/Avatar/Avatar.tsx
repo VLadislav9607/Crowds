@@ -3,8 +3,9 @@ import { View, Image } from 'react-native';
 import { If } from '@components';
 
 import { AppText } from '../AppText';
-import { styles, AVATAR_TYPOGRAPHY } from './styles';
+import { styles, AVATAR_TYPOGRAPHY, AVATAR_FLAG_COLOR } from './styles';
 import { IAvatarProps } from './types';
+import { COLORS } from '@styles';
 
 const getInitials = (name?: string): string => {
   if (!name) return '';
@@ -16,7 +17,7 @@ const getInitials = (name?: string): string => {
     .toUpperCase();
 };
 
-export const Avatar = ({ size = 40, uri, name, style }: IAvatarProps) => {
+export const Avatar = ({ size = 40, uri, name, flag, style }: IAvatarProps) => {
   const initials = getInitials(name);
   const sizeStyle = {
     width: size,
@@ -26,6 +27,16 @@ export const Avatar = ({ size = 40, uri, name, style }: IAvatarProps) => {
 
   return (
     <View style={[styles.avatar, sizeStyle, style]}>
+      <If condition={!!flag}>
+        <View
+          style={[
+            styles.flag,
+            {
+              backgroundColor: flag && COLORS[AVATAR_FLAG_COLOR[flag]],
+            },
+          ]}
+        />
+      </If>
       <If condition={!!uri}>
         <Image source={{ uri }} style={styles.image} />
       </If>
