@@ -32,6 +32,7 @@ export enum Screens {
   InviteNewMember = 'InviteNewMember',
   CopyInviteLink = 'CopyInviteLink',
   ManageEvent = 'ManageEvent',
+  EventParticipants = 'EventParticipants',
 
   // Talent screens
   AvailabilitySetup = 'AvailabilitySetup',
