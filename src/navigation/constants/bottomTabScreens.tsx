@@ -1,23 +1,19 @@
 import { ICONS } from '@assets';
 import { Role } from '@modules/common';
 
-import {
-  HomeTabScreen,
-} from '../../modules/home';
-
-import { HomeTabScreen, HomeTalentTabScreen } from '../../modules/home';
+import { HomeTabScreen } from '../../modules/home';
 import {
   EventsDashboardTabScreen,
   UpcomingEventsTabScreen,
   TalentEventsHomeTab,
   TalentEventsTab,
-  QRCodeScanTab
+  QRCodeScanTab,
 } from '../../modules/events';
 import { ChatsTabScreen } from '../../modules/chats';
+import { ProfileScreenTab } from '../../modules/profile';
 
 import { BottomTabsConfigType } from '../types';
 import { Screens } from './screens';
-import { TalentProfileTab } from '../../modules/profile/talent/screens';
 
 export const BottomTabsConfig: BottomTabsConfigType = {
   [Role.ORGANIZATION]: [
@@ -42,8 +38,8 @@ export const BottomTabsConfig: BottomTabsConfigType = {
       icon: (opacity: number) => ICONS.BOTTOM_TABS.settings(opacity),
     },
     {
-      name: Screens.ProfileOrganization,
-      component: HomeTabScreen,
+      name: Screens.ProfileTab,
+      component: ProfileScreenTab,
       icon: (opacity: number) => ICONS.BOTTOM_TABS.profile(opacity),
     },
   ],
@@ -54,15 +50,7 @@ export const BottomTabsConfig: BottomTabsConfigType = {
       component: TalentEventsHomeTab,
       icon: (opacity: number) => ICONS.BOTTOM_TABS.home(opacity),
     },
-    {
-      component: HomeTalentTabScreen,
-      icon: (opacity: number) => ICONS.BOTTOM_TABS.home(opacity),
-    },
-    {
-      name: Screens.ChatsTalent,
-      component: ChatsTabScreen,
-      icon: (opacity: number) => ICONS.BOTTOM_TABS.chats(opacity),
-    },
+
     {
       name: Screens.EventsTalent,
       component: TalentEventsTab,
@@ -75,12 +63,12 @@ export const BottomTabsConfig: BottomTabsConfigType = {
     },
     {
       name: Screens.ChatsTalent,
-      component: HomeTabScreen,
+      component: ChatsTabScreen,
       icon: (opacity: number) => ICONS.BOTTOM_TABS.chats(opacity),
     },
     {
-      name: Screens.ProfileTalent,
-      component: TalentProfileTab,
+      name: Screens.ProfileTab,
+      component: ProfileScreenTab,
       icon: (opacity: number) => ICONS.BOTTOM_TABS.profile(opacity),
     },
   ],

@@ -22,6 +22,7 @@ export const headerImageBgMap = {
 export interface HeaderContentProps {
   title?: string;
   showBackButton?: boolean;
+  avatarUrl?: string;
   titleProps?: TextProps;
   onBackPress?: () => void;
 }

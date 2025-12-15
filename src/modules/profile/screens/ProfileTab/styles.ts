@@ -1,15 +1,15 @@
 import { StyleSheet } from 'react-native';
+import { COLORS } from '@styles';
 
 export const styles = StyleSheet.create({
-  container: {
-    gap: 24,
-    paddingHorizontal: 20,
-    paddingTop: 32,
-  },
-  optionRow: {
+  optionItem: {
     flexDirection: 'row',
     alignItems: 'center',
-    justifyContent: 'space-between',
+    gap: 14,
+    height: 58,
+  },
+  divider: {
+    height: 1,
+    backgroundColor: COLORS.gray,
   },
 });
-

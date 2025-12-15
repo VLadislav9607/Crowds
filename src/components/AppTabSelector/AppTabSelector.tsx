@@ -18,14 +18,14 @@ const CONTAINER_COLORS: Record<TabSelectorTheme, string> = {
   black: COLORS.black,
 };
 
-export const AppTabSelector = <T = string,>({
+export function AppTabSelector<T = string>({
   options,
   selectedValue,
   onSelect,
   label,
   badgeLabel,
   theme = 'white',
-}: IAppTabSelectorProps<T>) => {
+}: IAppTabSelectorProps<T>) {
   const animatedValue = useRef(new Animated.Value(0)).current;
   const animatedWidth = useRef(new Animated.Value(0)).current;
   const animatedLeftRadius = useRef(new Animated.Value(BORDER_RADIUS)).current;
@@ -49,12 +49,6 @@ export const AppTabSelector = <T = string,>({
     ) {
       const targetPosition = tabPositions[selectedKey];
       const targetWidth = tabWidths[selectedKey];
-
-      const isFirst = selectedIndex === 0;
-      const isLast = selectedIndex === options.length - 1;
-
-      const leftRadius = isFirst ? BORDER_RADIUS : 0;
-      const rightRadius = isLast ? BORDER_RADIUS : 0;
 
       const isFirst = selectedIndex === 0;
       const isLast = selectedIndex === options.length - 1;
@@ -186,4 +180,4 @@ export const AppTabSelector = <T = string,>({
       <View style={[styles.container, containerStyle]}>{tabsContent}</View>
     </>
   );
-};
+}

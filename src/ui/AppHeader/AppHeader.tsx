@@ -40,12 +40,8 @@ export const AppHeader = ({
 
   return (
     <>
-
-<If condition={headerVariant === 'empty'}>
-        <View style={[headerStyle]}>
-       
-          {customElement}
-        </View>
+      <If condition={headerVariant === 'empty'}>
+        <View style={[headerStyle]}>{customElement}</View>
       </If>
 
       <If condition={headerVariant === 'withLogo'}>
@@ -80,7 +76,7 @@ export const AppHeader = ({
           style={[headerStyle, styles.withTitleAndImageBg]}
         >
           <View style={styles.overlay} />
-          <View style={[styles.contentWrapperColumn,  styles.headerContainer]}>
+          <View style={[styles.contentWrapperColumn, styles.headerContainer]}>
             <View style={styles.titleHeaderInner}>
               <HeaderContent
                 title={title}
@@ -93,7 +89,6 @@ export const AppHeader = ({
             </View>
           </View>
           {customElement}
-
         </ImageBackground>
       </If>
 
@@ -121,6 +116,7 @@ const HeaderContent = ({
   title,
   showBackButton,
   titleProps,
+  avatarUrl,
   onBackPress,
 }: HeaderContentProps) => (
   <View style={styles.headerContentRow}>
@@ -131,7 +127,11 @@ const HeaderContent = ({
     )}
     {avatarUrl && <Avatar size={48} uri={avatarUrl} style={styles.avatar} />}
     {title && (
-      <AppText numberOfLines={1}  {...titleProps} style={[styles.title, titleProps?.style]}>
+      <AppText
+        numberOfLines={1}
+        {...titleProps}
+        style={[styles.title, titleProps?.style]}
+      >
         {title}
       </AppText>
     )}

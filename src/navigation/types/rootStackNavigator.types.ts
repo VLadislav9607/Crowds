@@ -13,7 +13,6 @@ export type RootStackParamList = {
   [Screens.OnboardingTalent]: undefined;
   [Screens.TalentProfileSetup]: undefined;
   [Screens.ChangePassword]: undefined;
-  
 
   // Bottom Tabs
   [Screens.BottomTabs]: NavigatorScreenParams<BottomTabsParamList>;
@@ -39,7 +38,6 @@ export type RootStackParamList = {
   [Screens.TalentEventDetails]: {
     eventId: string;
   };
-  [Screens.TalentNotificationSettings]: undefined;
   [Screens.ManageEvent]: undefined;
   [Screens.EventParticipants]: undefined;
   [Screens.FlagParticipant]: { participantId: string };
@@ -49,4 +47,7 @@ export type RootStackParamList = {
 
   // Chat screens
   [Screens.ChatRoom]: { chatId: string };
+
+  //Profile
+  [Screens.NotificationSettings]: { role: Role };
 };
