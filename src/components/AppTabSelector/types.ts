@@ -1,15 +1,15 @@
 export type TabSelectorTheme = 'white' | 'black';
 
-export interface ITabOption {
+export interface ITabOption<T = string> {
   label: string;
-  value: string;
+  value: T;
   badge?: number;
 }
 
-export interface IAppTabSelectorProps {
-  options: ITabOption[];
-  selectedValue: string;
-  onSelect: (value: string) => void;
+export interface IAppTabSelectorProps<T = string> {
+  options: ITabOption<T>[];
+  selectedValue:  T;
+  onSelect: (value: T) => void;
   label?: string;
   badgeLabel?: string;
   theme?: TabSelectorTheme;

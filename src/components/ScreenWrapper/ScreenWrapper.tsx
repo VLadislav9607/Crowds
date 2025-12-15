@@ -1,11 +1,19 @@
-import { View, StyleSheet } from 'react-native';
+import { View, StyleProp, ViewStyle } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
-import { AppHeader } from '@ui';
-import { IScreenWrapperProps } from './types';
+import { AppHeader, IAppHeaderProps } from '@ui';
+import { styles } from './styles';
 
-export const ScreenWrapper = ({
+interface IScreenWrapperProps extends IAppHeaderProps {
+  children: React.ReactNode;
+  witBottomTab?: boolean;
+  containerStyle?: StyleProp<ViewStyle>;
+  contentContainerStyle?: StyleProp<ViewStyle>;
+}
+
+export const  ScreenWrapper = ({
   children,
+  containerStyle,
   contentContainerStyle,
   withBottomTabBar = false,
   wrapperStyle,
@@ -17,8 +25,8 @@ export const ScreenWrapper = ({
     <View
       style={[
         styles.wrapper,
-        { paddingBottom: withBottomTabBar ? 0 : bottom || 16 },
-        wrapperStyle,
+        { paddingBottom: witBottomTab ? 16 : bottom || 16 },
+        containerStyle,
       ]}
     >
       {headerProps.headerVariant && <AppHeader {...headerProps} />}
@@ -29,12 +37,3 @@ export const ScreenWrapper = ({
     </View>
   );
 };
-
-const styles = StyleSheet.create({
-  wrapper: {
-    flex: 1,
-  },
-  contentContainer: {
-    flex: 1,
-  },
-});

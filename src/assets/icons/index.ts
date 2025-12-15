@@ -22,6 +22,27 @@ import { clockIcon } from './clock';
 import { plus } from './plus';
 import { locationMap } from './locationMap';
 import { chevronRight } from './chevronRight';
+import { filter } from './filter';
+import { BOTTOM_TABS } from './bottomTabs';
+import { saved } from './saved';
+import { savedFilled } from './savedFilled';
+import { bell } from './bell';
+import { chats } from './chats';
+import { dangerTriangle } from './dangerTriangle';
+import { locationPin } from './locationPin';
+import { chatSquare } from './chatSquare';
+import { calendarEvent } from './calendarEvent';
+import { upload } from './upload';
+import { paperClip } from './paperClip';
+import { notification } from './notification';
+import { user } from './user';
+import {moneyBag} from './moneyBag';
+import {shieldCheck} from './shieldCheck';
+import {bookMark} from './bookMark';
+import {circleInfo} from './circleInfo';
+import {userShield} from './userShield'
+import {logout} from './logout'
+
 import { calendarV2 } from './calendarV2';
 import { clockV2 } from './clockV2';
 import { edit } from './edit';
@@ -34,7 +55,7 @@ import { image } from './image';
 
 export const ICONS = {
   BOTTOM_TABS,
-
+  moneyBag,
   firstScreenLogo,
   fullLogo,
   eyeIcon,
@@ -61,6 +82,24 @@ export const ICONS = {
   plus,
   locationMap,
   chevronRight,
+  filter,
+  saved,
+  savedFilled,
+  bell,
+  chats,
+  dangerTriangle,
+  locationPin,
+  chatSquare,
+  calendarEvent,
+  upload,
+  paperClip,
+  notification,
+  user,
+  shieldCheck,
+  bookMark,
+  circleInfo,
+  userShield,
+  logout,
   edit,
   calendarV3,
   checkedCircle,
@@ -68,3 +107,4 @@ export const ICONS = {
   dotsVertical,
   image,
 };
+

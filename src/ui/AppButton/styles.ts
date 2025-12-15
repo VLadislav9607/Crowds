@@ -26,7 +26,7 @@ export const styles = StyleSheet.create({
     backgroundColor: COLORS.gray,
   },
   primaryDisabledText: {
-    color: COLORS.gray,
+    color: COLORS.gray_bg,
   },
   // With Border
   withBorderButton: {
@@ -35,7 +35,7 @@ export const styles = StyleSheet.create({
     borderColor: COLORS.black,
   },
   withBorderText: {
-    color: COLORS.white,
+    color: COLORS.black,
   },
   withBorderDisabledButton: {},
   withBorderDisabledText: {
@@ -75,6 +75,12 @@ export const styles = StyleSheet.create({
     ...TYPOGRAPHY.bold_14,
     letterSpacing: -0.01,
   },
+  button36: {
+    height: 36,
+  },
+  button36Text: {
+    ...TYPOGRAPHY.bold_14,
+  },
   button32: {
     height: 32,
     paddingHorizontal: 16,
@@ -93,6 +99,12 @@ export const styles = StyleSheet.create({
   },
   button28Text: {
     ...TYPOGRAPHY.bold_12,
+  },
+  button25: {
+    height: 25,
+  },
+  button25Text: {
+    ...TYPOGRAPHY.medium_12,
   },
 
   iconWrapper: {},

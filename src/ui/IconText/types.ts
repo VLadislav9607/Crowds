@@ -6,5 +6,5 @@ export interface IconTextProps extends TouchableOpacityProps {
   iconSize?: number;
   gap?: number;
   text: string;
-  textProps?: Omit<AppTextProps, 'children'>;
+  textProps?: Partial<AppTextProps>;
 }

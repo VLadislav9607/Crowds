@@ -21,12 +21,7 @@ export const IconText = ({
       style={[styles.container, { gap }, { ...props?.style }]}
     >
       <SvgXml xml={icon} width={iconSize} height={iconSize} />
-      <AppText
-        typography="medium_10"
-        color="black_50"
-        {...textProps}
-        style={textProps?.style}
-      >
+      <AppText color='black' typography='medium_10' {...textProps}>
         {text}
       </AppText>
     </TouchableOpacity>

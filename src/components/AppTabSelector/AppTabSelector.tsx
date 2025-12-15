@@ -18,14 +18,14 @@ const CONTAINER_COLORS: Record<TabSelectorTheme, string> = {
   black: COLORS.black,
 };
 
-export const AppTabSelector = ({
+export const AppTabSelector = <T = string,>({
   options,
   selectedValue,
   onSelect,
   label,
   badgeLabel,
   theme = 'white',
-}: IAppTabSelectorProps) => {
+}: IAppTabSelectorProps<T>) => {
   const animatedValue = useRef(new Animated.Value(0)).current;
   const animatedWidth = useRef(new Animated.Value(0)).current;
   const animatedLeftRadius = useRef(new Animated.Value(BORDER_RADIUS)).current;
@@ -41,13 +41,20 @@ export const AppTabSelector = ({
       option => option.value === selectedValue,
     );
 
+    const selectedKey = String(selectedValue);
     if (
       selectedIndex !== -1 &&
-      tabPositions[selectedValue] !== undefined &&
-      tabWidths[selectedValue] !== undefined
+      tabPositions[selectedKey] !== undefined &&
+      tabWidths[selectedKey] !== undefined
     ) {
-      const targetPosition = tabPositions[selectedValue];
-      const targetWidth = tabWidths[selectedValue];
+      const targetPosition = tabPositions[selectedKey];
+      const targetWidth = tabWidths[selectedKey];
+
+      const isFirst = selectedIndex === 0;
+      const isLast = selectedIndex === options.length - 1;
+
+      const leftRadius = isFirst ? BORDER_RADIUS : 0;
+      const rightRadius = isLast ? BORDER_RADIUS : 0;
 
       const isFirst = selectedIndex === 0;
       const isLast = selectedIndex === options.length - 1;
@@ -101,18 +108,20 @@ export const AppTabSelector = ({
     containerWidth,
   ]);
 
-  const onLayout = (value: string) => (event: LayoutChangeEvent) => {
+  const onLayout = (value: string | T) => (event: LayoutChangeEvent) => {
     const { x, width } = event.nativeEvent.layout;
-    setTabPositions(prev => ({ ...prev, [value]: x }));
-    setTabWidths(prev => ({ ...prev, [value]: width }));
+    const key = String(value);
+    setTabPositions(prev => ({ ...prev, [key]: x }));
+    setTabWidths(prev => ({ ...prev, [key]: width }));
   };
 
   const renderTabs = () => {
     return options.map((option, index) => {
       const isActive = selectedValue === option.value;
+      const key = String(option.value);
       return (
         <Tab
-          key={option.value}
+          key={key}
           option={option}
           isActive={isActive}
           onLayout={onLayout(option.value)}

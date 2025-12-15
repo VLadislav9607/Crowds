@@ -22,6 +22,7 @@ module.exports = {
           "@modules/common": "./src/modules/common",
           "@modules/profile": "./src/modules/profile",
           "@modules/onboarding": "./src/modules/onboarding",
+          "@modules/events": "./src/modules/events",
         }
       }
     ],
