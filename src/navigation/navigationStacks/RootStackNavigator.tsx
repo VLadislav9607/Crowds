@@ -28,20 +28,24 @@ import {
   TalentEventDetailsScreen,
   TalentSearchEventsScreen,
 } from '../../modules/events/talent/screens';
-import { ChangePasswordScreen, NotificationSettingsScreen } from '@modules/profile';
+import {
+  ChangePasswordScreen,
+  NotificationSettingsScreen,
+} from '@modules/profile';
 import { ManageEventScreen } from '../../modules/event-management';
 import { ChatRoomScreen } from '../../modules/chats';
 import {
   EventParticipantsScreen,
   FlagParticipantScreen,
 } from '../../modules/event-participants';
+import { ApplicantProfileScreen } from '../../modules/event-applicants';
 
 const RootStack = createStackNavigator<RootStackParamList>();
 
 export const RootStackNavigator = () => {
   return (
     <RootStack.Navigator
-      initialRouteName={Screens.BottomTabs}
+      initialRouteName={Screens.ApplicantProfile}
       screenOptions={{ headerShown: false }}
     >
       <RootStack.Screen name={Screens.First} component={FirstScreen} />
@@ -138,6 +142,10 @@ export const RootStackNavigator = () => {
       <RootStack.Screen
         name={Screens.NotificationSettings}
         component={NotificationSettingsScreen}
+      />
+      <RootStack.Screen
+        name={Screens.ApplicantProfile}
+        component={ApplicantProfileScreen}
       />
     </RootStack.Navigator>
   );

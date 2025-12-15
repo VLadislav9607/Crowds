@@ -6,18 +6,16 @@ import { Role } from '@modules/common';
 export type OrgTabParams = {
   [Screens.EventsDashboard]: undefined;
   [Screens.UpcomingEvents]: undefined;
-  [Screens.ChatsOrganization]: undefined;
-  [Screens.SettingsOrganization]: undefined;
-  [Screens.ProfileTab]: { role: Role };
+  [Screens.Chats]: undefined;
+  [Screens.ProfileTab]: undefined;
 };
 
 export type TalentTabParams = {
   [Screens.HomeTalent]: undefined;
   [Screens.TalerQRCode]: undefined;
   [Screens.EventsTalent]: undefined;
-  [Screens.ChatsTalent]: undefined;
-  [Screens.SettingsTalent]: undefined;
-  [Screens.ProfileTab]: { role: Role };
+  [Screens.Chats]: undefined;
+  [Screens.ProfileTab]: undefined;
 };
 export interface BottomTabScreen<RoleParams> {
   name: keyof RoleParams;
