@@ -1,8 +1,10 @@
 import { COLORS } from '@styles';
 import React from 'react';
-import { StyleSheet, Switch as RNSwitch, View } from 'react-native';
+import { StyleSheet, View } from 'react-native';
+import { SwitchProps } from 'react-native';
+import { Switch as RNSwitch } from 'react-native';
 
-interface IProps {
+interface IProps extends Omit<SwitchProps, 'onChange'> {
   active: boolean;
   disabled?: boolean;
   onChange: (value: boolean) => void;
@@ -12,6 +14,7 @@ export const Switch: React.FC<IProps> = ({
   active,
   disabled = false,
   onChange,
+  ...props
 }) => {
   const handleValueChange = (value: boolean) => {
     onChange(value);
@@ -30,6 +33,7 @@ export const Switch: React.FC<IProps> = ({
         thumbColor={COLORS.white}
         ios_backgroundColor={COLORS.light_gray}
         style={styles.switch}
+        {...props}
       />
     </View>
   );

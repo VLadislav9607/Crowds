@@ -1,0 +1,96 @@
+import { TouchableOpacity, View } from "react-native";
+import { AppButton, AppText, IconText } from "@ui";
+import { styles } from "./styles";
+import { ICONS } from "@assets";
+import { SvgXml } from "react-native-svg";
+import { TalentEventCardCompactProps } from "./types";
+import { If } from "@components";
+import { COLORS } from "@styles";
+import { goToScreen, Screens } from "@navigation";
+
+export const TalentEventCardCompact = ({ containerStyle, type = 'approved' }: TalentEventCardCompactProps) => {
+
+
+  return (
+    <View style={[styles.container, containerStyle]}>
+      <View style={styles.imageContainer} >
+        <View style={styles.iconContainer}>
+          <SvgXml xml={ICONS.camera('white')} width={20} height={20} />
+        </View>
+      </View>
+
+
+      <View style={styles.content}>
+
+
+        <View style={styles.contentHeader}>
+          <View style={styles.dateTimeContainer}>
+            <IconText icon={ICONS.calendarIcon('main')} iconSize={14} text="03 OCT, 2025" textProps={{ typography: 'medium_12', color: 'black_50' }} />
+            <IconText icon={ICONS.clockIcon('main')} iconSize={14} text="3 Hours" textProps={{ typography: 'medium_12', color: 'black_50' }} />
+          </View>
+
+          <TouchableOpacity hitSlop={{ top: 10, bottom: 10, left: 10, right: 10 }}>
+            <SvgXml xml={ICONS.saved('main')} width={18} height={18} />
+          </TouchableOpacity>
+        </View>
+
+        <View style={styles.separatorDashedLine} />
+
+
+        <AppText typography='regular_14' color='black'>Need fun extras to join a crowd scene for an upbeat music video</AppText>
+
+        <View style={styles.priceContainer}>
+          <View style={styles.pricePadge}>
+            <AppText typography='bold_14' color='main'>$100</AppText>
+            <AppText typography='medium_10' color='main'>AUD</AppText>
+          </View>
+          <AppText typography='medium_12' color='black_50'>Fixed price</AppText>
+        </View>
+
+        <If condition={type !== 'denied'}>
+          <View style={styles.separatorDashedLine} />
+        </If>
+
+
+        <View style={styles.buttonsContainer}>
+          <If condition={type === 'random'}>
+            <TouchableOpacity activeOpacity={0.8} style={styles.redButton}>
+              <AppText typography='bold_14' color='red'>Reject</AppText>
+            </TouchableOpacity>
+            <TouchableOpacity activeOpacity={0.8} style={styles.greenButton}>
+              <AppText typography='bold_14' color='green'>Apply</AppText>
+            </TouchableOpacity>
+          </If>
+
+          <If condition={type === 'proposed'}>
+            <TouchableOpacity activeOpacity={0.8} style={styles.redButton}>
+              <AppText typography='bold_14' color='red'>Decline</AppText>
+            </TouchableOpacity>
+            <TouchableOpacity activeOpacity={0.8} style={styles.greenButton}>
+              <AppText typography='bold_14' color='green'>Accept</AppText>
+            </TouchableOpacity>
+          </If>
+
+
+          <If condition={type === 'pending'}>
+            <AppButton variant='withBorder' size='36' titleStyles={{ color: COLORS.black }} title="Cancel application" onPress={() => { }} />
+          </If>
+
+          <If condition={type === 'approved'}>
+            <View style={styles.approvedButtons}>
+              <AppButton size='37' icon={ICONS.chats('white')} iconSize={20} title="Message" wrapperStyles={styles.messageButtonWrapper} onPress={() => { }} />
+
+              <TouchableOpacity onPress={() => goToScreen(Screens.TalentEventDetails)} style={styles.eventDetailsButton}>
+                <AppText typography='bold_12' color='main'>EVENT DETAILS</AppText>
+                <SvgXml xml={ICONS.chevronRight('black')} width={14} height={14} />
+              </TouchableOpacity>
+            </View>
+          </If>
+        </View>
+
+      </View>
+
+
+    </View>
+  );
+};

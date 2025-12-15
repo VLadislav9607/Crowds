@@ -11,7 +11,8 @@ export type RootStackParamList = {
   [Screens.ForgotPassword]: undefined;
   [Screens.OnboardingTalent]: undefined;
   [Screens.TalentProfileSetup]: undefined;
-
+  [Screens.ChangePassword]: undefined;
+  
   // Bottom Tabs
   [Screens.BottomTabs]: NavigatorScreenParams<BottomTabsParamList>;
 
@@ -27,4 +28,14 @@ export type RootStackParamList = {
   [Screens.EventsDashboard]: undefined;
   [Screens.InviteNewMember]: undefined;
   [Screens.CopyInviteLink]: undefined;
+
+  // Talent screens
+  [Screens.TalentSearchEvents]?: {
+    autofocus?: boolean;
+    showFilter?: boolean;
+  };
+  [Screens.TalentEventDetails]: {
+    eventId: string;
+  };
+  [Screens.TalentNotificationSettings]: undefined;
 };

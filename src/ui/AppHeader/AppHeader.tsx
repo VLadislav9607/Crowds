@@ -7,7 +7,7 @@ import { AppText } from '@ui';
 import { goBack } from '@navigation';
 import { If } from '@components';
 
-import { headerImageBgMap, IAppHeaderProps } from './types';
+import { headerImageBgMap, HeaderContentProps, IAppHeaderProps } from './types';
 import { styles } from './styles';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
@@ -18,8 +18,10 @@ export const AppHeader = ({
   headerStyles,
   colorHeader,
   headerVariant,
+  showBackButton = true,
   logoProps,
   rightIcons,
+  titleProps,
   goBackCallback,
 }: IAppHeaderProps) => {
   const insets = useSafeAreaInsets();
@@ -37,6 +39,14 @@ export const AppHeader = ({
 
   return (
     <>
+
+<If condition={headerVariant === 'empty'}>
+        <View style={[headerStyle]}>
+       
+          {customElement}
+        </View>
+      </If>
+
       <If condition={headerVariant === 'withLogo'}>
         <View style={[headerStyle, styles.headerWithLogo]}>
           <View style={styles.logoHeaderInner}>
@@ -52,8 +62,9 @@ export const AppHeader = ({
           <View style={styles.titleHeaderInner}>
             <HeaderContent
               title={title}
-              showBackButton
+              showBackButton={showBackButton}
               onBackPress={handleBackPress}
+              titleProps={titleProps}
             />
             {rightIcons && <RightIcons rightIcons={rightIcons} />}
           </View>
@@ -68,17 +79,19 @@ export const AppHeader = ({
           style={[headerStyle, styles.withTitleAndImageBg]}
         >
           <View style={styles.overlay} />
-          <View style={[styles.contentWrapperColumn, styles.headerContainer]}>
+          <View style={[styles.contentWrapperColumn,  styles.headerContainer]}>
             <View style={styles.titleHeaderInner}>
               <HeaderContent
                 title={title}
-                showBackButton
+                showBackButton={showBackButton}
                 onBackPress={handleBackPress}
+                titleProps={titleProps}
               />
               {rightIcons && <RightIcons rightIcons={rightIcons} />}
             </View>
-            {customElement}
           </View>
+          {customElement}
+
         </ImageBackground>
       </If>
 
@@ -105,12 +118,9 @@ export const AppHeader = ({
 const HeaderContent = ({
   title,
   showBackButton,
+  titleProps,
   onBackPress,
-}: {
-  title?: string;
-  showBackButton?: boolean;
-  onBackPress?: () => void;
-}) => (
+}: HeaderContentProps) => (
   <View style={styles.headerContentRow}>
     {showBackButton && onBackPress && (
       <Pressable onPress={onBackPress}>
@@ -118,7 +128,7 @@ const HeaderContent = ({
       </Pressable>
     )}
     {title && (
-      <AppText numberOfLines={1} style={styles.title}>
+      <AppText numberOfLines={1}  {...titleProps} style={[styles.title, titleProps?.style]}>
         {title}
       </AppText>
     )}
@@ -128,17 +138,14 @@ const HeaderContent = ({
 const RightIcons = ({
   rightIcons,
 }: {
-  rightIcons?: {
-    icon: () => string | null;
-    onPress: () => void;
-  }[];
+  rightIcons?: IAppHeaderProps['rightIcons'];
 }) => {
   if (!rightIcons) return null;
   return (
     <View style={styles.rightIconsWrapper}>
-      {rightIcons.map(({ icon, onPress }) => (
+      {rightIcons.map(({ icon, onPress, size }) => (
         <Pressable key={icon()} hitSlop={10} onPress={onPress}>
-          <SvgXml xml={icon()} width={24} height={24} />
+          <SvgXml xml={icon()} width={size || 24} height={size || 24} />
         </Pressable>
       ))}
     </View>

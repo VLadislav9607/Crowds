@@ -1,18 +1,21 @@
 import { AppModal, If, Skeleton } from '@components';
 import { AppButton, AppText } from '@ui';
 import { ScrollView, TouchableOpacity, View } from 'react-native';
-import { TagsPickerModalProps } from './types';
+import { TagsPickerModalRef, TagsPickerModalProps } from './types';
 import { styles } from './styles';
-import { useEffect, useState } from 'react';
+import { useEffect, useState, forwardRef } from 'react';
+import { useImperativeModal } from '@hooks';
 
-export const TagsPickerModal = ({
-  modalProps,
-  defaultTags,
-  onTagsChange,
-}: TagsPickerModalProps) => {
+export const TagsPickerModal = forwardRef<TagsPickerModalRef>((_, ref) => {
+  const { isVisible, refProps, close } = useImperativeModal<TagsPickerModalProps>(ref, {
+    onRefClose: () => {
+      setSelectedTags([]);
+    },
+  });
+
+  const [selectedTags, setSelectedTags] = useState<string[]>(refProps?.defaultTags || []);
+
   const isLoading = false;
-
-  const [selectedTags, setSelectedTags] = useState<string[]>(defaultTags || []);
 
   const tags = [
     'Tag 1',
@@ -36,16 +39,18 @@ export const TagsPickerModal = ({
   const onClearAll = () => setSelectedTags([]);
 
   const handleContinue = () => {
-    onTagsChange?.(selectedTags);
-    modalProps?.onClose?.();
+    refProps?.onTagsChange?.(selectedTags);
+    close();
   };
 
   useEffect(() => {
-    modalProps.isVisible && setSelectedTags(defaultTags || []);
-  }, [defaultTags, modalProps.isVisible]);
+    if (isVisible) {
+      setSelectedTags(refProps?.defaultTags || []);
+    }
+  }, [refProps?.defaultTags, isVisible]);
 
   return (
-    <AppModal {...modalProps}>
+    <AppModal isVisible={isVisible} onClose={close}>
       <View style={styles.container}>
         <View style={styles.headerStyles}>
           <AppText typography="h4">Select Tags</AppText>
@@ -110,7 +115,7 @@ export const TagsPickerModal = ({
           />
           <AppButton
             title="Cancel"
-            onPress={modalProps?.onClose}
+            onPress={close}
             size="50"
             variant="withBorder"
             wrapperStyles={styles.footerButton}
@@ -120,4 +125,6 @@ export const TagsPickerModal = ({
       </View>
     </AppModal>
   );
-};
+});
+
+TagsPickerModal.displayName = 'TagsPickerModal';

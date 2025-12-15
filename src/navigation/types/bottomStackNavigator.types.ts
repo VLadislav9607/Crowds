@@ -13,6 +13,7 @@ export type OrgTabParams = {
 
 export type TalentTabParams = {
   [Screens.HomeTalent]: undefined;
+  [Screens.TalerQRCode]: undefined;
   [Screens.EventsTalent]: undefined;
   [Screens.ChatsTalent]: undefined;
   [Screens.SettingsTalent]: undefined;

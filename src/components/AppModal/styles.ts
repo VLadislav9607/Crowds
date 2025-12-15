@@ -9,6 +9,9 @@ export const styles = StyleSheet.create({
     paddingTop: 48,
     paddingBottom: 24,
   },
+  containerWithoutCloseButton: {
+    paddingTop: 24,
+  },
   closeButton: {
     position: 'absolute',
     top: 16,

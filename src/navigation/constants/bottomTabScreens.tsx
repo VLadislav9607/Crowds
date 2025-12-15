@@ -2,18 +2,20 @@ import { ICONS } from '@assets';
 import { Role } from '@modules/common';
 
 import {
-  HomeOrganizationTabScreen,
   HomeTabScreen,
-  HomeTalentTabScreen,
 } from '../../modules/home';
-import { HomeTabScreen } from '../../modules/home';
+
 import {
   EventsDashboardTabScreen,
   UpcomingEventsTabScreen,
+  TalentEventsHomeTab,
+  TalentEventsTab,
+  QRCodeScanTab
 } from '../../modules/events';
 
 import { BottomTabsConfigType } from '../types';
 import { Screens } from './screens';
+import { TalentProfileTab } from '../../modules/profile/talent/screens';
 
 export const BottomTabsConfig: BottomTabsConfigType = {
   [Role.ORGANIZATION]: [
@@ -47,9 +49,18 @@ export const BottomTabsConfig: BottomTabsConfigType = {
   [Role.TALENT]: [
     {
       name: Screens.HomeTalent,
-      component: HomeTalentTabScreen,
-      component: HomeTabScreen,
+      component: TalentEventsHomeTab,
       icon: (opacity: number) => ICONS.BOTTOM_TABS.home(opacity),
+    },
+    {
+      name: Screens.EventsTalent,
+      component: TalentEventsTab,
+      icon: (opacity: number) => ICONS.BOTTOM_TABS.events(opacity),
+    },
+    {
+      name: Screens.TalerQRCode,
+      component: QRCodeScanTab,
+      icon: (opacity: number) => ICONS.BOTTOM_TABS.qrCode(opacity),
     },
     {
       name: Screens.ChatsTalent,
@@ -57,18 +68,8 @@ export const BottomTabsConfig: BottomTabsConfigType = {
       icon: (opacity: number) => ICONS.BOTTOM_TABS.chats(opacity),
     },
     {
-      name: Screens.EventsTalent,
-      component: HomeTabScreen,
-      icon: (opacity: number) => ICONS.BOTTOM_TABS.events(opacity),
-    },
-    {
-      name: Screens.SettingsTalent,
-      component: HomeTabScreen,
-      icon: (opacity: number) => ICONS.BOTTOM_TABS.settings(opacity),
-    },
-    {
       name: Screens.ProfileTalent,
-      component: HomeTabScreen,
+      component: TalentProfileTab,
       icon: (opacity: number) => ICONS.BOTTOM_TABS.profile(opacity),
     },
   ],

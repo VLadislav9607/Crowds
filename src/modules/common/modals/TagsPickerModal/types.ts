@@ -1,8 +1,8 @@
-import { AppModalProps } from '@components';
+import { ImperativeModalRef } from '@hooks';
 
 export interface TagsPickerModalProps {
-  modalProps: AppModalProps;
   defaultTags?: string[];
-
   onTagsChange?: (tags: string[]) => void;
 }
+
+export type TagsPickerModalRef = ImperativeModalRef<TagsPickerModalProps>;

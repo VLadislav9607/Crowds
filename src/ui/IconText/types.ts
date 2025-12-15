@@ -6,5 +6,5 @@ export interface IconTextProps extends PressableProps {
   iconSize?: number;
   gap?: number;
   text: string;
-  textProps?: AppTextProps;
+  textProps?: Partial<AppTextProps>;
 }

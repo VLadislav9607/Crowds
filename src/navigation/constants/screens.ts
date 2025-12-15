@@ -7,6 +7,7 @@ export enum Screens {
   OnboardingTalent = 'OnboardingTalent',
   OrganizationOnboarding = 'OrganizationOnboarding',
   TalentProfileSetup = 'TalentProfileSetup',
+  ChangePassword = 'ChangePassword',
 
   // Onboarding
   OnboardingOrganization = 'OnboardingOrganization',
@@ -25,6 +26,7 @@ export enum Screens {
   //Bottom Tabs Talent
 
   HomeTalent = 'HomeTalent',
+  TalerQRCode = 'TalerQRCode',
   EventsTalent = 'EventsTalent',
   ChatsTalent = 'ChatsTalent',
   SettingsTalent = 'SettingsTalent',
@@ -34,4 +36,9 @@ export enum Screens {
   CreateEvent = 'CreateEvent',
   InviteNewMember = 'InviteNewMember',
   CopyInviteLink = 'CopyInviteLink',
+
+  // Talent screens
+  TalentSearchEvents = 'TalentSearchEvents',
+  TalentEventDetails = 'TalentEventDetails',
+  TalentNotificationSettings = 'TalentNotificationSettings',
 }
