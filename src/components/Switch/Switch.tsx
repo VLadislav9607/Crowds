@@ -3,6 +3,7 @@ import { StyleSheet, View } from 'react-native';
 import { SwitchProps } from 'react-native';
 import { Switch as RNSwitch } from 'react-native';
 
+import { COLORS, ColorsKeys } from '@styles';
 interface IProps extends Omit<SwitchProps, 'onChange'> {
   active: boolean;
   activeColor?: ColorsKeys;

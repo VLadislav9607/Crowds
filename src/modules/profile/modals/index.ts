@@ -1,2 +1,2 @@
-export * from './TalentLogoutModal';
-export type { TalentLogoutModalRef } from './TalentLogoutModal/types';
+export * from './LogoutModal';
+export type { LogoutModalRef } from './LogoutModal/types';

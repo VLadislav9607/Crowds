@@ -4,9 +4,7 @@ export enum Screens {
   SignIn = 'SignIn',
   ForgotPassword = 'ForgotPassword',
   SelectRole = 'SelectRole',
-  OnboardingTalent = 'OnboardingTalent',
   OrganizationOnboarding = 'OrganizationOnboarding',
-  TalentProfileSetup = 'TalentProfileSetup',
   ChangePassword = 'ChangePassword',
 
   // Onboarding
@@ -22,7 +20,7 @@ export enum Screens {
   UpcomingEvents = 'UpcomingEvents',
   ChatsOrganization = 'ChatsOrganization',
   SettingsOrganization = 'SettingsOrganization',
-  ProfileOrganization = 'ProfileOrganization',
+  ProfileTab = 'ProfileTab',
 
   //Bottom Tabs Talent
   HomeTalent = 'HomeTalent',
@@ -30,25 +28,25 @@ export enum Screens {
   EventsTalent = 'EventsTalent',
   ChatsTalent = 'ChatsTalent',
   SettingsTalent = 'SettingsTalent',
-  ProfileTalent = 'ProfileTalent',
 
   // Organization screens
   CreateEvent = 'CreateEvent',
   InviteNewMember = 'InviteNewMember',
   CopyInviteLink = 'CopyInviteLink',
+  OrgNotificationSettings = 'OrgNotificationSettings',
 
   // Talent screens
   TalentSearchEvents = 'TalentSearchEvents',
   TalentEventDetails = 'TalentEventDetails',
-  TalentNotificationSettings = 'TalentNotificationSettings',
   ManageEvent = 'ManageEvent',
   EventParticipants = 'EventParticipants',
   FlagParticipant = 'FlagParticipant',
-
-  // Talent screens
   AvailabilitySetup = 'AvailabilitySetup',
   TalentProfileSetup = 'TalentProfileSetup',
 
   // Chat screens
   ChatRoom = 'ChatRoom',
+
+  //Profile
+  NotificationSettings = 'NotificationSettings',
 }

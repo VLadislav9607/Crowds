@@ -8,7 +8,7 @@ export type OrgTabParams = {
   [Screens.UpcomingEvents]: undefined;
   [Screens.ChatsOrganization]: undefined;
   [Screens.SettingsOrganization]: undefined;
-  [Screens.ProfileOrganization]: undefined;
+  [Screens.ProfileTab]: { role: Role };
 };
 
 export type TalentTabParams = {
@@ -17,7 +17,7 @@ export type TalentTabParams = {
   [Screens.EventsTalent]: undefined;
   [Screens.ChatsTalent]: undefined;
   [Screens.SettingsTalent]: undefined;
-  [Screens.ProfileTalent]: undefined;
+  [Screens.ProfileTab]: { role: Role };
 };
 export interface BottomTabScreen<RoleParams> {
   name: keyof RoleParams;
