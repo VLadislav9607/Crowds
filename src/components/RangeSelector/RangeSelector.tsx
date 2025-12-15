@@ -1,15 +1,16 @@
 import { View } from 'react-native';
-import RangeSlider from 'react-native-sticky-range-slider';
 import { AppText } from '@ui';
 import { IRangeSelectorProps } from './types';
 import { styles } from './styles';
 import { If } from '../If';
+import { useEffect, useState } from 'react';
+import { Slider } from '@miblanchard/react-native-slider';
 
 export const RangeSelector = ({
   min,
   max,
-  minValue,
-  maxValue,
+  defaultMinValue,
+  defaultMaxValue,
   label,
   containerStyles,
   step = 1,
@@ -17,9 +18,18 @@ export const RangeSelector = ({
   labelProps,
   bottomLabels,
   measure,
-  value,
-  onValueChange,
+  onRenderValue,
+  onSlidingComplete,
 }: IRangeSelectorProps) => {
+
+  const [values, setValues] = useState({ min: defaultMinValue, max: defaultMaxValue })
+
+
+  console.log('values', values)
+  useEffect(() => {
+    setValues({ min: defaultMinValue, max: defaultMaxValue })
+  }, [defaultMinValue, defaultMaxValue])
+
   return (
     <View style={[styles.container, containerStyles]}>
       {label && (
@@ -34,20 +44,20 @@ export const RangeSelector = ({
 
       <View style={styles.sliderContainer}>
         <View style={styles.flex1}>
-          <RangeSlider
-            style={styles.slider}
-            min={min}
-            max={max}
+
+
+          <Slider
+            value={disableRange ? values.min : [values.min, values.max]}
+            onValueChange={(value) => {
+              setValues({ min: value[0], max: value[1] })
+            }}
+            minimumValue={min}
+            maximumValue={max}
+            renderThumbComponent={Thumb}
+            renderMaximumTrackComponent={Rail}
+            renderMinimumTrackComponent={RailSelected}
             step={step}
-            low={minValue}
-            high={maxValue}
-            onValueChanged={onValueChange}
-            renderThumb={Thumb}
-            renderRail={Rail}
-            renderRailSelected={RailSelected}
-            renderHighValue={() => null}
-            renderLowValue={() => null}
-            disableRange={disableRange}
+            onSlidingComplete={onSlidingComplete}
           />
 
           <If condition={!!bottomLabels}>
@@ -84,7 +94,7 @@ export const RangeSelector = ({
       </View>
 
       <AppText color="black" typography="semibold_14" margin={{ top: 10 }}>
-        {value}
+        {onRenderValue(values)}
       </AppText>
     </View>
   );

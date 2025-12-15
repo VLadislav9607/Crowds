@@ -1,19 +1,35 @@
 import { useEffect, useRef, useState } from 'react';
 import { View, ScrollView, Animated, LayoutChangeEvent } from 'react-native';
-import { IAppTabSelectorProps } from './types';
+import { IAppTabSelectorProps, TabSelectorTheme } from './types';
+import { COLORS } from '@styles';
 
 import { styles } from './styles';
 import { Tab, TabsLabel } from './ui';
 
-export const AppTabSelector = ({
+const BORDER_RADIUS = 32;
+
+const INDICATOR_COLORS: Record<TabSelectorTheme, string> = {
+  white: COLORS.black,
+  black: COLORS.white,
+};
+
+const CONTAINER_COLORS: Record<TabSelectorTheme, string> = {
+  white: COLORS.white,
+  black: COLORS.black,
+};
+
+export const AppTabSelector = <T = string,>({
   options,
   selectedValue,
   onSelect,
   label,
   badgeLabel,
-}: IAppTabSelectorProps) => {
+  theme = 'white',
+}: IAppTabSelectorProps<T>) => {
   const animatedValue = useRef(new Animated.Value(0)).current;
   const animatedWidth = useRef(new Animated.Value(0)).current;
+  const animatedLeftRadius = useRef(new Animated.Value(BORDER_RADIUS)).current;
+  const animatedRightRadius = useRef(new Animated.Value(0)).current;
   const scrollViewRef = useRef<ScrollView>(null);
   const [tabPositions, setTabPositions] = useState<Record<string, number>>({});
   const [tabWidths, setTabWidths] = useState<Record<string, number>>({});
@@ -25,13 +41,20 @@ export const AppTabSelector = ({
       option => option.value === selectedValue,
     );
 
+    const selectedKey = String(selectedValue);
     if (
       selectedIndex !== -1 &&
-      tabPositions[selectedValue] !== undefined &&
-      tabWidths[selectedValue] !== undefined
+      tabPositions[selectedKey] !== undefined &&
+      tabWidths[selectedKey] !== undefined
     ) {
-      const targetPosition = tabPositions[selectedValue];
-      const targetWidth = tabWidths[selectedValue];
+      const targetPosition = tabPositions[selectedKey];
+      const targetWidth = tabWidths[selectedKey];
+
+      const isFirst = selectedIndex === 0;
+      const isLast = selectedIndex === options.length - 1;
+
+      const leftRadius = isFirst ? BORDER_RADIUS : 0;
+      const rightRadius = isLast ? BORDER_RADIUS : 0;
 
       Animated.parallel([
         Animated.timing(animatedValue, {
@@ -41,6 +64,16 @@ export const AppTabSelector = ({
         }),
         Animated.timing(animatedWidth, {
           toValue: targetWidth,
+          duration: 150,
+          useNativeDriver: false,
+        }),
+        Animated.timing(animatedLeftRadius, {
+          toValue: leftRadius,
+          duration: 150,
+          useNativeDriver: false,
+        }),
+        Animated.timing(animatedRightRadius, {
+          toValue: rightRadius,
           duration: 150,
           useNativeDriver: false,
         }),
@@ -63,28 +96,34 @@ export const AppTabSelector = ({
     tabWidths,
     animatedValue,
     animatedWidth,
+    animatedLeftRadius,
+    animatedRightRadius,
     shouldScroll,
     containerWidth,
   ]);
 
-  const onLayout = (value: string) => (event: LayoutChangeEvent) => {
+  const onLayout = (value: string | T) => (event: LayoutChangeEvent) => {
     const { x, width } = event.nativeEvent.layout;
-    setTabPositions(prev => ({ ...prev, [value]: x }));
-    setTabWidths(prev => ({ ...prev, [value]: width }));
+    const key = String(value);
+    setTabPositions(prev => ({ ...prev, [key]: x }));
+    setTabWidths(prev => ({ ...prev, [key]: width }));
   };
 
   const renderTabs = () => {
-    return options.map(option => {
+    return options.map((option, index) => {
       const isActive = selectedValue === option.value;
+      const key = String(option.value);
       return (
         <Tab
-          key={option.value}
+          key={key}
           option={option}
           isActive={isActive}
           onLayout={onLayout(option.value)}
           onPress={() => onSelect(option.value)}
           shouldScroll={shouldScroll}
           totalOptions={options.length}
+          index={index}
+          theme={theme}
         />
       );
     });
@@ -98,12 +137,19 @@ export const AppTabSelector = ({
           {
             width: animatedWidth,
             transform: [{ translateX: animatedValue }],
+            borderTopLeftRadius: animatedLeftRadius,
+            borderBottomLeftRadius: animatedLeftRadius,
+            borderTopRightRadius: animatedRightRadius,
+            borderBottomRightRadius: animatedRightRadius,
+            backgroundColor: INDICATOR_COLORS[theme],
           },
         ]}
       />
       {renderTabs()}
     </>
   );
+
+  const containerStyle = { backgroundColor: CONTAINER_COLORS[theme] };
 
   if (shouldScroll) {
     return (
@@ -119,7 +165,7 @@ export const AppTabSelector = ({
             ref={scrollViewRef}
             horizontal
             showsHorizontalScrollIndicator={false}
-            contentContainerStyle={styles.scrollContent}
+            contentContainerStyle={[styles.scrollContent, containerStyle]}
           >
             {tabsContent}
           </ScrollView>
@@ -131,7 +177,7 @@ export const AppTabSelector = ({
   return (
     <>
       <TabsLabel label={label} badgeLabel={badgeLabel} />
-      <View style={styles.container}>{tabsContent}</View>
+      <View style={[styles.container, containerStyle]}>{tabsContent}</View>
     </>
   );
 };

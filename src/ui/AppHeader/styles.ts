@@ -42,7 +42,7 @@ export const styles = StyleSheet.create({
     gap: 14,
   },
   withTitleAndImageBg: {
-    flexDirection: 'row',
+    flexDirection: 'column',
     gap: 14,
     // paddingTop: 0,
     overflow: 'hidden',

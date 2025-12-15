@@ -5,6 +5,7 @@ import { styles } from './styles';
 import { SvgXml } from 'react-native-svg';
 import { ICONS } from '@assets';
 import { AppText } from '@ui';
+import { If } from '../If';
 
 export const AppModal = ({
   children,
@@ -12,14 +13,19 @@ export const AppModal = ({
   subtitle,
   titleProps,
   subtitleProps,
+  hideCloseButton,
+  contentContainerStyle,
   ...props
 }: AppModalProps) => {
+
   return (
     <Modal onBackdropPress={props.onClose} backdropOpacity={0.5} {...props}>
-      <View style={styles.container}>
-        <TouchableOpacity style={styles.closeButton} onPress={props.onClose}>
+      <View style={[styles.container, hideCloseButton && styles.containerWithoutCloseButton, contentContainerStyle]}>
+        <If condition={!hideCloseButton}>
+          <TouchableOpacity style={styles.closeButton} onPress={props.onClose}>
           <SvgXml xml={ICONS.closeIcon('black_50')} width={11} height={11} />
         </TouchableOpacity>
+        </If>
 
         {title && (
           <AppText

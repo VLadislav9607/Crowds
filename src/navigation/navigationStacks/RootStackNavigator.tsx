@@ -7,7 +7,7 @@ import {
   SignInScreen,
 } from '../../modules/auth';
 import { OnboardingTalentScreen } from '../../modules/onboarding/talent/screens';
-import { TalentProfileSetupScreen } from '../../modules/profile/talent/screens';
+import { TalentNotificationSettingsScreen, TalentProfileSetupScreen } from '../../modules/profile/talent/screens';
 import {
   CongratulationsScreen,
   OnboardingOrganizationScreen,
@@ -23,6 +23,8 @@ import {
   InviteNewMemberScreen,
 } from '../../modules/invite-member';
 import { CreateEventScreen } from '../../modules/create-event';
+import { TalentEventDetailsScreen, TalentSearchEventsScreen } from '../../modules/events/talent/screens';
+import { ChangePasswordScreen } from '@modules/profile';
 
 const RootStack = createStackNavigator<RootStackParamList>();
 
@@ -86,6 +88,22 @@ export const RootStackNavigator = () => {
       <RootStack.Screen
         name={Screens.CreateEvent}
         component={CreateEventScreen}
+      />
+      <RootStack.Screen
+        name={Screens.TalentSearchEvents}
+        component={TalentSearchEventsScreen}
+      />
+      <RootStack.Screen
+        name={Screens.TalentEventDetails}
+        component={TalentEventDetailsScreen}
+      />
+      <RootStack.Screen
+        name={Screens.TalentNotificationSettings}
+        component={TalentNotificationSettingsScreen}
+      />
+      <RootStack.Screen
+        name={Screens.ChangePassword}
+        component={ChangePasswordScreen}
       />
     </RootStack.Navigator>
   );

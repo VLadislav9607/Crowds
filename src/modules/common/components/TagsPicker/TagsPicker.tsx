@@ -3,8 +3,8 @@ import { styles } from './styles';
 import { AppText } from '@ui';
 import { TagsPickerProps } from './types';
 import { If, Skeleton } from '@components';
-import { TagsPickerModal } from '@modules/common';
-import { useBoolean } from '@hooks';
+import { TagsPickerModal, TagsPickerModalRef } from '@modules/common';
+import { useRef } from 'react';
 
 export const TagsPicker = ({
   selectedTags = [],
@@ -12,8 +12,7 @@ export const TagsPicker = ({
   onTagsChange,
   onTagPress,
 }: TagsPickerProps) => {
-  const { value: isTagsPickerModalVisible, toggle: toggleTagsPickerModal } =
-    useBoolean(false);
+  const tagsPickerModalRef = useRef<TagsPickerModalRef>(null);
 
   const tags = [
     'Tag 1',
@@ -46,7 +45,7 @@ export const TagsPicker = ({
       <View style={styles.headerContainer}>
         <AppText typography="semibold_18">Tags</AppText>
         <TouchableOpacity
-          onPress={toggleTagsPickerModal}
+          onPress={() => tagsPickerModalRef.current?.open({ defaultTags: selectedTags, onTagsChange })}
           hitSlop={{ top: 10, bottom: 10, left: 10, right: 10 }}
         >
           <If condition={!isLoading}>
@@ -96,16 +95,8 @@ export const TagsPicker = ({
         </Skeleton>
       </If>
 
-      <TagsPickerModal
-        modalProps={{
-          isVisible: isTagsPickerModalVisible,
-          onClose: toggleTagsPickerModal,
-        }}
-        defaultTags={selectedTags}
-        onTagsChange={onTagsChange}
-      />
+      <TagsPickerModal ref={tagsPickerModalRef} />
 
-      {/* TODO: Add more tags */}
     </View>
   );
 };
