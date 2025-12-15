@@ -5,6 +5,7 @@ import { location } from './location';
 import { profile } from './profile';
 import { profiles } from './profiles';
 import { settings } from './settings';
+import { qrCode } from './qrCode';
 
 export const BOTTOM_TABS = {
   chats,
@@ -14,4 +15,5 @@ export const BOTTOM_TABS = {
   profile,
   profiles,
   settings,
+  qrCode,
 };

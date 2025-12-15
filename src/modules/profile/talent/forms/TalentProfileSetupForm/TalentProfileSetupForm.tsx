@@ -123,9 +123,11 @@ export const TalentProfileSetupForm = () => {
               disableRange
               min={20}
               max={150}
-              minValue={field.value!}
-              maxValue={150}
-              onValueChange={low => field.onChange(low)}
+              // minValue={field.value!}
+              // maxValue={150}
+              defaultMinValue={field.value!}
+              defaultMaxValue={150}
+              onSlidingComplete={values => field.onChange(values)}
               label="Set Build"
               labelProps={{ color: 'main' }}
               bottomLabels={{
@@ -133,7 +135,7 @@ export const TalentProfileSetupForm = () => {
                 maxValueLabel: '150 Kg',
               }}
               measure="Kg"
-              value={`${field.value} Kg`}
+              onRenderValue={values => `${values.min} Kg`}
             />
           )}
         />
@@ -145,10 +147,10 @@ export const TalentProfileSetupForm = () => {
             <RangeSelector
               min={2}
               max={8}
-              minValue={field.value!}
-              maxValue={8}
+              defaultMinValue={field.value!}
+              defaultMaxValue={8}
               step={0.1}
-              onValueChange={low => field.onChange(low)}
+              onSlidingComplete={values => field.onChange(values)}
               label="Set Height"
               labelProps={{ color: 'main' }}
               bottomLabels={{
@@ -156,9 +158,9 @@ export const TalentProfileSetupForm = () => {
                 maxValueLabel: '8 Feet',
               }}
               measure="Ft"
-              value={`${Math.floor(field.value!)} Foot ${Math.round(
-                (field.value! - Math.floor(field.value!)) * 12,
-              )} Inch`}
+              onRenderValue={values => {
+                const fractionalPart = Math.round((values.min % 1) * 10);
+                return`${Math.floor(values.min)} Foot ${fractionalPart ? `${fractionalPart} Inch` : ''}`}}
               disableRange
             />
           )}

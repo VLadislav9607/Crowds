@@ -1,11 +1,14 @@
-import { StyleProp, ViewStyle } from 'react-native';
+import { StyleProp, TextProps, ViewStyle } from 'react-native';
 import { IMAGES } from '@assets';
 import { ColorsKeys } from '@styles';
 import { SvgProps } from 'react-native-svg';
+import { AppTextProps } from '../AppText';
 
 export type HeaderVariant =
+  | 'empty'
   | 'withTitle'
   | 'withLogo'
+  | 'withTitleCenter'
   | 'withTitleAndImageBg'
   | 'withLogoAndImageBg';
 
@@ -16,9 +19,18 @@ export const headerImageBgMap = {
   crowd: IMAGES.headerCrowdBg,
 };
 
+export interface HeaderContentProps {
+  title?: string;
+  showBackButton?: boolean;
+  titleProps?: TextProps;
+  onBackPress?: () => void;
+}
+
 export interface IAppHeaderProps {
   title?: string;
+  titleProps?: Partial<AppTextProps>;
   colorHeader?: ColorsKeys;
+  showBackButton?: boolean;
   avatarUrl?: string;
   headerVariant?: HeaderVariant;
   headerImageBg?: HeaderImageBgType;
@@ -28,6 +40,7 @@ export interface IAppHeaderProps {
   rightIcons?: {
     icon: () => string | null;
     onPress: () => void;
+    size?: number,
   }[];
   goBackCallback?: () => void;
 }

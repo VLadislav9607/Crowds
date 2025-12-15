@@ -4,8 +4,8 @@ import { ITabOption, TabSelectorTheme } from '../types';
 import { styles } from '../styles';
 import { COLORS } from '@styles';
 
-interface ITabProps {
-  option: ITabOption;
+interface ITabProps<T = string> {
+  option: ITabOption<T>;
   isActive: boolean;
   onLayout: (event: LayoutChangeEvent) => void;
   onPress: () => void;
@@ -36,7 +36,7 @@ const THEME_COLORS = {
   },
 };
 
-export const Tab = ({
+export const Tab = <T = string,>({
   option,
   isActive,
   onLayout,
@@ -45,7 +45,7 @@ export const Tab = ({
   totalOptions = 2,
   index = 0,
   theme = 'white',
-}: ITabProps) => {
+}: ITabProps<T>) => {
   const animValue = useRef(new Animated.Value(isActive ? 1 : 0)).current;
   const colors = THEME_COLORS[theme];
 
