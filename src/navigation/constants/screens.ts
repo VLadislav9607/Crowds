@@ -13,27 +13,25 @@ export enum Screens {
   TermsAndPrivacy = 'TermsAndPrivacy',
   Congratulations = 'Congratulations',
 
+  // Bottom Tabs
   BottomTabs = 'BottomTabs',
+  ProfileTab = 'ProfileTab',
+  Chats = 'Chats',
 
   //Bottom Tabs Organization
   EventsDashboard = 'EventsDashboard',
   UpcomingEvents = 'UpcomingEvents',
-  ChatsOrganization = 'ChatsOrganization',
-  SettingsOrganization = 'SettingsOrganization',
-  ProfileTab = 'ProfileTab',
 
   //Bottom Tabs Talent
   HomeTalent = 'HomeTalent',
   TalerQRCode = 'TalerQRCode',
   EventsTalent = 'EventsTalent',
-  ChatsTalent = 'ChatsTalent',
-  SettingsTalent = 'SettingsTalent',
 
   // Organization screens
   CreateEvent = 'CreateEvent',
   InviteNewMember = 'InviteNewMember',
   CopyInviteLink = 'CopyInviteLink',
-  OrgNotificationSettings = 'OrgNotificationSettings',
+  ApplicantProfile = 'ApplicantProfile',
 
   // Talent screens
   TalentSearchEvents = 'TalentSearchEvents',

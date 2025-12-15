@@ -41,6 +41,7 @@ export const ProfileSetupHeader = ({
       <TouchableOpacity
         activeOpacity={0.9}
         style={styles.imageContainer}
+        disabled={!showCamera}
         onPress={showCamera ? pickImage : undefined}
       >
         <If condition={!!showCamera}>

@@ -29,6 +29,7 @@ export type RootStackParamList = {
   [Screens.EventsDashboard]: undefined;
   [Screens.InviteNewMember]: undefined;
   [Screens.CopyInviteLink]: undefined;
+  [Screens.ApplicantProfile]: { applicantId: string };
 
   // Talent screens
   [Screens.TalentSearchEvents]?: {

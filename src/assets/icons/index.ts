@@ -52,6 +52,7 @@ import { dotsVertical } from './dotsVertical';
 import { image } from './image';
 import { orgDetails } from './orgDetails';
 import { wallet } from './wallet';
+import { settings } from './settings';
 
 import { BOTTOM_TABS } from './bottomTabs';
 
@@ -110,4 +111,5 @@ export const ICONS = {
   image,
   orgDetails,
   wallet,
+  settings,
 };

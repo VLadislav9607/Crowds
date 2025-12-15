@@ -4,7 +4,6 @@ import { home } from './home';
 import { location } from './location';
 import { profile } from './profile';
 import { profiles } from './profiles';
-import { settings } from './settings';
 import { qrCode } from './qrCode';
 
 export const BOTTOM_TABS = {
@@ -14,6 +13,5 @@ export const BOTTOM_TABS = {
   location,
   profile,
   profiles,
-  settings,
   qrCode,
 };

@@ -1,7 +1,6 @@
 import { ICONS } from '@assets';
 import { Role } from '@modules/common';
 
-import { HomeTabScreen } from '../../modules/home';
 import {
   EventsDashboardTabScreen,
   UpcomingEventsTabScreen,
@@ -28,14 +27,9 @@ export const BottomTabsConfig: BottomTabsConfigType = {
       icon: (opacity: number) => ICONS.BOTTOM_TABS.events(opacity),
     },
     {
-      name: Screens.ChatsOrganization,
+      name: Screens.Chats,
       component: ChatsTabScreen,
       icon: (opacity: number) => ICONS.BOTTOM_TABS.chats(opacity),
-    },
-    {
-      name: Screens.SettingsOrganization,
-      component: HomeTabScreen,
-      icon: (opacity: number) => ICONS.BOTTOM_TABS.settings(opacity),
     },
     {
       name: Screens.ProfileTab,
@@ -62,7 +56,7 @@ export const BottomTabsConfig: BottomTabsConfigType = {
       icon: (opacity: number) => ICONS.BOTTOM_TABS.qrCode(opacity),
     },
     {
-      name: Screens.ChatsTalent,
+      name: Screens.Chats,
       component: ChatsTabScreen,
       icon: (opacity: number) => ICONS.BOTTOM_TABS.chats(opacity),
     },
