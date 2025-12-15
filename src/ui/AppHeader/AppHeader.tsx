@@ -1,15 +1,15 @@
 import { View, ImageBackground, Pressable } from 'react-native';
 import { SvgXml } from 'react-native-svg';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import { ICONS } from '@assets';
 import { COLORS } from '@styles';
-import { AppText } from '@ui';
+import { AppText, Avatar } from '@ui';
 import { goBack } from '@navigation';
 import { If } from '@components';
 
 import { headerImageBgMap, HeaderContentProps, IAppHeaderProps } from './types';
 import { styles } from './styles';
-import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 export const AppHeader = ({
   title,
@@ -20,6 +20,7 @@ export const AppHeader = ({
   headerVariant,
   showBackButton = true,
   logoProps,
+  avatarUrl,
   rightIcons,
   titleProps,
   goBackCallback,
@@ -86,6 +87,7 @@ export const AppHeader = ({
                 showBackButton={showBackButton}
                 onBackPress={handleBackPress}
                 titleProps={titleProps}
+                avatarUrl={avatarUrl}
               />
               {rightIcons && <RightIcons rightIcons={rightIcons} />}
             </View>
@@ -127,6 +129,7 @@ const HeaderContent = ({
         <SvgXml xml={ICONS.goBackArrow()} style={styles.backButton} />
       </Pressable>
     )}
+    {avatarUrl && <Avatar size={48} uri={avatarUrl} style={styles.avatar} />}
     {title && (
       <AppText numberOfLines={1}  {...titleProps} style={[styles.title, titleProps?.style]}>
         {title}

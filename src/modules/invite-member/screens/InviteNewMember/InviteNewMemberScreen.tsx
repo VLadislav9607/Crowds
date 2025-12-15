@@ -23,13 +23,13 @@ export const InviteNewMemberScreen = () => {
       title="Invite New Team Member"
       headerImageBg="purple"
       isFloatFooter={false}
+      contentContainerStyle={styles.contentContainer}
       footer={
         <AppButton
           title="Create Invitation Link"
           onPress={handleCreateInvitationLink}
         />
       }
-      contentContainerStyle={styles.contentContainer}
     >
       <TheirDetailsForm
         control={formData.control}
@@ -44,8 +44,5 @@ export const InviteNewMemberScreen = () => {
 const styles = StyleSheet.create({
   contentContainer: {
     paddingHorizontal: 20,
-  },
-  createInvitationButton: {
-    marginBottom: 20,
   },
 });

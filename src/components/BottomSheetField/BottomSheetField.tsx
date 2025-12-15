@@ -24,6 +24,8 @@ export const BottomSheetField = ({
   placeholderText = 'Select an option',
   placeholderTextProps,
   children,
+  inputStyle,
+  valueTextStyle,
   bottomSheetRef: externalBottomSheetRef,
   bottomSheetProps,
   disableRenderWhenClosed,
@@ -92,14 +94,22 @@ export const BottomSheetField = ({
         <TouchableOpacity
           disabled={disabled}
           activeOpacity={0.5}
-          style={[styles.inputWrapper, disabled && styles.disabledInputWrapper]}
+          style={[
+            styles.inputWrapper,
+            inputStyle,
+            disabled && styles.disabledInputWrapper,
+          ]}
           onPress={handleOpenSheet}
         >
           {!!value && (
             <View style={styles.valueContainer}>
               {leftIcon}
 
-              <AppText typography="regular_14" color="black">
+              <AppText
+                typography="regular_14"
+                color="black"
+                style={valueTextStyle}
+              >
                 {value}
               </AppText>
             </View>

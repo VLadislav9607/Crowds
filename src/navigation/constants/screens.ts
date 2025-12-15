@@ -11,12 +11,13 @@ export enum Screens {
 
   // Onboarding
   OnboardingOrganization = 'OnboardingOrganization',
+  OnboardingTalent = 'OnboardingTalent',
   TermsAndPrivacy = 'TermsAndPrivacy',
   Congratulations = 'Congratulations',
 
-  //Bottom Tabs Organization
   BottomTabs = 'BottomTabs',
 
+  //Bottom Tabs Organization
   EventsDashboard = 'EventsDashboard',
   UpcomingEvents = 'UpcomingEvents',
   ChatsOrganization = 'ChatsOrganization',
@@ -24,7 +25,6 @@ export enum Screens {
   ProfileOrganization = 'ProfileOrganization',
 
   //Bottom Tabs Talent
-
   HomeTalent = 'HomeTalent',
   TalerQRCode = 'TalerQRCode',
   EventsTalent = 'EventsTalent',
@@ -41,4 +41,13 @@ export enum Screens {
   TalentSearchEvents = 'TalentSearchEvents',
   TalentEventDetails = 'TalentEventDetails',
   TalentNotificationSettings = 'TalentNotificationSettings',
+  ManageEvent = 'ManageEvent',
+  EventParticipants = 'EventParticipants',
+
+  // Talent screens
+  AvailabilitySetup = 'AvailabilitySetup',
+  TalentProfileSetup = 'TalentProfileSetup',
+
+  // Chat screens
+  ChatRoom = 'ChatRoom',
 }

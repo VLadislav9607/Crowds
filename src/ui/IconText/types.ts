@@ -1,7 +1,7 @@
-import { PressableProps } from 'react-native';
+import { TouchableOpacityProps } from 'react-native';
 import { AppTextProps } from '../AppText';
 
-export interface IconTextProps extends PressableProps {
+export interface IconTextProps extends TouchableOpacityProps {
   icon: string;
   iconSize?: number;
   gap?: number;

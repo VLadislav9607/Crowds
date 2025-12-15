@@ -31,6 +31,7 @@ export interface IAppHeaderProps {
   titleProps?: Partial<AppTextProps>;
   colorHeader?: ColorsKeys;
   showBackButton?: boolean;
+  avatarUrl?: string;
   headerVariant?: HeaderVariant;
   headerImageBg?: HeaderImageBgType;
   customElement?: React.ReactNode;

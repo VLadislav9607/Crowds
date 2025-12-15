@@ -8,6 +8,8 @@ import {
 } from '../../modules/auth';
 import { OnboardingTalentScreen } from '../../modules/onboarding/talent/screens';
 import { TalentNotificationSettingsScreen, TalentProfileSetupScreen } from '../../modules/profile/talent/screens';
+import { TalentProfileSetupScreen } from '../../modules/profile/talent/screens';
+import { AvailabilitySetupScreen } from '../../modules/talent-availability';
 import {
   CongratulationsScreen,
   OnboardingOrganizationScreen,
@@ -25,6 +27,9 @@ import {
 import { CreateEventScreen } from '../../modules/create-event';
 import { TalentEventDetailsScreen, TalentSearchEventsScreen } from '../../modules/events/talent/screens';
 import { ChangePasswordScreen } from '@modules/profile';
+import { ManageEventScreen } from '../../modules/event-management';
+import { ChatRoomScreen } from '../../modules/chats';
+import { EventParticipantsScreen } from '../../modules/event-participants';
 
 const RootStack = createStackNavigator<RootStackParamList>();
 
@@ -105,6 +110,23 @@ export const RootStackNavigator = () => {
         name={Screens.ChangePassword}
         component={ChangePasswordScreen}
       />
+
+      <RootStack.Screen
+        name={Screens.ManageEvent}
+        component={ManageEventScreen}
+      />
+
+      <RootStack.Screen
+        name={Screens.EventParticipants}
+        component={EventParticipantsScreen}
+      />
+
+      <RootStack.Screen
+        name={Screens.AvailabilitySetup}
+        component={AvailabilitySetupScreen}
+      />
+
+      <RootStack.Screen name={Screens.ChatRoom} component={ChatRoomScreen} />
     </RootStack.Navigator>
   );
 };

@@ -80,7 +80,15 @@ export const AppDateInput = ({
               {...valueProps}
               style={[styles.value, valueProps?.style]}
             >
-              {value?.toLocaleDateString()}
+              {mode === 'time'
+                ? value
+                    ?.toLocaleTimeString('en-US', {
+                      hour: 'numeric',
+                      minute: '2-digit',
+                      hour12: true,
+                    })
+                    .toLowerCase()
+                : value?.toLocaleDateString()}
             </AppText>
           </If>
 

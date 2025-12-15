@@ -15,7 +15,8 @@ export const  ScreenWrapper = ({
   children,
   containerStyle,
   contentContainerStyle,
-  witBottomTab = false,
+  withBottomTabBar = false,
+  wrapperStyle,
   ...headerProps
 }: IScreenWrapperProps) => {
   const { bottom } = useSafeAreaInsets();

@@ -27,6 +27,10 @@ export const styles = StyleSheet.create({
     flexDirection: 'row',
     gap: 4,
   },
+  avatar: {
+    marginHorizontal: 6,
+    top: -8,
+  },
   headerWithLogo: {
     flexDirection: 'column',
     alignItems: 'flex-start',

@@ -56,6 +56,12 @@ export const AppTabSelector = <T = string,>({
       const leftRadius = isFirst ? BORDER_RADIUS : 0;
       const rightRadius = isLast ? BORDER_RADIUS : 0;
 
+      const isFirst = selectedIndex === 0;
+      const isLast = selectedIndex === options.length - 1;
+
+      const leftRadius = isFirst ? BORDER_RADIUS : 0;
+      const rightRadius = isLast ? BORDER_RADIUS : 0;
+
       Animated.parallel([
         Animated.timing(animatedValue, {
           toValue: targetPosition,

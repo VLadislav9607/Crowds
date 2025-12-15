@@ -6,6 +6,7 @@ import { BottomTabsParamList } from './bottomStackNavigator.types';
 export type RootStackParamList = {
   // Authorization
   [Screens.First]: undefined;
+  [Screens.ForgotPassword]: undefined;
   [Screens.SelectRole]: undefined;
   [Screens.SignIn]: undefined;
   [Screens.ForgotPassword]: undefined;
@@ -13,17 +14,18 @@ export type RootStackParamList = {
   [Screens.TalentProfileSetup]: undefined;
   [Screens.ChangePassword]: undefined;
   
+
   // Bottom Tabs
   [Screens.BottomTabs]: NavigatorScreenParams<BottomTabsParamList>;
 
   // Onboarding
-  [Screens.OnboardingOrganization]: {
-    flow: OrganizationType;
-  };
-  [Screens.TermsAndPrivacy]: undefined;
   [Screens.Congratulations]: { role: Role };
+  [Screens.OnboardingOrganization]: { flow: OrganizationType };
+  [Screens.OnboardingTalent]: undefined;
+  [Screens.TermsAndPrivacy]: undefined;
 
   // Organization screens
+  [Screens.CopyInviteLink]: undefined;
   [Screens.CreateEvent]: undefined;
   [Screens.EventsDashboard]: undefined;
   [Screens.InviteNewMember]: undefined;
@@ -38,4 +40,12 @@ export type RootStackParamList = {
     eventId: string;
   };
   [Screens.TalentNotificationSettings]: undefined;
+  [Screens.ManageEvent]: undefined;
+  [Screens.EventParticipants]: undefined;
+  // Talent screens
+  [Screens.AvailabilitySetup]: undefined;
+  [Screens.TalentProfileSetup]: undefined;
+
+  // Chat screens
+  [Screens.ChatRoom]: { chatId: string };
 };
