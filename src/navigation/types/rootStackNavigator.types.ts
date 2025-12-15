@@ -42,6 +42,7 @@ export type RootStackParamList = {
   [Screens.TalentNotificationSettings]: undefined;
   [Screens.ManageEvent]: undefined;
   [Screens.EventParticipants]: undefined;
+  [Screens.FlagParticipant]: { participantId: string };
   // Talent screens
   [Screens.AvailabilitySetup]: undefined;
   [Screens.TalentProfileSetup]: undefined;
