@@ -43,6 +43,7 @@ export enum Screens {
   TalentNotificationSettings = 'TalentNotificationSettings',
   ManageEvent = 'ManageEvent',
   EventParticipants = 'EventParticipants',
+  FlagParticipant = 'FlagParticipant',
 
   // Talent screens
   AvailabilitySetup = 'AvailabilitySetup',

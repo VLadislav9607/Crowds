@@ -11,6 +11,7 @@ export const AVATAR_TYPOGRAPHY: Record<AvatarSize, TypographyKeysType> = {
   56: 'bold_18',
   64: 'bold_20',
   80: 'bold_24',
+  148: 'bold_32',
 };
 
 export const AVATAR_FLAG_COLOR: Record<AvatarFlag, ColorsKeys> = {

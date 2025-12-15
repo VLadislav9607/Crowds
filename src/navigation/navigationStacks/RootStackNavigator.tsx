@@ -29,14 +29,17 @@ import { TalentEventDetailsScreen, TalentSearchEventsScreen } from '../../module
 import { ChangePasswordScreen } from '@modules/profile';
 import { ManageEventScreen } from '../../modules/event-management';
 import { ChatRoomScreen } from '../../modules/chats';
-import { EventParticipantsScreen } from '../../modules/event-participants';
+import {
+  EventParticipantsScreen,
+  FlagParticipantScreen,
+} from '../../modules/event-participants';
 
 const RootStack = createStackNavigator<RootStackParamList>();
 
 export const RootStackNavigator = () => {
   return (
     <RootStack.Navigator
-      initialRouteName={Screens.BottomTabs}
+      initialRouteName={Screens.FlagParticipant}
       screenOptions={{ headerShown: false }}
     >
       <RootStack.Screen name={Screens.First} component={FirstScreen} />
@@ -119,6 +122,11 @@ export const RootStackNavigator = () => {
       <RootStack.Screen
         name={Screens.EventParticipants}
         component={EventParticipantsScreen}
+      />
+
+      <RootStack.Screen
+        name={Screens.FlagParticipant}
+        component={FlagParticipantScreen}
       />
 
       <RootStack.Screen
