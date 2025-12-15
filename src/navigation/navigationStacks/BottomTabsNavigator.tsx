@@ -1,18 +1,18 @@
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { SvgXml } from 'react-native-svg';
+import { StyleSheet } from 'react-native';
 
 import { Role } from '@modules/common';
 
 import { BottomTabsConfig } from '../constants';
 import { useBottomTabBar } from '../hooks';
-import { StyleSheet } from 'react-native';
 
 const Tab = createBottomTabNavigator();
 
 export const BottomTabsNavigator = () => {
   const { tabBarOptions } = useBottomTabBar();
 
-  const role = Role.TALENT;
+  const role = Role.ORGANIZATION;
   const screensByRole = BottomTabsConfig[role];
 
   return (

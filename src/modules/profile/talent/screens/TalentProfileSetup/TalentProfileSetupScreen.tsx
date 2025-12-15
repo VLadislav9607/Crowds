@@ -1,7 +1,6 @@
 import { ScreenWithScrollWrapper } from '@components';
 import { ProfileSetupHeader } from '../../../components';
 import { TalentProfileSetupForm } from '../../forms';
-import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import {
   useSharedValue,
   useAnimatedStyle,
@@ -11,7 +10,6 @@ import Animated from 'react-native-reanimated';
 import { styles } from './styles';
 
 export const TalentProfileSetupScreen = () => {
-  const insets = useSafeAreaInsets();
   const headerOpacity = useSharedValue(1);
   const headerTranslateY = useSharedValue(0);
   const headerHeight = useSharedValue(120);
@@ -58,10 +56,7 @@ export const TalentProfileSetupScreen = () => {
     <ScreenWithScrollWrapper
       title="Setup My Profile"
       headerVariant="withTitle"
-      contentContainerStyle={[
-        { paddingBottom: insets.bottom || 10 },
-        styles.contentContainer,
-      ]}
+      contentContainerStyle={styles.contentContainer}
       headerStyles={styles.headerStyles}
       animatedScrollHandler={scrollHandler}
       useAnimatedScrollView={true}

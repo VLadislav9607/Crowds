@@ -5,6 +5,7 @@ import {
   HomeTabScreen,
 } from '../../modules/home';
 
+import { HomeTabScreen, HomeTalentTabScreen } from '../../modules/home';
 import {
   EventsDashboardTabScreen,
   UpcomingEventsTabScreen,
@@ -12,6 +13,7 @@ import {
   TalentEventsTab,
   QRCodeScanTab
 } from '../../modules/events';
+import { ChatsTabScreen } from '../../modules/chats';
 
 import { BottomTabsConfigType } from '../types';
 import { Screens } from './screens';
@@ -31,7 +33,7 @@ export const BottomTabsConfig: BottomTabsConfigType = {
     },
     {
       name: Screens.ChatsOrganization,
-      component: HomeTabScreen,
+      component: ChatsTabScreen,
       icon: (opacity: number) => ICONS.BOTTOM_TABS.chats(opacity),
     },
     {
@@ -51,6 +53,15 @@ export const BottomTabsConfig: BottomTabsConfigType = {
       name: Screens.HomeTalent,
       component: TalentEventsHomeTab,
       icon: (opacity: number) => ICONS.BOTTOM_TABS.home(opacity),
+    },
+    {
+      component: HomeTalentTabScreen,
+      icon: (opacity: number) => ICONS.BOTTOM_TABS.home(opacity),
+    },
+    {
+      name: Screens.ChatsTalent,
+      component: ChatsTabScreen,
+      icon: (opacity: number) => ICONS.BOTTOM_TABS.chats(opacity),
     },
     {
       name: Screens.EventsTalent,

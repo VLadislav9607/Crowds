@@ -14,7 +14,7 @@ export const EventsDashboardScreenLayout = ({ children }: IProps) => {
   return (
     <ScreenWrapper
       headerVariant="withLogoAndImageBg"
-      witBottomTab={true}
+      withBottomTabBar={true}
       contentContainerStyle={styles.contentContainer}
     >
       <View style={styles.row}>

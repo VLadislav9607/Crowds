@@ -1,4 +1,4 @@
-import { ViewStyle } from 'react-native';
+import { TextStyle, ViewStyle } from 'react-native';
 import { AppTextProps } from '@ui';
 import { BottomSheetModal, BottomSheetProps } from '@gorhom/bottom-sheet';
 
@@ -8,6 +8,8 @@ export interface BottomSheetFieldProps {
   labelProps?: Partial<AppTextProps>;
   errorMessageProps?: Partial<AppTextProps>;
   containerStyle?: ViewStyle;
+  inputStyle?: ViewStyle;
+  valueTextStyle?: TextStyle;
   disabled?: boolean;
   placeholderText?: string;
   placeholderTextProps?: Partial<AppTextProps>;

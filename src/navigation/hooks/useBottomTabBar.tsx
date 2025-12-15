@@ -1,22 +1,18 @@
 import { StyleSheet } from 'react-native';
-import { useSafeAreaInsets } from 'react-native-safe-area-context';
-import { BottomTabBar } from '@react-navigation/bottom-tabs';
+import { BottomTabBarProps } from '@react-navigation/bottom-tabs';
 
 import { COLORS } from '@styles';
 
-const BOTTOM_TAB_HEIGHT = 51;
-
-const renderTabBar = (props: any) => <BottomTabBar {...props} />;
+import { TAB_BAR_HEIGHT } from '../constants/tabBar';
+import { CustomTabBar } from '../components';
 
 export const useBottomTabBar = () => {
-  const { bottom } = useSafeAreaInsets();
-
   const tabBarOptions = {
     safeAreaInsets: { bottom: 0 },
     screenOptions: {
-      tabBarStyle: [styles.tabBarStyle, { marginBottom: bottom + 15 }],
+      tabBarStyle: styles.tabBarStyle,
     },
-    tabBar: renderTabBar,
+    tabBar: (props: BottomTabBarProps) => <CustomTabBar {...props} />,
   };
 
   return { tabBarOptions };
@@ -24,9 +20,10 @@ export const useBottomTabBar = () => {
 
 const styles = StyleSheet.create({
   tabBarStyle: {
-    marginHorizontal: 20,
     borderRadius: 41,
-    height: BOTTOM_TAB_HEIGHT,
+    height: TAB_BAR_HEIGHT,
     backgroundColor: COLORS.black,
+    borderTopWidth: 0,
+    elevation: 0,
   },
 });

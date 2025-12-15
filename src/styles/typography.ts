@@ -65,6 +65,7 @@ export const TYPOGRAPHY = {
   regular_16: createStyle(FONTS.Inter_400, 16),
   regular_14: createStyle(FONTS.Inter_400, 14),
   regular_12: createStyle(FONTS.Inter_400, 12),
+  regular_10_4: createStyle(FONTS.Inter_400, 10.4),
   regular_10: createStyle(FONTS.Inter_400, 10),
   regular_9: createStyle(FONTS.Inter_400, 9),
   regular_8: createStyle(FONTS.Inter_400, 8),

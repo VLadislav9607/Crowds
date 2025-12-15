@@ -1,30 +1,15 @@
 import {
   View,
   StyleSheet,
-  StyleProp,
-  ViewStyle,
   KeyboardAvoidingView,
   Platform,
   ScrollView,
-  NativeSyntheticEvent,
-  NativeScrollEvent,
 } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import Animated from 'react-native-reanimated';
 
-import { AppHeader, IAppHeaderProps } from '@ui';
-
-interface IScreenWithScrollWrapperProps extends IAppHeaderProps {
-  children: React.ReactNode;
-  footer?: React.ReactNode;
-  isFloatFooter?: boolean;
-  footerStyle?: StyleProp<ViewStyle>;
-  contentContainerStyle?: StyleProp<ViewStyle>;
-  showsVerticalScrollIndicator?: boolean;
-  onScroll?: (event: NativeSyntheticEvent<NativeScrollEvent>) => void;
-  animatedScrollHandler?: (event: any) => void;
-  useAnimatedScrollView?: boolean;
-}
+import { AppHeader } from '@ui';
+import { IScreenWithScrollWrapperProps } from './types';
 
 export const ScreenWithScrollWrapper = ({
   children,
@@ -36,6 +21,8 @@ export const ScreenWithScrollWrapper = ({
   onScroll,
   animatedScrollHandler,
   useAnimatedScrollView = false,
+  keyboardAvoidingEnabled = true,
+  withBottomTabBar = false,
   ...headerProps
 }: IScreenWithScrollWrapperProps) => {
   const { bottom } = useSafeAreaInsets();
@@ -44,10 +31,8 @@ export const ScreenWithScrollWrapper = ({
     <View
       style={[
         styles.footer,
-        {
-          paddingBottom: bottom || 16,
-          ...footerStyle,
-        },
+        isFloatFooter && { paddingBottom: bottom || 16 },
+        footerStyle,
       ]}
     >
       {footer}
@@ -67,12 +52,17 @@ export const ScreenWithScrollWrapper = ({
       style={styles.wrapper}
       behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
       keyboardVerticalOffset={Platform.OS === 'ios' ? 0 : 20}
+      enabled={keyboardAvoidingEnabled}
     >
       {headerProps.headerVariant && <AppHeader {...headerProps} />}
 
       <ScrollViewComponent
         style={styles.scrollView}
-        contentContainerStyle={[styles.contentContainer, contentContainerStyle]}
+        contentContainerStyle={[
+          styles.contentContainer,
+          { paddingBottom: withBottomTabBar ? 0 : bottom || 16 },
+          contentContainerStyle,
+        ]}
         showsVerticalScrollIndicator={showsVerticalScrollIndicator}
         keyboardShouldPersistTaps="handled"
         {...scrollProps}

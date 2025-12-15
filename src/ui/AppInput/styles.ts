@@ -26,7 +26,6 @@ export const styles = StyleSheet.create({
     paddingTop: 3,
     flexGrow: 1,
   },
-
   errorMessage: {
     marginTop: 8,
   },
