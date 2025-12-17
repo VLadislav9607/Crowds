@@ -25,6 +25,7 @@ export function AppTabSelector<T = string>({
   label,
   badgeLabel,
   theme = 'white',
+  marginBottom = 16,
 }: IAppTabSelectorProps<T>) {
   const animatedValue = useRef(new Animated.Value(0)).current;
   const animatedWidth = useRef(new Animated.Value(0)).current;
@@ -177,7 +178,9 @@ export function AppTabSelector<T = string>({
   return (
     <>
       <TabsLabel label={label} badgeLabel={badgeLabel} />
-      <View style={[styles.container, containerStyle]}>{tabsContent}</View>
+      <View style={[styles.container, { marginBottom }, containerStyle]}>
+        {tabsContent}
+      </View>
     </>
   );
 }

@@ -35,7 +35,6 @@ export const AppHeader = ({
     ...styles.header,
     paddingTop: insets.top || 24,
     backgroundColor: COLORS[colorHeader || 'main'],
-    ...headerStyles,
   };
 
   return (
@@ -45,7 +44,7 @@ export const AppHeader = ({
       </If>
 
       <If condition={headerVariant === 'withLogo'}>
-        <View style={[headerStyle, styles.headerWithLogo]}>
+        <View style={[headerStyle, styles.headerWithLogo, headerStyles]}>
           <View style={styles.logoHeaderInner}>
             <SvgXml xml={ICONS.fullLogo()} {...logoProps} />
             {rightIcons && <RightIcons rightIcons={rightIcons} />}
@@ -55,7 +54,7 @@ export const AppHeader = ({
       </If>
 
       <If condition={headerVariant === 'withTitle'}>
-        <View style={[headerStyle, styles.headerWithTitle]}>
+        <View style={[headerStyle, styles.headerWithTitle, headerStyles]}>
           <View style={styles.titleHeaderInner}>
             <HeaderContent
               title={title}
@@ -73,7 +72,7 @@ export const AppHeader = ({
         <ImageBackground
           resizeMode="stretch"
           source={headerImageBgMap[headerImageBg || 'purple']}
-          style={[headerStyle, styles.withTitleAndImageBg]}
+          style={[headerStyle, styles.withTitleAndImageBg, headerStyles]}
         >
           <View style={styles.overlay} />
           <View style={[styles.contentWrapperColumn, styles.headerContainer]}>
@@ -96,7 +95,7 @@ export const AppHeader = ({
         <ImageBackground
           resizeMode="stretch"
           source={headerImageBgMap[headerImageBg || 'purple']}
-          style={[headerStyle, styles.withTitleAndImageBg]}
+          style={[headerStyle, styles.withTitleAndImageBg, headerStyles]}
         >
           <View style={styles.overlay} />
           <View style={[styles.contentWrapperLogo, styles.headerContainer]}>

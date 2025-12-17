@@ -1,5 +1,5 @@
 import { StyleSheet } from 'react-native';
-import { ColorsKeys, TypographyKeysType } from '@styles';
+import { COLORS, ColorsKeys, TypographyKeysType } from '@styles';
 import { AvatarFlag, AvatarSize } from './types';
 
 export const AVATAR_TYPOGRAPHY: Record<AvatarSize, TypographyKeysType> = {
@@ -21,6 +21,21 @@ export const AVATAR_FLAG_COLOR: Record<AvatarFlag, ColorsKeys> = {
   black: 'black',
 };
 
+export const AVATAR_FLAG_SIZE: Record<
+  AvatarSize,
+  { container: number; indicator: number }
+> = {
+  20: { container: 7, indicator: 5 },
+  24: { container: 8, indicator: 6 },
+  32: { container: 10, indicator: 7 },
+  40: { container: 11, indicator: 8 },
+  48: { container: 13, indicator: 10 },
+  56: { container: 15, indicator: 11 },
+  64: { container: 17, indicator: 13 },
+  80: { container: 20, indicator: 15 },
+  148: { container: 28, indicator: 22 },
+};
+
 export const styles = StyleSheet.create({
   avatar: {
     position: 'relative',
@@ -28,6 +43,7 @@ export const styles = StyleSheet.create({
   image: {
     width: '100%',
     height: '100%',
+    borderRadius: 50,
   },
   placeholder: {
     backgroundColor: '#F2F0F5',
@@ -37,13 +53,17 @@ export const styles = StyleSheet.create({
   initials: {
     color: '#12051F',
   },
-  flag: {
+  flagContainer: {
     position: 'absolute',
-    top: 1,
-    left: 1,
-    width: 11,
-    height: 11,
-    borderRadius: 100,
+    bottom: 0,
+    right: 0,
+    borderRadius: 50,
+    backgroundColor: COLORS.white,
+    justifyContent: 'center',
+    alignItems: 'center',
     zIndex: 1,
+  },
+  flag: {
+    borderRadius: 50,
   },
 });

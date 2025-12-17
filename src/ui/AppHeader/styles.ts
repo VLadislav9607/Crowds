@@ -47,8 +47,8 @@ export const styles = StyleSheet.create({
   },
   withTitleAndImageBg: {
     flexDirection: 'column',
+    minHeight: 120,
     gap: 14,
-    // paddingTop: 0,
     overflow: 'hidden',
   },
   backButton: {

@@ -39,13 +39,18 @@ import {
   FlagParticipantScreen,
 } from '../../modules/event-participants';
 import { ApplicantProfileScreen } from '../../modules/event-applicants';
+import {
+  AddTalentsToListScreen,
+  CustomTalentsListScreen,
+  InviteTalentsScreen,
+} from '../../modules/invite-talents';
 
 const RootStack = createStackNavigator<RootStackParamList>();
 
 export const RootStackNavigator = () => {
   return (
     <RootStack.Navigator
-      initialRouteName={Screens.ApplicantProfile}
+      initialRouteName={Screens.BottomTabs}
       screenOptions={{ headerShown: false }}
     >
       <RootStack.Screen name={Screens.First} component={FirstScreen} />
@@ -146,6 +151,21 @@ export const RootStackNavigator = () => {
       <RootStack.Screen
         name={Screens.ApplicantProfile}
         component={ApplicantProfileScreen}
+      />
+
+      <RootStack.Screen
+        name={Screens.InviteTalents}
+        component={InviteTalentsScreen}
+      />
+
+      <RootStack.Screen
+        name={Screens.CustomTalentsList}
+        component={CustomTalentsListScreen}
+      />
+
+      <RootStack.Screen
+        name={Screens.AddTalentsToList}
+        component={AddTalentsToListScreen}
       />
     </RootStack.Navigator>
   );

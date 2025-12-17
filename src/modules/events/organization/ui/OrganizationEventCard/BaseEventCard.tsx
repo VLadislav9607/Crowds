@@ -23,7 +23,7 @@ export const BaseEventCard = ({
       {/* Header Row */}
       <View style={cardStyles.nameRow}>
         <AppText style={cardStyles.name} numberOfLines={1}>
-          {event.name + event.name + event.name}
+          {event.name}
         </AppText>
         {headerRight}
       </View>
@@ -48,7 +48,7 @@ export const BaseEventCard = ({
           </View>
           <IconText
             icon={ICONS.locationMap()}
-            text={event.location + event.location + event.location}
+            text={event.location}
             textProps={{ numberOfLines: 1 }}
             iconSize={14}
           />

@@ -45,6 +45,14 @@ export enum HairColour {
   OTHER_NOT_SURE = 'other_not_sure',
 }
 
+export enum HairStyle {
+  STRAIGHT = 'straight',
+  WAVY = 'wavy',
+  CURLY = 'curly',
+  COILY = 'coily',
+  BALD = 'bald',
+}
+
 export enum FacialAttributes {
   BIRTHMARK = 'birthmark',
   MOLES = 'moles',
