@@ -8,9 +8,10 @@ export interface ITabOption<T = string> {
 
 export interface IAppTabSelectorProps<T = string> {
   options: ITabOption<T>[];
-  selectedValue:  T;
+  selectedValue: T;
   onSelect: (value: T) => void;
   label?: string;
   badgeLabel?: string;
   theme?: TabSelectorTheme;
+  marginBottom?: number;
 }

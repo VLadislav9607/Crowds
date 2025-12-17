@@ -32,13 +32,17 @@ export enum Screens {
   InviteNewMember = 'InviteNewMember',
   CopyInviteLink = 'CopyInviteLink',
   ApplicantProfile = 'ApplicantProfile',
+  ManageEvent = 'ManageEvent',
+  EventParticipants = 'EventParticipants',
+  FlagParticipant = 'FlagParticipant',
+  InviteTalents = 'InviteTalents',
+  CustomTalentsList = 'CustomTalentsList',
+  AddTalentsToList = 'AddTalentsToList',
 
   // Talent screens
   TalentSearchEvents = 'TalentSearchEvents',
   TalentEventDetails = 'TalentEventDetails',
-  ManageEvent = 'ManageEvent',
-  EventParticipants = 'EventParticipants',
-  FlagParticipant = 'FlagParticipant',
+
   AvailabilitySetup = 'AvailabilitySetup',
   TalentProfileSetup = 'TalentProfileSetup',
 
