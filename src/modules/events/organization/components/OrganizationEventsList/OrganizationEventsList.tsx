@@ -17,7 +17,7 @@ export const OrganizationEventsList = ({ events, cardType }: IProps) => {
       data={events}
       keyExtractor={item => item.id}
       renderItem={renderEventCard}
-      gap={16}
+      gap={4}
       emptyText="No events found"
       withBottomTab
     />

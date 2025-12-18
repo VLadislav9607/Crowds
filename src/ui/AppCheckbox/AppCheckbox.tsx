@@ -37,12 +37,7 @@ export const AppCheckbox = ({
   return (
     <View style={[styles.container, containerStyle]}>
       <TouchableOpacity
-        hitSlop={{
-          top: hitSlop,
-          bottom: hitSlop,
-          left: hitSlop,
-          right: hitSlop,
-        }}
+        hitSlop={hitSlop}
         onPress={() => onChange?.(!checked)}
         {...props}
         style={buttonStyles}

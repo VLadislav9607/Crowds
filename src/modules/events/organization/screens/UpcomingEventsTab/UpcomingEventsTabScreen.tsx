@@ -1,10 +1,9 @@
+import { useState } from 'react';
 import { StyleSheet } from 'react-native';
 
-import { AppTabSelector, ScreenWrapper } from '@components';
-import { AppText } from '@ui';
-import { useState } from 'react';
-import { OrganizationEventsList } from '../../components';
+import { AppTabSelector, If, ScreenWrapper } from '@components';
 
+import { OrganizationEventsList } from '../../components';
 import { IEventData } from '../../ui';
 
 const events: IEventData[] = [
@@ -66,29 +65,40 @@ const events: IEventData[] = [
 ];
 
 export const UpcomingEventsTabScreen = () => {
-  const [selectedTab, setSelectedTab] = useState('job_board');
+  const [mainTab, setMainTab] = useState('active');
+  const [activeSubTab, setActiveSubTab] = useState('job_board');
   return (
     <ScreenWrapper
-      headerVariant="withLogoAndImageBg"
+      showBackButton={false}
+      headerVariant="withTitleAndImageBg"
       withBottomTabBar={true}
+      title="Events"
+      titleProps={{ style: { textAlign: 'center' } }}
       contentContainerStyle={styles.contentContainer}
+      customElement={
+        <AppTabSelector
+          theme="black"
+          marginBottom={0}
+          options={[
+            { label: 'Active', value: 'active' },
+            { label: 'Drafts', value: 'drafts' },
+            { label: 'Past', value: 'upcoming' },
+          ]}
+          selectedValue={mainTab}
+          onSelect={setMainTab}
+        />
+      }
     >
-      <AppText typography="extra_bold_18" margin={{ bottom: 16 }}>
-        Upcoming Events
-        <AppText typography="regular_14" color="grayscale_500">
-          {' '}
-          (10)
-        </AppText>
-      </AppText>
-
-      <AppTabSelector
-        options={[
-          { label: 'Job Board', value: 'job_board', badge: 10 },
-          { label: 'Private', value: 'private' },
-        ]}
-        selectedValue={selectedTab}
-        onSelect={setSelectedTab}
-      />
+      <If condition={mainTab === 'active'}>
+        <AppTabSelector
+          options={[
+            { label: 'Job Board', value: 'job_board', badge: 10 },
+            { label: 'Private', value: 'private' },
+          ]}
+          selectedValue={activeSubTab}
+          onSelect={setActiveSubTab}
+        />
+      </If>
 
       <OrganizationEventsList events={events} cardType="upcoming" />
     </ScreenWrapper>
@@ -98,6 +108,6 @@ export const UpcomingEventsTabScreen = () => {
 const styles = StyleSheet.create({
   contentContainer: {
     paddingHorizontal: 20,
-    paddingTop: 32,
+    paddingTop: 16,
   },
 });

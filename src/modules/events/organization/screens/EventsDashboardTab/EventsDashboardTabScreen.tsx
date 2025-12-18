@@ -1,11 +1,9 @@
-import { useState } from 'react';
-import { AppTabSelector } from '@components';
-import { GridBoard } from '@ui';
+import { AppText, GridBoard } from '@ui';
 
 import { EventsDashboardScreenLayout } from '../../layouts';
 import { OrganizationEventsList } from '../../components';
 import { eventDashboardConfig } from '../../configs';
-import { EventCardType, IEventData } from '../../ui';
+import { IEventData } from '../../ui';
 
 const events: IEventData[] = [
   {
@@ -29,23 +27,15 @@ const events: IEventData[] = [
 ];
 
 export const EventsDashboardTabScreen = () => {
-  const [selectedTab, setSelectedTab] = useState<EventCardType>('active');
-
   return (
     <EventsDashboardScreenLayout>
       <GridBoard items={eventDashboardConfig} />
 
-      <AppTabSelector
-        options={[
-          { label: 'Active Events', value: 'active' },
-          { label: 'Drafts', value: 'drafts' },
-          { label: 'Past Events', value: 'past' },
-        ]}
-        selectedValue={selectedTab}
-        onSelect={(value: string) => setSelectedTab(value as EventCardType)}
-      />
+      <AppText typography="extra_bold_18" margin={{ bottom: 16 }}>
+        Today’s Events
+      </AppText>
 
-      <OrganizationEventsList events={events} cardType={selectedTab} />
+      <OrganizationEventsList events={events} cardType="active" />
     </EventsDashboardScreenLayout>
   );
 };
