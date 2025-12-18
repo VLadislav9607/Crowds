@@ -1,4 +1,5 @@
 export type TabSelectorTheme = 'white' | 'black';
+export type TabSelectorVariant = 'default' | 'pill';
 
 export interface ITabOption<T = string> {
   label: string;
@@ -13,5 +14,6 @@ export interface IAppTabSelectorProps<T = string> {
   label?: string;
   badgeLabel?: string;
   theme?: TabSelectorTheme;
+  variant?: TabSelectorVariant;
   marginBottom?: number;
 }

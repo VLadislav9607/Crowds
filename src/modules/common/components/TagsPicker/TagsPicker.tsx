@@ -11,6 +11,7 @@ export const TagsPicker = ({
   containerStyle,
   onTagsChange,
   onTagPress,
+  categoriesContainerStyle,
 }: TagsPickerProps) => {
   const tagsPickerModalRef = useRef<TagsPickerModalRef>(null);
 
@@ -57,7 +58,7 @@ export const TagsPicker = ({
       </View>
 
       <If condition={!isLoading}>
-        <View style={styles.categoriesContainer}>
+        <View style={[styles.categoriesContainer, categoriesContainerStyle]}>
           {tags.map(tag => {
             const isSelected = selectedTags.includes(tag);
             return (

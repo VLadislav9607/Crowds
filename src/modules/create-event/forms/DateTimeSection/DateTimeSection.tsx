@@ -1,4 +1,4 @@
-import { Controller, FieldErrors } from 'react-hook-form';
+import { Controller, useFormContext } from 'react-hook-form';
 import { StyleSheet, View } from 'react-native';
 
 import { AppText } from '@ui';
@@ -7,12 +7,12 @@ import { ICONS } from '@assets';
 
 import { CreateEventFormData } from '../../validation';
 
-interface BasicInfoSectionProps {
-  control: any;
-  errors: FieldErrors<CreateEventFormData>;
-}
+export const DateTimeSection = () => {
+  const {
+    control,
+    formState: { errors },
+  } = useFormContext<CreateEventFormData>();
 
-export const DateTimeSection = ({ control, errors }: BasicInfoSectionProps) => {
   return (
     <>
       <AppText typography="h5_mob" margin={{ bottom: -16 }}>
@@ -50,6 +50,16 @@ export const DateTimeSection = ({ control, errors }: BasicInfoSectionProps) => {
           )}
         />
       </View>
+
+      <AppText
+        typography="medium_12"
+        color="gray_primary"
+        margin={{ top: -16 }}
+      >
+        As the selected date is less than 2 days away, we cannot ensure crowd
+        availability. We recommend choosing another date for a better
+        experience.
+      </AppText>
 
       <View style={styles.dateInputContainer}>
         <Controller

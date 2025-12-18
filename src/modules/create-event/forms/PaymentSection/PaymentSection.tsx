@@ -1,16 +1,18 @@
 import { StyleSheet } from 'react-native';
-import { Controller, FieldErrors } from 'react-hook-form';
+import { Controller, useFormContext } from 'react-hook-form';
+
 import { CheckboxList } from '@components';
-import { CreateEventFormData } from '../../validation';
-import { COLORS, TYPOGRAPHY } from '@styles';
 import { AppInput } from '@ui';
+import { COLORS, TYPOGRAPHY } from '@styles';
 
-interface PaymentSectionProps {
-  control: any;
-  errors: FieldErrors<CreateEventFormData>;
-}
+import { CreateEventFormData } from '../../validation';
 
-export const PaymentSection = ({ control, errors }: PaymentSectionProps) => {
+export const PaymentSection = () => {
+  const {
+    control,
+    formState: { errors },
+  } = useFormContext<CreateEventFormData>();
+
   return (
     <>
       <Controller
@@ -36,10 +38,12 @@ export const PaymentSection = ({ control, errors }: PaymentSectionProps) => {
         name="paymentAmount"
         render={({ field: { value, onChange } }) => (
           <AppInput
-            value={value}
-            onChangeText={onChange}
+            value={value ? String(value) : ''}
+            onChangeText={text => onChange(text ? Number(text) : undefined)}
+            keyboardType="numeric"
             errorMessage={errors.paymentAmount?.message}
             placeholder="$15 minimum"
+            description="Minimum 3-hour payment applies, even for 1-hour shifts (legal requirement)."
             containerStyle={styles.paymentAmountInput}
           />
         )}

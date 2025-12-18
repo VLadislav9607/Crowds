@@ -53,6 +53,7 @@ import { image } from './image';
 import { orgDetails } from './orgDetails';
 import { wallet } from './wallet';
 import { settings } from './settings';
+import { trash } from './trash';
 
 import { BOTTOM_TABS } from './bottomTabs';
 
@@ -112,4 +113,5 @@ export const ICONS = {
   orgDetails,
   wallet,
   settings,
+  trash,
 };

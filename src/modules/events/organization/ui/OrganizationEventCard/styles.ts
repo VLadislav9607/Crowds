@@ -12,8 +12,9 @@ export const cardStyles = StyleSheet.create({
     shadowColor: COLORS.black,
     shadowOffset: { width: 0, height: 1 },
     shadowOpacity: 0.12,
-    shadowRadius: 2,
+    shadowRadius: 4,
     elevation: 4,
+    margin: 4,
   },
   nameRow: {
     flexDirection: 'row',
