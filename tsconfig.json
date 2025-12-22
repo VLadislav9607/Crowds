@@ -32,7 +32,8 @@
       "@modules/common": ["./src/modules/common/index.ts"],
       "@modules/profile": ["./src/modules/profile/index.ts"],
       "@modules/onboarding": ["./src/modules/onboarding/index.ts"],
-      "@modules/events": ["./src/modules/events/index.ts"]
+      "@modules/events": ["./src/modules/events/index.ts"],
+      "@actions": ["./src/actions/index.ts"],
     }
   }
 }

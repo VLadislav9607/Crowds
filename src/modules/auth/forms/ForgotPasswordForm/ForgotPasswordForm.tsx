@@ -10,14 +10,18 @@ import {
   ForgotPasswordFormRef,
   forgotPasswordFormSchema,
 } from './types';
+import { useForgotPassword } from '@actions';
+import { showErrorToast } from '@helpers';
 
 export const ForgotPasswordForm = forwardRef<
   ForgotPasswordFormRef,
   ForgotPasswordFormProps
->(({ defaultValues, containerStyle, onFormStateChange }, ref) => {
+>(({ defaultValues, containerStyle, onFormStateChange, onSuccess }, ref) => {
+
+  const { mutate: forgotPasswordMutate, isPending: isLoading } = useForgotPassword();
+
   const {
     control,
-    formState: { isValid },
     handleSubmit,
     getValues,
   } = useForm<ForgotPasswordFormData>({
@@ -31,19 +35,40 @@ export const ForgotPasswordForm = forwardRef<
       } as Partial<ForgotPasswordFormData>),
   });
 
-  useImperativeHandle(ref, () => ({ handleSubmit, getValues }), [
-    handleSubmit,
-    getValues,
-  ]);
+
+  const onUpdatePassword = (data: ForgotPasswordFormData) => {
+    forgotPasswordMutate(data, {
+      onSuccess,
+      onError: (error: Error) => {
+        showErrorToast(error.message);
+      },
+    });
+  };
+
+  useImperativeHandle(ref, () => ({ 
+    handleSubmit: handleSubmit(onUpdatePassword), getValues }), 
+    [handleSubmit]);
 
   useEffect(() => {
-    if (onFormStateChange) {
-      onFormStateChange({ isValid });
-    }
-  }, [isValid, onFormStateChange]);
+      onFormStateChange?.({ isLoading });
+  }, [isLoading, onFormStateChange]);
 
   return (
     <View style={[styles.container, containerStyle]}>
+         <Controller
+        control={control}
+        name='username'
+        render={({ field, fieldState }) => (
+          <AppInput
+            label="Username"
+            placeholder="Enter your username"
+            value={field.value}
+            onChangeText={field.onChange}
+            errorMessage={fieldState.error?.message}
+          />
+        )}
+      />
+
       <Controller
         control={control}
         name="uin"

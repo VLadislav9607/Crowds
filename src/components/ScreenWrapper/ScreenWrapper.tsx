@@ -9,6 +9,8 @@ interface IScreenWrapperProps extends IAppHeaderProps {
   witBottomTab?: boolean;
   containerStyle?: StyleProp<ViewStyle>;
   contentContainerStyle?: StyleProp<ViewStyle>;
+  withBottomTabBar?: boolean;
+  wrapperStyle?: StyleProp<ViewStyle>;
 }
 
 export const  ScreenWrapper = ({
@@ -16,6 +18,7 @@ export const  ScreenWrapper = ({
   containerStyle,
   contentContainerStyle,
   withBottomTabBar = false,
+  witBottomTab,
   wrapperStyle,
   ...headerProps
 }: IScreenWrapperProps) => {

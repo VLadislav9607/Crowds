@@ -34,6 +34,7 @@ export const FirstScreen = () => {
         onPress={() => goToScreen(Screens.SignIn)}
         variant="withBorder"
         size="56"
+        titleStyles={styles.loginButtonText}
         wrapperStyles={styles.loginButton}
       />
     </ImageBackground>
@@ -68,5 +69,8 @@ const styles = StyleSheet.create({
     backgroundColor: COLORS.transparent,
     borderColor: COLORS.white,
     marginBottom: 10,
+  },
+  loginButtonText: {
+    color: COLORS.white,
   },
 });

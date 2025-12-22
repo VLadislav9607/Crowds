@@ -2,6 +2,7 @@ import { ScreenWrapper } from '@components';
 
 import { ChatList } from '../../components';
 import { IChatData } from '../../ui';
+import { COLORS } from '@styles';
 
 const MOCK_DATA: IChatData[] = [
   {
@@ -48,7 +49,7 @@ const MOCK_DATA: IChatData[] = [
 
 export const ChatsTabScreen = () => {
   return (
-    <ScreenWrapper headerVariant="withLogoAndImageBg" withBottomTabBar>
+    <ScreenWrapper headerVariant='withTitle' title='My Messages' withBottomTabBar headerStyles={{ backgroundColor: COLORS.black }}>
       <ChatList chats={MOCK_DATA} variant="organization" withBottomTab />
     </ScreenWrapper>
   );

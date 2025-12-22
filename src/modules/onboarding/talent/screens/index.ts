@@ -1,1 +1,2 @@
-export * from './OnboardingTalent';
+export * from './OnboardingAuthTalent';
+export * from './OnboardingUnAuthTalent';

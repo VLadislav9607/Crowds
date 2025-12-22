@@ -1,2 +1,3 @@
-export * from './OnboardingOrganization';
+export * from './OnboardingUnAuthOrganization';
 export * from './TermsAndPrivacy';
+export * from './OnboardingAuthOrganization';

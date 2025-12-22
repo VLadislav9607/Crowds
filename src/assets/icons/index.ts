@@ -50,7 +50,6 @@ import { calendarV3 } from './calendarV3';
 import { checkedCircle } from './checkedCircle';
 import { plane } from './plane';
 import { dotsVertical } from './dotsVertical';
-import { BOTTOM_TABS } from './bottomTabs';
 import { image } from './image';
 
 export const ICONS = {

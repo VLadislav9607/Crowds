@@ -1,30 +1,61 @@
-import { StyleSheet } from 'react-native';
-import { Controller, Control, FieldErrors } from 'react-hook-form';
+import { StyleSheet, View } from 'react-native';
+import { Controller, useForm } from 'react-hook-form';
+import { zodResolver } from '@hookform/resolvers/zod';
+import { forwardRef, useEffect, useImperativeHandle } from 'react';
 
 import { AppInput, AppText } from '@ui';
 import { CardSelector } from '@components';
 import { TYPOGRAPHY } from '@styles';
 import { OrganizationType } from '@modules/common';
 
-import { OrganizationFormData } from '../../validation';
+import {
+  OrganizationNameFormData,
+  OrganizationNameFormProps,
+  OrganizationNameFormRef,
+  organizationNameFormSchema,
+} from './types';
 
-interface IProps {
-  control: Control<OrganizationFormData>;
-  errors: FieldErrors<OrganizationFormData>;
-}
+export const OrganizationNameStep = forwardRef<
+  OrganizationNameFormRef,
+  OrganizationNameFormProps
+>(({ defaultValues, containerStyle, onFormStateChange }, ref) => {
+  const {
+    control,
+    formState: { isValid },
+    handleSubmit,
+    getValues,
+  } = useForm<OrganizationNameFormData>({
+    resolver: zodResolver(organizationNameFormSchema),
+    defaultValues:
+      defaultValues ||
+      ({
+        organizationName: '',
+        organizationType: OrganizationType.SINGLE,
+      } as Partial<OrganizationNameFormData>),
+  });
 
-export const OrganizationNameStep = ({ control, errors }: IProps) => {
+  useImperativeHandle(ref, () => ({ handleSubmit, getValues }), [
+    handleSubmit,
+    getValues,
+  ]);
+
+  useEffect(() => {
+    if (onFormStateChange) {
+      onFormStateChange({ isValid });
+    }
+  }, [isValid, onFormStateChange]);
+
   return (
-    <>
+    <View style={containerStyle}>
       <Controller
         control={control}
         name="organizationName"
-        render={({ field: { onChange, value } }) => (
+        render={({ field, fieldState }) => (
           <AppInput
             placeholder="Company/business name"
-            value={value}
-            onChangeText={onChange}
-            errorMessage={errors.organizationName?.message}
+            value={field.value}
+            onChangeText={field.onChange}
+            errorMessage={fieldState.error?.message}
           />
         )}
       />
@@ -34,7 +65,7 @@ export const OrganizationNameStep = ({ control, errors }: IProps) => {
       <Controller
         control={control}
         name="organizationType"
-        render={({ field: { onChange, value } }) => (
+        render={({ field }) => (
           <CardSelector
             cards={[
               {
@@ -50,24 +81,24 @@ export const OrganizationNameStep = ({ control, errors }: IProps) => {
               },
             ]}
             cardStyles={styles.card}
-            selectedValue={value as OrganizationType}
+            selectedValue={field.value as OrganizationType}
             onSelect={selectedValue =>
-              onChange(selectedValue as OrganizationType)
+              field.onChange(selectedValue as OrganizationType)
             }
           />
         )}
       />
-    </>
+    </View>
   );
-};
+});
 
 const styles = StyleSheet.create({
   card: {
     height: 140,
   },
   sectionTitle: {
-    marginTop: 12,
-    marginBottom: -4,
+    marginTop: 32,
+    marginBottom: 16,
     ...TYPOGRAPHY.semibold_16,
   },
 });

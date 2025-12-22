@@ -2,6 +2,9 @@ import { COLORS, SHADOWS } from "@styles";
 import { StyleSheet } from "react-native";
 
 export const styles = StyleSheet.create({
+  container: {
+    paddingBottom: 0,
+  },
   searchContainer: {
     flexDirection: 'row', alignItems: 'center', gap: 16, marginBottom: 32, paddingHorizontal: 20
   },

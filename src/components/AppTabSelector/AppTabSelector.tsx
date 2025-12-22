@@ -16,7 +16,7 @@ const INDICATOR_COLORS: Record<TabSelectorTheme, string> = {
 const CONTAINER_COLORS: Record<TabSelectorTheme, string> = {
   white: COLORS.white,
   black: COLORS.black,
-};
+};  
 
 export const AppTabSelector = <T = string,>({
   options,
@@ -49,12 +49,6 @@ export const AppTabSelector = <T = string,>({
     ) {
       const targetPosition = tabPositions[selectedKey];
       const targetWidth = tabWidths[selectedKey];
-
-      const isFirst = selectedIndex === 0;
-      const isLast = selectedIndex === options.length - 1;
-
-      const leftRadius = isFirst ? BORDER_RADIUS : 0;
-      const rightRadius = isLast ? BORDER_RADIUS : 0;
 
       const isFirst = selectedIndex === 0;
       const isLast = selectedIndex === options.length - 1;

@@ -5,7 +5,7 @@ import { AppButton, AppText } from "@ui";
 import { styles } from "./styles";
 import { ICONS } from "@assets";
 import { SvgXml } from "react-native-svg";
-import { TalentLogoutModal, TalentLogoutModalRef } from "../../../modals";
+import { LogoutModal, LogoutModalRef } from "../../../modals";
 import { useRef } from "react";
 import { goToScreen, Screens } from "@navigation";
 
@@ -17,7 +17,7 @@ interface TalentProfileTabOption {
 }
 
 export const TalentProfileTab = () => {
-  const talentLogoutModalRef = useRef<TalentLogoutModalRef>(null);
+  const talentLogoutModalRef = useRef<LogoutModalRef>(null);
 
   const options: TalentProfileTabOption[] = [
     {
@@ -107,7 +107,7 @@ export const TalentProfileTab = () => {
         })}
       </View>
 
-      <TalentLogoutModal ref={talentLogoutModalRef} />
+      <LogoutModal ref={talentLogoutModalRef} />
     </ScreenWithScrollWrapper>
   );
 };

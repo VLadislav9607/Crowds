@@ -27,8 +27,7 @@ export const AppHeader = ({
 }: IAppHeaderProps) => {
   const insets = useSafeAreaInsets();
   const handleBackPress = () => {
-    goBack();
-    goBackCallback?.();
+    goBackCallback ? goBackCallback() : goBack();
   };
 
   const headerStyle = {
@@ -122,6 +121,7 @@ const HeaderContent = ({
   showBackButton,
   titleProps,
   onBackPress,
+  avatarUrl,
 }: HeaderContentProps) => (
   <View style={styles.headerContentRow}>
     {showBackButton && onBackPress && (

@@ -4,12 +4,14 @@ import {
   KeyboardAvoidingView,
   Platform,
   ScrollView,
+  ActivityIndicator,
 } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import Animated from 'react-native-reanimated';
 
 import { AppHeader } from '@ui';
 import { IScreenWithScrollWrapperProps } from './types';
+import { COLORS } from '@styles';
 
 export const ScreenWithScrollWrapper = ({
   children,
@@ -18,6 +20,7 @@ export const ScreenWithScrollWrapper = ({
   footerStyle,
   contentContainerStyle,
   showsVerticalScrollIndicator = false,
+  showLoader = false,
   onScroll,
   animatedScrollHandler,
   useAnimatedScrollView = false,
@@ -55,7 +58,9 @@ export const ScreenWithScrollWrapper = ({
       enabled={keyboardAvoidingEnabled}
     >
       {headerProps.headerVariant && <AppHeader {...headerProps} />}
-
+      {showLoader && <View style={styles.footerContainer}>
+        <ActivityIndicator size="large" color={COLORS.white} />
+      </View>}
       <ScrollViewComponent
         style={styles.scrollView}
         contentContainerStyle={[
@@ -64,15 +69,20 @@ export const ScreenWithScrollWrapper = ({
           contentContainerStyle,
         ]}
         showsVerticalScrollIndicator={showsVerticalScrollIndicator}
-        keyboardShouldPersistTaps="handled"
         {...scrollProps}
+        keyboardShouldPersistTaps="always"
+
       >
+
         {children}
 
         {!isFloatFooter && footer && FooterComponent}
       </ScrollViewComponent>
 
+
+
       {isFloatFooter && footer && FooterComponent}
+
     </KeyboardAvoidingView>
   );
 };
@@ -89,5 +99,16 @@ const styles = StyleSheet.create({
   },
   footer: {
     backgroundColor: 'transparent',
+  },
+  footerContainer: {
+    position: 'absolute',
+    top: 0,
+    bottom: 0,
+    left: 0,
+    right: 0,
+    backgroundColor: COLORS.black_50,
+    zIndex: 100,
+    justifyContent: 'center',
+    alignItems: 'center',
   },
 });

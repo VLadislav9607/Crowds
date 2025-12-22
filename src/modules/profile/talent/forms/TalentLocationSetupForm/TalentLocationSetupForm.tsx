@@ -1,121 +1,89 @@
 import { View } from 'react-native';
 import { Controller, useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { forwardRef, useImperativeHandle } from 'react';
-import { AppInput, AppText } from '@ui';
-import { SelectOptionField } from '@components';
-import { styles } from './styles';
+import { forwardRef, useEffect, useImperativeHandle } from 'react';
+import { PlacesPredictionsInput } from '@components';
 import {
   TalentLocationSetupFormData,
+  TalentLocationSetupFormProps,
   TalentLocationSetupFormRef,
   talentLocationSetupSchema,
 } from './types';
+import { PlaceAutocompleteType } from '@googlemaps/google-maps-services-js';
+import { useGetMe, useUpsertTalentLocation } from '@actions';
+import { styles } from './styles';
 
-// Common countries list - can be moved to constants if needed
-const countryOptions = [
-  { label: 'United States', value: 'us' },
-  { label: 'United Kingdom', value: 'uk' },
-  { label: 'Canada', value: 'ca' },
-  { label: 'Australia', value: 'au' },
-  { label: 'Germany', value: 'de' },
-  { label: 'France', value: 'fr' },
-  { label: 'Italy', value: 'it' },
-  { label: 'Spain', value: 'es' },
-  { label: 'Netherlands', value: 'nl' },
-  { label: 'Belgium', value: 'be' },
-  { label: 'Switzerland', value: 'ch' },
-  { label: 'Austria', value: 'at' },
-  { label: 'Sweden', value: 'se' },
-  { label: 'Norway', value: 'no' },
-  { label: 'Denmark', value: 'dk' },
-  { label: 'Poland', value: 'pl' },
-  { label: 'Ukraine', value: 'ua' },
-  { label: 'Japan', value: 'jp' },
-  { label: 'South Korea', value: 'kr' },
-  { label: 'China', value: 'cn' },
-  { label: 'India', value: 'in' },
-  { label: 'Brazil', value: 'br' },
-  { label: 'Mexico', value: 'mx' },
-  { label: 'Argentina', value: 'ar' },
-  { label: 'South Africa', value: 'za' },
-  { label: 'New Zealand', value: 'nz' },
-];
+
 
 export const TalentLocationSetupForm = forwardRef<
   TalentLocationSetupFormRef,
-  {}
->((_, ref) => {
-  const defaultValues: TalentLocationSetupFormData = {
-    country: '',
-    stateProvince: '',
-    suburb: '',
-  };
+  TalentLocationSetupFormProps
+>(({ onFormStateChange, onSuccess }, ref) => {
+  const { data: me } = useGetMe();
+  const { mutate: upsertTalentLocationMutate, isPending: isUpsertingLocation } = useUpsertTalentLocation();
 
-  const { control, handleSubmit, getValues } =
+  const talentLocation = me?.talent?.talent_location;
+
+  const defaultValues: TalentLocationSetupFormData | undefined = talentLocation ? {
+    parsed_location: {
+      ...talentLocation,
+      coords: talentLocation.coords as string,
+    },
+  } : undefined;
+
+  const { control, handleSubmit, reset, watch } =
     useForm<TalentLocationSetupFormData>({
       resolver: zodResolver(talentLocationSetupSchema),
-      defaultValues,
       mode: 'onBlur',
+      defaultValues
     });
 
-  useImperativeHandle(ref, () => ({ handleSubmit, getValues }), [
-    handleSubmit,
-    getValues,
-  ]);
+  const parsedLocation = watch('parsed_location');
+
+  const onFormReset = () => parsedLocation?.autocomplete_description && reset();
+
+  const createUpdateLocationHandler = (data: TalentLocationSetupFormData) => {
+    if (defaultValues?.parsed_location.place_id && defaultValues?.parsed_location?.place_id === data.parsed_location.place_id) {
+      onSuccess?.();
+      return;
+    }
+
+    upsertTalentLocationMutate(
+      { location: { ...data.parsed_location, id: talentLocation?.id } },
+      { onSuccess }
+    );
+  };
+
+  useImperativeHandle(ref, () => ({
+    handleSubmit: handleSubmit(createUpdateLocationHandler),
+  }), [handleSubmit]);
+
+  useEffect(() => {
+    onFormStateChange?.({ isUpsertingLocation });
+  }, [isUpsertingLocation, onFormStateChange]);
 
   return (
-    <View style={styles.container}>
-      <AppText color="black" typography="semibold_18" margin={{ bottom: 16 }}>
+    <View style={styles.container} >
+      {/* <AppText color="black" typography="semibold_18" margin={{ bottom: 16 }}>
         Where do you live?
-      </AppText>
+      </AppText> */}
 
       <Controller
         control={control}
-        name="country"
-        render={({ field }) => (
-          <SelectOptionField
-            fieldProps={{
-              label: 'Country',
-              placeholderText: 'Country',
-              labelProps: { color: 'main' },
-              value: countryOptions.find(o => o.value === field.value)?.label,
-            }}
-            options={countryOptions}
-            selectedValues={field.value}
-            onOptionSelect={item => field.onChange(item.value)}
-          />
-        )}
+        name="parsed_location"
+        render={({ field, fieldState }) => {
+          return (
+            <PlacesPredictionsInput
+              types={PlaceAutocompleteType.cities}
+              onChangeText={onFormReset}
+              errorMessage={fieldState?.error?.message}
+              onSelectPlace={res => field.onChange(res.parsed_details)}
+              defaultValue={parsedLocation?.autocomplete_description}
+            />
+          )
+        }}
       />
 
-      <Controller
-        control={control}
-        name="stateProvince"
-        render={({ field, fieldState }) => (
-          <AppInput
-            label="State / Province"
-            placeholder="State / Province"
-            value={field.value}
-            onChangeText={field.onChange}
-            errorMessage={fieldState.error?.message}
-            containerStyle={styles.inputContainer}
-          />
-        )}
-      />
-
-      <Controller
-        control={control}
-        name="suburb"
-        render={({ field, fieldState }) => (
-          <AppInput
-            label="Suburb"
-            placeholder="Suburb"
-            value={field.value}
-            onChangeText={field.onChange}
-            errorMessage={fieldState.error?.message}
-            containerStyle={styles.inputContainer}
-          />
-        )}
-      />
     </View>
   );
 });

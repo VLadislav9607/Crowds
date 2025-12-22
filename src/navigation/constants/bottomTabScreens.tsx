@@ -5,7 +5,6 @@ import {
   HomeTabScreen,
 } from '../../modules/home';
 
-import { HomeTabScreen, HomeTalentTabScreen } from '../../modules/home';
 import {
   EventsDashboardTabScreen,
   UpcomingEventsTabScreen,
@@ -55,15 +54,6 @@ export const BottomTabsConfig: BottomTabsConfigType = {
       icon: (opacity: number) => ICONS.BOTTOM_TABS.home(opacity),
     },
     {
-      component: HomeTalentTabScreen,
-      icon: (opacity: number) => ICONS.BOTTOM_TABS.home(opacity),
-    },
-    {
-      name: Screens.ChatsTalent,
-      component: ChatsTabScreen,
-      icon: (opacity: number) => ICONS.BOTTOM_TABS.chats(opacity),
-    },
-    {
       name: Screens.EventsTalent,
       component: TalentEventsTab,
       icon: (opacity: number) => ICONS.BOTTOM_TABS.events(opacity),
@@ -75,7 +65,7 @@ export const BottomTabsConfig: BottomTabsConfigType = {
     },
     {
       name: Screens.ChatsTalent,
-      component: HomeTabScreen,
+      component: ChatsTabScreen,
       icon: (opacity: number) => ICONS.BOTTOM_TABS.chats(opacity),
     },
     {

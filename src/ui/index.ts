@@ -12,3 +12,5 @@ export * from './GridBoard';
 export * from './ChatButton';
 export * from './ActionPurpleButton';
 export * from './Avatar';
+export * from './DashedLine';
+export * from './OtpInput';

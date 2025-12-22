@@ -24,6 +24,7 @@ export interface HeaderContentProps {
   showBackButton?: boolean;
   titleProps?: TextProps;
   onBackPress?: () => void;
+  avatarUrl?: string;
 }
 
 export interface IAppHeaderProps {

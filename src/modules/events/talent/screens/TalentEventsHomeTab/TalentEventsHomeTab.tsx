@@ -8,10 +8,11 @@ import { styles } from './styles';
 import { EVENTS_CATEGORIES } from '../../../constants';
 import { TalentEventsList } from '../../components';
 import { goToScreen, Screens } from '@navigation';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 
 export const TalentEventsHomeTab = () => {
-
+  const insets = useSafeAreaInsets(); 
   // Групуємо категорії по 4 елементи в рядок
   const groupedCategories = EVENTS_CATEGORIES.reduce((acc: (typeof EVENTS_CATEGORIES)[], category: typeof EVENTS_CATEGORIES[0], index: number) => {
     const rowIndex = Math.floor(index / 4);
@@ -29,6 +30,7 @@ export const TalentEventsHomeTab = () => {
       headerVariant="withLogo"
       logoProps={{ width: 164, height: 34.5 }}
       headerStyles={{ backgroundColor: COLORS.black }}
+      containerStyle={styles.container}
       customElement
       rightIcons={[
         {
@@ -41,7 +43,7 @@ export const TalentEventsHomeTab = () => {
 
       <TalentEventsList
         type='random'
-        contentContainerStyle={styles.listContentContainer}
+        contentContainerStyle={[styles.listContentContainer, {paddingBottom: insets.bottom + 90}]}
         ListHeaderComponent={<>
           <View style={styles.searchContainer}>
             <TouchableOpacity onPress={()=>goToScreen(Screens.TalentSearchEvents, { autofocus: true})} activeOpacity={0.8} style={styles.searchInputButton}>
