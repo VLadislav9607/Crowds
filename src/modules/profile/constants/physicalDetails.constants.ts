@@ -3,6 +3,7 @@ import {
   Accent,
   EyeColour,
   HairColour,
+  HairStyle,
   FacialAttributes,
   BodyAttributes,
   TattooSpot,
@@ -55,6 +56,14 @@ export const hairColourOptions = [
   { label: 'Amber', value: HairColour.AMBER },
   { label: 'Bald / Shaved', value: HairColour.BALD_SHAVED },
   { label: 'Other / Not Sure', value: HairColour.OTHER_NOT_SURE },
+];
+
+export const hairStyleOptions = [
+  { label: 'Straight', value: HairStyle.STRAIGHT },
+  { label: 'Wavy', value: HairStyle.WAVY },
+  { label: 'Curly', value: HairStyle.CURLY },
+  { label: 'Coily', value: HairStyle.COILY },
+  { label: 'Bald', value: HairStyle.BALD },
 ];
 
 export const facialAttributesOptions = [

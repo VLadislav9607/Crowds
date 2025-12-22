@@ -6,4 +6,5 @@ export interface ActionPurpleButtonProps extends TouchableOpacityProps {
     title?: string;
     titleIconSize?: number;
     iconSize?: number;
+    description?: string;
 }

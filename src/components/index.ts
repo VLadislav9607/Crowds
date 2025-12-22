@@ -14,3 +14,4 @@ export * from './Skeleton';
 export * from './AppBottomSheet';
 export * from './AppFlashList';
 export * from './PopupMenu';
+export * from './DocumentPicker';

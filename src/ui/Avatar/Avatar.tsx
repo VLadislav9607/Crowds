@@ -1,11 +1,16 @@
 import { View, Image } from 'react-native';
 
 import { If } from '@components';
+import { COLORS } from '@styles';
 
 import { AppText } from '../AppText';
-import { styles, AVATAR_TYPOGRAPHY, AVATAR_FLAG_COLOR } from './styles';
+import {
+  styles,
+  AVATAR_TYPOGRAPHY,
+  AVATAR_FLAG_COLOR,
+  AVATAR_FLAG_SIZE,
+} from './styles';
 import { IAvatarProps } from './types';
-import { COLORS } from '@styles';
 
 const getInitials = (name?: string): string => {
   if (!name) return '';
@@ -18,33 +23,46 @@ const getInitials = (name?: string): string => {
 };
 
 export const Avatar = ({ size = 40, uri, name, flag, style }: IAvatarProps) => {
-  const initials = getInitials(name);
   const sizeStyle = {
     width: size,
     height: size,
-    borderRadius: size / 2,
+    borderRadius: 50,
   };
+
+  const flagSize = AVATAR_FLAG_SIZE[size];
 
   return (
     <View style={[styles.avatar, sizeStyle, style]}>
-      <If condition={!!flag}>
-        <View
-          style={[
-            styles.flag,
-            {
-              backgroundColor: flag && COLORS[AVATAR_FLAG_COLOR[flag]],
-            },
-          ]}
-        />
-      </If>
       <If condition={!!uri}>
         <Image source={{ uri }} style={styles.image} />
       </If>
       <If condition={!uri}>
         <View style={[styles.placeholder, sizeStyle]}>
           <AppText typography={AVATAR_TYPOGRAPHY[size]} style={styles.initials}>
-            {initials}
+            {getInitials(name)}
           </AppText>
+        </View>
+      </If>
+      <If condition={!!flag}>
+        <View
+          style={[
+            styles.flagContainer,
+            {
+              width: flagSize.container,
+              height: flagSize.container,
+            },
+          ]}
+        >
+          <View
+            style={[
+              styles.flag,
+              {
+                width: flagSize.indicator,
+                height: flagSize.indicator,
+                backgroundColor: flag && COLORS[AVATAR_FLAG_COLOR[flag]],
+              },
+            ]}
+          />
         </View>
       </If>
     </View>

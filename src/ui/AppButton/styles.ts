@@ -26,7 +26,7 @@ export const styles = StyleSheet.create({
     backgroundColor: COLORS.gray,
   },
   primaryDisabledText: {
-    color: COLORS.gray_bg,
+    color: COLORS.white,
   },
   // With Border
   withBorderButton: {

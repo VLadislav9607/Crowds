@@ -1,16 +1,20 @@
+import { useState } from 'react';
 import { StyleSheet, View } from 'react-native';
 
 import { ScreenWrapper } from '@components';
 import { AppButton, AppText } from '@ui';
-import { goToScreen, Screens } from '@navigation';
 import { ICONS } from '@assets';
 import { TYPOGRAPHY } from '@styles';
+
+import { EventTypeCreationModal } from '../../modals';
 
 interface IProps {
   children: React.ReactNode;
 }
 
 export const EventsDashboardScreenLayout = ({ children }: IProps) => {
+  const [isModalOpen, setIsModalOpen] = useState(false);
+
   return (
     <ScreenWrapper
       headerVariant="withLogoAndImageBg"
@@ -25,10 +29,15 @@ export const EventsDashboardScreenLayout = ({ children }: IProps) => {
           size="28"
           wrapperStyles={styles.createEventButton}
           titleStyles={styles.createEventButtonText}
-          onPress={() => goToScreen(Screens.CreateEvent)}
+          onPress={() => setIsModalOpen(true)}
         />
       </View>
       {children}
+
+      <EventTypeCreationModal
+        isVisible={isModalOpen}
+        onClose={() => setIsModalOpen(false)}
+      />
     </ScreenWrapper>
   );
 };
@@ -41,7 +50,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
-    marginTop: 32,
+    marginTop: 24,
     marginBottom: 20,
   },
   createEventButton: {

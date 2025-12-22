@@ -1,0 +1,2 @@
+export { CustomTalentsListCard } from './CustomTalentsListCard';
+

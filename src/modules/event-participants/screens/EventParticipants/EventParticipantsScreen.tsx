@@ -2,6 +2,7 @@ import { useState } from 'react';
 
 import { EventParticipantsList, IEventParticipant } from '../../components';
 import { EventParticipantsScreenLayout, ParticipantTab } from '../../layouts';
+import { TalentFlag } from '@modules/common';
 
 const MOCK_PARTICIPANTS: IEventParticipant[] = [
   {
@@ -10,7 +11,7 @@ const MOCK_PARTICIPANTS: IEventParticipant[] = [
     location: 'Melbourne VIC',
     status: 'checked_in',
     time: '9.10am',
-    flag: 'green',
+    flag: TalentFlag.GREEN,
   },
   {
     id: '2',
@@ -18,7 +19,7 @@ const MOCK_PARTICIPANTS: IEventParticipant[] = [
     location: 'Melbourne VIC',
     status: 'checked_out',
     time: '9.10am',
-    flag: 'red',
+    flag: TalentFlag.RED,
   },
   {
     id: '3',
@@ -26,7 +27,7 @@ const MOCK_PARTICIPANTS: IEventParticipant[] = [
     location: 'Melbourne VIC',
     status: 'completed_tasks',
     time: '9.10am',
-    flag: 'yellow',
+    flag: TalentFlag.YELLOW,
   },
   {
     id: '4',
@@ -34,7 +35,7 @@ const MOCK_PARTICIPANTS: IEventParticipant[] = [
     location: 'Melbourne VIC',
     status: 'completed_tasks',
     time: '9.10am',
-    flag: 'black',
+    flag: TalentFlag.BLACK,
   },
   {
     id: '5',
@@ -42,7 +43,7 @@ const MOCK_PARTICIPANTS: IEventParticipant[] = [
     location: 'Melbourne VIC',
     status: 'no_show',
     time: '9.10am',
-    flag: 'black',
+    flag: TalentFlag.BLACK,
   },
   {
     id: '6',
@@ -50,7 +51,7 @@ const MOCK_PARTICIPANTS: IEventParticipant[] = [
     location: 'Melbourne VIC',
     status: 'no_show',
     time: '9.10am',
-    flag: 'black',
+    flag: TalentFlag.BLACK,
   },
 ];
 

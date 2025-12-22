@@ -22,6 +22,7 @@ export const AppDateInput = ({
   fieldStyle,
   placeholderProps,
   valueProps,
+  description = '',
   onChange,
   ...props
 }: AppDateInputProps) => {
@@ -101,16 +102,24 @@ export const AppDateInput = ({
           </If>
         </TouchableOpacity>
 
-        <If condition={!!errorMessage}>
-          <AppText
-            typography="medium_10"
-            color="red"
-            {...errorMessageProps}
-            style={[styles.errorMessage, styles.errorMessage]}
-          >
-            {errorMessage}
-          </AppText>
-        </If>
+        <AppText
+          renderIf={!!description && !errorMessage}
+          typography="medium_12"
+          color="gray_primary"
+          margin={{ top: 10 }}
+        >
+          {description}
+        </AppText>
+
+        <AppText
+          renderIf={!!errorMessage}
+          typography="medium_10"
+          color="red"
+          {...errorMessageProps}
+          style={[styles.errorMessage, styles.errorMessage]}
+        >
+          {errorMessage}
+        </AppText>
       </View>
 
       <DatePicker
