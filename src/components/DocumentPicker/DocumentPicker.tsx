@@ -1,15 +1,18 @@
 import { useState } from 'react';
 import { TouchableOpacity, View } from 'react-native';
 import { SvgXml } from 'react-native-svg';
-import DocumentPickerLib, {
-  DocumentPickerResponse,
-} from 'react-native-document-picker';
+import {
+  pick,
+  types,
+  isErrorWithCode,
+  errorCodes,
+} from '@react-native-documents/picker';
 
 import { ICONS } from '@assets';
 import { If } from '@components';
 import { AppText } from '@ui';
 
-import { DocumentPickerProps } from './types';
+import { DocumentPickerProps, PickedDocument } from './types';
 import { styles } from './styles';
 
 export const DocumentPicker = ({
@@ -20,25 +23,30 @@ export const DocumentPicker = ({
   iconSize = 28,
   titleIconSize = 20,
   onDocumentSelect,
-  documentTypes = [DocumentPickerLib.types.pdf, DocumentPickerLib.types.doc],
+  documentTypes = [types.pdf, types.doc],
   style,
 }: DocumentPickerProps) => {
   const [selectedDocument, setSelectedDocument] =
-    useState<DocumentPickerResponse | null>(null);
+    useState<PickedDocument | null>(null);
 
   const handlePickDocument = async () => {
     try {
-      const result = await DocumentPickerLib.pick({
+      const [result] = await pick({
         type: documentTypes,
-        copyTo: 'cachesDirectory',
       });
 
-      if (result && result[0]) {
-        setSelectedDocument(result[0]);
-        onDocumentSelect?.(result[0]);
+      if (result) {
+        const document: PickedDocument = {
+          uri: result.uri,
+          name: result.name ?? 'Document',
+          type: result.type ?? undefined,
+          size: result.size ?? undefined,
+        };
+        setSelectedDocument(document);
+        onDocumentSelect?.(document);
       }
     } catch (err) {
-      if (!DocumentPickerLib.isCancel(err)) {
+      if (isErrorWithCode(err) && err.code !== errorCodes.OPERATION_CANCELED) {
         console.error('Document picker error:', err);
       }
     }

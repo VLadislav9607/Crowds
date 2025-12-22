@@ -1,5 +1,11 @@
 import { StyleProp, ViewStyle } from 'react-native';
-import { DocumentPickerResponse } from 'react-native-document-picker';
+
+export interface PickedDocument {
+  uri: string;
+  name: string;
+  type?: string;
+  size?: number;
+}
 
 export interface DocumentPickerProps {
   title?: string;
@@ -8,8 +14,7 @@ export interface DocumentPickerProps {
   titleIcon?: string | null;
   iconSize?: number;
   titleIconSize?: number;
-  onDocumentSelect?: (document: DocumentPickerResponse | null) => void;
+  onDocumentSelect?: (document: PickedDocument | null) => void;
   documentTypes?: string[];
   style?: StyleProp<ViewStyle>;
 }
-
