@@ -39,7 +39,6 @@ export const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     height: 32,
-    paddingHorizontal: 12,
     borderWidth: 1,
     justifyContent: 'center',
     minWidth: 80,

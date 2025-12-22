@@ -2529,6 +2529,16 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@react-native-documents/picker@npm:^11.0.3":
+  version: 11.0.3
+  resolution: "@react-native-documents/picker@npm:11.0.3"
+  peerDependencies:
+    react: "*"
+    react-native: ">=0.79.0"
+  checksum: 32e1b60235142af4d12443f3b6a879114c8efbc3239854638996bfd793f4e9d79b3ea65f13fc806a405342cb09f3deae77108618a45f4387e67aecf7b0a05b5b
+  languageName: node
+  linkType: hard
+
 "@react-native-masked-view/masked-view@npm:^0.3.2":
   version: 0.3.2
   resolution: "@react-native-masked-view/masked-view@npm:0.3.2"
@@ -3386,6 +3396,7 @@ __metadata:
     "@react-native-community/cli": 20.0.0
     "@react-native-community/cli-platform-android": 20.0.0
     "@react-native-community/cli-platform-ios": 20.0.0
+    "@react-native-documents/picker": ^11.0.3
     "@react-native-masked-view/masked-view": ^0.3.2
     "@react-native/babel-preset": 0.82.1
     "@react-native/eslint-config": 0.82.1
@@ -3412,7 +3423,6 @@ __metadata:
     react-native: 0.82.1
     react-native-bootsplash: ^6.3.11
     react-native-date-picker: ^5.0.13
-    react-native-document-picker: ^9.3.1
     react-native-dotenv: ^3.4.11
     react-native-gesture-handler: ^2.29.1
     react-native-hole-view: ^4.0.0
@@ -3423,13 +3433,14 @@ __metadata:
     react-native-modal: ^14.0.0-rc.1
     react-native-nitro-modules: ^0.31.10
     react-native-permissions: ^5.4.4
-    react-native-reanimated: latest
+    react-native-reanimated: 4.2.0
     react-native-safe-area-context: ^5.5.2
     react-native-screens: ^4.18.0
     react-native-skeleton-placeholder: ^5.2.4
     react-native-sticky-range-slider: ^0.1.7
     react-native-svg: ^15.15.0
     react-native-vision-camera: ^4.7.3
+    react-native-webview: ^13.16.0
     react-native-worklets: 0.7.1
     react-test-renderer: 19.1.1
     typescript: ^5.8.3
@@ -6566,7 +6577,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"invariant@npm:^2.2.4":
+"invariant@npm:2.2.4, invariant@npm:^2.2.4":
   version: 2.2.4
   resolution: "invariant@npm:2.2.4"
   dependencies:
@@ -9375,22 +9386,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"react-native-document-picker@npm:^9.3.1":
-  version: 9.3.1
-  resolution: "react-native-document-picker@npm:9.3.1"
-  dependencies:
-    invariant: ^2.2.4
-  peerDependencies:
-    react: "*"
-    react-native: "*"
-    react-native-windows: "*"
-  peerDependenciesMeta:
-    react-native-windows:
-      optional: true
-  checksum: 5979e4b93f15e0568ae70b70cc2304cd727f20939a58412d483517942df6d3cf3821319b3b7934bcaa2866ed1918ef9e8de9933ce6953209340abe3455403e0d
-  languageName: node
-  linkType: hard
-
 "react-native-dotenv@npm:^3.4.11":
   version: 3.4.11
   resolution: "react-native-dotenv@npm:3.4.11"
@@ -9524,7 +9519,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"react-native-reanimated@npm:latest":
+"react-native-reanimated@npm:4.2.0":
   version: 4.2.0
   resolution: "react-native-reanimated@npm:4.2.0"
   dependencies:
@@ -9614,6 +9609,19 @@ __metadata:
     react-native-worklets-core:
       optional: true
   checksum: e3abe484e4303d4fa9088e546e846642f4be503180ed24eaf74fc9e11c667cee779c5a9de4f27999dccb830ee60760badc641ee869fc6015e7ab7bec0f494f6d
+  languageName: node
+  linkType: hard
+
+"react-native-webview@npm:^13.16.0":
+  version: 13.16.0
+  resolution: "react-native-webview@npm:13.16.0"
+  dependencies:
+    escape-string-regexp: ^4.0.0
+    invariant: 2.2.4
+  peerDependencies:
+    react: "*"
+    react-native: "*"
+  checksum: a6fefc1bc977c1d121057c91696edb08ca170421a6d6ad5a9bcda279a20eca84aaaf553eca3a8e51b621e22fd473afa8bc994888807fb7db154eb9d7acb87928
   languageName: node
   linkType: hard
 
