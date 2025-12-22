@@ -11,12 +11,11 @@ interface IScreenWrapperProps extends IAppHeaderProps {
   contentContainerStyle?: StyleProp<ViewStyle>;
 }
 
-export const  ScreenWrapper = ({
+export const ScreenWrapper = ({
   children,
   containerStyle,
   contentContainerStyle,
-  withBottomTabBar = false,
-  wrapperStyle,
+  witBottomTab = false,
   ...headerProps
 }: IScreenWrapperProps) => {
   const { bottom } = useSafeAreaInsets();
