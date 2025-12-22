@@ -9,6 +9,7 @@ import { useState } from 'react';
 
 export const AppInput = ({
   label,
+  description,
   errorMessage,
   style,
   labelProps,
@@ -58,16 +59,24 @@ export const AppInput = ({
         )}
       </View>
 
-      {errorMessage && (
-        <AppText
-          typography="medium_10"
-          color="red"
-          {...errorMessageProps}
-          style={[styles.errorMessage, styles.errorMessage]}
-        >
-          {errorMessage}
-        </AppText>
-      )}
+      <AppText
+        renderIf={!!description && !errorMessage}
+        typography="medium_12"
+        color="gray_primary"
+        margin={{ top: 10 }}
+      >
+        {description}
+      </AppText>
+
+      <AppText
+        renderIf={!!errorMessage}
+        typography="medium_10"
+        color="red"
+        {...errorMessageProps}
+        style={[styles.errorMessage, styles.errorMessage]}
+      >
+        {errorMessage}
+      </AppText>
     </View>
   );
 };

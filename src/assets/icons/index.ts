@@ -23,7 +23,6 @@ import { plus } from './plus';
 import { locationMap } from './locationMap';
 import { chevronRight } from './chevronRight';
 import { filter } from './filter';
-import { BOTTOM_TABS } from './bottomTabs';
 import { saved } from './saved';
 import { savedFilled } from './savedFilled';
 import { bell } from './bell';
@@ -36,12 +35,12 @@ import { upload } from './upload';
 import { paperClip } from './paperClip';
 import { notification } from './notification';
 import { user } from './user';
-import {moneyBag} from './moneyBag';
-import {shieldCheck} from './shieldCheck';
-import {bookMark} from './bookMark';
-import {circleInfo} from './circleInfo';
-import {userShield} from './userShield'
-import {logout} from './logout'
+import { moneyBag } from './moneyBag';
+import { shieldCheck } from './shieldCheck';
+import { bookMark } from './bookMark';
+import { circleInfo } from './circleInfo';
+import { userShield } from './userShield';
+import { logout } from './logout';
 
 import { calendarV2 } from './calendarV2';
 import { clockV2 } from './clockV2';
@@ -50,8 +49,13 @@ import { calendarV3 } from './calendarV3';
 import { checkedCircle } from './checkedCircle';
 import { plane } from './plane';
 import { dotsVertical } from './dotsVertical';
-import { BOTTOM_TABS } from './bottomTabs';
 import { image } from './image';
+import { orgDetails } from './orgDetails';
+import { wallet } from './wallet';
+import { settings } from './settings';
+import { trash } from './trash';
+
+import { BOTTOM_TABS } from './bottomTabs';
 
 export const ICONS = {
   BOTTOM_TABS,
@@ -106,5 +110,8 @@ export const ICONS = {
   plane,
   dotsVertical,
   image,
+  orgDetails,
+  wallet,
+  settings,
+  trash,
 };
-

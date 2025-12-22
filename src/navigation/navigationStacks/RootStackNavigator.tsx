@@ -7,7 +7,6 @@ import {
   SignInScreen,
 } from '../../modules/auth';
 import { OnboardingTalentScreen } from '../../modules/onboarding/talent/screens';
-import { TalentNotificationSettingsScreen, TalentProfileSetupScreen } from '../../modules/profile/talent/screens';
 import { TalentProfileSetupScreen } from '../../modules/profile/talent/screens';
 import { AvailabilitySetupScreen } from '../../modules/talent-availability';
 import {
@@ -25,11 +24,26 @@ import {
   InviteNewMemberScreen,
 } from '../../modules/invite-member';
 import { CreateEventScreen } from '../../modules/create-event';
-import { TalentEventDetailsScreen, TalentSearchEventsScreen } from '../../modules/events/talent/screens';
-import { ChangePasswordScreen } from '@modules/profile';
+import {
+  TalentEventDetailsScreen,
+  TalentSearchEventsScreen,
+} from '../../modules/events/talent/screens';
+import {
+  ChangePasswordScreen,
+  NotificationSettingsScreen,
+} from '@modules/profile';
 import { ManageEventScreen } from '../../modules/event-management';
 import { ChatRoomScreen } from '../../modules/chats';
-import { EventParticipantsScreen } from '../../modules/event-participants';
+import {
+  EventParticipantsScreen,
+  FlagParticipantScreen,
+} from '../../modules/event-participants';
+import { ApplicantProfileScreen } from '../../modules/event-applicants';
+import {
+  AddTalentsToListScreen,
+  CustomTalentsListScreen,
+  InviteTalentsScreen,
+} from '../../modules/invite-talents';
 
 const RootStack = createStackNavigator<RootStackParamList>();
 
@@ -102,10 +116,7 @@ export const RootStackNavigator = () => {
         name={Screens.TalentEventDetails}
         component={TalentEventDetailsScreen}
       />
-      <RootStack.Screen
-        name={Screens.TalentNotificationSettings}
-        component={TalentNotificationSettingsScreen}
-      />
+
       <RootStack.Screen
         name={Screens.ChangePassword}
         component={ChangePasswordScreen}
@@ -122,11 +133,40 @@ export const RootStackNavigator = () => {
       />
 
       <RootStack.Screen
+        name={Screens.FlagParticipant}
+        component={FlagParticipantScreen}
+      />
+
+      <RootStack.Screen
         name={Screens.AvailabilitySetup}
         component={AvailabilitySetupScreen}
       />
 
       <RootStack.Screen name={Screens.ChatRoom} component={ChatRoomScreen} />
+
+      <RootStack.Screen
+        name={Screens.NotificationSettings}
+        component={NotificationSettingsScreen}
+      />
+      <RootStack.Screen
+        name={Screens.ApplicantProfile}
+        component={ApplicantProfileScreen}
+      />
+
+      <RootStack.Screen
+        name={Screens.InviteTalents}
+        component={InviteTalentsScreen}
+      />
+
+      <RootStack.Screen
+        name={Screens.CustomTalentsList}
+        component={CustomTalentsListScreen}
+      />
+
+      <RootStack.Screen
+        name={Screens.AddTalentsToList}
+        component={AddTalentsToListScreen}
+      />
     </RootStack.Navigator>
   );
 };

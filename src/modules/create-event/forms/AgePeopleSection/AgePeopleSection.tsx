@@ -1,64 +1,63 @@
-import { Controller, FieldErrors } from 'react-hook-form';
+import { useFieldArray, useFormContext } from 'react-hook-form';
 import { StyleSheet, View } from 'react-native';
-import { AppInput, AppText } from '@ui';
+
+import { ICONS } from '@assets';
+import { COLORS } from '@styles';
+import { AppText, IconButton } from '@ui';
+
 import { CreateEventFormData } from '../../validation';
+import { AgeGroupWidget } from '../../widgets';
 
-interface AgePeopleSectionProps {
-  control: any;
-  errors: FieldErrors<CreateEventFormData>;
-}
+export const AgePeopleSection = () => {
+  const { control } = useFormContext<CreateEventFormData>();
 
-export const AgePeopleSection = ({
-  control,
-  errors,
-}: AgePeopleSectionProps) => {
+  const { fields, append, remove } = useFieldArray({
+    control,
+    name: 'ageGroups',
+  });
+
+  const handleAddAgeGroup = () => {
+    append({
+      id: Math.random().toString(36).substring(2, 9),
+      minAge: 18,
+      maxAge: 65,
+      maleCount: undefined,
+      femaleCount: undefined,
+      othersCount: undefined,
+    });
+  };
+
+  const handleRemoveAgeGroup = (index: number) => {
+    remove(index);
+  };
+
   return (
     <>
-      <AppText typography="h5_mob" margin={{ bottom: -4 }}>
-        Select Age Groups & No. of People
-      </AppText>
-
       <View style={styles.container}>
-        <Controller
-          control={control}
-          name="minAge"
-          render={({ field: { value } }) => (
-            <AppInput
-              label="Min Age Group"
-              value={value}
-              inputMode="numeric"
-              errorMessage={errors.minAge?.message}
-              containerStyle={styles.dateInput}
-              placeholder="Enter"
-              labelProps={{
-                typography: 'regular_12',
-                color: 'dark_gray',
-                style: { marginBottom: 0 },
-              }}
-            />
-          )}
-        />
+        <AppText typography="h5_mob" margin={{ bottom: -4 }}>
+          Select Age Groups & No. of People
+        </AppText>
 
-        <Controller
-          control={control}
-          name="maxAge"
-          render={({ field: { value } }) => (
-            <AppInput
-              label="Max Age Group"
-              value={value}
-              inputMode="numeric"
-              errorMessage={errors.maxAge?.message}
-              containerStyle={styles.dateInput}
-              placeholder="Enter"
-              labelProps={{
-                typography: 'regular_12',
-                color: 'dark_gray',
-                style: { marginBottom: 0 },
-              }}
-            />
-          )}
+        <IconButton
+          onPress={handleAddAgeGroup}
+          icon={ICONS.plus()}
+          iconSize={20}
+          style={styles.addButton}
         />
       </View>
+
+      {fields.length > 0 && (
+        <View style={styles.widgetsContainer}>
+          {fields.map((_field, index) => (
+            <AgeGroupWidget
+              key={index}
+              control={control}
+              index={index}
+              onRemove={() => handleRemoveAgeGroup(index)}
+            />
+          ))}
+        </View>
+      )}
     </>
   );
 };
@@ -66,10 +65,19 @@ export const AgePeopleSection = ({
 const styles = StyleSheet.create({
   container: {
     flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
     gap: 14,
   },
-  dateInput: {
-    width: '10%',
-    flex: 1,
+  widgetsContainer: {
+    gap: 16,
+  },
+  addButton: {
+    backgroundColor: COLORS.main,
+    borderRadius: 10,
+    width: 40,
+    height: 40,
+    alignItems: 'center',
+    justifyContent: 'center',
   },
 });

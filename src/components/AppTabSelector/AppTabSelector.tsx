@@ -18,14 +18,16 @@ const CONTAINER_COLORS: Record<TabSelectorTheme, string> = {
   black: COLORS.black,
 };
 
-export const AppTabSelector = <T = string,>({
+export function AppTabSelector<T = string>({
   options,
   selectedValue,
   onSelect,
   label,
   badgeLabel,
   theme = 'white',
-}: IAppTabSelectorProps<T>) => {
+  variant = 'default',
+  marginBottom = 16,
+}: IAppTabSelectorProps<T>) {
   const animatedValue = useRef(new Animated.Value(0)).current;
   const animatedWidth = useRef(new Animated.Value(0)).current;
   const animatedLeftRadius = useRef(new Animated.Value(BORDER_RADIUS)).current;
@@ -35,6 +37,7 @@ export const AppTabSelector = <T = string,>({
   const [tabWidths, setTabWidths] = useState<Record<string, number>>({});
   const [containerWidth, setContainerWidth] = useState(0);
   const shouldScroll = options.length > 3;
+  const isPill = variant === 'pill';
 
   useEffect(() => {
     const selectedIndex = options.findIndex(
@@ -53,14 +56,8 @@ export const AppTabSelector = <T = string,>({
       const isFirst = selectedIndex === 0;
       const isLast = selectedIndex === options.length - 1;
 
-      const leftRadius = isFirst ? BORDER_RADIUS : 0;
-      const rightRadius = isLast ? BORDER_RADIUS : 0;
-
-      const isFirst = selectedIndex === 0;
-      const isLast = selectedIndex === options.length - 1;
-
-      const leftRadius = isFirst ? BORDER_RADIUS : 0;
-      const rightRadius = isLast ? BORDER_RADIUS : 0;
+      const leftRadius = isPill ? BORDER_RADIUS : isFirst ? BORDER_RADIUS : 0;
+      const rightRadius = isPill ? BORDER_RADIUS : isLast ? BORDER_RADIUS : 0;
 
       Animated.parallel([
         Animated.timing(animatedValue, {
@@ -106,6 +103,7 @@ export const AppTabSelector = <T = string,>({
     animatedRightRadius,
     shouldScroll,
     containerWidth,
+    isPill,
   ]);
 
   const onLayout = (value: string | T) => (event: LayoutChangeEvent) => {
@@ -130,24 +128,31 @@ export const AppTabSelector = <T = string,>({
           totalOptions={options.length}
           index={index}
           theme={theme}
+          variant={variant}
         />
       );
     });
   };
 
+  const indicatorStyle = isPill
+    ? styles.slidingIndicatorPill
+    : styles.slidingIndicator;
+
   const tabsContent = (
     <>
       <Animated.View
         style={[
-          styles.slidingIndicator,
+          indicatorStyle,
           {
             width: animatedWidth,
             transform: [{ translateX: animatedValue }],
+            backgroundColor: isPill ? COLORS.main : INDICATOR_COLORS[theme],
+          },
+          !isPill && {
             borderTopLeftRadius: animatedLeftRadius,
             borderBottomLeftRadius: animatedLeftRadius,
             borderTopRightRadius: animatedRightRadius,
             borderBottomRightRadius: animatedRightRadius,
-            backgroundColor: INDICATOR_COLORS[theme],
           },
         ]}
       />
@@ -156,6 +161,10 @@ export const AppTabSelector = <T = string,>({
   );
 
   const containerStyle = { backgroundColor: CONTAINER_COLORS[theme] };
+  const containerBaseStyle = isPill ? styles.containerPill : styles.container;
+  const scrollContentStyle = isPill
+    ? styles.scrollContentPill
+    : styles.scrollContent;
 
   if (shouldScroll) {
     return (
@@ -171,7 +180,7 @@ export const AppTabSelector = <T = string,>({
             ref={scrollViewRef}
             horizontal
             showsHorizontalScrollIndicator={false}
-            contentContainerStyle={[styles.scrollContent, containerStyle]}
+            contentContainerStyle={[scrollContentStyle, containerStyle]}
           >
             {tabsContent}
           </ScrollView>
@@ -183,7 +192,9 @@ export const AppTabSelector = <T = string,>({
   return (
     <>
       <TabsLabel label={label} badgeLabel={badgeLabel} />
-      <View style={[styles.container, containerStyle]}>{tabsContent}</View>
+      <View style={[containerBaseStyle, { marginBottom }, containerStyle]}>
+        {tabsContent}
+      </View>
     </>
   );
-};
+}
