@@ -1,5 +1,5 @@
 import { If, RangeSelector, SelectOptionField } from '@components';
-import { ImageBackground, TouchableOpacity, View } from 'react-native';
+import { Alert, ImageBackground, TouchableOpacity, View } from 'react-native';
 import { AppText, AppTextarea } from '@ui';
 import { styles } from './styles';
 import {
@@ -19,32 +19,39 @@ import {
   TagsPicker,
 } from '@modules/common';
 import { Controller, useForm } from 'react-hook-form';
-import { TalentProfileSetupFormData, talentProfileSetupSchema } from './types';
+import { TalentProfileSetupFormData, TalentProfileSetupFormProps, TalentProfileSetupFormRef, talentProfileSetupSchema } from './types';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { SvgXml } from 'react-native-svg';
 import { ICONS, IMAGES } from '@assets';
-import { useRef } from 'react';
+import { forwardRef, useEffect, useImperativeHandle, useRef } from 'react';
 import { BottomSheetModal } from '@gorhom/bottom-sheet';
+import { useGetMe, useUpdateTalent } from '@actions';
+import { EyeColour, HairColour } from '@modules/profile';
 
-export const TalentProfileSetupForm = () => {
+export const TalentProfileSetupForm = forwardRef<TalentProfileSetupFormRef, TalentProfileSetupFormProps>(({ onSuccess, onFormStateChange }, ref) => {
+  const { data: me } = useGetMe();
+  const { mutate: updateTalentMutate, isPending: isUpdating , error } = useUpdateTalent();
+  const talent = me?.talent;
   const imageSourcePickerModalRef =
     useRef<BottomSheetModal<ImageSourcePickerModalData>>(null);
 
+    console.log('error', error);
+
   const defaultValues: TalentProfileSetupFormData = {
-    hairColour: undefined,
-    hairStyle: undefined,
-    eyeColour: undefined,
+    hairColour: talent?.hair_color as HairColour ?? undefined,
+    // hairStyle: undefined,
+    eyeColour:  talent?.eye_color as EyeColour ?? undefined,
     facialAttributes: undefined,
     tattooSpot: undefined,
     ethnicity: undefined,
-    build: 70,
-    height: 5,
-    skinTone: undefined,
+    build: talent?.build ?? 70,
+    height: talent?.height ?? 5,
+    skinTone: talent?.skin_tone ?? undefined,
     isPregnant: undefined,
     months: undefined,
     categories: undefined,
     tags: undefined,
-    additionalSkills: undefined,
+    additionalSkills: talent?.additional_skills ?? undefined,
     photo: undefined,
   };
 
@@ -52,12 +59,15 @@ export const TalentProfileSetupForm = () => {
     control,
     watch,
     setValue,
+    handleSubmit,
     formState: { errors },
   } = useForm<TalentProfileSetupFormData>({
     resolver: zodResolver(talentProfileSetupSchema),
     defaultValues,
     mode: 'onBlur',
   });
+
+  console.log('errors', errors);
 
   const categories = watch('categories');
   const months = watch('months');
@@ -70,6 +80,39 @@ export const TalentProfileSetupForm = () => {
       },
     });
 
+  const onUpdate = (data: TalentProfileSetupFormData) => {
+    updateTalentMutate({
+      id: talent?.id!,
+      data: {
+        hair_color: data.hairColour,
+        eye_color: data.eyeColour,
+        build: data.build,
+        height: data.height,
+        // facial_attributes: data.facialAttributes,
+        // tattoo_spots: data.tattooSpot,
+        // ethnicity: data.ethnicity,
+        // skin_tone: data.skinTone,
+        // is_pregnant: data.isPregnant,
+        // months: data.months,
+        additional_skills: data.additionalSkills,
+        // photo: data.photo?.uri,
+        // categories: data.categories,
+        // tags: data.tags,
+      },
+    }, {
+      onSuccess,
+    });
+  }
+
+  useImperativeHandle(ref, () => ({
+    onSubmit: handleSubmit(onUpdate),
+  }));
+
+  useEffect(() => {
+    onFormStateChange?.({ isUpdating: isUpdating });
+  }, [isUpdating]);
+
+  
   return (
     <View style={styles.container}>
       <AppText color="black" typography="semibold_18" margin={{ bottom: 16 }}>
@@ -127,7 +170,7 @@ export const TalentProfileSetupForm = () => {
               // maxValue={150}
               defaultMinValue={field.value!}
               defaultMaxValue={150}
-              onSlidingComplete={values => field.onChange(values)}
+              onSlidingComplete={values => field.onChange(values[0])}
               label="Set Build"
               labelProps={{ color: 'main' }}
               bottomLabels={{
@@ -150,7 +193,7 @@ export const TalentProfileSetupForm = () => {
               defaultMinValue={field.value!}
               defaultMaxValue={8}
               step={0.1}
-              onSlidingComplete={values => field.onChange(values)}
+              onSlidingComplete={values => field.onChange(values[0])}
               label="Set Height"
               labelProps={{ color: 'main' }}
               bottomLabels={{
@@ -279,7 +322,7 @@ export const TalentProfileSetupForm = () => {
       />
 
       <View>
-        <TouchableOpacity activeOpacity={0.8} onPress={pickImage}>
+        <TouchableOpacity activeOpacity={0.8} onPress={pickImage} style={styles.photoContainerWrapper}>
           <ImageBackground
             source={photo?.uri ? { uri: photo.uri } : IMAGES.userWithGrayBg}
             style={styles.photoContainer}
@@ -334,4 +377,6 @@ export const TalentProfileSetupForm = () => {
       <ImageSourcePickerModal bottomSheetRef={imageSourcePickerModalRef} />
     </View>
   );
-};
+});
+
+TalentProfileSetupForm.displayName = 'TalentProfileSetupForm';

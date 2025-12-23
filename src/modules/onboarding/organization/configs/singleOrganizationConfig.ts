@@ -1,7 +1,7 @@
 import {
   OrganizationNameStep,
   PrimaryLocationStep,
-  YourInformationStep,
+  OrganizationCreatorInformationStep,
 } from '../forms';
 import { StepConfig } from './types';
 
@@ -25,7 +25,7 @@ export const singleOrganizationConfig: StepConfig[] = [
     title: 'Your Information',
     label: 'Single Country',
     description: 'Enter the secondary location of your organization',
-    component: YourInformationStep,
+    component: OrganizationCreatorInformationStep,
     validate: async formData => {
       return await formData.trigger([
         'firstName',

@@ -2,6 +2,7 @@ import { AppModal } from '@components';
 import { AppButton } from '@ui';
 import { goToScreen, Screens } from '@navigation';
 import { BaseEventCard } from '../../../events/organization/ui';
+import { styles } from './styles';
 
 interface EventCreatedModalProps {
   isVisible: boolean;
@@ -44,7 +45,7 @@ export const EventCreatedModal = ({
         title="Invite Talents"
         variant="withBorder"
         onPress={goToInviteTalents}
-        wrapperStyles={{ marginTop: 16 }}
+        wrapperStyles={styles.buttonWrapper}
       />
     </AppModal>
   );

@@ -1,4 +1,5 @@
-import { Alert, NativeModules } from 'react-native';
+import { NativeModules } from 'react-native';
+import { showErrorToast, showInfoToast } from './showToast';
 
 const { Clipboard } = NativeModules;
 
@@ -19,14 +20,14 @@ export const copyToClipboard = async ({
     if (Clipboard?.setString) {
       await Clipboard.setString(text);
       if (successMessage) {
-        Alert.alert('Success', successMessage);
+        showInfoToast(successMessage);
       }
       onSuccess?.();
       return true;
     }
   } catch {
     if (errorMessage) {
-      Alert.alert('Error', errorMessage);
+      showErrorToast(errorMessage);
     }
     return false;
   }

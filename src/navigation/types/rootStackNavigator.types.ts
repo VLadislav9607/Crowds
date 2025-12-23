@@ -5,22 +5,25 @@ import { BottomTabsParamList } from './bottomStackNavigator.types';
 
 export type RootStackParamList = {
   // Authorization
+  [Screens.SplashScreen]: undefined;
   [Screens.First]: undefined;
   [Screens.ForgotPassword]: undefined;
   [Screens.SelectRole]: undefined;
   [Screens.SignIn]: undefined;
   [Screens.ForgotPassword]: undefined;
-  [Screens.OnboardingTalent]: undefined;
+  [Screens.OnboardingAuthTalent]: undefined;
   [Screens.TalentProfileSetup]: undefined;
   [Screens.ChangePassword]: undefined;
+  [Screens.OnboardingUnAuthTalent]: undefined;
 
   // Bottom Tabs
   [Screens.BottomTabs]: NavigatorScreenParams<BottomTabsParamList>;
 
   // Onboarding
   [Screens.Congratulations]: { role: Role };
-  [Screens.OnboardingOrganization]: { flow: OrganizationType };
-  [Screens.OnboardingTalent]: undefined;
+  [Screens.OnboardingUnAuthOrganization]: { flow: OrganizationType };
+  [Screens.OnboardingAuthTalent]: undefined;
+  [Screens.OnboardingAuthOrganization]: undefined;
   [Screens.TermsAndPrivacy]: undefined;
 
   // Organization screens

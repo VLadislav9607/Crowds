@@ -22,7 +22,9 @@ export const PhysicalDetailsList = ({ details }: PhysicalDetailsListProps) => {
             {detail.label} -{' '}
           </AppText>
           {detail.color && (
-            <View style={[styles.colorBox, { backgroundColor: detail.color }]} />
+            <View
+              style={[styles.colorBox, { backgroundColor: detail.color }]}
+            />
           )}
           <AppText typography="regular_14" color="black">
             {detail.value}
@@ -32,4 +34,3 @@ export const PhysicalDetailsList = ({ details }: PhysicalDetailsListProps) => {
     </View>
   );
 };
-

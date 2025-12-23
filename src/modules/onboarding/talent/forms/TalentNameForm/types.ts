@@ -19,6 +19,7 @@ export interface TalentNameFormProps {
 }
 
 export const talentNameFormSchema = z.object({
+  username: z.string().min(1, 'Username is required'),
   firstName: z.string().min(1, 'First name is required'),
   lastName: z.string().min(1, 'Last name is required'),
   gender: z.enum([Gender.MALE, Gender.FEMALE, Gender.OTHER], {

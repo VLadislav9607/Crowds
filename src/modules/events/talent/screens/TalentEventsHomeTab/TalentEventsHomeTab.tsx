@@ -32,6 +32,7 @@ export const TalentEventsHomeTab = () => {
       headerVariant="withLogo"
       logoProps={{ width: 164, height: 34.5 }}
       headerStyles={{ backgroundColor: COLORS.black }}
+      containerStyle={styles.container}
       customElement
       rightIcons={[
         {

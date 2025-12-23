@@ -1,10 +1,10 @@
-import { TouchableOpacityProps } from "react-native";
+import { TouchableOpacityProps } from 'react-native';
 
 export interface ActionPurpleButtonProps extends TouchableOpacityProps {
-    titleIcon?: string | null;
-    icon?: string | null;
-    title?: string;
-    titleIconSize?: number;
-    iconSize?: number;
-    description?: string;
+  titleIcon?: string | null;
+  icon?: string | null;
+  title?: string;
+  titleIconSize?: number;
+  iconSize?: number;
+  description?: string;
 }

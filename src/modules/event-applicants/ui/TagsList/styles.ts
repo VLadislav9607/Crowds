@@ -15,4 +15,3 @@ export const styles = StyleSheet.create({
     borderColor: COLORS.light_gray2,
   },
 });
-

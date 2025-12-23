@@ -16,4 +16,7 @@ export const styles = StyleSheet.create({
     backgroundColor: COLORS.black,
     paddingBottom: 55,
   },
+  contentWrapper: {
+    paddingHorizontal: 20,
+  },
 });

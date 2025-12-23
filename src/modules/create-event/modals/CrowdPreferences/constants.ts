@@ -41,4 +41,3 @@ export const CHECKBOX_CONFIGS: Array<{
   },
   { key: 'skinTone', label: 'Skin Tone', options: skinToneOptions },
 ];
-

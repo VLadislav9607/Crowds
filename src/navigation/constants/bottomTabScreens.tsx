@@ -44,7 +44,6 @@ export const BottomTabsConfig: BottomTabsConfigType = {
       component: TalentEventsHomeTab,
       icon: (opacity: number) => ICONS.BOTTOM_TABS.home(opacity),
     },
-
     {
       name: Screens.EventsTalent,
       component: TalentEventsTab,

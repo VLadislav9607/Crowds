@@ -6,4 +6,3 @@ export interface FlagParticipantLayoutProps {
   children: ReactNode;
   participant: IParticipantInfo;
 }
-

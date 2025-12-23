@@ -1,15 +1,18 @@
 export enum Screens {
   // Authorization
+  SplashScreen = 'SplashScreen',
   First = 'First',
   SignIn = 'SignIn',
   ForgotPassword = 'ForgotPassword',
   SelectRole = 'SelectRole',
+  OnboardingAuthTalent = 'OnboardingAuthTalent',
   OrganizationOnboarding = 'OrganizationOnboarding',
   ChangePassword = 'ChangePassword',
+  OnboardingUnAuthTalent = 'OnboardingUnAuthTalent',
 
   // Onboarding
-  OnboardingOrganization = 'OnboardingOrganization',
-  OnboardingTalent = 'OnboardingTalent',
+  OnboardingUnAuthOrganization = 'OnboardingUnAuthOrganization',
+  OnboardingAuthOrganization = 'OnboardingAuthOrganization',
   TermsAndPrivacy = 'TermsAndPrivacy',
   Congratulations = 'Congratulations',
 

@@ -20,7 +20,7 @@ export const FirstScreen = () => {
       <SvgXml xml={ICONS.firstScreenLogo()} style={styles.appName} />
 
       <AppText style={styles.text} color="white">
-        {`The \n World Leading \n Market Place \n for Crowds \n On Demand!`}
+        {`The World Leading Market Place for Crowds On Demand!`}
       </AppText>
 
       <AppButton
@@ -34,6 +34,7 @@ export const FirstScreen = () => {
         onPress={() => goToScreen(Screens.SignIn)}
         variant="withBorder"
         size="56"
+        titleStyles={styles.loginButtonText}
         wrapperStyles={styles.loginButton}
       />
     </ImageBackground>
@@ -54,9 +55,7 @@ const styles = StyleSheet.create({
     marginTop: 28,
   },
   text: {
-    marginTop: '32%',
-    marginLeft: 42,
-    marginRight: 32,
+    marginTop: 'auto',
     marginBottom: 'auto',
     ...TYPOGRAPHY.bold_40,
   },
@@ -68,5 +67,8 @@ const styles = StyleSheet.create({
     backgroundColor: COLORS.transparent,
     borderColor: COLORS.white,
     marginBottom: 10,
+  },
+  loginButtonText: {
+    color: COLORS.white,
   },
 });

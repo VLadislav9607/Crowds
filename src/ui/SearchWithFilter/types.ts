@@ -8,4 +8,3 @@ export interface SearchWithFilterProps {
   onFilterPress: () => void;
   containerStyle?: StyleProp<ViewStyle>;
 }
-

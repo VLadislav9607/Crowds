@@ -18,4 +18,5 @@ export interface IScreenWithScrollWrapperProps extends IAppHeaderProps {
   animatedScrollHandler?: (event: any) => void;
   useAnimatedScrollView?: boolean;
   keyboardAvoidingEnabled?: boolean;
+  showLoader?: boolean;
 }

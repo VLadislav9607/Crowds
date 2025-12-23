@@ -2,7 +2,7 @@ import { View } from 'react-native';
 import { AppInput } from '@ui';
 import { Controller, useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { forwardRef, useEffect, useImperativeHandle } from 'react';
+import { forwardRef, useCallback, useEffect, useImperativeHandle } from 'react';
 import { styles } from './styles';
 import {
   ForgotPasswordFormData,
@@ -10,17 +10,18 @@ import {
   ForgotPasswordFormRef,
   forgotPasswordFormSchema,
 } from './types';
+import { useForgotPassword } from '@actions';
+import { showErrorToast, showSuccessToast } from '@helpers';
+import { goToScreen, Screens } from '@navigation';
 
 export const ForgotPasswordForm = forwardRef<
   ForgotPasswordFormRef,
   ForgotPasswordFormProps
->(({ defaultValues, containerStyle, onFormStateChange }, ref) => {
-  const {
-    control,
-    formState: { isValid },
-    handleSubmit,
-    getValues,
-  } = useForm<ForgotPasswordFormData>({
+>(({ defaultValues, containerStyle, onFormStateChange, onSuccess }, ref) => {
+  const { mutate: forgotPasswordMutate, isPending: isLoading } =
+    useForgotPassword();
+
+  const { control, handleSubmit, getValues } = useForm<ForgotPasswordFormData>({
     resolver: zodResolver(forgotPasswordFormSchema),
     defaultValues:
       defaultValues ||
@@ -31,19 +32,51 @@ export const ForgotPasswordForm = forwardRef<
       } as Partial<ForgotPasswordFormData>),
   });
 
-  useImperativeHandle(ref, () => ({ handleSubmit, getValues }), [
-    handleSubmit,
-    getValues,
-  ]);
+  const onUpdatePassword = useCallback(
+    (data: ForgotPasswordFormData) => {
+      forgotPasswordMutate(data, {
+        onSuccess: () => {
+          onSuccess?.();
+          showSuccessToast('Password reset successfully');
+          goToScreen(Screens.SignIn);
+        },
+        onError: (error: Error) => {
+          showErrorToast(error.message);
+        },
+      });
+    },
+    [forgotPasswordMutate, onSuccess],
+  );
+
+  useImperativeHandle(
+    ref,
+    () => ({
+      handleSubmit: handleSubmit(onUpdatePassword),
+      getValues,
+    }),
+    [handleSubmit, getValues, onUpdatePassword],
+  );
 
   useEffect(() => {
-    if (onFormStateChange) {
-      onFormStateChange({ isValid });
-    }
-  }, [isValid, onFormStateChange]);
+    onFormStateChange?.({ isLoading });
+  }, [isLoading, onFormStateChange]);
 
   return (
     <View style={[styles.container, containerStyle]}>
+      <Controller
+        control={control}
+        name="username"
+        render={({ field, fieldState }) => (
+          <AppInput
+            label="Username"
+            placeholder="Enter your username"
+            value={field.value}
+            onChangeText={field.onChange}
+            errorMessage={fieldState.error?.message}
+          />
+        )}
+      />
+
       <Controller
         control={control}
         name="uin"

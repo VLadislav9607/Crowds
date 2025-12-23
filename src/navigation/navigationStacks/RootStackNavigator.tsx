@@ -5,13 +5,18 @@ import {
   ForgotPasswordScreen,
   SelectRoleScreen,
   SignInScreen,
+  SplashScreen,
 } from '../../modules/auth';
-import { OnboardingTalentScreen } from '../../modules/onboarding/talent/screens';
+import {
+  OnboardingUnAuthTalentScreen,
+  OnboardingAuthTalentScreen,
+} from '../../modules/onboarding/talent/screens';
 import { TalentProfileSetupScreen } from '../../modules/profile/talent/screens';
 import { AvailabilitySetupScreen } from '../../modules/talent-availability';
 import {
   CongratulationsScreen,
-  OnboardingOrganizationScreen,
+  OnboardingAuthOrganization,
+  OnboardingUnAuthOrganizationScreen,
   TermsAndPrivacyScreen,
 } from '../../modules/onboarding';
 
@@ -50,13 +55,18 @@ const RootStack = createStackNavigator<RootStackParamList>();
 export const RootStackNavigator = () => {
   return (
     <RootStack.Navigator
-      initialRouteName={Screens.BottomTabs}
+      initialRouteName={Screens.SplashScreen}
       screenOptions={{ headerShown: false }}
     >
+      <RootStack.Screen name={Screens.SplashScreen} component={SplashScreen} />
       <RootStack.Screen name={Screens.First} component={FirstScreen} />
       <RootStack.Screen
         name={Screens.SelectRole}
         component={SelectRoleScreen}
+      />
+      <RootStack.Screen
+        name={Screens.OnboardingUnAuthTalent}
+        component={OnboardingUnAuthTalentScreen}
       />
       <RootStack.Screen
         name={Screens.BottomTabs}
@@ -68,8 +78,15 @@ export const RootStackNavigator = () => {
         component={ForgotPasswordScreen}
       />
       <RootStack.Screen
-        name={Screens.OnboardingTalent}
-        component={OnboardingTalentScreen}
+        options={{ gestureEnabled: false }}
+        name={Screens.OnboardingAuthTalent}
+        component={OnboardingAuthTalentScreen}
+      />
+
+      <RootStack.Screen
+        options={{ gestureEnabled: false }}
+        name={Screens.OnboardingAuthOrganization}
+        component={OnboardingAuthOrganization}
       />
 
       <RootStack.Screen
@@ -80,8 +97,8 @@ export const RootStackNavigator = () => {
         }}
       />
       <RootStack.Screen
-        name={Screens.OnboardingOrganization}
-        component={OnboardingOrganizationScreen}
+        name={Screens.OnboardingUnAuthOrganization}
+        component={OnboardingUnAuthOrganizationScreen}
       />
 
       <RootStack.Screen
