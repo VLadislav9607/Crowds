@@ -1,34 +1,29 @@
 import { View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
+import { useMemo } from 'react';
 
 import { AppHeader } from '@ui';
-import { styles } from './styles';
+import { styles, getWrapperPaddingBottom } from './styles';
 import { IScreenWrapperProps } from './types';
-
-interface IScreenWrapperProps extends IAppHeaderProps {
-  children: React.ReactNode;
-  witBottomTab?: boolean;
-  containerStyle?: StyleProp<ViewStyle>;
-  contentContainerStyle?: StyleProp<ViewStyle>;
-}
 
 export const ScreenWrapper = ({
   children,
-    containerStyle,
+  containerStyle,
   contentContainerStyle,
-  witBottomTab = false,
+  withBottomTabBar = false,
   ...headerProps
 }: IScreenWrapperProps) => {
   const { bottom } = useSafeAreaInsets();
 
+  const wrapperPaddingBottomStyle = useMemo(
+    () => ({
+      paddingBottom: getWrapperPaddingBottom(withBottomTabBar, bottom),
+    }),
+    [withBottomTabBar, bottom],
+  );
+
   return (
-    <View
-      style={[
-        styles.wrapper,
-        { paddingBottom: withBottomTabBar ? 16 : bottom || 16 },
-        wrapperStyle,
-      ]}
-    >
+    <View style={[styles.wrapper, wrapperPaddingBottomStyle, containerStyle]}>
       {headerProps.headerVariant && <AppHeader {...headerProps} />}
 
       <View style={[styles.contentContainer, contentContainerStyle]}>

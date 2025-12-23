@@ -41,7 +41,7 @@ export interface IAppHeaderProps {
   rightIcons?: {
     icon: () => string | null;
     onPress: () => void;
-    size?: number,
+    size?: number;
   }[];
   goBackCallback?: () => void;
 }

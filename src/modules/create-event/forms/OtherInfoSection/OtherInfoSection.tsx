@@ -6,6 +6,7 @@ import { AppCheckbox } from '@ui';
 import { ICONS } from '@assets';
 
 import { CreateEventFormData } from '../../validation';
+import { styles } from './styles';
 
 export const OtherInfoSection = () => {
   const {
@@ -18,7 +19,7 @@ export const OtherInfoSection = () => {
   return (
     <>
       <AppCheckbox
-        containerStyle={{ marginBottom: -14 }}
+        containerStyle={styles.checkboxContainer}
         label="Do you want to upload an NDA?"
         type="checkedIcon"
         checked={hasNDA}

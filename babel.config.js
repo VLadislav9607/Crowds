@@ -23,6 +23,8 @@ module.exports = {
           "@modules/profile": "./src/modules/profile",
           "@modules/onboarding": "./src/modules/onboarding",
           "@modules/events": "./src/modules/events",
+          "@actions": "./src/actions",
+          "@services":"./src/services"
         }
       }
     ],
@@ -30,7 +32,7 @@ module.exports = {
       "module:react-native-dotenv",
       {
         moduleName: "@env",
-        path: ".env",
+        path: ".env.local",
         safe: false,
         allowUndefined: true,
         verbose: false

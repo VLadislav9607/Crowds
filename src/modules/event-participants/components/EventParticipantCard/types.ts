@@ -1,7 +1,11 @@
 import { TalentFlag } from '@modules/common';
 import { IPopupMenuItem } from '@components';
 
-export type ParticipantStatus = 'checked_in' | 'checked_out' | 'completed_tasks' | 'no_show';
+export type ParticipantStatus =
+  | 'checked_in'
+  | 'checked_out'
+  | 'completed_tasks'
+  | 'no_show';
 
 export interface IEventParticipant {
   id: string;
@@ -18,4 +22,3 @@ export interface EventParticipantCardProps {
   onMenuSelect?: (item: IPopupMenuItem) => void;
   onPressImageIcon?: () => void;
 }
-

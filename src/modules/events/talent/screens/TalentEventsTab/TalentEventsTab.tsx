@@ -4,8 +4,10 @@ import { useState } from 'react';
 import { ScrollView } from 'react-native';
 import { TalentEventStatus } from '../../../types';
 import { styles } from './styles';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 export const TalentEventsTab = () => {
+  const insets = useSafeAreaInsets(); 
 
   const [selectedTab, setSelectedTab] = useState<TalentEventStatus>('proposed');
 
@@ -20,6 +22,7 @@ export const TalentEventsTab = () => {
     <ScreenWrapper
       headerVariant='withTitle'
       showBackButton={false}
+      containerStyle={styles.container}
       title='Events'
       titleProps={{ style: styles.title }}
       headerStyles={styles.header}
@@ -35,7 +38,7 @@ export const TalentEventsTab = () => {
 
       <TalentEventsList
         type={selectedTab}
-        contentContainerStyle={styles.eventsListContent}
+        contentContainerStyle={[styles.eventsListContent, {paddingBottom: insets.bottom + 90}]}
       />
 
     </ScreenWrapper>

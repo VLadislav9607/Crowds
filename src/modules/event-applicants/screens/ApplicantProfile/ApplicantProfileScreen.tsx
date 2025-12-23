@@ -138,7 +138,7 @@ export const ApplicantProfileScreen = () => {
         <AppText style={styles.label}>Availability</AppText>
 
         <AppText style={styles.availability}>
-          ◉  Available for this month
+          ◉ Available for this month
         </AppText>
       </View>
     </ScreenWithScrollWrapper>

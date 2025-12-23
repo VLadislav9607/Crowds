@@ -6,6 +6,7 @@ import { SvgXml } from 'react-native-svg';
 import { ICONS } from '@assets';
 import { AppText } from '@ui';
 import { If } from '../If';
+import { AppToast } from '../AppToast';
 
 export const AppModal = ({
   children,
@@ -20,8 +21,9 @@ export const AppModal = ({
 
   return (
     <Modal onBackdropPress={props.onClose} backdropOpacity={0.5} {...props}>
+      <AppToast removeTopOffset />
       <View style={[styles.container, hideCloseButton && styles.containerWithoutCloseButton, contentContainerStyle]}>
-        <If condition={!hideCloseButton}>
+        <If condition={!hideCloseButton && !props.onClose}>
           <TouchableOpacity style={styles.closeButton} onPress={props.onClose}>
           <SvgXml xml={ICONS.closeIcon('black_50')} width={11} height={11} />
         </TouchableOpacity>

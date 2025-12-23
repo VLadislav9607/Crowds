@@ -26,4 +26,3 @@ export const useTalentsFilter = (talents: InvitedTalent[]) => {
     filteredTalents,
   };
 };
-

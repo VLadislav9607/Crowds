@@ -7,4 +7,3 @@ export interface CrowdPreferencesModalProps {
   preferences?: CrowdPreferences;
   onSave: (preferences: CrowdPreferences) => void;
 }
-

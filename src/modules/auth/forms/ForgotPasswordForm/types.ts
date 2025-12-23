@@ -1,24 +1,26 @@
-import { UseFormGetValues, UseFormHandleSubmit } from 'react-hook-form';
+import { UseFormGetValues } from 'react-hook-form';
 import { ViewStyle } from 'react-native';
 import { z } from 'zod';
 
 export interface ForgotPasswordFormRef {
-  handleSubmit: UseFormHandleSubmit<ForgotPasswordFormData>;
+  handleSubmit: () => void;
   getValues: UseFormGetValues<ForgotPasswordFormData>;
 }
 
 export interface ForgotPasswordFormState {
-  isValid: boolean;
+  isLoading: boolean;
 }
 
 export interface ForgotPasswordFormProps {
   defaultValues?: ForgotPasswordFormData;
   containerStyle?: ViewStyle;
+  onSuccess?: () => void;
   onFormStateChange?: (state: ForgotPasswordFormState) => void;
 }
 
 export const forgotPasswordFormSchema = z
   .object({
+    username: z.string().min(1, 'Username is required'),
     uin: z
       .string()
       .min(1, 'UIN is required')

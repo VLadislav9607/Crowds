@@ -4,6 +4,7 @@ import headerPurpleBg from './headerPurpleBg.png';
 import headerCrowdBg from './headerCrowdBg.png';
 import blackCrowdBg from './blackCrowdBg.png';
 import userWithGrayBg from './userWithGrayBg.png';
+import stripeConnect from './stripeConnect.png';
 
 export const IMAGES = {
   logo,
@@ -12,4 +13,5 @@ export const IMAGES = {
   headerPurpleBg,
   headerCrowdBg,
   userWithGrayBg,
+  stripeConnect
 };

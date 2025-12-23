@@ -47,6 +47,20 @@ export const TalentNameForm = forwardRef<
     <View style={[styles.container, containerStyle]}>
       <Controller
         control={control}
+        name="username"
+        render={({ field, fieldState }) => (
+          <AppInput
+            label="Username"
+            placeholder="Enter your username"
+            value={field.value}
+            onChangeText={field.onChange}
+            errorMessage={fieldState.error?.message}
+          />
+        )}
+      />
+
+      <Controller
+        control={control}
         name="firstName"
         render={({ field, fieldState }) => (
           <AppInput

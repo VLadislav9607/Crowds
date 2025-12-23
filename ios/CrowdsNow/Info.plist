@@ -32,11 +32,25 @@
 		<false/>
 		<key>NSAllowsLocalNetworking</key>
 		<true/>
+		<key>NSExceptionDomains</key>
+		<dict>
+			<key>mznllzlcwtonsjqvzpux.supabase.co</key>
+			<dict>
+				<key>NSIncludesSubdomains</key>
+				<true/>
+				<key>NSExceptionAllowsInsecureHTTPLoads</key>
+				<false/>
+				<key>NSExceptionRequiresForwardSecrecy</key>
+				<true/>
+				<key>NSExceptionMinimumTLSVersion</key>
+				<string>TLSv1.2</string>
+			</dict>
+		</dict>
 	</dict>
 	  <key>NSCameraUsageDescription</key>
   	<string>We need access to your camera to take photos for your profile and qr code scanning</string>
 	<key>NSLocationWhenInUseUsageDescription</key>
-	<string/>
+	<string>We need access to your location to find nearby events and help you discover events in your area</string>
 	<key>RCTNewArchEnabled</key>
 	<true/>
 	<key>UILaunchStoryboardName</key>

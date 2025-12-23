@@ -1,14 +1,18 @@
-import { View, StyleSheet, Pressable } from 'react-native';
+import { View, StyleSheet, TouchableOpacity, StyleProp, ViewStyle } from 'react-native';
 import { SvgXml } from 'react-native-svg';
 
 import { ICONS } from '@assets';
 import { COLORS } from '@styles';
+import { If } from '@components';
 
-interface IForwardBackArrowsProps {
+export interface IForwardBackArrowsProps {
   steps: number;
   currentStep: number;
   disabledBack?: boolean;
   disabledForward?: boolean;
+  hideBack?: boolean;
+  containerStyle?: StyleProp<ViewStyle>;
+  ForwardButton?: React.ReactNode;
   onBackPress: () => void;
   onForwardPress: () => void;
 }
@@ -18,26 +22,38 @@ export const ForwardBackArrows = ({
   currentStep,
   disabledBack,
   disabledForward,
+  hideBack,
+  containerStyle,
+  ForwardButton,
   onBackPress,
   onForwardPress,
 }: IForwardBackArrowsProps) => {
   return (
-    <View style={styles.container}>
+    <View style={[styles.container, containerStyle]}>
       <View style={styles.circlesContainer}>
-        <Pressable
-          style={[styles.circle, disabledBack && styles.disabledCircle]}
-          onPress={onBackPress}
-          disabled={disabledBack}
-        >
-          <SvgXml xml={ICONS.arrowLeft()} />
-        </Pressable>
-        <Pressable
-          style={[styles.circle, disabledForward && styles.disabledCircle]}
-          onPress={onForwardPress}
-          disabled={disabledForward}
-        >
-          <SvgXml xml={ICONS.arrowRight()} />
-        </Pressable>
+        <If condition={!hideBack}>
+          <TouchableOpacity
+            activeOpacity={0.5}
+            style={[styles.circle, disabledBack && styles.disabledCircle]}
+            onPress={onBackPress}
+            disabled={disabledBack}
+          >
+            <SvgXml xml={ICONS.arrowLeft()} />
+          </TouchableOpacity>
+        </If>
+        <If condition={!!ForwardButton}>
+          {ForwardButton}
+        </If>
+        <If condition={!ForwardButton}>
+          <TouchableOpacity
+            activeOpacity={0.5}
+            style={[styles.circle, disabledForward && styles.disabledCircle]}
+            onPress={onForwardPress}
+            disabled={disabledForward}
+          >
+            <SvgXml xml={ICONS.arrowRight()} />
+          </TouchableOpacity>
+        </If>
       </View>
 
       <View style={styles.dotsContainer}>

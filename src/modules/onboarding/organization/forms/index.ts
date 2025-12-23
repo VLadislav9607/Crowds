@@ -1,4 +1,4 @@
 export * from './NameStep';
 export * from './PrimaryLocationStep';
-export * from './YourInformationStep';
+export * from './OrganizationCreatorInformationStep';
 export * from './HeadGlobalLocationStep';

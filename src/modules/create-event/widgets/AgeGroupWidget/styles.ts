@@ -101,7 +101,7 @@ export const styles = StyleSheet.create({
     marginBottom: -16,
   },
   editPreferencesButtonText: {
-   ...TYPOGRAPHY.bold_14,
+    ...TYPOGRAPHY.bold_14,
   },
 });
 

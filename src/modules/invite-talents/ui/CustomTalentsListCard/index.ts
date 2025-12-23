@@ -1,2 +1,1 @@
 export { CustomTalentsListCard } from './CustomTalentsListCard';
-

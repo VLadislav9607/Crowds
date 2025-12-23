@@ -27,8 +27,7 @@ export const AppHeader = ({
 }: IAppHeaderProps) => {
   const insets = useSafeAreaInsets();
   const handleBackPress = () => {
-    goBack();
-    goBackCallback?.();
+    goBackCallback ? goBackCallback() : goBack();
   };
 
   const headerStyle = {

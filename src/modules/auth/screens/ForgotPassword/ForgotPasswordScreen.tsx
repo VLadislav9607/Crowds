@@ -4,19 +4,25 @@ import { COLORS } from '@styles';
 import { AppButton, AppText } from '@ui';
 import { styles } from './styles';
 import { View } from 'react-native';
-import { useRef } from 'react';
+import { useEffect, useRef } from 'react';
+import { useBoolean } from '@hooks';
 
 export const ForgotPasswordScreen = () => {
   const forgotPasswordFormRef = useRef<ForgotPasswordFormRef>(null);
+  const { value: isResettingPassword, setValue: setIsResettingPassword } =
+    useBoolean(false);
 
   const handleResetPassword = () => {
-    forgotPasswordFormRef.current?.handleSubmit(formData => {
-      console.log('Form data:', formData);
-    })();
+    forgotPasswordFormRef.current?.handleSubmit();
   };
+
+  useEffect(() => {
+    setIsResettingPassword(isResettingPassword);
+  }, [isResettingPassword, setIsResettingPassword]);
 
   return (
     <ScreenWithScrollWrapper
+      showLoader={isResettingPassword}
       headerVariant="withLogo"
       headerStyles={{ backgroundColor: COLORS.black }}
     >
@@ -24,7 +30,10 @@ export const ForgotPasswordScreen = () => {
         <AppText typography="bold_20" style={styles.title}>
           Reset password
         </AppText>
-        <ForgotPasswordForm ref={forgotPasswordFormRef} />
+        <ForgotPasswordForm
+          ref={forgotPasswordFormRef}
+          onFormStateChange={value => setIsResettingPassword(value.isLoading)}
+        />
         <AppButton
           title="Reset password"
           onPress={handleResetPassword}

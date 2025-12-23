@@ -77,7 +77,7 @@ export const CreatePasswordForm = forwardRef<
           )}
         />
 
-        <If condition={!uin}>
+        {/* <If condition={!uin}>
           <View style={styles.generateUINContainer}>
             <AppText color="black_40" typography="regular_14">
               Generate your unique identifier
@@ -92,9 +92,9 @@ export const CreatePasswordForm = forwardRef<
               titleStyles={styles.generateIDButtonTitle}
             />
           </View>
-        </If>
+        </If> */}
 
-        <If condition={!!uin}>
+        {/* <If condition={!!uin}>
           <View>
             <View style={styles.UINContainer}>
               <AppText color="black" typography="medium_12">
@@ -120,7 +120,7 @@ export const CreatePasswordForm = forwardRef<
               Only ONE is issued per account per person.
             </AppText>
           </View>
-        </If>
+        </If> */}
       </View>
     );
   },

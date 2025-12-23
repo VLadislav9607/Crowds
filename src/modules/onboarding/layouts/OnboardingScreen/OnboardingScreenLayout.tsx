@@ -4,7 +4,7 @@ import { ScreenWithScrollWrapper } from '@components';
 import { AppText, IAppHeaderProps } from '@ui';
 import { COLORS, TYPOGRAPHY } from '@styles';
 
-import { ForwardBackArrows } from '../../components';
+import { ForwardBackArrows, IForwardBackArrowsProps } from '../../components';
 
 interface IOnboardingScreenLayoutProps {
   title: string;
@@ -13,9 +13,15 @@ interface IOnboardingScreenLayoutProps {
   headerProps?: IAppHeaderProps;
   currentStep: number;
   children: React.ReactNode;
+  showLoader?: boolean;
+  isFloatFooter?: boolean;
+  useAnimatedScrollView?: boolean;
+  animatedScrollHandler?: (event: any) => void;
   onBackPress: () => void;
   onForwardPress: () => void;
+  footerProps?: Pick<IForwardBackArrowsProps, 'containerStyle' | 'ForwardButton' | 'hideBack'>;
 }
+
 
 export const OnboardingScreenLayout = ({
   title,
@@ -24,26 +30,35 @@ export const OnboardingScreenLayout = ({
   headerProps,
   currentStep,
   children,
+  showLoader = false,
+  isFloatFooter = true,
   onBackPress,
   onForwardPress,
+  footerProps,
+  animatedScrollHandler,
+  useAnimatedScrollView = false,
 }: IOnboardingScreenLayoutProps) => {
   return (
     <ScreenWithScrollWrapper
+      showLoader={showLoader}
+      isFloatFooter={isFloatFooter}
       headerVariant="withLogo"
       colorHeader="main"
-      keyboardAvoidingEnabled={false}
+      useAnimatedScrollView={useAnimatedScrollView}
+      animatedScrollHandler={animatedScrollHandler}
       footer={
         <ForwardBackArrows
           steps={stepsCount}
           currentStep={currentStep}
           onBackPress={onBackPress}
           onForwardPress={onForwardPress}
+          {...footerProps}
         />
       }
       {...headerProps}
     >
       <View style={styles.titleContainer}>
-        <AppText typography="semibold_20">{title}</AppText>
+        <AppText typography="semibold_20" style={styles.titleText}>{title}</AppText>
         <AppText renderIf={!!label} style={styles.label}>
           {label}
         </AppText>
@@ -66,6 +81,9 @@ const styles = StyleSheet.create({
     gap: 10,
     marginTop: 24,
     marginBottom: 32,
+  },
+  titleText: {
+    textAlign: 'center',
   },
   label: {
     paddingHorizontal: 10,

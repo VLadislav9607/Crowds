@@ -46,7 +46,12 @@ export const TagsPicker = ({
       <View style={styles.headerContainer}>
         <AppText typography="semibold_18">Tags</AppText>
         <TouchableOpacity
-          onPress={() => tagsPickerModalRef.current?.open({ defaultTags: selectedTags, onTagsChange })}
+          onPress={() =>
+            tagsPickerModalRef.current?.open({
+              defaultTags: selectedTags,
+              onTagsChange,
+            })
+          }
           hitSlop={{ top: 10, bottom: 10, left: 10, right: 10 }}
         >
           <If condition={!isLoading}>
@@ -97,7 +102,6 @@ export const TagsPicker = ({
       </If>
 
       <TagsPickerModal ref={tagsPickerModalRef} />
-
     </View>
   );
 };
