@@ -15,7 +15,6 @@ export type RootStackParamList = {
   [Screens.TalentProfileSetup]: undefined;
   [Screens.ChangePassword]: undefined;
   [Screens.OnboardingUnAuthTalent]: undefined;
-  
 
   // Bottom Tabs
   [Screens.BottomTabs]: NavigatorScreenParams<BottomTabsParamList>;
@@ -33,7 +32,10 @@ export type RootStackParamList = {
   [Screens.EventsDashboard]: undefined;
   [Screens.InviteNewMember]: undefined;
   [Screens.CopyInviteLink]: undefined;
-
+  [Screens.ApplicantProfile]: { applicantId: string };
+  [Screens.InviteTalents]: undefined;
+  [Screens.CustomTalentsList]: { listName: string; listId: string };
+  [Screens.AddTalentsToList]: { listId: string };
   // Talent screens
   [Screens.TalentSearchEvents]?: {
     autofocus?: boolean;
@@ -42,13 +44,16 @@ export type RootStackParamList = {
   [Screens.TalentEventDetails]: {
     eventId: string;
   };
-  [Screens.TalentNotificationSettings]: undefined;
   [Screens.ManageEvent]: undefined;
   [Screens.EventParticipants]: undefined;
+  [Screens.FlagParticipant]: { participantId: string };
   // Talent screens
   [Screens.AvailabilitySetup]: undefined;
   [Screens.TalentProfileSetup]: undefined;
 
   // Chat screens
   [Screens.ChatRoom]: { chatId: string };
+
+  //Profile
+  [Screens.NotificationSettings]: { role: Role };
 };

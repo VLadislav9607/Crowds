@@ -16,39 +16,42 @@ export enum Screens {
   TermsAndPrivacy = 'TermsAndPrivacy',
   Congratulations = 'Congratulations',
 
+  // Bottom Tabs
   BottomTabs = 'BottomTabs',
+  ProfileTab = 'ProfileTab',
+  Chats = 'Chats',
 
   //Bottom Tabs Organization
   EventsDashboard = 'EventsDashboard',
   UpcomingEvents = 'UpcomingEvents',
-  ChatsOrganization = 'ChatsOrganization',
-  SettingsOrganization = 'SettingsOrganization',
-  ProfileOrganization = 'ProfileOrganization',
 
   //Bottom Tabs Talent
   HomeTalent = 'HomeTalent',
   TalerQRCode = 'TalerQRCode',
   EventsTalent = 'EventsTalent',
-  ChatsTalent = 'ChatsTalent',
-  SettingsTalent = 'SettingsTalent',
-  ProfileTalent = 'ProfileTalent',
 
   // Organization screens
   CreateEvent = 'CreateEvent',
   InviteNewMember = 'InviteNewMember',
   CopyInviteLink = 'CopyInviteLink',
+  ApplicantProfile = 'ApplicantProfile',
+  ManageEvent = 'ManageEvent',
+  EventParticipants = 'EventParticipants',
+  FlagParticipant = 'FlagParticipant',
+  InviteTalents = 'InviteTalents',
+  CustomTalentsList = 'CustomTalentsList',
+  AddTalentsToList = 'AddTalentsToList',
 
   // Talent screens
   TalentSearchEvents = 'TalentSearchEvents',
   TalentEventDetails = 'TalentEventDetails',
-  TalentNotificationSettings = 'TalentNotificationSettings',
-  ManageEvent = 'ManageEvent',
-  EventParticipants = 'EventParticipants',
 
-  // Talent screens
   AvailabilitySetup = 'AvailabilitySetup',
   TalentProfileSetup = 'TalentProfileSetup',
 
   // Chat screens
   ChatRoom = 'ChatRoom',
+
+  //Profile
+  NotificationSettings = 'NotificationSettings',
 }

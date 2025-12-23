@@ -1,37 +1,29 @@
-import { View, StyleProp, ViewStyle } from 'react-native';
+import { View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
+import { useMemo } from 'react';
 
-import { AppHeader, IAppHeaderProps } from '@ui';
-import { styles } from './styles';
+import { AppHeader } from '@ui';
+import { styles, getWrapperPaddingBottom } from './styles';
+import { IScreenWrapperProps } from './types';
 
-interface IScreenWrapperProps extends IAppHeaderProps {
-  children: React.ReactNode;
-  witBottomTab?: boolean;
-  containerStyle?: StyleProp<ViewStyle>;
-  contentContainerStyle?: StyleProp<ViewStyle>;
-  withBottomTabBar?: boolean;
-  wrapperStyle?: StyleProp<ViewStyle>;
-}
-
-export const  ScreenWrapper = ({
+export const ScreenWrapper = ({
   children,
-  containerStyle,
   contentContainerStyle,
   withBottomTabBar = false,
-  witBottomTab,
   wrapperStyle,
   ...headerProps
 }: IScreenWrapperProps) => {
   const { bottom } = useSafeAreaInsets();
 
+  const wrapperPaddingBottomStyle = useMemo(
+    () => ({
+      paddingBottom: getWrapperPaddingBottom(withBottomTabBar, bottom),
+    }),
+    [withBottomTabBar, bottom],
+  );
+
   return (
-    <View
-      style={[
-        styles.wrapper,
-        { paddingBottom: witBottomTab ? 16 : bottom || 16 },
-        containerStyle,
-      ]}
-    >
+    <View style={[styles.wrapper, wrapperPaddingBottomStyle, wrapperStyle]}>
       {headerProps.headerVariant && <AppHeader {...headerProps} />}
 
       <View style={[styles.contentContainer, contentContainerStyle]}>

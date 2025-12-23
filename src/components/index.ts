@@ -16,3 +16,4 @@ export * from './AppFlashList';
 export * from './PopupMenu';
 export * from './AppToast';
 export * from './PlacesPredictionsInput';
+export * from './DocumentPicker';

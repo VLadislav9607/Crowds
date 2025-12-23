@@ -22,9 +22,9 @@ export const headerImageBgMap = {
 export interface HeaderContentProps {
   title?: string;
   showBackButton?: boolean;
+  avatarUrl?: string;
   titleProps?: TextProps;
   onBackPress?: () => void;
-  avatarUrl?: string;
 }
 
 export interface IAppHeaderProps {
@@ -41,7 +41,7 @@ export interface IAppHeaderProps {
   rightIcons?: {
     icon: () => string | null;
     onPress: () => void;
-    size?: number,
+    size?: number;
   }[];
   goBackCallback?: () => void;
 }

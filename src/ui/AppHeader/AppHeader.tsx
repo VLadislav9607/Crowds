@@ -39,16 +39,12 @@ export const AppHeader = ({
 
   return (
     <>
-
-<If condition={headerVariant === 'empty'}>
-        <View style={[headerStyle]}>
-       
-          {customElement}
-        </View>
+      <If condition={headerVariant === 'empty'}>
+        <View style={[headerStyle]}>{customElement}</View>
       </If>
 
       <If condition={headerVariant === 'withLogo'}>
-        <View style={[headerStyle, styles.headerWithLogo]}>
+        <View style={[headerStyle, styles.headerWithLogo, headerStyles]}>
           <View style={styles.logoHeaderInner}>
             <SvgXml xml={ICONS.fullLogo()} {...logoProps} />
             {rightIcons && <RightIcons rightIcons={rightIcons} />}
@@ -58,7 +54,7 @@ export const AppHeader = ({
       </If>
 
       <If condition={headerVariant === 'withTitle'}>
-        <View style={[headerStyle, styles.headerWithTitle]}>
+        <View style={[headerStyle, styles.headerWithTitle, headerStyles]}>
           <View style={styles.titleHeaderInner}>
             <HeaderContent
               title={title}
@@ -76,10 +72,10 @@ export const AppHeader = ({
         <ImageBackground
           resizeMode="stretch"
           source={headerImageBgMap[headerImageBg || 'purple']}
-          style={[headerStyle, styles.withTitleAndImageBg]}
+          style={[headerStyle, styles.withTitleAndImageBg, headerStyles]}
         >
           <View style={styles.overlay} />
-          <View style={[styles.contentWrapperColumn,  styles.headerContainer]}>
+          <View style={[styles.contentWrapperColumn, styles.headerContainer]}>
             <View style={styles.titleHeaderInner}>
               <HeaderContent
                 title={title}
@@ -92,7 +88,6 @@ export const AppHeader = ({
             </View>
           </View>
           {customElement}
-
         </ImageBackground>
       </If>
 
@@ -100,7 +95,7 @@ export const AppHeader = ({
         <ImageBackground
           resizeMode="stretch"
           source={headerImageBgMap[headerImageBg || 'purple']}
-          style={[headerStyle, styles.withTitleAndImageBg]}
+          style={[headerStyle, styles.withTitleAndImageBg, headerStyles]}
         >
           <View style={styles.overlay} />
           <View style={[styles.contentWrapperLogo, styles.headerContainer]}>
@@ -120,8 +115,8 @@ const HeaderContent = ({
   title,
   showBackButton,
   titleProps,
-  onBackPress,
   avatarUrl,
+  onBackPress,
 }: HeaderContentProps) => (
   <View style={styles.headerContentRow}>
     {showBackButton && onBackPress && (
@@ -131,7 +126,11 @@ const HeaderContent = ({
     )}
     {avatarUrl && <Avatar size={48} uri={avatarUrl} style={styles.avatar} />}
     {title && (
-      <AppText numberOfLines={1}  {...titleProps} style={[styles.title, titleProps?.style]}>
+      <AppText
+        numberOfLines={1}
+        {...titleProps}
+        style={[styles.title, titleProps?.style]}
+      >
         {title}
       </AppText>
     )}

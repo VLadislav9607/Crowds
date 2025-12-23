@@ -1,0 +1,1 @@
+export { useTalentsFilter } from './useTalentsFilter';

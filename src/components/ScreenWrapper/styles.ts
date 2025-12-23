@@ -9,3 +9,9 @@ export const styles = StyleSheet.create({
   },
 });
 
+export const getWrapperPaddingBottom = (
+  withBottomTabBar: boolean,
+  bottom: number,
+) => {
+  return withBottomTabBar ? 16 : bottom || 16;
+};

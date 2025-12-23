@@ -8,6 +8,7 @@ import {
 } from 'react-native-reanimated';
 import Animated from 'react-native-reanimated';
 import { styles } from './styles';
+import { View } from 'react-native';
 
 export const TalentProfileSetupScreen = () => {
   const headerOpacity = useSharedValue(1);
@@ -71,7 +72,9 @@ export const TalentProfileSetupScreen = () => {
         </Animated.View>
       }
     >
-      <TalentProfileSetupForm />
+      <View style={styles.contentWrapper}>
+        <TalentProfileSetupForm />
+      </View>
     </ScreenWithScrollWrapper>
   );
 };

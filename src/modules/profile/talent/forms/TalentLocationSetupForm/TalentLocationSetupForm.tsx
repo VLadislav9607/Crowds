@@ -1,7 +1,13 @@
 import { View } from 'react-native';
 import { Controller, useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { forwardRef, useEffect, useImperativeHandle } from 'react';
+import {
+  forwardRef,
+  useCallback,
+  useEffect,
+  useImperativeHandle,
+  useMemo,
+} from 'react';
 import { PlacesPredictionsInput } from '@components';
 import {
   TalentLocationSetupFormData,
@@ -12,58 +18,81 @@ import {
 import { PlaceAutocompleteType } from '@googlemaps/google-maps-services-js';
 import { useGetMe, useUpsertTalentLocation } from '@actions';
 import { styles } from './styles';
-
-
+import { queryClient } from '@services';
+import { TANSTACK_QUERY_KEYS } from '@constants';
 
 export const TalentLocationSetupForm = forwardRef<
   TalentLocationSetupFormRef,
   TalentLocationSetupFormProps
 >(({ onFormStateChange, onSuccess }, ref) => {
   const { data: me } = useGetMe();
-  const { mutate: upsertTalentLocationMutate, isPending: isUpsertingLocation } = useUpsertTalentLocation();
+  const { mutate: upsertTalentLocationMutate, isPending: isUpsertingLocation } =
+    useUpsertTalentLocation();
 
   const talentLocation = me?.talent?.talent_location;
 
-  const defaultValues: TalentLocationSetupFormData | undefined = talentLocation ? {
-    parsed_location: {
-      ...talentLocation,
-      coords: talentLocation.coords as string,
-    },
-  } : undefined;
+  const defaultValues: TalentLocationSetupFormData | undefined = useMemo(() => {
+    return talentLocation
+      ? {
+          parsed_location: {
+            ...talentLocation,
+            coords: talentLocation.coords as string,
+          },
+        }
+      : undefined;
+  }, [talentLocation]);
 
   const { control, handleSubmit, reset, watch } =
     useForm<TalentLocationSetupFormData>({
       resolver: zodResolver(talentLocationSetupSchema),
       mode: 'onBlur',
-      defaultValues
+      defaultValues,
     });
 
   const parsedLocation = watch('parsed_location');
 
   const onFormReset = () => parsedLocation?.autocomplete_description && reset();
 
-  const createUpdateLocationHandler = (data: TalentLocationSetupFormData) => {
-    if (defaultValues?.parsed_location.place_id && defaultValues?.parsed_location?.place_id === data.parsed_location.place_id) {
-      onSuccess?.();
-      return;
-    }
+  const createUpdateLocationHandler = useCallback(
+    (data: TalentLocationSetupFormData) => {
+      if (
+        defaultValues?.parsed_location.place_id &&
+        defaultValues?.parsed_location?.place_id ===
+          data.parsed_location.place_id
+      ) {
+        onSuccess?.();
+        return;
+      }
 
-    upsertTalentLocationMutate(
-      { location: { ...data.parsed_location, id: talentLocation?.id } },
-      { onSuccess }
-    );
-  };
+      upsertTalentLocationMutate(
+        { location: { ...data.parsed_location, id: talentLocation?.id } },
+        {
+          onSuccess: () => {
+            queryClient.invalidateQueries({
+              queryKey: [TANSTACK_QUERY_KEYS.GET_ME],
+            });
+            onSuccess?.();
+          },
+        },
+      );
+    },
+    [defaultValues, onSuccess, upsertTalentLocationMutate, talentLocation?.id],
+  );
 
-  useImperativeHandle(ref, () => ({
-    handleSubmit: handleSubmit(createUpdateLocationHandler),
-  }), [handleSubmit]);
+  useImperativeHandle(
+    ref,
+    () => ({
+      handleSubmit: handleSubmit(createUpdateLocationHandler),
+    }),
+    [handleSubmit, createUpdateLocationHandler],
+  );
 
   useEffect(() => {
     onFormStateChange?.({ isUpsertingLocation });
   }, [isUpsertingLocation, onFormStateChange]);
 
   return (
-    <View style={styles.container} >
+    <View style={styles.container}>
       {/* <AppText color="black" typography="semibold_18" margin={{ bottom: 16 }}>
         Where do you live?
       </AppText> */}
@@ -80,10 +109,9 @@ export const TalentLocationSetupForm = forwardRef<
               onSelectPlace={res => field.onChange(res.parsed_details)}
               defaultValue={parsedLocation?.autocomplete_description}
             />
-          )
+          );
         }}
       />
-
     </View>
   );
 });

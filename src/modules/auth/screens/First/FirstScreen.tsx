@@ -20,7 +20,7 @@ export const FirstScreen = () => {
       <SvgXml xml={ICONS.firstScreenLogo()} style={styles.appName} />
 
       <AppText style={styles.text} color="white">
-        {`The \n World Leading \n Market Place \n for Crowds \n On Demand!`}
+        {`The World Leading Market Place for Crowds On Demand!`}
       </AppText>
 
       <AppButton
@@ -56,8 +56,6 @@ const styles = StyleSheet.create({
   },
   text: {
     marginTop: '32%',
-    marginLeft: 42,
-    marginRight: 32,
     marginBottom: 'auto',
     ...TYPOGRAPHY.bold_40,
   },

@@ -1,5 +1,3 @@
-import { ImperativeModalRef } from "@hooks";
-
+import { ImperativeModalRef } from '@hooks';
 
 export type LogoutModalRef = ImperativeModalRef<{}>;
-

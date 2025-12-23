@@ -50,19 +50,19 @@ export const OrganizationCreatorInformationStep = forwardRef<
 
   return (
     <View style={[styles.container, containerStyle]}>
-         <Controller
-          control={control}
-          name="username"
-          render={({ field: { onChange, value }, fieldState }) => (
-            <AppInput
-              placeholder="Username"
-              value={value}
-              onChangeText={onChange}
-              containerStyle={styles.nameInput}
-              errorMessage={fieldState.error?.message}
-            />
-          )}
-        />
+      <Controller
+        control={control}
+        name="username"
+        render={({ field: { onChange, value }, fieldState }) => (
+          <AppInput
+            placeholder="Username"
+            value={value}
+            onChangeText={onChange}
+            containerStyle={styles.nameInput}
+            errorMessage={fieldState.error?.message}
+          />
+        )}
+      />
 
       <View style={styles.nameInputs}>
         <Controller
@@ -93,7 +93,6 @@ export const OrganizationCreatorInformationStep = forwardRef<
           )}
         />
       </View>
-
 
       <Controller
         control={control}
@@ -150,17 +149,19 @@ export const OrganizationCreatorInformationStep = forwardRef<
           //   checkedValues={value ? 'yes' : 'no'}
           //   onCheckboxPress={item => onChange(item.value === 'yes')}
           // />
-          <View style={{flexDirection: 'row', alignItems: 'flex-start', gap: 10, }}>
+          <View style={styles.checkboxRow}>
             <AppCheckbox
-            type='checkedIcon'
+              type="checkedIcon"
               checked={value}
               onChange={onChange}
             />
-            <AppText typography="regular_14" style={{flex: 1}}>Are you authorized on behalf of the company to make decisions; and or in an Executive, C Suite or Board Position?</AppText>
+            <AppText typography="regular_14" style={styles.checkboxText}>
+              Are you authorized on behalf of the company to make decisions; and
+              or in an Executive, C Suite or Board Position?
+            </AppText>
           </View>
         )}
       />
-
     </View>
   );
 });
@@ -176,5 +177,12 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     gap: 20,
   },
+  checkboxRow: {
+    flexDirection: 'row',
+    alignItems: 'flex-start',
+    gap: 10,
+  },
+  checkboxText: {
+    flex: 1,
+  },
 });
-

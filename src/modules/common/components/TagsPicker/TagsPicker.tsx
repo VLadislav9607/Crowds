@@ -11,6 +11,7 @@ export const TagsPicker = ({
   containerStyle,
   onTagsChange,
   onTagPress,
+  categoriesContainerStyle,
 }: TagsPickerProps) => {
   const tagsPickerModalRef = useRef<TagsPickerModalRef>(null);
 
@@ -45,7 +46,12 @@ export const TagsPicker = ({
       <View style={styles.headerContainer}>
         <AppText typography="semibold_18">Tags</AppText>
         <TouchableOpacity
-          onPress={() => tagsPickerModalRef.current?.open({ defaultTags: selectedTags, onTagsChange })}
+          onPress={() =>
+            tagsPickerModalRef.current?.open({
+              defaultTags: selectedTags,
+              onTagsChange,
+            })
+          }
           hitSlop={{ top: 10, bottom: 10, left: 10, right: 10 }}
         >
           <If condition={!isLoading}>
@@ -57,7 +63,7 @@ export const TagsPicker = ({
       </View>
 
       <If condition={!isLoading}>
-        <View style={styles.categoriesContainer}>
+        <View style={[styles.categoriesContainer, categoriesContainerStyle]}>
           {tags.map(tag => {
             const isSelected = selectedTags.includes(tag);
             return (
@@ -96,7 +102,6 @@ export const TagsPicker = ({
       </If>
 
       <TagsPickerModal ref={tagsPickerModalRef} />
-
     </View>
   );
 };

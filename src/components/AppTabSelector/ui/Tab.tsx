@@ -1,6 +1,6 @@
 import { useEffect, useRef } from 'react';
 import { Pressable, Animated, LayoutChangeEvent } from 'react-native';
-import { ITabOption, TabSelectorTheme } from '../types';
+import { ITabOption, TabSelectorTheme, TabSelectorVariant } from '../types';
 import { styles } from '../styles';
 import { COLORS } from '@styles';
 
@@ -13,6 +13,7 @@ interface ITabProps<T = string> {
   totalOptions?: number;
   index?: number;
   theme?: TabSelectorTheme;
+  variant?: TabSelectorVariant;
 }
 
 const THEME_COLORS = {
@@ -45,9 +46,11 @@ export const Tab = <T = string,>({
   totalOptions = 2,
   index = 0,
   theme = 'white',
+  variant = 'default',
 }: ITabProps<T>) => {
   const animValue = useRef(new Animated.Value(isActive ? 1 : 0)).current;
   const colors = THEME_COLORS[theme];
+  const isPill = variant === 'pill';
 
   useEffect(() => {
     Animated.timing(animValue, {
@@ -75,15 +78,17 @@ export const Tab = <T = string,>({
   const isFirst = index === 0;
   const isLast = index === totalOptions - 1;
 
+  const tabStyle = isPill ? styles.tabPill : styles.tab;
+
   return (
     <Pressable
       onLayout={onLayout}
       style={[
-        styles.tab,
-        { borderColor: colors.border },
+        tabStyle,
+        !isPill && { borderColor: colors.border },
         shouldScroll ? {} : { flex: 1 / totalOptions },
-        isFirst && styles.firstTab,
-        isLast && styles.lastTab,
+        !isPill && isFirst && styles.firstTab,
+        !isPill && isLast && styles.lastTab,
       ]}
       onPress={onPress}
     >

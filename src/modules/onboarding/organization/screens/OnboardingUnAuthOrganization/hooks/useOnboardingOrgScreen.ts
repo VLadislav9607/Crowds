@@ -1,7 +1,7 @@
-import { goBack, goToScreen, Screens } from "@navigation";
-import { useRef, useState } from "react";
+import { goBack, goToScreen, Screens } from '@navigation';
+import { useRef, useState } from 'react';
 
-import { OrganizationType, OtpVerificationFormRef } from "@modules/common";
+import { OrganizationType, OtpVerificationFormRef } from '@modules/common';
 
 import {
   HeadGlobalLocationFormData,
@@ -12,21 +12,21 @@ import {
   OrganizationNameFormRef,
   PrimaryLocationFormData,
   PrimaryLocationFormRef,
-} from "../../../forms";
+} from '../../../forms';
 import {
   prefetchUseGetMe,
   useCheckUsernameExist,
   useCreateOrganizationAndCreator,
   useSendOtp,
   useVerifyOtp,
-} from "@actions";
-import { showErrorToast } from "@helpers";
+} from '@actions';
+import { showErrorToast } from '@helpers';
 import {
   CreatePasswordFormData,
   CreatePasswordFormRef,
-} from "../../../../forms";
-import { supabase } from "@services";
-import { UINSaveConfirmationModalRef } from "../../../../modals";
+} from '../../../../forms';
+import { supabase } from '@services';
+import { UINSaveConfirmationModalRef } from '../../../../modals';
 
 export const useOnboardingOrgScreen = () => {
   const organizationNameFormRef = useRef<OrganizationNameFormRef>(null);
@@ -36,16 +36,15 @@ export const useOnboardingOrgScreen = () => {
   const createPasswordFormRef = useRef<CreatePasswordFormRef>(null);
   const uinSaveConfirmationModalRef = useRef<UINSaveConfirmationModalRef>(null);
 
-  const organizationCreatorInformationFormRef = useRef<
-    OrganizationCreatorInformationFormRef
-  >(null);
+  const organizationCreatorInformationFormRef =
+    useRef<OrganizationCreatorInformationFormRef>(null);
 
   const {
     mutateAsync: checkUsernameExistMutateAsync,
     isPending: isCheckingUsernameExist,
   } = useCheckUsernameExist();
 
-  const [uin, setUIN] = useState<string>("");
+  const [uin, setUIN] = useState<string>('');
   const {
     mutateAsync: createOrganizationAndCreatorMutateAsync,
     isPending: isCreatingOrganizationAndCreator,
@@ -53,7 +52,7 @@ export const useOnboardingOrgScreen = () => {
 
   const { mutateAsync: verifyOtpMutateAsync, isPending: isVerifyingOtp } =
     useVerifyOtp({
-      onError: (e) => showErrorToast(e?.message),
+      onError: e => showErrorToast(e?.message),
     });
   const { mutateAsync: sendOtpMutateAsync } = useSendOtp();
 
@@ -63,8 +62,7 @@ export const useOnboardingOrgScreen = () => {
     organizationNameFormData?: OrganizationNameFormData;
     headGlobalLocationFormData?: HeadGlobalLocationFormData;
     primaryLocationFormData?: PrimaryLocationFormData;
-    organizationCreatorInformationFormData?:
-      OrganizationCreatorInformationFormData;
+    organizationCreatorInformationFormData?: OrganizationCreatorInformationFormData;
     verificationToken?: string;
   }>({});
 
@@ -78,11 +76,13 @@ export const useOnboardingOrgScreen = () => {
       organizationNameFormRef.current?.handleSubmit(
         handleOrganizationNameFormSubmit,
       )();
-    step === 1 && isGlobal &&
+    step === 1 &&
+      isGlobal &&
       headGlobalLocationFormRef.current?.handleSubmit(
         handleHeadGlobalLocationFormSubmit,
       )();
-    step === 1 && !isGlobal &&
+    step === 1 &&
+      !isGlobal &&
       primaryLocationFormRef.current?.handleSubmit(
         handlePrimaryLocationFormSubmit,
       )();
@@ -91,50 +91,52 @@ export const useOnboardingOrgScreen = () => {
         handleOrganizationCreatorInformationFormSubmit,
       )();
     step === 3 && onOtpVerificationFormSubmit();
-    step === 4 && createPasswordFormRef.current?.handleSubmit(
-      onCreatePasswordFormSubmit,
-    )();
+    step === 4 &&
+      createPasswordFormRef.current?.handleSubmit(onCreatePasswordFormSubmit)();
   };
 
   const onCreatePasswordFormSubmit = async (
     formData: CreatePasswordFormData,
   ) => {
-    if (
-      !data.verificationToken || !data.organizationCreatorInformationFormData
-    ) return;
+    if (!data.verificationToken || !data.organizationCreatorInformationFormData)
+      return;
 
-    createOrganizationAndCreatorMutateAsync({
-      organization_name: data.organizationNameFormData?.organizationName || "",
-      password: formData.password,
-      verification_token: data.verificationToken,
-      owner: {
-        first_name: data.organizationCreatorInformationFormData?.firstName,
-        last_name: data.organizationCreatorInformationFormData?.lastName,
-        gender: data.organizationCreatorInformationFormData?.gender,
-        position: data.organizationCreatorInformationFormData
-          ?.positionInCompany,
-        username: data.organizationCreatorInformationFormData?.username,
-        email: data.organizationCreatorInformationFormData?.email,
+    createOrganizationAndCreatorMutateAsync(
+      {
+        organization_name:
+          data.organizationNameFormData?.organizationName || '',
+        password: formData.password,
+        verification_token: data.verificationToken,
+        owner: {
+          first_name: data.organizationCreatorInformationFormData?.firstName,
+          last_name: data.organizationCreatorInformationFormData?.lastName,
+          gender: data.organizationCreatorInformationFormData?.gender,
+          position:
+            data.organizationCreatorInformationFormData?.positionInCompany,
+          username: data.organizationCreatorInformationFormData?.username,
+          email: data.organizationCreatorInformationFormData?.email,
+        },
       },
-    }, {
-      onSuccess: async (data) => {
-        setUIN(data.uin);
-        await supabase.auth.setSession({
-          access_token: data.session.access_token,
-          refresh_token: data.session.refresh_token,
-        });
-        await prefetchUseGetMe();
-        uinSaveConfirmationModalRef.current?.open({
-          uin: data.uin,
-          // onConfirm: () => goToScreen(Screens.OnboardingAuthTalent)
-        });
+      {
+        onSuccess: async responseData => {
+          setUIN(responseData.uin);
+          await supabase.auth.setSession({
+            access_token: responseData.session.access_token,
+            refresh_token: responseData.session.refresh_token,
+          });
+          await prefetchUseGetMe();
+          uinSaveConfirmationModalRef.current?.open({
+            uin: responseData.uin,
+            onConfirm: () => goToScreen(Screens.OnboardingAuthOrganization),
+          });
+        },
+        onError: (error: Error) => {
+          showErrorToast(
+            error?.message || 'Failed to create account. Please try again.',
+          );
+        },
       },
-      onError: (error: Error) => {
-        showErrorToast(
-          error?.message || "Failed to create account. Please try again.",
-        );
-      },
-    });
+    );
 
     // createTalentMutate({
     //   first_name: data.talentNameFormData.firstName,
@@ -196,7 +198,7 @@ export const useOnboardingOrgScreen = () => {
   ) => {
     if (!values.isAuthorizedOnBehalfOfCompany) {
       showErrorToast(
-        "You must be authorized on behalf of the company to make decisions",
+        'You must be authorized on behalf of the company to make decisions',
       );
       return;
     }
@@ -204,7 +206,7 @@ export const useOnboardingOrgScreen = () => {
       username: values.username.toLowerCase(),
     });
     if (isUserExists.isExists) {
-      showErrorToast("Username already exists.");
+      showErrorToast('Username already exists.');
       return;
     }
     sendOtpMutateAsync({ email: values.email });
@@ -216,12 +218,12 @@ export const useOnboardingOrgScreen = () => {
     try {
       const otp_code = otpVerificationFormRef.current?.getCode();
       if (otp_code && otp_code.length < 6) {
-        showErrorToast("Please enter the verification code");
+        showErrorToast('Please enter the verification code');
         return;
       }
       const response = await verifyOtpMutateAsync({
         email: data.organizationCreatorInformationFormData?.email!,
-        otp_code: otp_code || "",
+        otp_code: otp_code || '',
       });
       setData({ ...data, verificationToken: response.verification_token });
       if (response.success) {
@@ -230,9 +232,11 @@ export const useOnboardingOrgScreen = () => {
     } catch {}
   };
 
-  const goToPreviousStep = () => !step ? goBack() : setStep(step - 1);
+  const goToPreviousStep = () => (!step ? goBack() : setStep(step - 1));
 
-  const showFullScreenLoader = isCheckingUsernameExist || isVerifyingOtp ||
+  const showFullScreenLoader =
+    isCheckingUsernameExist ||
+    isVerifyingOtp ||
     isCreatingOrganizationAndCreator;
   return {
     step,

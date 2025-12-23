@@ -1,56 +1,55 @@
 import { useState } from 'react';
-import { Controller, FieldErrors } from 'react-hook-form';
+import { Controller, useFormContext } from 'react-hook-form';
 
-import { AppDateInput } from '@components';
-import { AppCheckbox, AppTextarea } from '@ui';
+import { AppDateInput, DocumentPicker, If } from '@components';
+import { AppCheckbox } from '@ui';
+import { ICONS } from '@assets';
 
 import { CreateEventFormData } from '../../validation';
+import { styles } from './styles';
 
-interface OtherInfoSectionProps {
-  control: any;
-  errors: FieldErrors<CreateEventFormData>;
-}
+export const OtherInfoSection = () => {
+  const {
+    control,
+    formState: { errors },
+  } = useFormContext<CreateEventFormData>();
 
-export const OtherInfoSection = ({
-  control,
-  errors,
-}: OtherInfoSectionProps) => {
   const [hasNDA, setHasNDA] = useState(false);
 
   return (
     <>
-      <Controller
-        control={control}
-        name="eventBrief"
-        render={({ field: { value, onChange } }) => (
-          <AppTextarea
-            label="Event Brief"
-            labelProps={{
-              typography: 'h5_mob',
-              color: 'black',
-              style: { marginBottom: 5 },
-            }}
-            value={value}
-            onChangeText={onChange}
-            errorMessage={errors.eventBrief?.message}
-            placeholder="Provide a detailed brief of the event"
-          />
-        )}
-      />
-
       <AppCheckbox
+        containerStyle={styles.checkboxContainer}
         label="Do you want to upload an NDA?"
         type="checkedIcon"
         checked={hasNDA}
         onChange={setHasNDA}
       />
 
+      <If condition={hasNDA}>
+        <Controller
+          control={control}
+          name="ndaDocument"
+          render={({ field: { onChange } }) => (
+            <DocumentPicker
+              icon={ICONS.upload('main')}
+              titleIcon={ICONS.paperClip('main')}
+              titleIconSize={20}
+              title="Upload NDA Document Here"
+              description="Do not provide your company's information in the NDA at this point."
+              onDocumentSelect={onChange}
+            />
+          )}
+        />
+      </If>
+
       <Controller
         control={control}
         name="registrationClosingDate"
         render={({ field: { value, onChange } }) => (
           <AppDateInput
-            label="Registration Closing by Date"
+            label="Closing by Date"
+            description="Set the closing date for event registrations"
             defaultIconPosition="right"
             labelProps={{
               typography: 'h5_mob',
