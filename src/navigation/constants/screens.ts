@@ -12,9 +12,10 @@ export enum Screens {
 
   // Onboarding
   OnboardingUnAuthOrganization = 'OnboardingUnAuthOrganization',
-  OnboardingAuthOrganization = 'OnboardingAuthOrganization',
+  OrgIdentityVerification = 'OrgIdentityVerification',
   TermsAndPrivacy = 'TermsAndPrivacy',
   Congratulations = 'Congratulations',
+  VerificationPerson = 'VerificationPerson',
 
   // Bottom Tabs
   BottomTabs = 'BottomTabs',

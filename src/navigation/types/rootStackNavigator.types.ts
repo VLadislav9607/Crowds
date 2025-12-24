@@ -23,8 +23,9 @@ export type RootStackParamList = {
   [Screens.Congratulations]: { role: Role };
   [Screens.OnboardingUnAuthOrganization]: { flow: OrganizationType };
   [Screens.OnboardingAuthTalent]: undefined;
-  [Screens.OnboardingAuthOrganization]: undefined;
+  [Screens.OrgIdentityVerification]: undefined;
   [Screens.TermsAndPrivacy]: undefined;
+  [Screens.VerificationPerson]: { url: string; userId: string };
 
   // Organization screens
   [Screens.CopyInviteLink]: undefined;

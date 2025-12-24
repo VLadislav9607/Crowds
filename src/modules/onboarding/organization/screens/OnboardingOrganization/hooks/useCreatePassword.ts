@@ -9,6 +9,7 @@ export const useCreatePassword = () => {
   const handleCreatePassword = (onboardingData: any) => {
     createPasswordFormRef.current?.handleSubmit(formData => {
       console.log('formData', formData);
+      
       console.log('onboardingData', onboardingData);
       setConfirmationModalOpen(true);
       setUIN(Math.random().toString(36).substring(2, 15));

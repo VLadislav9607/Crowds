@@ -1,3 +1,3 @@
 export * from './OnboardingUnAuthOrganization';
 export * from './TermsAndPrivacy';
-export * from './OnboardingAuthOrganization';
+export * from './OrgIdentityVerification';

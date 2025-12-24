@@ -15,7 +15,7 @@ import { TalentProfileSetupScreen } from '../../modules/profile/talent/screens';
 import { AvailabilitySetupScreen } from '../../modules/talent-availability';
 import {
   CongratulationsScreen,
-  OnboardingAuthOrganization,
+  OrgIdentityVerificationScreen,
   OnboardingUnAuthOrganizationScreen,
   TermsAndPrivacyScreen,
 } from '../../modules/onboarding';
@@ -49,6 +49,7 @@ import {
   CustomTalentsListScreen,
   InviteTalentsScreen,
 } from '../../modules/invite-talents';
+import { VerificationPersonScreen } from '../../modules/kyc';
 
 const RootStack = createStackNavigator<RootStackParamList>();
 
@@ -85,8 +86,8 @@ export const RootStackNavigator = () => {
 
       <RootStack.Screen
         options={{ gestureEnabled: false }}
-        name={Screens.OnboardingAuthOrganization}
-        component={OnboardingAuthOrganization}
+        name={Screens.OrgIdentityVerification}
+        component={OrgIdentityVerificationScreen}
       />
 
       <RootStack.Screen
@@ -104,6 +105,11 @@ export const RootStackNavigator = () => {
       <RootStack.Screen
         name={Screens.TermsAndPrivacy}
         component={TermsAndPrivacyScreen}
+      />
+
+      <RootStack.Screen
+        name={Screens.VerificationPerson}
+        component={VerificationPersonScreen}
       />
 
       <RootStack.Screen

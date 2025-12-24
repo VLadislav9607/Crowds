@@ -23,6 +23,7 @@ module.exports = {
           "@modules/profile": "./src/modules/profile",
           "@modules/onboarding": "./src/modules/onboarding",
           "@modules/events": "./src/modules/events",
+          "@modules/kyc": "./src/modules/kyc",
           "@actions": "./src/actions",
           "@services":"./src/services"
         }
