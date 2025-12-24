@@ -4,16 +4,21 @@ import { View } from 'react-native';
 import { styles } from './styles';
 import { If } from '@components';
 import { useOnboardingAuthTalentScreen } from './useOnboardingAuthTalentScreen';
-import { TalentLocationSetupForm, TalentProfileSetupForm, TalentStripeSetup } from '@modules/profile';
-import { AnimatedProfileSetupHeader, ProfileIdentityVerification } from '../../../../profile/components';
+import {
+  TalentLocationSetupForm,
+  TalentProfileSetupForm,
+  TalentStripeSetup,
+} from '@modules/profile';
+import { AnimatedProfileSetupHeader } from '../../../../profile/components';
+import { IdentityVerification } from '@modules/kyc';
 import { AppButton, IAppHeaderProps } from '@ui';
 import { AnimatedProfileSetupHeaderRef } from '../../../../profile/components';
 import { useState } from 'react';
 import { LogoutModal } from '../../../../profile/modals';
 
 export const OnboardingAuthTalentScreen = () => {
-  const [scrollHandler, setScrollHandler] = useState<AnimatedProfileSetupHeaderRef['scrollHandler']>();
-
+  const [scrollHandler, setScrollHandler] =
+    useState<AnimatedProfileSetupHeaderRef['scrollHandler']>();
 
   const {
     logoutModalRef,
@@ -27,9 +32,8 @@ export const OnboardingAuthTalentScreen = () => {
     setShowFullScreenLoader,
     goToNextStep,
     goToPreviousStep,
-    onIdentityVerificationSuccess,
     onStripeSetupSuccess,
-    onProfileSetupSuccess
+    onProfileSetupSuccess,
   } = useOnboardingAuthTalentScreen();
 
   const titles = {
@@ -40,23 +44,33 @@ export const OnboardingAuthTalentScreen = () => {
   };
 
   const renderForwardButton = () => {
-
     if (step === 1) {
-      return <AppButton title='Start Verification' onPress={goToNextStep} wrapperStyles={{ flex: 1 }} />
+      return (
+        <AppButton
+          title="Start Verification"
+          onPress={goToNextStep}
+          wrapperStyles={{ flex: 1 }}
+        />
+      );
     }
 
     if (step === 2) {
-      return <AppButton title='Proceed to add details' onPress={goToNextStep} wrapperStyles={{ flex: 1 }} />
+      return (
+        <AppButton
+          title="Proceed to add details"
+          onPress={goToNextStep}
+          wrapperStyles={{ flex: 1 }}
+        />
+      );
     }
-    return undefined
-  }
-
+    return undefined;
+  };
 
   const defaultHeaderProps: IAppHeaderProps = {
     headerStyles: {
       backgroundColor: COLORS.black,
     },
-  }
+  };
 
   const setupProfileHeaderProps: IAppHeaderProps = {
     headerStyles: {
@@ -66,10 +80,12 @@ export const OnboardingAuthTalentScreen = () => {
     headerVariant: 'withTitle',
     goBackCallback: goToPreviousStep,
     title: 'Setup my profile',
-    customElement: <AnimatedProfileSetupHeader
-      ref={(ref) => setScrollHandler(ref?.scrollHandler)}
-    />
-  }
+    customElement: (
+      <AnimatedProfileSetupHeader
+        ref={ref => setScrollHandler(ref?.scrollHandler)}
+      />
+    ),
+  };
 
   const isProfileSetupStep = step === 3;
 
@@ -89,22 +105,25 @@ export const OnboardingAuthTalentScreen = () => {
         ForwardButton: renderForwardButton(),
         hideBack: step === 4,
       }}
-      headerProps={isProfileSetupStep ? setupProfileHeaderProps : defaultHeaderProps}
+      headerProps={
+        isProfileSetupStep ? setupProfileHeaderProps : defaultHeaderProps
+      }
     >
-      <View style={[styles.container, isProfileSetupStep && { paddingTop: 70 }]}>
-        <If condition={!step}>
+      <View
+        style={[styles.container, isProfileSetupStep && { paddingTop: 70 }]}
+      >
+        <If condition={step === 0}>
           <TalentLocationSetupForm
-            onFormStateChange={val => setShowFullScreenLoader(val.isUpsertingLocation)}
+            onFormStateChange={val =>
+              setShowFullScreenLoader(val.isUpsertingLocation)
+            }
             ref={talentLocationSetupFormRef}
             onSuccess={onLocationSetupSuccess}
           />
         </If>
 
         <If condition={step === 1}>
-          <ProfileIdentityVerification
-            ref={profileIdentityVerificationRef}
-            onSuccess={onIdentityVerificationSuccess}
-          />
+          <IdentityVerification ref={profileIdentityVerificationRef} />
         </If>
 
         <If condition={step === 2}>
@@ -127,4 +146,3 @@ export const OnboardingAuthTalentScreen = () => {
     </OnboardingScreenLayout>
   );
 };
-

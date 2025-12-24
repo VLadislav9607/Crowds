@@ -19,7 +19,6 @@ import { TANSTACK_QUERY_KEYS } from '@constants';
 
 export const SignInForm = forwardRef<SignInFormRef, SignInFormProps>(
   (props, ref) => {
-
     const { containerStyle, onFormStateChange } = props;
 
     const { control, handleSubmit } = useForm<SignInFormData>({
@@ -30,49 +29,69 @@ export const SignInForm = forwardRef<SignInFormRef, SignInFormProps>(
     const [isProcessingSuccess, setIsProcessingSuccess] = useState(false);
 
     const onSignIn = (data: SignInFormData) => {
-      loginMutate({
-        username: data.username.toLowerCase(),
-        password: data.password,
-      }, {
-        onError: e => {
-          setIsProcessingSuccess(false);
-          showErrorToast(e?.message);
+      loginMutate(
+        {
+          username: data.username.toLowerCase(),
+          password: data.password,
         },
-        onSuccess: async data => {
-          setIsProcessingSuccess(true);
-          try {
-            await  supabase.auth.setSession({
-              access_token: data.session.access_token,
-              refresh_token: data.session.refresh_token,
-            });
-
-            const sessionResponse = await supabase.auth.getSession();
-            const session = sessionResponse.data.session;
-            if(session?.user?.app_metadata?.isTalent){
-              await prefetchUseGetMe();
-              const resp = queryClient.getQueryData<UseGetMeResDto>([TANSTACK_QUERY_KEYS.GET_ME]);
-              const lastCompletedStep = resp?.talent?.onboarding_copleted_step || 0;
-              goToScreen( lastCompletedStep < 4 ? Screens.OnboardingAuthTalent : Screens.BottomTabs)
-            }else if(session?.user?.app_metadata?.isOrganizationMember){
-              console.log('organization member')
-              await prefetchUseGetMe();
-              const resp =  queryClient.getQueryData<UseGetMeResDto>([TANSTACK_QUERY_KEYS.GET_ME]);
-              console.log('resp', resp)
-              const lastCompletedStep = resp?.organizationMember?.onboarding_copleted_step || 0;
-              console.log('lastCompletedStep', lastCompletedStep)
-              goToScreen( lastCompletedStep < 1 ? Screens.OnboardingAuthOrganization : Screens.BottomTabs)
-            }
-          } finally {
+        {
+          onError: e => {
             setIsProcessingSuccess(false);
-          }
-        }
+            showErrorToast(e?.message);
+          },
+          onSuccess: async data => {
+            setIsProcessingSuccess(true);
+            try {
+              await supabase.auth.setSession({
+                access_token: data.session.access_token,
+                refresh_token: data.session.refresh_token,
+              });
 
-      });
-    }
+              const sessionResponse = await supabase.auth.getSession();
+              const session = sessionResponse.data.session;
+              if (session?.user?.app_metadata?.isTalent) {
+                await prefetchUseGetMe();
+                const resp = queryClient.getQueryData<UseGetMeResDto>([
+                  TANSTACK_QUERY_KEYS.GET_ME,
+                ]);
+                const lastCompletedStep =
+                  resp?.talent?.onboarding_copleted_step || 0;
+                goToScreen(
+                  lastCompletedStep < 4
+                    ? Screens.OnboardingAuthTalent
+                    : Screens.BottomTabs,
+                );
+              } else if (session?.user?.app_metadata?.isOrganizationMember) {
+                console.log('organization member');
+                await prefetchUseGetMe();
+                const resp = queryClient.getQueryData<UseGetMeResDto>([
+                  TANSTACK_QUERY_KEYS.GET_ME,
+                ]);
+                console.log('resp', resp);
+                const lastCompletedStep =
+                  resp?.organizationMember?.onboarding_copleted_step || 0;
+                console.log('lastCompletedStep', lastCompletedStep);
+                goToScreen(
+                  lastCompletedStep < 1
+                    ? Screens.OrgIdentityVerification
+                    : Screens.BottomTabs,
+                );
+              }
+            } finally {
+              setIsProcessingSuccess(false);
+            }
+          },
+        },
+      );
+    };
 
-    useImperativeHandle(ref, () => ({
-      handleSubmit: handleSubmit(onSignIn)
-    }), [handleSubmit]);
+    useImperativeHandle(
+      ref,
+      () => ({
+        handleSubmit: handleSubmit(onSignIn),
+      }),
+      [handleSubmit],
+    );
 
     useEffect(() => {
       onFormStateChange?.({ isLoggingIn: isLoggingIn || isProcessingSuccess });

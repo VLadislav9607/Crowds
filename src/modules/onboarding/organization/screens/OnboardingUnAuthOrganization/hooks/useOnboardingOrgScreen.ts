@@ -142,7 +142,7 @@ export const useOnboardingOrgScreen = () => {
             await prefetchUseGetMe();
             uinSaveConfirmationModalRef.current?.open({
               uin: responseData.uin,
-              onConfirm: () => goToScreen(Screens.OnboardingAuthOrganization),
+              onConfirm: () => goToScreen(Screens.OrgIdentityVerificationScreen),
             });
           } finally {
             setIsProcessingSuccess(false);

@@ -9,9 +9,9 @@ import { ForwardBackArrows, IForwardBackArrowsProps } from '../../components';
 interface IOnboardingScreenLayoutProps {
   title: string;
   label?: string;
-  stepsCount: number;
+  stepsCount?: number;
   headerProps?: IAppHeaderProps;
-  currentStep: number;
+  currentStep: number | null;
   children: React.ReactNode;
   showLoader?: boolean;
   isFloatFooter?: boolean;
@@ -19,9 +19,11 @@ interface IOnboardingScreenLayoutProps {
   animatedScrollHandler?: (event: any) => void;
   onBackPress: () => void;
   onForwardPress: () => void;
-  footerProps?: Pick<IForwardBackArrowsProps, 'containerStyle' | 'ForwardButton' | 'hideBack'>;
+  footerProps?: Pick<
+    IForwardBackArrowsProps,
+    'containerStyle' | 'ForwardButton' | 'hideBack'
+  >;
 }
-
 
 export const OnboardingScreenLayout = ({
   title,
@@ -38,6 +40,9 @@ export const OnboardingScreenLayout = ({
   animatedScrollHandler,
   useAnimatedScrollView = false,
 }: IOnboardingScreenLayoutProps) => {
+  console.log('currentStep', currentStep);
+  if (currentStep === null) return null;
+
   return (
     <ScreenWithScrollWrapper
       showLoader={showLoader}
@@ -58,7 +63,9 @@ export const OnboardingScreenLayout = ({
       {...headerProps}
     >
       <View style={styles.titleContainer}>
-        <AppText typography="semibold_20" style={styles.titleText}>{title}</AppText>
+        <AppText typography="semibold_20" style={styles.titleText}>
+          {title}
+        </AppText>
         <AppText renderIf={!!label} style={styles.label}>
           {label}
         </AppText>

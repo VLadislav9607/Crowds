@@ -1,8 +1,8 @@
 import { ScreenWrapper } from '@components';
+import { useGetMe } from '@actions';
 
 import { ChatList } from '../../components';
 import { IChatData } from '../../ui';
-import { COLORS } from '@styles';
 
 const MOCK_DATA: IChatData[] = [
   {
@@ -48,9 +48,19 @@ const MOCK_DATA: IChatData[] = [
 ];
 
 export const ChatsTabScreen = () => {
+  const { isTalent } = useGetMe();
   return (
-    <ScreenWrapper headerVariant='withTitle' title='My Messages' withBottomTabBar headerStyles={{ backgroundColor: COLORS.black }}>
-      <ChatList chats={MOCK_DATA} variant="organization" withBottomTab />
+    <ScreenWrapper
+      headerVariant="withLogoAndImageBg"
+      title="My Messages"
+      showBackButton={false}
+      withBottomTabBar
+    >
+      <ChatList
+        chats={MOCK_DATA}
+        variant={isTalent ? 'talent' : 'organization'}
+        withBottomTab
+      />
     </ScreenWrapper>
   );
 };

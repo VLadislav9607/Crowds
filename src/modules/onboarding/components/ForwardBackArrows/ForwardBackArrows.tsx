@@ -6,7 +6,7 @@ import { COLORS } from '@styles';
 import { If } from '@components';
 
 export interface IForwardBackArrowsProps {
-  steps: number;
+  steps?: number;
   currentStep: number;
   disabledBack?: boolean;
   disabledForward?: boolean;
@@ -41,9 +41,7 @@ export const ForwardBackArrows = ({
             <SvgXml xml={ICONS.arrowLeft()} />
           </TouchableOpacity>
         </If>
-        <If condition={!!ForwardButton}>
-          {ForwardButton}
-        </If>
+        <If condition={!!ForwardButton}>{ForwardButton}</If>
         <If condition={!ForwardButton}>
           <TouchableOpacity
             activeOpacity={0.5}
@@ -56,16 +54,18 @@ export const ForwardBackArrows = ({
         </If>
       </View>
 
-      <View style={styles.dotsContainer}>
-        {Array.from({ length: steps }).map((_, index) => (
-          <View key={index} style={styles.dotWrapper}>
-            <View
-              style={[styles.dot, currentStep === index && styles.dotActive]}
-            />
-            {index < steps - 1 && <View style={styles.line} />}
-          </View>
-        ))}
-      </View>
+      <If condition={!!steps}>
+        <View style={styles.dotsContainer}>
+          {Array.from({ length: steps || 0 }).map((_, index) => (
+            <View key={index} style={styles.dotWrapper}>
+              <View
+                style={[styles.dot, currentStep === index && styles.dotActive]}
+              />
+              {index < (steps || 0) - 1 && <View style={styles.line} />}
+            </View>
+          ))}
+        </View>
+      </If>
     </View>
   );
 };

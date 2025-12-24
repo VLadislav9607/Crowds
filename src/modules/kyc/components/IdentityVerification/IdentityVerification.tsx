@@ -1,32 +1,14 @@
-import { AppText, DashedLine } from '@ui';
-import { View } from 'react-native';
-import { styles } from './styles';
-import { ProfileIdentityVerificationRef } from './types';
 import { forwardRef, useImperativeHandle } from 'react';
-import { useCreateKycSession, useGetMe } from '@actions';
-import { goToScreen, Screens } from '@navigation';
+import { View } from 'react-native';
+import { AppText, DashedLine } from '@ui';
 
-export const ProfileIdentityVerification =
-  forwardRef<ProfileIdentityVerificationRef>((_props, ref) => {
-    const { me } = useGetMe();
-    const { mutateAsync: createKycSession } = useCreateKycSession();
+import { useIdentityVerification } from '../../hooks';
+import { IdentityVerificationRef } from './types';
+import { styles } from './styles';
 
-    const goToVerification = async () => {
-      const userId = me?.id || '';
-      const response = await createKycSession({
-        userId,
-        firstName: me?.first_name || '',
-        lastName: me?.last_name || '',
-        dob: '2000-01-01',
-      });
-
-      if (response?.redirectUrl) {
-        return goToScreen(Screens.VerificationPerson, {
-          url: response.redirectUrl,
-          userId,
-        });
-      }
-    };
+export const IdentityVerification = forwardRef<IdentityVerificationRef>(
+  (_props, ref) => {
+    const { goToVerification } = useIdentityVerification();
 
     useImperativeHandle(ref, () => ({
       onVerify: goToVerification,
@@ -126,9 +108,10 @@ export const ProfileIdentityVerification =
           style={styles.textCenter}
         >
           Please note that no international work is allowed without Passport
-          Verification. If you don’t verify with a Passport at this time; you
+          Verification. If you don't verify with a Passport at this time; you
           will be able to add this later.
         </AppText>
       </View>
     );
-  });
+  },
+);
