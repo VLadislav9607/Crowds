@@ -19,15 +19,25 @@ export interface OrganizationCreatorInformationFormProps {
 }
 
 export const organizationCreatorInformationFormSchema = z.object({
-  username: z.string().min(1, 'Username is required'),
+  username: z
+    .string()
+    .min(1, 'Username is required')
+    .min(3, 'Username must be at least 3 characters')
+    .max(20, 'Username must be no more than 20 characters')
+    .regex(
+      /^[a-zA-Z0-9_]+$/,
+      'Username can only contain letters, numbers, and underscores',
+    )
+    .refine(val => /^[a-zA-Z_]/.test(val), {
+      message: 'Username must start with a letter or underscore',
+    }),
   firstName: z.string().min(1, 'First name is required'),
   lastName: z.string().min(1, 'Last name is required'),
   positionInCompany: z.string().min(1, 'Position in company is required'),
   isAuthorizedOnBehalfOfCompany: z.boolean(),
-  email: z.email({ message: 'Invalid email address'}),
+  email: z.email({ message: 'Invalid email address' }),
   gender: z.enum([Gender.MALE, Gender.FEMALE, Gender.OTHER]),
 });
 
 export interface OrganizationCreatorInformationFormData
   extends z.infer<typeof organizationCreatorInformationFormSchema> {}
-

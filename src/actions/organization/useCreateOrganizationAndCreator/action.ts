@@ -5,6 +5,7 @@ import { supabase } from '@services';
 export const createOrganizationAndCreatorAction = async (
   body: CreateOrganizationBodyDto,
 ): Promise<CreateOrganizationResDto> => {
+  console.log('body', body);
   const { data, error } = await supabase.functions.invoke(
     'create-organization',
     { body },

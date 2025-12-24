@@ -13,6 +13,8 @@ import {
   ImageSourcePickerModalData,
   PickedImage,
 } from '@modules/common';
+import { useGetMe } from '@actions';
+import { differenceInYears } from 'date-fns';
 
 export const ProfileSetupHeader = ({
   containerStyle,
@@ -27,6 +29,8 @@ export const ProfileSetupHeader = ({
   const [photo, setPhoto] = useState<PickedImage | null>(null);
   const imageSourcePickerModalRef =
     useRef<BottomSheetModal<ImageSourcePickerModalData>>(null);
+
+  const { data: me } = useGetMe();
 
   const pickImage = () => {
     imageSourcePickerModalRef.current?.present({
@@ -90,7 +94,7 @@ export const ProfileSetupHeader = ({
       <View>
         <View style={styles.nameContainer}>
           <AppText color="black" typography="semibold_20">
-            Mia
+            {me?.talent?.first_name}
           </AppText>
 
           <If condition={!!showCnBadge}>
@@ -109,7 +113,14 @@ export const ProfileSetupHeader = ({
         </View>
 
         <AppText color="black" typography="regular_16" margin={{ bottom: 2 }}>
-          Female, 32
+          {me?.talent?.gender
+            ? me.talent.gender.charAt(0).toUpperCase() +
+              me.talent.gender.slice(1)
+            : ''}
+          ,{' '}
+          {me?.talent?.birth_date
+            ? differenceInYears(new Date(), new Date(me.talent.birth_date))
+            : ''}
         </AppText>
         <AppText color="black_60" typography="regular_16">
           VIC

@@ -18,109 +18,133 @@ import {
 export const PrimaryLocationStep = forwardRef<
   PrimaryLocationFormRef,
   PrimaryLocationFormProps
->(({ defaultValues: defaultValuesExternal, containerStyle, onFormStateChange }, ref) => {
-
-  const defaultValues: PrimaryLocationFormData = defaultValuesExternal ? defaultValuesExternal : {
-    isHeadOffice: true,
-    parsed_location: {
-      autocomplete_description: '',
-      city: '',
-      coords: '',
-      country: '',
-      formatted_address: '',
-      latitude: 0,
-      longitude: 0,
-      place_id: '',
-      region: '',
+>(
+  (
+    {
+      defaultValues: defaultValuesExternal,
+      containerStyle,
+      onChangeText,
+      onFormStateChange,
     },
-  };
+    ref,
+  ) => {
+    const defaultValues: Partial<PrimaryLocationFormData> =
+      defaultValuesExternal
+        ? defaultValuesExternal
+        : {
+            isHeadOffice: true,
+            parsed_location: {
+              autocomplete_description: '',
+              city: '',
+              coords: '',
+              country: '',
+              formatted_address: '',
+              latitude: 0,
+              longitude: 0,
+              place_id: '',
+              region: '',
+              street_name: '',
+              street_number: '',
+              street_address: '',
+            },
+            parsed_head_office_location: undefined,
+          };
 
-  const {
-    control,
-    formState: { isValid },
-    handleSubmit,
-    getValues,
-    resetField,
-    watch,
-  } = useForm<PrimaryLocationFormData>({
-    resolver: zodResolver(primaryLocationFormSchema),
-    mode: 'onBlur',
-    defaultValues
-  });
+    const {
+      control,
+      formState: { isValid },
+      handleSubmit,
+      getValues,
+      resetField,
+      watch,
+    } = useForm<PrimaryLocationFormData>({
+      resolver: zodResolver(primaryLocationFormSchema),
+      mode: 'onBlur',
+      defaultValues,
+    });
 
+    const parsedLocation = watch('parsed_location');
+    const isHeadOffice = watch('isHeadOffice');
+    const parsedHeadOfficeLocation = watch('parsed_head_office_location');
 
-  const parsedLocation = watch('parsed_location');
-  const isHeadOffice = watch('isHeadOffice');
-  const parsedHeadOfficeLocation = watch('parsed_head_office_location');
+    useImperativeHandle(ref, () => ({ handleSubmit, getValues }), [
+      handleSubmit,
+      getValues,
+    ]);
 
+    useEffect(() => {
+      if (onFormStateChange) {
+        onFormStateChange({ isValid });
+      }
+    }, [isValid, onFormStateChange]);
 
-  useImperativeHandle(ref, () => ({ handleSubmit, getValues }), [
-    handleSubmit,
-    getValues,
-  ]);
+    return (
+      <View style={containerStyle}>
+        <AppText style={styles.organizationDetails}>
+          Organization Details
+        </AppText>
 
-  useEffect(() => {
-    if (onFormStateChange) {
-      onFormStateChange({ isValid });
-    }
-  }, [isValid, onFormStateChange]);
-
-  return (
-    <View style={containerStyle}>
-      <AppText style={styles.organizationDetails}>Organization Details</AppText>
-
-      <Controller
-        control={control}
-        name="parsed_location"
-        render={({ field, fieldState }) => (
-          <PlacesPredictionsInput
-            placeholder="Search primary location"
-            types={PlaceAutocompleteType.address}
-            onChangeText={() => resetField('parsed_location')}
-            errorMessage={fieldState.error?.message}
-            onSelectPlace={res => field.onChange(res.parsed_details)}
-            defaultValue={parsedLocation?.autocomplete_description}
-          />
-        )}
-      />
-
-      <Controller
-        control={control}
-        name="isHeadOffice"
-        render={({ field }) => (
-          <CheckboxList
-            label="Is this location a head office?"
-            containerStyle={styles.checkboxListContainer}
-            items={[
-              { label: 'Yes', value: 'yes' },
-              { label: 'No', value: 'no' },
-            ]}
-            checkedValues={field.value ? 'yes' : 'no'}
-            onCheckboxPress={item => field.onChange(item.value === 'yes')}
-          />
-        )}
-      />
-
-      <If condition={!isHeadOffice}>
         <Controller
           control={control}
-          name="parsed_head_office_location"
+          name="parsed_location"
           render={({ field, fieldState }) => (
             <PlacesPredictionsInput
-              placeholder="Search head office location"
+              placeholder="Search primary location"
               types={PlaceAutocompleteType.address}
-              onChangeText={() => resetField('parsed_head_office_location')}
+              onChangeText={() => {
+                resetField('parsed_location');
+                onChangeText?.();
+              }}
               errorMessage={fieldState.error?.message}
               onSelectPlace={res => field.onChange(res.parsed_details)}
-              defaultValue={parsedHeadOfficeLocation?.autocomplete_description}
-              containerStyle={styles.headOfficeLocationInput}
+              defaultValue={parsedLocation?.autocomplete_description}
             />
           )}
         />
-      </If>
-    </View>
-  );
-});
+
+        <Controller
+          control={control}
+          name="isHeadOffice"
+          render={({ field }) => (
+            <CheckboxList
+              label="Is this location a head office?"
+              containerStyle={styles.checkboxListContainer}
+              items={[
+                { label: 'Yes', value: 'yes' },
+                { label: 'No', value: 'no' },
+              ]}
+              checkedValues={field.value ? 'yes' : 'no'}
+              onCheckboxPress={item => field.onChange(item.value === 'yes')}
+            />
+          )}
+        />
+
+        <If condition={!isHeadOffice}>
+          <Controller
+            control={control}
+            name="parsed_head_office_location"
+            render={({ field, fieldState }) => (
+              <PlacesPredictionsInput
+                placeholder="Search head office location"
+                types={PlaceAutocompleteType.address}
+                onChangeText={() => {
+                  resetField('parsed_head_office_location');
+                  onChangeText?.();
+                }}
+                errorMessage={fieldState.error?.message}
+                onSelectPlace={res => field.onChange(res.parsed_details)}
+                defaultValue={
+                  parsedHeadOfficeLocation?.autocomplete_description
+                }
+                containerStyle={styles.headOfficeLocationInput}
+              />
+            )}
+          />
+        </If>
+      </View>
+    );
+  },
+);
 
 const styles = StyleSheet.create({
   organizationDetails: {
