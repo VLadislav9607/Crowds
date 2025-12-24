@@ -58,14 +58,17 @@ export const useOnboardingOrgScreen = () => {
     useSendOtp();
 
   const [step, setStep] = useState(0);
+  const [isProcessingSuccess, setIsProcessingSuccess] = useState(false);
 
   const [data, setData] = useState<{
     organizationNameFormData?: OrganizationNameFormData;
     headGlobalLocationFormData?: HeadGlobalLocationFormData;
-    primaryLocationFormData?: PrimaryLocationFormData;
+    primaryLocationFormData?: Partial<PrimaryLocationFormData>;
     organizationCreatorInformationFormData?: OrganizationCreatorInformationFormData;
     verificationToken?: string;
   }>({});
+
+  console.log('data', data);
 
   const isGlobal =
     data.organizationNameFormData?.organizationType === OrganizationType.GLOBAL;
@@ -86,6 +89,10 @@ export const useOnboardingOrgScreen = () => {
       !isGlobal &&
       primaryLocationFormRef.current?.handleSubmit(
         handlePrimaryLocationFormSubmit,
+        error =>
+          (error?.parsed_location?.street_number ||
+            error?.parsed_head_office_location?.street_number) &&
+          showErrorToast('Location must contain a full address'),
       )();
     step === 2 &&
       organizationCreatorInformationFormRef.current?.handleSubmit(
@@ -99,7 +106,12 @@ export const useOnboardingOrgScreen = () => {
   const onCreatePasswordFormSubmit = async (
     formData: CreatePasswordFormData,
   ) => {
-    if (!data.verificationToken || !data.organizationCreatorInformationFormData)
+    console.log('');
+    if (
+      !data.verificationToken ||
+      !data.organizationCreatorInformationFormData ||
+      (!data.primaryLocationFormData && !data.headGlobalLocationFormData)
+    )
       return;
 
     createOrganizationAndCreatorMutateAsync(
@@ -120,18 +132,24 @@ export const useOnboardingOrgScreen = () => {
       },
       {
         onSuccess: async responseData => {
-          setUIN(responseData.uin);
-          await supabase.auth.setSession({
-            access_token: responseData.session.access_token,
-            refresh_token: responseData.session.refresh_token,
-          });
-          await prefetchUseGetMe();
-          uinSaveConfirmationModalRef.current?.open({
-            uin: responseData.uin,
-            onConfirm: () => goToScreen(Screens.OnboardingAuthOrganization),
-          });
+          setIsProcessingSuccess(true);
+          try {
+            setUIN(responseData.uin);
+            await supabase.auth.setSession({
+              access_token: responseData.session.access_token,
+              refresh_token: responseData.session.refresh_token,
+            });
+            await prefetchUseGetMe();
+            uinSaveConfirmationModalRef.current?.open({
+              uin: responseData.uin,
+              onConfirm: () => goToScreen(Screens.OnboardingAuthOrganization),
+            });
+          } finally {
+            setIsProcessingSuccess(false);
+          }
         },
         onError: (error: Error) => {
+          console.log('error', error);
           showErrorToast(
             error?.message || 'Failed to create account. Please try again.',
           );
@@ -184,6 +202,7 @@ export const useOnboardingOrgScreen = () => {
   const handlePrimaryLocationFormSubmit = async (
     values: PrimaryLocationFormData,
   ) => {
+    console.log('values', values);
     setData({ ...data, primaryLocationFormData: values });
     setStep(2);
   };
@@ -210,7 +229,7 @@ export const useOnboardingOrgScreen = () => {
       showErrorToast('Username already exists.');
       return;
     }
-    sendOtpMutateAsync({ email: values.email });
+    await sendOtpMutateAsync({ email: values.email });
     setData({ ...data, organizationCreatorInformationFormData: values });
     setStep(3);
   };
@@ -233,13 +252,24 @@ export const useOnboardingOrgScreen = () => {
     } catch {}
   };
 
-  const goToPreviousStep = () => (!step ? goBack() : setStep(step - 1));
+  const goToPreviousStep = () => {
+    if (step === 0) {
+      goBack();
+      return;
+    }
+    if (step === 4) {
+      setStep(2);
+      return;
+    }
+    setStep(step - 1);
+  };
 
   const showFullScreenLoader =
     isCheckingUsernameExist ||
     isVerifyingOtp ||
     isCreatingOrganizationAndCreator ||
-    isSendingOtp;
+    isSendingOtp ||
+    isProcessingSuccess;
 
   return {
     step,
@@ -256,6 +286,7 @@ export const useOnboardingOrgScreen = () => {
     uinSaveConfirmationModalRef,
     createPasswordFormRef,
     uin,
+    setData,
     onResendOtpCode,
     goToNextStep,
     goToPreviousStep,

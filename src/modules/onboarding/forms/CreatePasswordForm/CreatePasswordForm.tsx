@@ -1,4 +1,4 @@
-import { AppButton, AppInput, AppText } from '@ui';
+import { AppInput } from '@ui';
 import { View } from 'react-native';
 import {
   CreatePasswordFormData,
@@ -9,75 +9,71 @@ import {
 import { zodResolver } from '@hookform/resolvers/zod';
 import { Controller, useForm } from 'react-hook-form';
 import { styles } from './styles';
-import { If } from '@components';
-import { ICONS } from '@assets';
 import { forwardRef, useEffect, useImperativeHandle } from 'react';
 
 export const CreatePasswordForm = forwardRef<
   CreatePasswordFormRef,
   CreatePasswordFormProps
->(
-  (
-    { uin, containerStyle, defaultValues, onGenerateUIN, onFormStateChange },
-    ref,
-  ) => {
-    const {
-      control,
-      formState: { errors, isValid },
-      getValues,
-      handleSubmit,
-    } = useForm<CreatePasswordFormData>({
-      resolver: zodResolver(createPasswordSchema),
-      defaultValues:
-        defaultValues ||
-        ({
-          password: '',
-          confirmPassword: '',
-        } as Partial<CreatePasswordFormData>),
-    });
+>(({ containerStyle, defaultValues, onFormStateChange }, ref) => {
+  const {
+    control,
+    formState: { errors, isValid },
+    getValues,
+    handleSubmit,
+  } = useForm<CreatePasswordFormData>({
+    resolver: zodResolver(createPasswordSchema),
+    defaultValues:
+      defaultValues ||
+      ({
+        password: '',
+        confirmPassword: '',
+      } as Partial<CreatePasswordFormData>),
+  });
 
-    useEffect(() => {
-      onFormStateChange?.({ isValid });
-    }, [isValid, onFormStateChange]);
+  console.log('CreatePasswordForm errors', errors);
 
-    useImperativeHandle(ref, () => ({ handleSubmit, getValues }), [
-      handleSubmit,
-      getValues,
-    ]);
+  useEffect(() => {
+    onFormStateChange?.({ isValid });
+  }, [isValid, onFormStateChange]);
 
-    return (
-      <View style={[styles.container, containerStyle]}>
-        <Controller
-          control={control}
-          name="password"
-          render={({ field: { onChange, value } }) => (
-            <AppInput
-              label="Enter Password"
-              placeholder="Enter your password"
-              value={value}
-              onChangeText={onChange}
-              secureTextEntry
-              errorMessage={errors.password?.message}
-            />
-          )}
-        />
+  useImperativeHandle(ref, () => ({ handleSubmit, getValues }), [
+    handleSubmit,
+    getValues,
+  ]);
 
-        <Controller
-          control={control}
-          name="confirmPassword"
-          render={({ field: { onChange, value } }) => (
-            <AppInput
-              label="Confirm Password"
-              placeholder="Confirm your password"
-              value={value}
-              onChangeText={onChange}
-              secureTextEntry
-              errorMessage={errors.confirmPassword?.message}
-            />
-          )}
-        />
+  return (
+    <View style={[styles.container, containerStyle]}>
+      <Controller
+        control={control}
+        name="password"
+        render={({ field: { onChange, value } }) => (
+          <AppInput
+            label="Enter Password"
+            placeholder="Enter your password"
+            value={value}
+            onChangeText={onChange}
+            secureTextEntry
+            errorMessage={errors.password?.message}
+          />
+        )}
+      />
 
-        {/* <If condition={!uin}>
+      <Controller
+        control={control}
+        name="confirmPassword"
+        render={({ field: { onChange, value } }) => (
+          <AppInput
+            label="Confirm Password"
+            placeholder="Confirm your password"
+            value={value}
+            onChangeText={onChange}
+            secureTextEntry
+            errorMessage={errors.confirmPassword?.message}
+          />
+        )}
+      />
+
+      {/* <If condition={!uin}>
           <View style={styles.generateUINContainer}>
             <AppText color="black_40" typography="regular_14">
               Generate your unique identifier
@@ -94,7 +90,7 @@ export const CreatePasswordForm = forwardRef<
           </View>
         </If> */}
 
-        {/* <If condition={!!uin}>
+      {/* <If condition={!!uin}>
           <View>
             <View style={styles.UINContainer}>
               <AppText color="black" typography="medium_12">
@@ -121,7 +117,6 @@ export const CreatePasswordForm = forwardRef<
             </AppText>
           </View>
         </If> */}
-      </View>
-    );
-  },
-);
+    </View>
+  );
+});

@@ -26,6 +26,7 @@ export const OnboardingUnAuthOrganizationScreen = () => {
     otpVerificationFormRef,
     createPasswordFormRef,
     uin,
+    setData,
     goToNextStep,
     goToPreviousStep,
     onResendOtpCode,
@@ -68,11 +69,19 @@ export const OnboardingUnAuthOrganizationScreen = () => {
           <HeadOfficeGlobalStep
             ref={headGlobalLocationFormRef}
             defaultValues={data.headGlobalLocationFormData}
+            onChangeText={() =>
+              data.headGlobalLocationFormData &&
+              setData({ ...data, headGlobalLocationFormData: undefined })
+            }
           />
         ) : (
           <PrimaryLocationStep
             ref={primaryLocationFormRef}
             defaultValues={data.primaryLocationFormData}
+            onChangeText={() =>
+              data.primaryLocationFormData &&
+              setData({ ...data, primaryLocationFormData: undefined })
+            }
           />
         )}
       </If>
