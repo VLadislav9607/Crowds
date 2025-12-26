@@ -1,7 +1,7 @@
 import { If } from '@components';
 
 import { OnboardingScreenLayout } from '../../../layouts';
-import { useOnboardingOrgScreen } from './hooks';
+import { useOnboardingUnAuthOrganization } from './useOnboardingUnAuthOrganization';
 import { UINSaveConfirmationModal } from '../../../modals';
 import {
   OrganizationNameStep,
@@ -25,14 +25,13 @@ export const OnboardingUnAuthOrganizationScreen = () => {
     showFullScreenLoader,
     otpVerificationFormRef,
     createPasswordFormRef,
-    uin,
     setData,
     goToNextStep,
     goToPreviousStep,
     onResendOtpCode,
     onOtpVerificationFormSubmit,
     uinSaveConfirmationModalRef,
-  } = useOnboardingOrgScreen();
+  } = useOnboardingUnAuthOrganization();
 
   const titles = {
     0: 'Organization Details',
@@ -103,7 +102,7 @@ export const OnboardingUnAuthOrganizationScreen = () => {
       </If>
 
       <If condition={step === 4}>
-        <CreatePasswordForm ref={createPasswordFormRef} uin={uin} />
+        <CreatePasswordForm ref={createPasswordFormRef} />
       </If>
 
       <UINSaveConfirmationModal ref={uinSaveConfirmationModalRef} />

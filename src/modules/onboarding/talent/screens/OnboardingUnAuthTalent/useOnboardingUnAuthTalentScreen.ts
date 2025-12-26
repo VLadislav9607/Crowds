@@ -7,12 +7,12 @@ import {
   CreatePasswordFormData,
   CreatePasswordFormRef,
 } from '@modules/onboarding';
-import { useCreateTalent } from '@actions';
+import { CreateTalentResDto, useCreateTalent } from '@actions';
 import { UINSaveConfirmationModalRef } from '../../../modals';
 import { supabase } from '@services';
 import { format } from 'date-fns';
-import { showErrorToast } from '@helpers';
 import { isAtLeastAge } from '@utils';
+import { showErrorToast, showMutationErrorToast } from '@helpers';
 import { useCheckUsernameExist } from '@actions';
 import { goBack, goToScreen, Screens } from '@navigation';
 import { prefetchUseGetMe } from '@actions';
@@ -22,16 +22,30 @@ export const useOnboardingUnAuthTalentScreen = () => {
   const createPasswordFormRef = useRef<CreatePasswordFormRef>(null);
   const uinSaveConfirmationModalRef = useRef<UINSaveConfirmationModalRef>(null);
 
+  const onCreateTalentSuccess = async (data: CreateTalentResDto) => {
+    await supabase.auth.setSession({
+      access_token: data.session.access_token,
+      refresh_token: data.session.refresh_token,
+    });
+    await prefetchUseGetMe();
+    uinSaveConfirmationModalRef.current?.open({
+      uin: data.uin,
+      onConfirm: () => goToScreen(Screens.OnboardingAuthTalent),
+    });
+  };
+
   const { mutate: createTalentMutate, isPending: isCreatingTalent } =
-    useCreateTalent();
+    useCreateTalent({
+      onSuccess: onCreateTalentSuccess,
+      onError: showMutationErrorToast,
+    });
+
   const {
     mutateAsync: checkUsernameExistMutateAsync,
     isPending: isCheckingUsernameExist,
   } = useCheckUsernameExist();
 
   const [step, setStep] = useState(0);
-
-  const [uin, setUIN] = useState<string>('');
 
   const [data, setData] = useState<{
     talentNameFormData?: TalentNameFormData;
@@ -61,6 +75,7 @@ export const useOnboardingUnAuthTalentScreen = () => {
     const isUserExists = await checkUsernameExistMutateAsync({
       username: formData.username.toLowerCase(),
     });
+
     if (isUserExists.isExists) {
       showErrorToast('Username already exists.');
       return;
@@ -75,35 +90,14 @@ export const useOnboardingUnAuthTalentScreen = () => {
   ) => {
     if (!data.talentNameFormData) return;
 
-    createTalentMutate(
-      {
-        first_name: data.talentNameFormData.firstName,
-        last_name: data.talentNameFormData.lastName,
-        username: data.talentNameFormData.username.toLowerCase(),
-        gender: data.talentNameFormData.gender,
-        birth_date: format(data.talentNameFormData.dateOfBirth, 'yyyy-MM-dd'),
-        password: formData.password,
-      },
-      {
-        onSuccess: async data => {
-          setUIN(data.uin);
-          await supabase.auth.setSession({
-            access_token: data.session.access_token,
-            refresh_token: data.session.refresh_token,
-          });
-          await prefetchUseGetMe();
-          uinSaveConfirmationModalRef.current?.open({
-            uin: data.uin,
-            onConfirm: () => goToScreen(Screens.OnboardingAuthTalent),
-          });
-        },
-        onError: (error: Error) => {
-          showErrorToast(
-            error?.message || 'Failed to create account. Please try again.',
-          );
-        },
-      },
-    );
+    createTalentMutate({
+      first_name: data.talentNameFormData.firstName,
+      last_name: data.talentNameFormData.lastName,
+      username: data.talentNameFormData.username.toLowerCase(),
+      gender: data.talentNameFormData.gender,
+      birth_date: format(data.talentNameFormData.dateOfBirth, 'yyyy-MM-dd'),
+      password: formData.password,
+    });
   };
 
   const goToPreviousStep = async () => (!step ? goBack() : setStep(step - 1));
@@ -116,9 +110,7 @@ export const useOnboardingUnAuthTalentScreen = () => {
     uinSaveConfirmationModalRef,
     step,
     data,
-    uin,
     showFullScreenLoader,
-    setUIN,
     goToNextStep,
     goToPreviousStep,
   };

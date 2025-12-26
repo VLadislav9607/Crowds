@@ -26,7 +26,8 @@ module.exports = {
           "@modules/kyc": "./src/modules/kyc",
           "@actions": "./src/actions",
           "@services": "./src/services",
-          "@utils": "./src/utils"
+          "@utils": "./src/utils",
+          "@configs":"./src/configs"
         }
       }
     ],

@@ -4,10 +4,11 @@ import {
   TalentProfileSetupFormRef,
   TalentStripeSetupRef,
 } from '@modules/profile';
-import { useUpdateTalent, useGetMe } from '@actions';
+import { useUpdateTalent } from '@actions';
+import { useGetMe } from '@actions';
 import { LogoutModalRef } from '../../../../profile/modals';
-import { IdentityVerificationRef } from '@modules/kyc';
 import { goToScreen, Screens } from '@navigation';
+import { IdentityVerificationRef } from '@modules/kyc';
 import { useIsUserVerified } from '@modules/kyc';
 
 export const useOnboardingAuthTalentScreen = () => {

@@ -1,28 +1,35 @@
-import { useRef, useEffect, useMemo } from 'react';
+import { useEffect, useMemo } from 'react';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { BottomSheetModal } from '@gorhom/bottom-sheet';
-import { useGetMe, useUpdateTalent } from '@actions';
-import { ImageSourcePickerModalData, PickedImage } from '@modules/common';
+import { useGetMe } from '@actions';
 import { Category } from '@modules/profile';
 import {
   TalentProfileSetupFormData,
   TalentProfileSetupFormProps,
   talentProfileSetupSchema,
 } from '../../forms/TalentProfileSetupForm/types';
+import { useUpdateTalentProfile } from '../useUpdateTalentProfile';
+import { useTalentPhoto } from '../useTalentPhoto';
 
 export const useTalentProfileSetupForm = ({
   onSuccess,
   onFormStateChange,
 }: Pick<TalentProfileSetupFormProps, 'onSuccess' | 'onFormStateChange'>) => {
   const { data: me } = useGetMe();
-  const { mutate: updateTalentMutate, isPending: isUpdating } =
-    useUpdateTalent();
   const talent = me?.talent;
 
-  const imageSourcePickerModalRef =
-    useRef<BottomSheetModal<ImageSourcePickerModalData>>(null);
+  // Profile update logic
+  const { updateProfile, isUpdating } = useUpdateTalentProfile({ onSuccess });
 
+  // Photo upload logic
+  const {
+    currentPhoto,
+    isUploadingPhoto,
+    openPhotoPicker,
+    imageSourcePickerModalRef,
+  } = useTalentPhoto();
+
+  // Form default values
   // TODO: Remove 'as any' after regenerating Supabase types
   const defaultValues: any = useMemo(
     () => ({
@@ -63,57 +70,29 @@ export const useTalentProfileSetupForm = ({
     mode: 'onBlur',
   });
 
-  // Sync form with talent data when it changes
   useEffect(() => {
     if (talent) reset(defaultValues);
   }, [talent, reset, defaultValues]);
 
-  const pickImage = () =>
-    imageSourcePickerModalRef.current?.present({
-      onImagePicked: (image: PickedImage) => {
-        setValue('photo', image);
-      },
-    });
+  const onSubmit = handleSubmit(updateProfile);
 
-  const onUpdate = (data: TalentProfileSetupFormData) => {
-    // TODO: Remove 'as any' after regenerating Supabase types
-    updateTalentMutate(
-      {
-        id: talent?.id!,
-        data: {
-          hair_color: data.hairColour,
-          eye_color: data.eyeColour,
-          build: data.build,
-          height: data.height,
-          additional_skills: data.additionalSkills,
-          skin_tone: data.skinTone,
-          ethnicity: data.ethnicity,
-          facial_attributes: data.facialAttributes,
-          tattoo_spot: data.tattooSpot,
-          categories: data.categories,
-          tags: data.tags,
-          is_pregnant: data.isPregnant,
-          pregnancy_months:
-            data.months && data.isPregnant ? parseInt(data.months, 10) : null,
-        } as any,
-      },
-      { onSuccess },
-    );
-  };
-
-  const onSubmit = handleSubmit(onUpdate);
-
+  // Notify parent about loading state
+  const isPending = isUpdating || isUploadingPhoto;
   useEffect(() => {
-    onFormStateChange?.({ isUpdating });
-  }, [isUpdating, onFormStateChange]);
+    onFormStateChange?.({ isUpdating: isPending });
+  }, [isPending, onFormStateChange]);
 
   return {
+    // Form
     control,
     setValue,
     watch,
     errors,
-    pickImage,
     onSubmit,
+    // Photo
+    currentPhoto,
+    isUploadingPhoto,
+    openPhotoPicker,
     imageSourcePickerModalRef,
   };
 };

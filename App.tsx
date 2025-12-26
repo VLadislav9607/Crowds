@@ -10,6 +10,7 @@ import { AppToast, PopupMenuProvider } from './src/components';
 import { useEffect } from 'react';
 import { prefetchUseGetMe } from '@actions';
 import { fetchUserKycStatus } from '@modules/kyc';
+import { onNavigateAfterAuth } from '@helpers';
 
 interface TextWithDefaultProps extends Text {
   defaultProps?: { allowFontScaling?: boolean };
@@ -55,6 +56,7 @@ const App = () => {
 
         goToScreen(Screens.BottomTabs);
       }
+      onNavigateAfterAuth(session);
     });
   }, []);
 
