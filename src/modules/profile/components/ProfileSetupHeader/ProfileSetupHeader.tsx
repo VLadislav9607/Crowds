@@ -1,95 +1,99 @@
 import { AppText } from '@ui';
-import { TouchableOpacity, View, Image } from 'react-native';
+import { View } from 'react-native';
 import { styles } from './styles';
 import { ProfileSetupHeaderProps } from './types';
-import { If } from '@components';
+import { AppImage, If } from '@components';
 import { COLORS } from '@styles';
 import { SvgXml } from 'react-native-svg';
 import { ICONS } from '@assets';
-import { useState, useRef } from 'react';
+import { useRef } from 'react';
 import { BottomSheetModal } from '@gorhom/bottom-sheet';
 import {
   ImageSourcePickerModal,
   ImageSourcePickerModalData,
   PickedImage,
 } from '@modules/common';
-import { useGetMe } from '@actions';
+import { useBucketUpload, useGetMe, useUpdateTalent } from '@actions';
 import { differenceInYears } from 'date-fns';
+import { showMutationErrorToast } from '@helpers';
 
 export const ProfileSetupHeader = ({
   containerStyle,
-  showCircleBadge,
-  showUnverifiedBadge,
+  showCircleBadge = false,
+  showUnverifiedBadge = false,
   showCnBadge,
   cnBadgeColor,
   circleBadgeStyle,
   cnBadgeStyle,
-  showCamera,
+  showCamera = false,
 }: ProfileSetupHeaderProps) => {
-  const [photo, setPhoto] = useState<PickedImage | null>(null);
+  const { mutateAsync: updateTalentMutateAsync } = useUpdateTalent();
+
+  const { mutate: upsertTalentAvatarMutate, isPending: isUpsertingAvatar } =
+    useBucketUpload({
+      onSuccess: async data => {
+        await updateTalentMutateAsync({
+          id: talent?.id!,
+          data: { avatar_path: data.uploadedFile.path },
+        });
+      },
+      onError: showMutationErrorToast,
+    });
+
   const imageSourcePickerModalRef =
     useRef<BottomSheetModal<ImageSourcePickerModalData>>(null);
 
   const { data: me } = useGetMe();
 
+  const talent = me?.talent;
+
   const pickImage = () => {
     imageSourcePickerModalRef.current?.present({
       onImagePicked: (image: PickedImage) => {
-        setPhoto(image);
+        upsertTalentAvatarMutate({ bucket: 'talents_avatars', file: image });
       },
     });
   };
 
   return (
     <View style={[styles.container, containerStyle]}>
-      <TouchableOpacity
-        activeOpacity={0.9}
-        style={styles.imageContainer}
-        onPress={pickImage}
-      >
-        <If condition={!!showCamera}>
-          <View style={styles.cameraContainer}>
-            <SvgXml xml={ICONS.camera('black')} width={16} height={13} />
-          </View>
-        </If>
+      <View style={styles.imageWrapper}>
+        <AppImage
+          bucket="talents_avatars"
+          imgPath={me?.talent?.avatar_path}
+          containerStyle={styles.image}
+          showSkeleton={isUpsertingAvatar}
+          onPress={pickImage}
+          placeholderIcon={ICONS.avatar('gray_20')}
+          CustomElements={
+            <If condition={!me?.talent?.avatar_path}>
+              <If condition={showCamera}>
+                <View style={styles.cameraContainer}>
+                  <SvgXml xml={ICONS.camera('black')} width={16} height={13} />
+                </View>
+              </If>
 
-        <If condition={!!photo?.uri}>
-          {photo?.uri && (
-            <Image
-              source={{ uri: photo.uri }}
-              style={styles.imageContainer}
-              resizeMode="cover"
-            />
-          )}
-        </If>
+              <If condition={showCircleBadge}>
+                <View
+                  style={[
+                    styles.circleBadge,
+                    !showUnverifiedBadge && styles.circleBadgeUnverified,
+                    circleBadgeStyle,
+                  ]}
+                />
+              </If>
 
-        <If condition={!photo?.uri}>
-          <SvgXml
-            xml={ICONS.avatar('gray')}
-            width={112}
-            height={112}
-            opacity={0.2}
-          />
-        </If>
-
-        <If condition={!!showCircleBadge}>
-          <View
-            style={[
-              styles.circleBadge,
-              !showUnverifiedBadge && styles.circleBadgeUnverified,
-              circleBadgeStyle,
-            ]}
-          />
-        </If>
-
-        <If condition={!!showUnverifiedBadge}>
-          <View style={styles.unverifiedBadge}>
-            <AppText color="white" typography="bold_10">
-              Unverified
-            </AppText>
-          </View>
-        </If>
-      </TouchableOpacity>
+              <If condition={showUnverifiedBadge}>
+                <View style={styles.unverifiedBadge}>
+                  <AppText color="white" typography="bold_10">
+                    Unverified
+                  </AppText>
+                </View>
+              </If>
+            </If>
+          }
+        />
+      </View>
 
       <View>
         <View style={styles.nameContainer}>

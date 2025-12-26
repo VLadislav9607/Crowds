@@ -1,11 +1,14 @@
-import { useRef, useState } from "react";
-import { TalentLocationSetupFormRef, TalentProfileSetupFormRef, TalentStripeSetupRef } from "@modules/profile";
-import { useUpdateTalent } from "@actions";
-import { useGetMe } from "@actions";
-import { LogoutModalRef } from "../../../../profile/modals";
-import { ProfileIdentityVerificationRef } from "../../../../profile/components";
-import { Alert } from "react-native";
-import { goToScreen, Screens } from "@navigation";
+import { useRef, useState } from 'react';
+import {
+  TalentLocationSetupFormRef,
+  TalentProfileSetupFormRef,
+  TalentStripeSetupRef,
+} from '@modules/profile';
+import { useUpdateTalent } from '@actions';
+import { useGetMe } from '@actions';
+import { LogoutModalRef } from '../../../../profile/modals';
+import { ProfileIdentityVerificationRef } from '../../../../profile/components';
+import { goToScreen, Screens } from '@navigation';
 
 export const useOnboardingAuthTalentScreen = () => {
   const { data: me } = useGetMe();
@@ -13,7 +16,8 @@ export const useOnboardingAuthTalentScreen = () => {
 
   const logoutModalRef = useRef<LogoutModalRef>(null);
   const talentLocationSetupFormRef = useRef<TalentLocationSetupFormRef>(null);
-  const profileIdentityVerificationRef = useRef<ProfileIdentityVerificationRef>(null);
+  const profileIdentityVerificationRef =
+    useRef<ProfileIdentityVerificationRef>(null);
   const talentStripeSetupRef = useRef<TalentStripeSetupRef>(null);
   const talentProfileSetupFormRef = useRef<TalentProfileSetupFormRef>(null);
   const [showFullScreenLoader, setShowFullScreenLoader] = useState(false);
@@ -66,7 +70,7 @@ export const useOnboardingAuthTalentScreen = () => {
         id: me?.talent?.id!,
         data: { onboarding_copleted_step: 4 },
       });
-      goToScreen(Screens.BottomTabs);
+    goToScreen(Screens.BottomTabs);
   };
 
   const goToPreviousStep = async () =>
@@ -86,7 +90,6 @@ export const useOnboardingAuthTalentScreen = () => {
     goToPreviousStep,
     onIdentityVerificationSuccess,
     onStripeSetupSuccess,
-    onProfileSetupSuccess
+    onProfileSetupSuccess,
   };
 };
-

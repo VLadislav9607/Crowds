@@ -3,7 +3,7 @@ import { SignInForm, SignInFormRef } from '../../forms';
 import { COLORS } from '@styles';
 import { AppButton, AppText } from '@ui';
 import { styles } from './styles';
-import { Alert, TouchableOpacity, View } from 'react-native';
+import { TouchableOpacity, View } from 'react-native';
 import { useRef } from 'react';
 import { Screens } from '@navigation';
 import { goToScreen } from '@navigation';
@@ -37,7 +37,6 @@ export const SignInScreen = () => {
         />
 
         <TouchableOpacity
-
           style={styles.forgotPassword}
           onPress={handleForgotPassword}
         >
@@ -46,7 +45,11 @@ export const SignInScreen = () => {
           </AppText>
         </TouchableOpacity>
 
-        <AppButton isLoading={isLoggingIn} title="Sign in" onPress={handleSignIn} />
+        <AppButton
+          isLoading={isLoggingIn}
+          title="Sign in"
+          onPress={handleSignIn}
+        />
       </View>
     </ScreenWithScrollWrapper>
   );

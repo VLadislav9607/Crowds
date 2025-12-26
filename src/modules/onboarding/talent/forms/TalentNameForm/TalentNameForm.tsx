@@ -12,6 +12,8 @@ import {
 } from './types';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { forwardRef, useEffect, useImperativeHandle } from 'react';
+import { differenceInYears } from 'date-fns';
+import { showErrorToast } from '@helpers';
 
 export const TalentNameForm = forwardRef<
   TalentNameFormRef,
@@ -109,17 +111,29 @@ export const TalentNameForm = forwardRef<
         <Controller
           control={control}
           name="dateOfBirth"
-          render={({ field, fieldState }) => (
-            <AppDateInput
-              useDefaultIcon
-              placeholder="Select your date of birth"
-              label="Date of birth"
-              containerStyle={styles.dateInputContainer}
-              value={field.value}
-              onChange={date => field.onChange(date)}
-              errorMessage={fieldState.error?.message}
-            />
-          )}
+          render={({ field, fieldState }) => {
+            const handleChange = (date: Date) => {
+              const age = differenceInYears(new Date(), date);
+              age < 18
+                ? showErrorToast(
+                    'Sorry, but you must be over 18 to use this platform',
+                  )
+                : field.onChange(date);
+            };
+
+            return (
+              <AppDateInput
+                useDefaultIcon
+                placeholder="Select your date of birth"
+                label="Date of birth"
+                containerStyle={styles.dateInputContainer}
+                value={field.value}
+                onChange={handleChange}
+                errorMessage={fieldState.error?.message}
+                maximumDate={new Date()}
+              />
+            );
+          }}
         />
 
         <AppText color="main" typography="medium_12">
