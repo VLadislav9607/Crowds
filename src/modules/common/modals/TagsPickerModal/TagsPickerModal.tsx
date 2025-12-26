@@ -5,34 +5,28 @@ import { TagsPickerModalRef, TagsPickerModalProps } from './types';
 import { styles } from './styles';
 import { useEffect, useState, forwardRef } from 'react';
 import { useImperativeModal } from '@hooks';
+import { TagValue } from '@modules/profile';
 
 export const TagsPickerModal = forwardRef<TagsPickerModalRef>((_, ref) => {
-  const { isVisible, refProps, close } = useImperativeModal<TagsPickerModalProps>(ref, {
-    onRefClose: () => {
-      setSelectedTags([]);
-    },
-  });
+  const { isVisible, refProps, close } =
+    useImperativeModal<TagsPickerModalProps>(ref, {
+      onRefClose: () => {
+        setSelectedTags([]);
+      },
+    });
 
-  const [selectedTags, setSelectedTags] = useState<string[]>(refProps?.defaultTags || []);
+  const [selectedTags, setSelectedTags] = useState<TagValue[]>(
+    refProps?.defaultTags || [],
+  );
 
+  const tagOptions = refProps?.tagOptions || [];
   const isLoading = false;
 
-  const tags = [
-    'Tag 1',
-    'Tag 2',
-    'Tag 3',
-    'Tag 4',
-    'Tag 5',
-    'Tag 6',
-    'Tag 7',
-    'Tag 8',
-  ];
-
-  const handleItemPress = (tag: string) => {
-    if (selectedTags.includes(tag)) {
-      setSelectedTags(prev => prev.filter(t => t !== tag));
+  const handleItemPress = (tagValue: TagValue) => {
+    if (selectedTags.includes(tagValue)) {
+      setSelectedTags(prev => prev.filter(t => t !== tagValue));
     } else {
-      setSelectedTags(prev => [...prev, tag]);
+      setSelectedTags(prev => [...prev, tagValue]);
     }
   };
 
@@ -69,12 +63,12 @@ export const TagsPickerModal = forwardRef<TagsPickerModalRef>((_, ref) => {
 
         <If condition={!isLoading}>
           <ScrollView contentContainerStyle={styles.categoriesContainer}>
-            {tags.map(tag => {
-              const isSelected = selectedTags.includes(tag);
+            {tagOptions.map(tag => {
+              const isSelected = selectedTags.includes(tag.value);
               return (
                 <TouchableOpacity
-                  onPress={() => handleItemPress(tag)}
-                  key={tag}
+                  onPress={() => handleItemPress(tag.value)}
+                  key={tag.value}
                   style={[styles.item, isSelected && styles.itemSelected]}
                   activeOpacity={0.5}
                 >
@@ -82,7 +76,7 @@ export const TagsPickerModal = forwardRef<TagsPickerModalRef>((_, ref) => {
                     typography="regular_14"
                     color={isSelected ? 'white' : 'black'}
                   >
-                    {tag}
+                    {tag.label}
                   </AppText>
                 </TouchableOpacity>
               );

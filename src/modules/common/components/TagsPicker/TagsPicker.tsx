@@ -4,9 +4,11 @@ import { AppText } from '@ui';
 import { TagsPickerProps } from './types';
 import { If, Skeleton } from '@components';
 import { TagsPickerModal, TagsPickerModalRef } from '@modules/common';
-import { useRef } from 'react';
+import { useMemo, useRef } from 'react';
+import { getTagOptions, TagValue } from '@modules/profile';
 
 export const TagsPicker = ({
+  selectedCategories,
   selectedTags = [],
   containerStyle,
   onTagsChange,
@@ -15,61 +17,67 @@ export const TagsPicker = ({
 }: TagsPickerProps) => {
   const tagsPickerModalRef = useRef<TagsPickerModalRef>(null);
 
-  const tags = [
-    'Tag 1',
-    'Tag 2',
-    'Tag 3',
-    'Tag 4',
-    'Tag 5',
-    'Tag 6',
-    'Tag 7',
-    'Tag 8',
-  ];
+  const tagOptions = useMemo(
+    () => getTagOptions(selectedCategories),
+    [selectedCategories],
+  );
 
-  const handleItemPress = (tag: string) => {
-    onTagPress?.(tag);
+  const visibleTags = tagOptions.slice(0, 8);
+  const hasMoreTags = tagOptions.length > 8;
+
+  const handleItemPress = (tagValue: TagValue) => {
+    onTagPress?.(tagValue);
 
     if (onTagsChange) {
-      if (selectedTags.includes(tag)) {
-        const filteredValues = selectedTags.filter(v => v !== tag);
+      if (selectedTags.includes(tagValue)) {
+        const filteredValues = selectedTags.filter(v => v !== tagValue);
         onTagsChange(filteredValues);
       } else {
-        const newValues = [...selectedTags, tag];
+        const newValues = [...selectedTags, tagValue];
         onTagsChange(newValues);
       }
     }
   };
 
   const isLoading = false;
+  const hasTags = tagOptions.length > 0;
+
+  if (!hasTags) {
+    return null;
+  }
+
   return (
     <View style={[styles.container, containerStyle]}>
       <View style={styles.headerContainer}>
         <AppText typography="semibold_18">Tags</AppText>
-        <TouchableOpacity
-          onPress={() =>
-            tagsPickerModalRef.current?.open({
-              defaultTags: selectedTags,
-              onTagsChange,
-            })
-          }
-          hitSlop={{ top: 10, bottom: 10, left: 10, right: 10 }}
-        >
-          <If condition={!isLoading}>
-            <AppText typography="bold_14" color="main">
-              View More
-            </AppText>
-          </If>
-        </TouchableOpacity>
+        <If condition={hasMoreTags}>
+          <TouchableOpacity
+            onPress={() =>
+              tagsPickerModalRef.current?.open({
+                defaultTags: selectedTags,
+                onTagsChange,
+                tagOptions,
+              })
+            }
+            hitSlop={{ top: 10, bottom: 10, left: 10, right: 10 }}
+          >
+            <If condition={!isLoading}>
+              <AppText typography="bold_14" color="main">
+                View More
+              </AppText>
+            </If>
+          </TouchableOpacity>
+        </If>
       </View>
 
       <If condition={!isLoading}>
         <View style={[styles.categoriesContainer, categoriesContainerStyle]}>
-          {tags.map(tag => {
-            const isSelected = selectedTags.includes(tag);
+          {visibleTags.map(tag => {
+            const isSelected = selectedTags.includes(tag.value);
             return (
               <TouchableOpacity
-                onPress={() => handleItemPress(tag)}
-                key={tag}
+                onPress={() => handleItemPress(tag.value)}
+                key={tag.value}
                 style={[styles.item, isSelected && styles.itemSelected]}
                 activeOpacity={0.5}
               >
@@ -77,7 +85,7 @@ export const TagsPicker = ({
                   typography="regular_14"
                   color={isSelected ? 'white' : 'black'}
                 >
-                  {tag}
+                  {tag.label}
                 </AppText>
               </TouchableOpacity>
             );

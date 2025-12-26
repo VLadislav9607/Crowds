@@ -21,14 +21,14 @@ export const RangeSelector = ({
   onRenderValue,
   onSlidingComplete,
 }: IRangeSelectorProps) => {
+  const [values, setValues] = useState({
+    min: defaultMinValue,
+    max: defaultMaxValue,
+  });
 
-  const [values, setValues] = useState({ min: defaultMinValue, max: defaultMaxValue })
-
-
-  console.log('values', values)
   useEffect(() => {
-    setValues({ min: defaultMinValue, max: defaultMaxValue })
-  }, [defaultMinValue, defaultMaxValue])
+    setValues({ min: defaultMinValue, max: defaultMaxValue });
+  }, [defaultMinValue, defaultMaxValue]);
 
   return (
     <View style={[styles.container, containerStyles]}>
@@ -44,12 +44,10 @@ export const RangeSelector = ({
 
       <View style={styles.sliderContainer}>
         <View style={styles.flex1}>
-
-
           <Slider
             value={disableRange ? values.min : [values.min, values.max]}
-            onValueChange={(value) => {
-              setValues({ min: value[0], max: value[1] })
+            onValueChange={value => {
+              setValues({ min: value[0], max: value[1] });
             }}
             minimumValue={min}
             maximumValue={max}

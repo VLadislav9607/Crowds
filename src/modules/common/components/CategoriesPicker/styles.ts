@@ -8,7 +8,7 @@ export const styles = StyleSheet.create({
   categoriesContainer: {
     flexDirection: 'row',
     flexWrap: 'wrap',
-    gap: 14,
+    gap: 6,
   },
   item: {
     height: 30,

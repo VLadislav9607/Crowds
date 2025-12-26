@@ -19,4 +19,8 @@ export const styles = StyleSheet.create({
   contentWrapper: {
     paddingHorizontal: 20,
   },
+  submitButton: {
+    marginTop: 24,
+    marginBottom: 40,
+  },
 });

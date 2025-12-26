@@ -1,16 +1,23 @@
-import { ScreenWithScrollWrapper } from '@components';
-import { ProfileSetupHeader } from '../../../components';
-import { TalentProfileSetupForm } from '../../forms';
+import { useRef, useState } from 'react';
+import { View } from 'react-native';
 import {
   useSharedValue,
   useAnimatedStyle,
   useAnimatedScrollHandler,
 } from 'react-native-reanimated';
 import Animated from 'react-native-reanimated';
+import { ScreenWithScrollWrapper } from '@components';
+import { AppButton } from '@ui';
+import { useNavigation } from '@react-navigation/native';
+import { ProfileSetupHeader } from '../../../components';
+import { TalentProfileSetupForm, TalentProfileSetupFormRef } from '../../forms';
 import { styles } from './styles';
-import { View } from 'react-native';
 
 export const TalentProfileSetupScreen = () => {
+  const navigation = useNavigation();
+  const formRef = useRef<TalentProfileSetupFormRef>(null);
+  const [isUpdating, setIsUpdating] = useState(false);
+
   const headerOpacity = useSharedValue(1);
   const headerTranslateY = useSharedValue(0);
   const headerHeight = useSharedValue(120);
@@ -22,22 +29,16 @@ export const TalentProfileSetupScreen = () => {
       const currentScrollY = event.contentOffset.y;
 
       if (currentScrollY <= ANIMATION_START_LIMIT) {
-        //first 20px - header stays in place
         headerTranslateY.value = 0;
         headerOpacity.value = 1;
         headerHeight.value = 120;
       } else if (currentScrollY <= ANIMATION_END_LIMIT) {
-        //next 20px (20-40) - gradual disappearance and movement up
         headerHeight.value = 120;
-
         const scrollProgress = currentScrollY - ANIMATION_START_LIMIT;
         headerTranslateY.value = -scrollProgress;
         headerOpacity.value =
           1 - scrollProgress / (ANIMATION_END_LIMIT - ANIMATION_START_LIMIT);
-        // const heightProgress = scrollProgress / (ANIMATION_END_LIMIT - ANIMATION_START_LIMIT);
-        // headerHeight.value = 120 * (1 - heightProgress);
       } else {
-        //after 40px - fully hidden
         headerTranslateY.value = -(ANIMATION_END_LIMIT - ANIMATION_START_LIMIT);
         headerOpacity.value = 0;
         headerHeight.value = 0;
@@ -45,13 +46,19 @@ export const TalentProfileSetupScreen = () => {
     },
   });
 
-  const animatedHeaderStyle = useAnimatedStyle(() => {
-    return {
-      opacity: headerOpacity.value,
-      transform: [{ translateY: headerTranslateY.value }],
-      height: headerHeight.value,
-    };
-  });
+  const animatedHeaderStyle = useAnimatedStyle(() => ({
+    opacity: headerOpacity.value,
+    transform: [{ translateY: headerTranslateY.value }],
+    height: headerHeight.value,
+  }));
+
+  const handleSubmit = () => {
+    formRef.current?.onSubmit();
+  };
+
+  const handleSuccess = () => {
+    navigation.goBack();
+  };
 
   return (
     <ScreenWithScrollWrapper
@@ -61,6 +68,7 @@ export const TalentProfileSetupScreen = () => {
       headerStyles={styles.headerStyles}
       animatedScrollHandler={scrollHandler}
       useAnimatedScrollView={true}
+      showLoader={isUpdating}
       customElement={
         <Animated.View style={[styles.headerContainer, animatedHeaderStyle]}>
           <ProfileSetupHeader
@@ -73,7 +81,18 @@ export const TalentProfileSetupScreen = () => {
       }
     >
       <View style={styles.contentWrapper}>
-        <TalentProfileSetupForm />
+        <TalentProfileSetupForm
+          ref={formRef}
+          onSuccess={handleSuccess}
+          onFormStateChange={state => setIsUpdating(state.isUpdating)}
+        />
+
+        <AppButton
+          title="Save Changes"
+          onPress={handleSubmit}
+          isDisabled={isUpdating}
+          wrapperStyles={styles.submitButton}
+        />
       </View>
     </ScreenWithScrollWrapper>
   );

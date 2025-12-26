@@ -1,20 +1,27 @@
-import { EyeColour, HairColour } from '@modules/profile';
+import {
+  Category,
+  Ethnicity,
+  EyeColour,
+  FacialAttributes,
+  HairColour,
+  SkinTone,
+  TattooSpot,
+} from '@modules/profile';
 import { z } from 'zod';
 
 export const talentProfileSetupSchema = z
   .object({
     hairColour: z.enum(HairColour).optional(),
-    // hairStyle: z.string().optional(), // Eye Colour
     eyeColour: z.enum(EyeColour).optional(),
-    facialAttributes: z.array(z.string()).optional(),
-    tattooSpot: z.array(z.string()).optional(),
-    ethnicity: z.string().optional(),
+    facialAttributes: z.array(z.enum(FacialAttributes)).optional(),
+    tattooSpot: z.array(z.enum(TattooSpot)).optional(),
+    ethnicity: z.enum(Ethnicity).optional(),
     build: z.number().optional(),
     height: z.number().optional(),
-    skinTone: z.string().optional(),
+    skinTone: z.enum(SkinTone).optional(),
     isPregnant: z.boolean().optional(),
     months: z.string().optional(),
-    categories: z.array(z.string()).optional(),
+    categories: z.array(z.enum(Category)).optional(),
     tags: z.array(z.string()).optional(),
     additionalSkills: z.string().optional(),
     photo: z

@@ -25,7 +25,8 @@ module.exports = {
           "@modules/events": "./src/modules/events",
           "@modules/kyc": "./src/modules/kyc",
           "@actions": "./src/actions",
-          "@services":"./src/services"
+          "@services": "./src/services",
+          "@utils": "./src/utils"
         }
       }
     ],

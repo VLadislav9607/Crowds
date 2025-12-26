@@ -10,8 +10,9 @@ import {
 import { useCreateTalent } from '@actions';
 import { UINSaveConfirmationModalRef } from '../../../modals';
 import { supabase } from '@services';
-import { format, differenceInYears } from 'date-fns';
+import { format } from 'date-fns';
 import { showErrorToast } from '@helpers';
+import { isAtLeastAge } from '@utils';
 import { useCheckUsernameExist } from '@actions';
 import { goBack, goToScreen, Screens } from '@navigation';
 import { prefetchUseGetMe } from '@actions';
@@ -52,10 +53,7 @@ export const useOnboardingUnAuthTalentScreen = () => {
 
   const handleTalentNameFormSubmit = async (formData: TalentNameFormData) => {
     // Check if user is 18 or older
-    const today = new Date();
-    const age = differenceInYears(today, formData.dateOfBirth);
-
-    if (age < 18) {
+    if (!isAtLeastAge(formData.dateOfBirth, 18)) {
       showErrorToast('Sorry, but you must be over 18 to use this platform');
       return;
     }

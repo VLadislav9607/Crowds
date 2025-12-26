@@ -3,18 +3,31 @@ import { View } from 'react-native';
 import { AppButton, AppText, Avatar } from '@ui';
 import { ICONS } from '@assets';
 import { goToScreen, Screens } from '@navigation';
+import { capitalize } from '@utils';
 
 import { styles } from './styles';
 
-export const TalentProfileHeader = () => (
+interface TalentProfileHeaderProps {
+  fullName: string;
+  gender: string;
+  age: number;
+  avatarUri: string;
+}
+
+export const TalentProfileHeader = ({
+  fullName,
+  gender,
+  age,
+  avatarUri,
+}: TalentProfileHeaderProps) => (
   <View style={styles.headerContainer}>
     <View style={styles.profileInfoContainer}>
-      <Avatar size={64} name="Mia Ferris" />
+      <Avatar size={64} uri={avatarUri} name={fullName} />
 
       <View>
         <View style={styles.nameBadgeContainer}>
           <AppText color="white" typography="semibold_16">
-            Mia
+            {fullName}
           </AppText>
 
           <View style={[styles.cnBadge, styles.cnBadgeWithBorder]}>
@@ -25,7 +38,7 @@ export const TalentProfileHeader = () => (
         </View>
 
         <AppText color="gray" typography="regular_14" margin={{ top: 8 }}>
-          Female 32, VIC
+          {capitalize(gender)} {age}, VIC
         </AppText>
       </View>
     </View>

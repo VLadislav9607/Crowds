@@ -2,13 +2,11 @@ import { COLORS } from '@styles';
 import { StyleSheet } from 'react-native';
 
 export const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-  },
   physicalDetailsContainer: {
     gap: 16,
   },
   photoContainerWrapper: {
+    marginTop: 32,
     width: 167
   },
   photoContainer: {
@@ -40,6 +38,6 @@ export const styles = StyleSheet.create({
     left: 12,
   },
   additionalSkills: {
-    marginVertical: 32,
+    marginTop: 24,
   },
 });
