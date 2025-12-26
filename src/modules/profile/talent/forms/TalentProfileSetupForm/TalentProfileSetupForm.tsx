@@ -2,7 +2,6 @@ import { forwardRef, useImperativeHandle } from 'react';
 import { Gender } from '@modules/profile';
 import { useGetMe } from '@actions';
 import { ImageSourcePickerModal } from '@modules/common';
-
 import {
   TalentProfileSetupFormProps,
   TalentProfileSetupFormRef,
@@ -22,11 +21,13 @@ export const TalentProfileSetupForm = forwardRef<
 
   const {
     control,
-    watch,
     setValue,
     errors,
-    pickImage,
     onSubmit,
+    // Photo
+    currentPhoto,
+    isUploadingPhoto,
+    openPhotoPicker,
     imageSourcePickerModalRef,
   } = useTalentProfileSetupForm({ onSuccess, onFormStateChange });
 
@@ -44,9 +45,10 @@ export const TalentProfileSetupForm = forwardRef<
       <SkillsAndCategoriesSection control={control} />
 
       <PhotoUploadSection
-        photo={watch('photo')}
+        userFullBodyPhoto={currentPhoto}
+        isUploadingPhoto={isUploadingPhoto}
         errorMessage={errors.photo?.message}
-        onPress={pickImage}
+        onPress={openPhotoPicker}
       />
 
       <ImageSourcePickerModal bottomSheetRef={imageSourcePickerModalRef} />

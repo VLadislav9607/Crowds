@@ -9,8 +9,8 @@ import {
   TalentProfileSetupForm,
   TalentStripeSetup,
 } from '@modules/profile';
-import { AnimatedProfileSetupHeader } from '../../../../profile/components';
 import { IdentityVerification } from '@modules/kyc';
+import { AnimatedProfileSetupHeader } from '../../../../profile/components';
 import { AppButton, IAppHeaderProps } from '@ui';
 import { AnimatedProfileSetupHeaderRef } from '../../../../profile/components';
 import { useState } from 'react';
@@ -112,7 +112,7 @@ export const OnboardingAuthTalentScreen = () => {
       <View
         style={[styles.container, isProfileSetupStep && { paddingTop: 70 }]}
       >
-        <If condition={step === 0}>
+        <If condition={!step}>
           <TalentLocationSetupForm
             onFormStateChange={val =>
               setShowFullScreenLoader(val.isUpsertingLocation)

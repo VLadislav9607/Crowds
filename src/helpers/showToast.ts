@@ -1,7 +1,5 @@
-import Toast from "react-native-toast-message";
-import { ToastCustomProps } from "src/components/AppToast/types";
-
-
+import Toast from 'react-native-toast-message';
+import { ToastCustomProps } from 'src/components/AppToast/types';
 
 export const showSuccessToast = (message: string, props?: ToastCustomProps) => {
   Toast.show({
@@ -16,6 +14,13 @@ export const showErrorToast = (message: string, props?: ToastCustomProps) => {
     text1: message,
     type: 'error',
     props,
+  });
+};
+
+export const showMutationErrorToast = (error: Error) => {
+  Toast.show({
+    text1: error.message || 'Something went wrong',
+    type: 'error',
   });
 };
 

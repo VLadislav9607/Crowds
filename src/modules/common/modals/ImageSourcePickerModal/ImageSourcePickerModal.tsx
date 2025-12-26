@@ -74,6 +74,7 @@ export const ImageSourcePickerModal = ({
           uri: asset.uri || '',
           name: asset.fileName || `photo_${Date.now()}.jpg`,
           type: asset.type || 'image/jpeg',
+          size: asset.fileSize,
         });
         handleCloseSheet?.();
       }
@@ -125,6 +126,7 @@ export const ImageSourcePickerModal = ({
     >
       {({ data }) => {
         const onImagePicked = data?.onImagePicked;
+
         return (
           <BottomSheetView style={styles.bottomSheetContent}>
             <AppButton

@@ -12,23 +12,21 @@ import {
   OrganizationNameFormRef,
   PrimaryLocationFormData,
   PrimaryLocationFormRef,
-} from '../../../forms';
+} from '../../forms';
 import {
+  CreateOrganizationResDto,
   prefetchUseGetMe,
   useCheckUsernameExist,
   useCreateOrganizationAndCreator,
   useSendOtp,
   useVerifyOtp,
 } from '@actions';
-import { showErrorToast } from '@helpers';
-import {
-  CreatePasswordFormData,
-  CreatePasswordFormRef,
-} from '../../../../forms';
+import { showErrorToast, showMutationErrorToast } from '@helpers';
+import { CreatePasswordFormData, CreatePasswordFormRef } from '../../../forms';
 import { supabase } from '@services';
-import { UINSaveConfirmationModalRef } from '../../../../modals';
+import { UINSaveConfirmationModalRef } from '../../../modals';
 
-export const useOnboardingOrgScreen = () => {
+export const useOnboardingUnAuthOrganization = () => {
   const organizationNameFormRef = useRef<OrganizationNameFormRef>(null);
   const headGlobalLocationFormRef = useRef<HeadGlobalLocationFormRef>(null);
   const primaryLocationFormRef = useRef<PrimaryLocationFormRef>(null);
@@ -44,11 +42,27 @@ export const useOnboardingOrgScreen = () => {
     isPending: isCheckingUsernameExist,
   } = useCheckUsernameExist();
 
-  const [uin, setUIN] = useState<string>('');
+  const onCreatingAccountSuccess = async (
+    responseData: CreateOrganizationResDto,
+  ) => {
+    await supabase.auth.setSession({
+      access_token: responseData.session.access_token,
+      refresh_token: responseData.session.refresh_token,
+    });
+    await prefetchUseGetMe();
+    uinSaveConfirmationModalRef.current?.open({
+      uin: responseData.uin,
+      onConfirm: () => goToScreen(Screens.OrgIdentityVerification),
+    });
+  };
+
   const {
     mutateAsync: createOrganizationAndCreatorMutateAsync,
     isPending: isCreatingOrganizationAndCreator,
-  } = useCreateOrganizationAndCreator();
+  } = useCreateOrganizationAndCreator({
+    onSuccess: onCreatingAccountSuccess,
+    onError: showMutationErrorToast,
+  });
 
   const { mutateAsync: verifyOtpMutateAsync, isPending: isVerifyingOtp } =
     useVerifyOtp({
@@ -58,7 +72,6 @@ export const useOnboardingOrgScreen = () => {
     useSendOtp();
 
   const [step, setStep] = useState(0);
-  const [isProcessingSuccess, setIsProcessingSuccess] = useState(false);
 
   const [data, setData] = useState<{
     organizationNameFormData?: OrganizationNameFormData;
@@ -67,8 +80,6 @@ export const useOnboardingOrgScreen = () => {
     organizationCreatorInformationFormData?: OrganizationCreatorInformationFormData;
     verificationToken?: string;
   }>({});
-
-  console.log('data', data);
 
   const isGlobal =
     data.organizationNameFormData?.organizationType === OrganizationType.GLOBAL;
@@ -106,7 +117,6 @@ export const useOnboardingOrgScreen = () => {
   const onCreatePasswordFormSubmit = async (
     formData: CreatePasswordFormData,
   ) => {
-    console.log('');
     if (
       !data.verificationToken ||
       !data.organizationCreatorInformationFormData ||
@@ -114,75 +124,20 @@ export const useOnboardingOrgScreen = () => {
     )
       return;
 
-    createOrganizationAndCreatorMutateAsync(
-      {
-        organization_name:
-          data.organizationNameFormData?.organizationName || '',
-        password: formData.password,
-        verification_token: data.verificationToken,
-        owner: {
-          first_name: data.organizationCreatorInformationFormData?.firstName,
-          last_name: data.organizationCreatorInformationFormData?.lastName,
-          gender: data.organizationCreatorInformationFormData?.gender,
-          position:
-            data.organizationCreatorInformationFormData?.positionInCompany,
-          username: data.organizationCreatorInformationFormData?.username,
-          email: data.organizationCreatorInformationFormData?.email,
-        },
+    createOrganizationAndCreatorMutateAsync({
+      organization_name: data.organizationNameFormData?.organizationName || '',
+      password: formData.password,
+      verification_token: data.verificationToken,
+      owner: {
+        first_name: data.organizationCreatorInformationFormData?.firstName,
+        last_name: data.organizationCreatorInformationFormData?.lastName,
+        gender: data.organizationCreatorInformationFormData?.gender,
+        position:
+          data.organizationCreatorInformationFormData?.positionInCompany,
+        username: data.organizationCreatorInformationFormData?.username,
+        email: data.organizationCreatorInformationFormData?.email,
       },
-      {
-        onSuccess: async responseData => {
-          setIsProcessingSuccess(true);
-          try {
-            setUIN(responseData.uin);
-            await supabase.auth.setSession({
-              access_token: responseData.session.access_token,
-              refresh_token: responseData.session.refresh_token,
-            });
-            await prefetchUseGetMe();
-            uinSaveConfirmationModalRef.current?.open({
-              uin: responseData.uin,
-              onConfirm: () => goToScreen(Screens.OrgIdentityVerificationScreen),
-            });
-          } finally {
-            setIsProcessingSuccess(false);
-          }
-        },
-        onError: (error: Error) => {
-          console.log('error', error);
-          showErrorToast(
-            error?.message || 'Failed to create account. Please try again.',
-          );
-        },
-      },
-    );
-
-    // createTalentMutate({
-    //   first_name: data.talentNameFormData.firstName,
-    //   last_name: data.talentNameFormData.lastName,
-    //   username: data.talentNameFormData.username.toLowerCase(),
-    //   gender: data.talentNameFormData.gender,
-    //   birth_date: format(data.talentNameFormData.dateOfBirth, "yyyy-MM-dd"),
-    //   password: formData.password,
-    // }, {
-    //   onSuccess: async (data) => {
-    //     setUIN(data.uin);
-    //     await supabase.auth.setSession({
-    //       access_token: data.session.access_token,
-    //       refresh_token: data.session.refresh_token,
-    //     });
-    //     await prefetchUseGetMe();
-    //     uinSaveConfirmationModalRef.current?.open({
-    //       uin: data.uin,
-    //       onConfirm: () => goToScreen(Screens.OnboardingAuthTalent)
-    //     });
-    //   },
-    //   onError: (error: Error) => {
-    //     showErrorToast(
-    //       error?.message || "Failed to create account. Please try again.",
-    //     );
-    //   },
-    // });
+    });
   };
 
   const handleOrganizationNameFormSubmit = async (
@@ -202,7 +157,6 @@ export const useOnboardingOrgScreen = () => {
   const handlePrimaryLocationFormSubmit = async (
     values: PrimaryLocationFormData,
   ) => {
-    console.log('values', values);
     setData({ ...data, primaryLocationFormData: values });
     setStep(2);
   };
@@ -235,21 +189,19 @@ export const useOnboardingOrgScreen = () => {
   };
 
   const onOtpVerificationFormSubmit = async () => {
-    try {
-      const otp_code = otpVerificationFormRef.current?.getCode();
-      if (otp_code && otp_code.length < 6) {
-        showErrorToast('Please enter the verification code');
-        return;
-      }
-      const response = await verifyOtpMutateAsync({
-        email: data.organizationCreatorInformationFormData?.email!,
-        otp_code: otp_code || '',
-      });
-      setData({ ...data, verificationToken: response.verification_token });
-      if (response.success) {
-        setStep(4);
-      }
-    } catch {}
+    const otp_code = otpVerificationFormRef.current?.getCode();
+    if (otp_code && otp_code.length < 6) {
+      showErrorToast('Please enter the verification code');
+      return;
+    }
+    const response = await verifyOtpMutateAsync({
+      email: data.organizationCreatorInformationFormData?.email!,
+      otp_code: otp_code || '',
+    });
+    setData({ ...data, verificationToken: response.verification_token });
+    if (response.success) {
+      setStep(4);
+    }
   };
 
   const goToPreviousStep = () => {
@@ -268,8 +220,7 @@ export const useOnboardingOrgScreen = () => {
     isCheckingUsernameExist ||
     isVerifyingOtp ||
     isCreatingOrganizationAndCreator ||
-    isSendingOtp ||
-    isProcessingSuccess;
+    isSendingOtp;
 
   return {
     step,
@@ -285,7 +236,6 @@ export const useOnboardingOrgScreen = () => {
     otpVerificationFormRef,
     uinSaveConfirmationModalRef,
     createPasswordFormRef,
-    uin,
     setData,
     onResendOtpCode,
     goToNextStep,

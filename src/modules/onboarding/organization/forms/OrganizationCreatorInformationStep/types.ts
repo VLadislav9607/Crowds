@@ -2,6 +2,7 @@ import { Gender } from '@modules/profile';
 import { UseFormGetValues, UseFormHandleSubmit } from 'react-hook-form';
 import { ViewStyle } from 'react-native';
 import { z } from 'zod';
+import { REGEX } from '@constants';
 
 export interface OrganizationCreatorInformationFormRef {
   handleSubmit: UseFormHandleSubmit<OrganizationCreatorInformationFormData>;
@@ -25,10 +26,10 @@ export const organizationCreatorInformationFormSchema = z.object({
     .min(3, 'Username must be at least 3 characters')
     .max(20, 'Username must be no more than 20 characters')
     .regex(
-      /^[a-zA-Z0-9_]+$/,
+      REGEX.username,
       'Username can only contain letters, numbers, and underscores',
     )
-    .refine(val => /^[a-zA-Z_]/.test(val), {
+    .refine(val => REGEX.usernameStartWithLetterOrUnderscore.test(val), {
       message: 'Username must start with a letter or underscore',
     }),
   firstName: z.string().min(1, 'First name is required'),

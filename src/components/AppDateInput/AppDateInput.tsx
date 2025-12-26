@@ -24,6 +24,7 @@ export const AppDateInput = ({
   valueProps,
   description = '',
   onChange,
+  maximumDate,
   ...props
 }: AppDateInputProps) => {
   const [showDatePicker, setShowDatePicker] = useState(false);
@@ -127,6 +128,7 @@ export const AppDateInput = ({
         mode={mode}
         open={showDatePicker}
         date={value || new Date()}
+        maximumDate={maximumDate}
         onConfirm={onConfirm}
         onCancel={onCancel}
       />

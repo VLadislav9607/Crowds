@@ -4,16 +4,14 @@ import { StyleSheet } from 'react-native';
 export const styles = StyleSheet.create({
   physicalDetailsContainer: {
     gap: 16,
-  },
-  photoContainerWrapper: {
-    marginTop: 32,
-    width: 167
+    marginTop: 24,
   },
   photoContainer: {
     width: 167,
     height: 210,
     borderRadius: 10,
     overflow: 'hidden',
+    marginTop: 32,
   },
   cameraContainer: {
     position: 'absolute',
