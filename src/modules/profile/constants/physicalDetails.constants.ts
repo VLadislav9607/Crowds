@@ -10,6 +10,7 @@ import {
   SkinTone,
   Gender,
 } from '../types/physicalDetails.enums';
+import { Category } from '../types/category.enums';
 
 export const ethnicityOptions = [
   { label: 'Asian', value: Ethnicity.ASIAN },
@@ -109,4 +110,15 @@ export const genderOptions = [
   { label: 'Male', value: Gender.MALE },
   { label: 'Female', value: Gender.FEMALE },
   { label: 'Other', value: Gender.OTHER },
+];
+
+export const categoryOptions = [
+  { label: 'Hospitality', value: Category.HOSPITALITY },
+  { label: 'Retail', value: Category.RETAIL },
+  { label: 'PR Groups', value: Category.PR_GROUPS },
+  { label: 'Private Events', value: Category.PRIVATE_EVENTS },
+  { label: 'Music Groups', value: Category.MUSIC_GROUPS },
+  { label: 'Politics', value: Category.POLITICS },
+  { label: 'TV (Ad Hoc)', value: Category.TV_AD_HOC },
+  { label: 'Film extra', value: Category.FILM_EXTRA },
 ];

@@ -14,7 +14,7 @@ import {
   PickedImage,
 } from '@modules/common';
 import { useGetMe } from '@actions';
-import { differenceInYears } from 'date-fns';
+import { calculateAge, capitalize } from '@utils';
 
 export const ProfileSetupHeader = ({
   containerStyle,
@@ -113,14 +113,7 @@ export const ProfileSetupHeader = ({
         </View>
 
         <AppText color="black" typography="regular_16" margin={{ bottom: 2 }}>
-          {me?.talent?.gender
-            ? me.talent.gender.charAt(0).toUpperCase() +
-              me.talent.gender.slice(1)
-            : ''}
-          ,{' '}
-          {me?.talent?.birth_date
-            ? differenceInYears(new Date(), new Date(me.talent.birth_date))
-            : ''}
+          {capitalize(me?.talent?.gender)}, {calculateAge(me?.talent?.birth_date) || ''}
         </AppText>
         <AppText color="black_60" typography="regular_16">
           VIC

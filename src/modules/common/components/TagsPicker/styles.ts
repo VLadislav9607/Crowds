@@ -8,12 +8,12 @@ export const styles = StyleSheet.create({
   skeletonContainer: {
     flexDirection: 'row',
     flexWrap: 'wrap',
-    gap: 14,
+    gap: 6,
   },
   categoriesContainer: {
     flexDirection: 'row',
     flexWrap: 'wrap',
-    gap: 14,
+    gap: 6,
   },
   item: {
     height: 30,
