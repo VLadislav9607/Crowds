@@ -15,9 +15,7 @@ export const OnboardingUnAuthTalentScreen = () => {
     uinSaveConfirmationModalRef,
     step,
     data,
-    uin,
     showFullScreenLoader,
-    setUIN,
     goToNextStep,
     goToPreviousStep,
   } = useOnboardingUnAuthTalentScreen();
@@ -56,10 +54,6 @@ export const OnboardingUnAuthTalentScreen = () => {
           <CreatePasswordForm
             defaultValues={data.createPasswordFormData}
             ref={createPasswordFormRef}
-            onGenerateUIN={() =>
-              setUIN(Math.random().toString(36).substring(2, 15))
-            }
-            uin={uin}
           />
         </If>
       </View>
@@ -68,4 +62,3 @@ export const OnboardingUnAuthTalentScreen = () => {
     </OnboardingScreenLayout>
   );
 };
-

@@ -1,5 +1,5 @@
-import { If, RangeSelector, SelectOptionField } from '@components';
-import { Alert, ImageBackground, TouchableOpacity, View } from 'react-native';
+import { AppImage, If, RangeSelector, SelectOptionField } from '@components';
+import { View } from 'react-native';
 import { AppText, AppTextarea } from '@ui';
 import { styles } from './styles';
 import {
@@ -19,28 +19,52 @@ import {
   TagsPicker,
 } from '@modules/common';
 import { Controller, useForm } from 'react-hook-form';
-import { TalentProfileSetupFormData, TalentProfileSetupFormProps, TalentProfileSetupFormRef, talentProfileSetupSchema } from './types';
+import {
+  TalentProfileSetupFormData,
+  TalentProfileSetupFormProps,
+  TalentProfileSetupFormRef,
+  talentProfileSetupSchema,
+} from './types';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { SvgXml } from 'react-native-svg';
 import { ICONS, IMAGES } from '@assets';
 import { forwardRef, useEffect, useImperativeHandle, useRef } from 'react';
 import { BottomSheetModal } from '@gorhom/bottom-sheet';
-import { useGetMe, useUpdateTalent } from '@actions';
+import { useBucketUpload, useGetMe, useUpdateTalent } from '@actions';
 import { EyeColour, HairColour } from '@modules/profile';
+import { showMutationErrorToast } from '@helpers';
 
-export const TalentProfileSetupForm = forwardRef<TalentProfileSetupFormRef, TalentProfileSetupFormProps>(({ onSuccess, onFormStateChange }, ref) => {
+export const TalentProfileSetupForm = forwardRef<
+  TalentProfileSetupFormRef,
+  TalentProfileSetupFormProps
+>(({ onSuccess, onFormStateChange }, ref) => {
   const { data: me } = useGetMe();
-  const { mutate: updateTalentMutate, isPending: isUpdating , error } = useUpdateTalent();
+  const {
+    mutate: updateTalentMutate,
+    mutateAsync: updateTalentMutateAsync,
+    isPending: isUpdating,
+  } = useUpdateTalent();
   const talent = me?.talent;
   const imageSourcePickerModalRef =
     useRef<BottomSheetModal<ImageSourcePickerModalData>>(null);
 
-    console.log('error', error);
+  const { mutate: upsertTalentPhotoMutate, isPending: isUploadingPhoto } =
+    useBucketUpload({
+      onSuccess: async data => {
+        await updateTalentMutateAsync({
+          id: talent?.id!,
+          data: { avatar_full_path: data.uploadedFile.path },
+        });
+      },
+      onError: showMutationErrorToast,
+    });
+
+  // const onUploadToBucket = async (file: PickedImage) => upsertTalentPhotoMutate({ file });
 
   const defaultValues: TalentProfileSetupFormData = {
-    hairColour: talent?.hair_color as HairColour ?? undefined,
+    hairColour: (talent?.hair_color as HairColour) ?? undefined,
     // hairStyle: undefined,
-    eyeColour:  talent?.eye_color as EyeColour ?? undefined,
+    eyeColour: (talent?.eye_color as EyeColour) ?? undefined,
     facialAttributes: undefined,
     tattooSpot: undefined,
     ethnicity: undefined,
@@ -67,52 +91,56 @@ export const TalentProfileSetupForm = forwardRef<TalentProfileSetupFormRef, Tale
     mode: 'onBlur',
   });
 
-  console.log('errors', errors);
-
   const categories = watch('categories');
   const months = watch('months');
-  const photo = watch('photo');
 
   const pickImage = () =>
     imageSourcePickerModalRef.current?.present({
       onImagePicked: (image: PickedImage) => {
-        setValue('photo', image);
+        upsertTalentPhotoMutate({
+          file: image,
+          bucket: 'talents_full_body_photos',
+        });
       },
     });
 
   const onUpdate = (data: TalentProfileSetupFormData) => {
-    updateTalentMutate({
-      id: talent?.id!,
-      data: {
-        hair_color: data.hairColour,
-        eye_color: data.eyeColour,
-        build: data.build,
-        height: data.height,
-        // facial_attributes: data.facialAttributes,
-        // tattoo_spots: data.tattooSpot,
-        // ethnicity: data.ethnicity,
-        // skin_tone: data.skinTone,
-        // is_pregnant: data.isPregnant,
-        // months: data.months,
-        additional_skills: data.additionalSkills,
-        // photo: data.photo?.uri,
-        // categories: data.categories,
-        // tags: data.tags,
+    updateTalentMutate(
+      {
+        id: talent?.id!,
+        data: {
+          hair_color: data.hairColour,
+          eye_color: data.eyeColour,
+          build: data.build,
+          height: data.height,
+          // facial_attributes: data.facialAttributes,
+          // tattoo_spots: data.tattooSpot,
+          // ethnicity: data.ethnicity,
+          // skin_tone: data.skinTone,
+          // is_pregnant: data.isPregnant,
+          // months: data.months,
+          additional_skills: data.additionalSkills,
+          // photo: data.photo?.uri,
+          // categories: data.categories,
+          // tags: data.tags,
+        },
       },
-    }, {
-      onSuccess,
-    });
-  }
+      {
+        onSuccess,
+      },
+    );
+  };
 
   useImperativeHandle(ref, () => ({
     onSubmit: handleSubmit(onUpdate),
   }));
 
   useEffect(() => {
-    onFormStateChange?.({ isUpdating: isUpdating });
-  }, [isUpdating]);
+    onFormStateChange?.({ isUpdating: isUpdating || isUploadingPhoto });
+  }, [isUpdating, isUploadingPhoto, onFormStateChange]);
 
-  
+  const userFullBodyPhoto = me?.talent?.avatar_full_path;
+
   return (
     <View style={styles.container}>
       <AppText color="black" typography="semibold_18" margin={{ bottom: 16 }}>
@@ -203,7 +231,10 @@ export const TalentProfileSetupForm = forwardRef<TalentProfileSetupFormRef, Tale
               measure="Ft"
               onRenderValue={values => {
                 const fractionalPart = Math.round((values.min % 1) * 10);
-                return`${Math.floor(values.min)} Foot ${fractionalPart ? `${fractionalPart} Inch` : ''}`}}
+                return `${Math.floor(values.min)} Foot ${
+                  fractionalPart ? `${fractionalPart} Inch` : ''
+                }`;
+              }}
               disableRange
             />
           )}
@@ -322,12 +353,15 @@ export const TalentProfileSetupForm = forwardRef<TalentProfileSetupFormRef, Tale
       />
 
       <View>
-        <TouchableOpacity activeOpacity={0.8} onPress={pickImage} style={styles.photoContainerWrapper}>
-          <ImageBackground
-            source={photo?.uri ? { uri: photo.uri } : IMAGES.userWithGrayBg}
-            style={styles.photoContainer}
-          >
-            <If condition={!photo?.uri}>
+        <AppImage
+          bucket="talents_full_body_photos"
+          imgPath={userFullBodyPhoto}
+          placeholderImage={IMAGES.userWithGrayBg}
+          containerStyle={styles.photoContainer}
+          showSkeleton={isUploadingPhoto}
+          onPress={pickImage}
+          CustomElements={
+            <If condition={!userFullBodyPhoto && !isUploadingPhoto}>
               <SvgXml
                 xml={ICONS.manScan()}
                 width={30}
@@ -338,8 +372,8 @@ export const TalentProfileSetupForm = forwardRef<TalentProfileSetupFormRef, Tale
                 <SvgXml xml={ICONS.camera('black')} width={15} height={15} />
               </View>
             </If>
-          </ImageBackground>
-        </TouchableOpacity>
+          }
+        />
 
         <If condition={!!errors.photo}>
           <AppText typography="medium_10" color="red" margin={{ top: 8 }}>

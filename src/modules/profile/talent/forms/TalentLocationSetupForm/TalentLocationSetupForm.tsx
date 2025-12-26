@@ -26,8 +26,18 @@ export const TalentLocationSetupForm = forwardRef<
   TalentLocationSetupFormProps
 >(({ onFormStateChange, onSuccess }, ref) => {
   const { data: me } = useGetMe();
+
+  const onUpsertLocationSuccess = async () => {
+    await queryClient.invalidateQueries({
+      queryKey: [TANSTACK_QUERY_KEYS.GET_ME],
+    });
+    onSuccess?.();
+  };
+
   const { mutate: upsertTalentLocationMutate, isPending: isUpsertingLocation } =
-    useUpsertTalentLocation();
+    useUpsertTalentLocation({
+      onSuccess: onUpsertLocationSuccess,
+    });
 
   const talentLocation = me?.talent?.talent_location;
 
@@ -53,38 +63,38 @@ export const TalentLocationSetupForm = forwardRef<
 
   const onFormReset = () => parsedLocation?.autocomplete_description && reset();
 
-  const createUpdateLocationHandler = useCallback(
+  const upsertLocationHandler = useCallback(
     (data: TalentLocationSetupFormData) => {
-      if (
+      const isNothingChanged =
         defaultValues?.parsed_location.place_id &&
         defaultValues?.parsed_location?.place_id ===
-          data.parsed_location.place_id
-      ) {
+          data.parsed_location.place_id;
+      if (isNothingChanged) {
         onSuccess?.();
         return;
       }
 
-      upsertTalentLocationMutate(
-        { location: { ...data.parsed_location, id: talentLocation?.id } },
-        {
-          onSuccess: () => {
-            queryClient.invalidateQueries({
-              queryKey: [TANSTACK_QUERY_KEYS.GET_ME],
-            });
-            onSuccess?.();
-          },
+      upsertTalentLocationMutate({
+        location: {
+          ...data.parsed_location,
+          id: talentLocation?.id,
         },
-      );
+      });
     },
-    [defaultValues, onSuccess, upsertTalentLocationMutate, talentLocation?.id],
+    [
+      defaultValues?.parsed_location.place_id,
+      onSuccess,
+      upsertTalentLocationMutate,
+      talentLocation?.id,
+    ],
   );
 
   useImperativeHandle(
     ref,
     () => ({
-      handleSubmit: handleSubmit(createUpdateLocationHandler),
+      handleSubmit: handleSubmit(upsertLocationHandler),
     }),
-    [handleSubmit, createUpdateLocationHandler],
+    [handleSubmit, upsertLocationHandler],
   );
 
   useEffect(() => {

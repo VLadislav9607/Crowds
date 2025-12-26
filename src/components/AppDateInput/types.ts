@@ -19,4 +19,5 @@ export interface AppDateInputProps {
   placeholderProps?: Partial<AppTextProps>;
   valueProps?: Partial<AppTextProps>;
   onChange?: (date: Date) => void;
+  maximumDate?: Date;
 }

@@ -1,6 +1,7 @@
 import { UseFormGetValues, UseFormHandleSubmit } from 'react-hook-form';
 import { ViewStyle } from 'react-native';
 import { z } from 'zod';
+import { REGEX } from '@constants';
 
 export interface CreatePasswordFormState {
   isValid: boolean;
@@ -8,9 +9,7 @@ export interface CreatePasswordFormState {
 
 export interface CreatePasswordFormProps {
   defaultValues?: CreatePasswordFormData;
-  uin?: string;
   containerStyle?: ViewStyle;
-  onGenerateUIN?: () => void;
   onFormStateChange?: (state: CreatePasswordFormState) => void;
 }
 
@@ -25,7 +24,7 @@ export const createPasswordSchema = z
       .string()
       .min(8, 'Password must be at least 8 characters')
       .regex(
-        /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)/,
+        REGEX.password,
         'Password must contain at least one uppercase letter, one lowercase letter, and one number',
       ),
     confirmPassword: z.string().min(1, 'Please confirm your password'),

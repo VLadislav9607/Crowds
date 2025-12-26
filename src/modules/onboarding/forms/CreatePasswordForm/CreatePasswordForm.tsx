@@ -30,8 +30,6 @@ export const CreatePasswordForm = forwardRef<
       } as Partial<CreatePasswordFormData>),
   });
 
-  console.log('CreatePasswordForm errors', errors);
-
   useEffect(() => {
     onFormStateChange?.({ isValid });
   }, [isValid, onFormStateChange]);
@@ -72,51 +70,6 @@ export const CreatePasswordForm = forwardRef<
           />
         )}
       />
-
-      {/* <If condition={!uin}>
-          <View style={styles.generateUINContainer}>
-            <AppText color="black_40" typography="regular_14">
-              Generate your unique identifier
-            </AppText>
-            <AppButton
-              title="Generate ID"
-              variant="primary"
-              size="37"
-              wrapperStyles={styles.generateIDButton}
-              onPress={onGenerateUIN}
-              isDisabled={!isValid}
-              titleStyles={styles.generateIDButtonTitle}
-            />
-          </View>
-        </If> */}
-
-      {/* <If condition={!!uin}>
-          <View>
-            <View style={styles.UINContainer}>
-              <AppText color="black" typography="medium_12">
-                Your unique identifier is:
-              </AppText>
-              <AppButton
-                title="123456789012"
-                variant="primary"
-                size="31"
-                wrapperStyles={styles.UINButton}
-                iconPlace="right"
-                iconSize={16}
-                icon={ICONS.copyIcon('white')}
-              />
-            </View>
-
-            <AppText color="main" typography="medium_12">
-              This is your Unique Identifier Number. Crowds Now does not store
-              any data, nor does it take your email or mobile. As a result in
-              the event you lose your password; we have NO WAY or giving you
-              back access to your account without your UIN (Unique Identifier
-              Number).  It is your responsibility to store it in a safe place.
-              Only ONE is issued per account per person.
-            </AppText>
-          </View>
-        </If> */}
     </View>
   );
 });

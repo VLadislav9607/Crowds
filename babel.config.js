@@ -24,7 +24,8 @@ module.exports = {
           "@modules/onboarding": "./src/modules/onboarding",
           "@modules/events": "./src/modules/events",
           "@actions": "./src/actions",
-          "@services":"./src/services"
+          "@services":"./src/services",
+          "@configs":"./src/configs"
         }
       }
     ],
