@@ -3,6 +3,7 @@ import { updateTalentAction } from './action';
 import { IMutationOptions, queryClient } from '@services';
 import { UpdateTalentRespDto } from './types';
 import { TANSTACK_QUERY_KEYS } from '@constants';
+import { showMutationErrorToast } from '@helpers';
 
 export const useUpdateTalent = (
   options?: IMutationOptions<UpdateTalentRespDto>,
@@ -16,5 +17,6 @@ export const useUpdateTalent = (
       });
       await options?.onSuccess?.(...args);
     },
+    onError: showMutationErrorToast,
   });
 };

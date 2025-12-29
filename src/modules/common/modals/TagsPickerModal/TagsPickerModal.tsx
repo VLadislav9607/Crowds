@@ -5,7 +5,6 @@ import { TagsPickerModalRef, TagsPickerModalProps } from './types';
 import { styles } from './styles';
 import { useEffect, useState, forwardRef } from 'react';
 import { useImperativeModal } from '@hooks';
-import { TagValue } from '@modules/profile';
 
 export const TagsPickerModal = forwardRef<TagsPickerModalRef>((_, ref) => {
   const { isVisible, refProps, close } =
@@ -15,14 +14,14 @@ export const TagsPickerModal = forwardRef<TagsPickerModalRef>((_, ref) => {
       },
     });
 
-  const [selectedTags, setSelectedTags] = useState<TagValue[]>(
+  const [selectedTags, setSelectedTags] = useState<string[]>(
     refProps?.defaultTags || [],
   );
 
   const tagOptions = refProps?.tagOptions || [];
   const isLoading = false;
 
-  const handleItemPress = (tagValue: TagValue) => {
+  const handleItemPress = (tagValue: string) => {
     if (selectedTags.includes(tagValue)) {
       setSelectedTags(prev => prev.filter(t => t !== tagValue));
     } else {

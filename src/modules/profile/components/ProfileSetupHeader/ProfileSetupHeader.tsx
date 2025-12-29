@@ -117,10 +117,12 @@ export const ProfileSetupHeader = ({
         </View>
 
         <AppText color="black" typography="regular_16" margin={{ bottom: 2 }}>
-          {capitalize(me?.talent?.gender)}, {calculateAge(me?.talent?.birth_date) || ''}
+          {capitalize(me?.talent?.gender)},{' '}
+          {calculateAge(me?.talent?.birth_date) || ''}
         </AppText>
         <AppText color="black_60" typography="regular_16">
-          VIC
+          {me?.talent?.talent_location?.country},{' '}
+          {me?.talent?.talent_location?.city || ''}
         </AppText>
       </View>
 

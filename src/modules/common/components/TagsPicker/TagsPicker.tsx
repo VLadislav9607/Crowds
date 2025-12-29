@@ -1,48 +1,84 @@
+import { useRef, useMemo, useEffect } from 'react';
 import { TouchableOpacity, View } from 'react-native';
-import { styles } from './styles';
+
 import { AppText } from '@ui';
-import { TagsPickerProps } from './types';
 import { If, Skeleton } from '@components';
+import { useGetEventsTags } from '@actions';
 import { TagsPickerModal, TagsPickerModalRef } from '@modules/common';
-import { useMemo, useRef } from 'react';
-import { getTagOptions, TagValue } from '@modules/profile';
+
+import { styles } from './styles';
+import { TagsPickerProps } from './types';
 
 export const TagsPicker = ({
-  selectedCategories,
+  selectedSubcategoryIds,
   selectedTags = [],
   containerStyle,
   onTagsChange,
   onTagPress,
-  categoriesContainerStyle,
+  tagsContainerStyle,
 }: TagsPickerProps) => {
   const tagsPickerModalRef = useRef<TagsPickerModalRef>(null);
 
-  const tagOptions = useMemo(
-    () => getTagOptions(selectedCategories),
-    [selectedCategories],
-  );
+  const { data, isLoading } = useGetEventsTags(selectedSubcategoryIds);
+  const tags = useMemo(() => data?.tags ?? [], [data?.tags]);
+
+  const tagOptions = useMemo(() => {
+    return tags.map(tag => ({
+      label: tag.title,
+      value: tag.id,
+    }));
+  }, [tags]);
 
   const visibleTags = tagOptions.slice(0, 8);
   const hasMoreTags = tagOptions.length > 8;
 
-  const handleItemPress = (tagValue: TagValue) => {
-    onTagPress?.(tagValue);
+  const handleItemPress = (tagId: string) => {
+    onTagPress?.(tagId);
 
     if (onTagsChange) {
-      if (selectedTags.includes(tagValue)) {
-        const filteredValues = selectedTags.filter(v => v !== tagValue);
+      if (selectedTags.includes(tagId)) {
+        const filteredValues = selectedTags.filter(v => v !== tagId);
         onTagsChange(filteredValues);
       } else {
-        const newValues = [...selectedTags, tagValue];
+        const newValues = [...selectedTags, tagId];
         onTagsChange(newValues);
       }
     }
   };
 
-  const isLoading = false;
-  const hasTags = tagOptions.length > 0;
+  // Auto-cleanup invalid tags when subcategories change
+  useEffect(() => {
+    if (tags.length === 0) return;
 
-  if (!hasTags) {
+    const validIds = new Set(tags.map(t => t.id));
+    const validSelectedTags = selectedTags.filter(id => validIds.has(id));
+
+    if (validSelectedTags.length !== selectedTags.length && onTagsChange) {
+      onTagsChange(validSelectedTags);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [tags]);
+
+  if (selectedSubcategoryIds.length === 0) {
+    return null;
+  }
+
+  const renderSkeleton = () => (
+    <Skeleton>
+      <View style={styles.skeletonContainer}>
+        {Array.from({ length: 6 }).map((_, index) => (
+          <Skeleton.Item
+            key={index}
+            width={70 + Math.random() * 40}
+            height={30}
+            borderRadius={100}
+          />
+        ))}
+      </View>
+    </Skeleton>
+  );
+
+  if (!isLoading && tagOptions.length === 0) {
     return null;
   }
 
@@ -50,7 +86,7 @@ export const TagsPicker = ({
     <View style={[styles.container, containerStyle]}>
       <View style={styles.headerContainer}>
         <AppText typography="semibold_18">Tags</AppText>
-        <If condition={hasMoreTags}>
+        <If condition={hasMoreTags && !isLoading}>
           <TouchableOpacity
             onPress={() =>
               tagsPickerModalRef.current?.open({
@@ -61,17 +97,17 @@ export const TagsPicker = ({
             }
             hitSlop={{ top: 10, bottom: 10, left: 10, right: 10 }}
           >
-            <If condition={!isLoading}>
-              <AppText typography="bold_14" color="main">
-                View More
-              </AppText>
-            </If>
+            <AppText typography="bold_14" color="main">
+              View More
+            </AppText>
           </TouchableOpacity>
         </If>
       </View>
 
-      <If condition={!isLoading}>
-        <View style={[styles.categoriesContainer, categoriesContainerStyle]}>
+      {isLoading ? (
+        renderSkeleton()
+      ) : (
+        <View style={[styles.categoriesContainer, tagsContainerStyle]}>
           {visibleTags.map(tag => {
             const isSelected = selectedTags.includes(tag.value);
             return (
@@ -91,23 +127,7 @@ export const TagsPicker = ({
             );
           })}
         </View>
-      </If>
-
-      <If condition={isLoading}>
-        <Skeleton>
-          <Skeleton.Item style={styles.skeletonContainer}>
-            <Skeleton.Item width={100} height={30} borderRadius={100} />
-            <Skeleton.Item width={80} height={30} borderRadius={100} />
-            <Skeleton.Item width={93} height={30} borderRadius={100} />
-            <Skeleton.Item width={97} height={30} borderRadius={100} />
-            <Skeleton.Item width={79} height={30} borderRadius={100} />
-            <Skeleton.Item width={82} height={30} borderRadius={100} />
-            <Skeleton.Item width={80} height={30} borderRadius={100} />
-            <Skeleton.Item width={93} height={30} borderRadius={100} />
-            <Skeleton.Item width={97} height={30} borderRadius={100} />
-          </Skeleton.Item>
-        </Skeleton>
-      </If>
+      )}
 
       <TagsPickerModal ref={tagsPickerModalRef} />
     </View>

@@ -1,6 +1,6 @@
 import { View, Image } from 'react-native';
 
-import { If } from '@components';
+import { AppImage, If } from '@components';
 import { COLORS } from '@styles';
 
 import { AppText } from '../AppText';
@@ -22,7 +22,15 @@ const getInitials = (name?: string): string => {
     .toUpperCase();
 };
 
-export const Avatar = ({ size = 40, uri, name, flag, style }: IAvatarProps) => {
+export const Avatar = ({
+  size = 40,
+  uri,
+  imgPath,
+  bucket,
+  name,
+  flag,
+  style,
+}: IAvatarProps) => {
   const sizeStyle = {
     width: size,
     height: size,
@@ -31,18 +39,34 @@ export const Avatar = ({ size = 40, uri, name, flag, style }: IAvatarProps) => {
 
   const flagSize = AVATAR_FLAG_SIZE[size];
 
+  const hasImage = !!uri || (!!imgPath && !!bucket);
+
   return (
     <View style={[styles.avatar, sizeStyle, style]}>
-      <If condition={!!uri}>
+      {/* AppImage with bucket path */}
+      <If condition={!!imgPath && !!bucket}>
+        <AppImage
+          bucket={bucket!}
+          imgPath={imgPath}
+          containerStyle={[styles.image, { borderRadius: size / 2 }]}
+        />
+      </If>
+
+      {/* Legacy direct URI */}
+      <If condition={!!uri && !imgPath}>
         <Image source={{ uri }} style={styles.image} />
       </If>
-      <If condition={!uri}>
+
+      {/* Placeholder with initials */}
+      <If condition={!hasImage}>
         <View style={[styles.placeholder, sizeStyle]}>
           <AppText typography={AVATAR_TYPOGRAPHY[size]} style={styles.initials}>
             {getInitials(name)}
           </AppText>
         </View>
       </If>
+
+      {/* Flag indicator */}
       <If condition={!!flag}>
         <View
           style={[

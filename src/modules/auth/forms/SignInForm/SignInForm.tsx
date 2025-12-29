@@ -29,11 +29,7 @@ export const SignInForm = forwardRef<SignInFormRef, SignInFormProps>(
           refresh_token: data.session.refresh_token,
         });
 
-        const sessionResponse = await supabase.auth.getSession();
-        const session = sessionResponse.data.session;
-        if (session) {
-          await onNavigateAfterAuth(session);
-        }
+        await onNavigateAfterAuth();
       },
       onError: showMutationErrorToast,
     });
