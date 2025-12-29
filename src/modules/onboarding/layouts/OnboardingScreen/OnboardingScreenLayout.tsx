@@ -3,6 +3,7 @@ import { StyleSheet, View } from 'react-native';
 import { ScreenWithScrollWrapper } from '@components';
 import { AppText, IAppHeaderProps } from '@ui';
 import { COLORS, TYPOGRAPHY } from '@styles';
+import { useKeyboard } from '@hooks';
 
 import { ForwardBackArrows, IForwardBackArrowsProps } from '../../components';
 
@@ -40,7 +41,8 @@ export const OnboardingScreenLayout = ({
   animatedScrollHandler,
   useAnimatedScrollView = false,
 }: IOnboardingScreenLayoutProps) => {
-  console.log('currentStep', currentStep);
+  const { isKeyboardVisible } = useKeyboard();
+
   if (currentStep === null) return null;
 
   return (
@@ -51,12 +53,14 @@ export const OnboardingScreenLayout = ({
       colorHeader="main"
       useAnimatedScrollView={useAnimatedScrollView}
       animatedScrollHandler={animatedScrollHandler}
+      resetKeyboardOffset={true}
       footer={
         <ForwardBackArrows
           steps={stepsCount}
           currentStep={currentStep}
           onBackPress={onBackPress}
           onForwardPress={onForwardPress}
+          hideDots={isKeyboardVisible}
           {...footerProps}
         />
       }

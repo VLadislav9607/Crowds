@@ -18,7 +18,7 @@ export const TagsSection = () => {
         name="tags"
         render={({ field }) => (
           <TagsPicker
-            categoriesContainerStyle={styles.tagsPicker}
+            tagsContainerStyle={styles.tagsPicker}
             selectedTags={field.value}
             onTagsChange={field.onChange}
           />

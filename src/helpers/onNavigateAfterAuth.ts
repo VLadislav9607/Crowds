@@ -1,27 +1,26 @@
-import { TANSTACK_QUERY_KEYS } from '@constants';
 import { goToScreen, Screens } from '@navigation';
 import { prefetchUseGetMe } from '@actions';
-import { queryClient } from '@services';
-import { Session } from '@supabase/supabase-js';
-import { UseGetMeResDto } from '@actions';
+import { fetchUserKycStatus } from '@modules/kyc';
 
-export const onNavigateAfterAuth = async (session: Session) => {
-  await prefetchUseGetMe();
-  const resp = queryClient.getQueryData<UseGetMeResDto>([
-    TANSTACK_QUERY_KEYS.GET_ME,
-  ]);
-  if (session?.user?.app_metadata?.isTalent) {
-    const lastCompletedStep = resp?.talent?.onboarding_copleted_step || 0;
+export const onNavigateAfterAuth = async () => {
+  const myData = await prefetchUseGetMe();
+
+  const { isTalent, isOrganizationMember, talent, me } = myData;
+
+  if (isTalent) {
+    const lastCompletedStep = talent?.onboarding_copleted_step || 0;
     goToScreen(
       lastCompletedStep < 4 ? Screens.OnboardingAuthTalent : Screens.BottomTabs,
     );
-  } else if (session?.user?.app_metadata?.isOrganizationMember) {
-    const lastCompletedStep =
-      resp?.organizationMember?.onboarding_copleted_step || 0;
-    goToScreen(
-      lastCompletedStep < 1
-        ? Screens.OnboardingAuthOrganization
-        : Screens.BottomTabs,
-    );
+  } else if (isOrganizationMember) {
+    const kycData = await fetchUserKycStatus(me?.id || '');
+    const isVerified = kycData?.status === 'completed';
+
+    if (!isVerified) {
+      goToScreen(Screens.OrgIdentityVerification);
+      return;
+    }
+
+    goToScreen(Screens.BottomTabs);
   }
 };

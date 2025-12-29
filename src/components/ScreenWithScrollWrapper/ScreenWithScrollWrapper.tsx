@@ -21,6 +21,7 @@ export const ScreenWithScrollWrapper = ({
   contentContainerStyle,
   showsVerticalScrollIndicator = false,
   showLoader = false,
+  resetKeyboardOffset = false,
   onScroll,
   animatedScrollHandler,
   useAnimatedScrollView = false,
@@ -55,11 +56,16 @@ export const ScreenWithScrollWrapper = ({
       style={styles.wrapper}
       behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
       enabled={keyboardAvoidingEnabled}
+      keyboardVerticalOffset={
+        Platform.OS === 'ios' ? (resetKeyboardOffset ? -bottom : 0) : 0
+      }
     >
       {headerProps.headerVariant && <AppHeader {...headerProps} />}
-      {showLoader && <View style={styles.footerContainer}>
-        <ActivityIndicator size="large" color={COLORS.white} />
-      </View>}
+      {showLoader && (
+        <View style={styles.footerContainer}>
+          <ActivityIndicator size="large" color={COLORS.white} />
+        </View>
+      )}
       <ScrollViewComponent
         style={styles.scrollView}
         contentContainerStyle={[
@@ -70,18 +76,13 @@ export const ScreenWithScrollWrapper = ({
         showsVerticalScrollIndicator={showsVerticalScrollIndicator}
         {...scrollProps}
         keyboardShouldPersistTaps="handled"
-
       >
-
         {children}
 
         {!isFloatFooter && footer && FooterComponent}
       </ScrollViewComponent>
 
-
-
       {isFloatFooter && footer && FooterComponent}
-
     </KeyboardAvoidingView>
   );
 };

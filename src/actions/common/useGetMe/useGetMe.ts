@@ -29,5 +29,9 @@ export const prefetchUseGetMe = async () => {
   return {
     data,
     me: data?.isTalent ? data.talent : data?.organizationMember,
+    isTalent: data?.isTalent,
+    isOrganizationMember: data?.isOrganizationMember,
+    talent: data?.talent,
+    organizationMember: data?.organizationMember,
   };
 };

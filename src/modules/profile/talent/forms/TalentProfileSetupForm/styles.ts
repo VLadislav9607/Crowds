@@ -27,8 +27,11 @@ export const styles = StyleSheet.create({
   categoriesPicker: {
     marginTop: 32,
   },
+  subcategoriesPicker: {
+    marginTop: 24,
+  },
   tagsPicker: {
-    marginTop: 32,
+    marginTop: 24,
   },
   manScan: {
     position: 'absolute',
