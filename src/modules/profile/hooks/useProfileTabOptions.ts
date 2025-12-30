@@ -1,7 +1,7 @@
 import { ICONS } from '@assets';
 import { goToScreen, Screens } from '@navigation';
-import { Role } from '@modules/common';
 import { ColorsKeys } from '@styles';
+import { useGetMe } from '@actions';
 
 interface ProfileOption {
   title: string;
@@ -17,7 +17,7 @@ interface UseProfileTabOptionsProps {
 export const useProfileTabOptions = ({
   onLogout,
 }: UseProfileTabOptionsProps) => {
-  const role = Role.TALENT;
+  const { isTalent } = useGetMe();
 
   const talentOptions: ProfileOption[] = [
     {
@@ -28,8 +28,7 @@ export const useProfileTabOptions = ({
     {
       title: 'Notification settings',
       icon: ICONS.notification(),
-      onPress: () =>
-        goToScreen(Screens.NotificationSettings, { role: Role.TALENT }),
+      onPress: () => goToScreen(Screens.NotificationSettings),
     },
     {
       title: 'Bank account details',
@@ -49,7 +48,7 @@ export const useProfileTabOptions = ({
     {
       title: 'Update my availability',
       icon: ICONS.calendarIcon(),
-      onPress: () => {},
+      onPress: () => goToScreen(Screens.AvailabilitySetup),
     },
     {
       title: 'Terms and conditions',
@@ -78,8 +77,7 @@ export const useProfileTabOptions = ({
     {
       title: 'Notification settings',
       icon: ICONS.notification(),
-      onPress: () =>
-        goToScreen(Screens.NotificationSettings, { role: Role.ORGANIZATION }),
+      onPress: () => goToScreen(Screens.NotificationSettings),
     },
     {
       title: 'Organization details',
@@ -124,5 +122,5 @@ export const useProfileTabOptions = ({
     },
   ];
 
-  return role === Role.TALENT ? talentOptions : organizationOptions;
+  return isTalent ? talentOptions : organizationOptions;
 };

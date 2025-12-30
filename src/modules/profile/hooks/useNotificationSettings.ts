@@ -1,6 +1,5 @@
 import { useState, useMemo } from 'react';
-
-import { Role } from '@modules/common';
+import { useGetMe } from '@actions';
 
 import {
   TALENT_NOTIFICATION_OPTIONS,
@@ -8,15 +7,13 @@ import {
   TALENT_DEFAULT_SETTINGS,
   ORG_DEFAULT_SETTINGS,
 } from '../screens/NotificationSettings/constants';
-import { Screens, useScreenNavigation } from '@navigation';
 
 type TalentSettings = typeof TALENT_DEFAULT_SETTINGS;
 type OrgSettings = typeof ORG_DEFAULT_SETTINGS;
 type Settings = TalentSettings | OrgSettings;
 
 export const useNotificationSettings = () => {
-  const { params } = useScreenNavigation<Screens.NotificationSettings>();
-  const isTalent = params?.role === Role.TALENT;
+  const { isTalent } = useGetMe();
 
   const notificationOptions = isTalent
     ? TALENT_NOTIFICATION_OPTIONS

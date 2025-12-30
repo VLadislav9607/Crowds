@@ -141,7 +141,7 @@ export const PhysicalDetailsSection = ({
             }}
             options={facialAttributesOptions}
             enableAutoClose={false}
-            selectedValues={field.value}
+            selectedValues={field.value || []}
             onSelectedOptionsChange={item =>
               field.onChange(item.map(o => o.value))
             }
@@ -164,7 +164,7 @@ export const PhysicalDetailsSection = ({
             }}
             options={tattooSpotOptions}
             enableAutoClose={false}
-            selectedValues={field.value}
+            selectedValues={field.value || []}
             onSelectedOptionsChange={item =>
               field.onChange(item.map(o => o.value))
             }
@@ -204,7 +204,7 @@ export const PhysicalDetailsSection = ({
         )}
       />
 
-      <If condition={!isFemale}>
+      <If condition={!!isFemale}>
         <Controller
           control={control}
           name="isPregnant"
