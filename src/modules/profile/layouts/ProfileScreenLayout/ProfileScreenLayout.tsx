@@ -16,8 +16,6 @@ interface ProfileScreenLayoutProps {
 export const ProfileScreenLayout = ({ children }: ProfileScreenLayoutProps) => {
   const { me, isTalent } = useGetMe();
 
-  console.log('me', me);
-
   return (
     <ScreenWithScrollWrapper
       title={isTalent ? undefined : 'Profile'}

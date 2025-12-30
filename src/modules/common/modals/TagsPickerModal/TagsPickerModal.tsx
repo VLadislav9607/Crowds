@@ -61,7 +61,10 @@ export const TagsPickerModal = forwardRef<TagsPickerModalRef>((_, ref) => {
         </View>
 
         <If condition={!isLoading}>
-          <ScrollView contentContainerStyle={styles.categoriesContainer}>
+          <ScrollView
+            contentContainerStyle={styles.categoriesContainer}
+            showsVerticalScrollIndicator={false}
+          >
             {tagOptions.map(tag => {
               const isSelected = selectedTags.includes(tag.value);
               return (

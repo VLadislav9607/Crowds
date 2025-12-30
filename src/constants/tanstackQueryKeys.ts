@@ -7,4 +7,5 @@ export const TANSTACK_QUERY_KEYS = {
   PLACES_AUTOCOMPLETE: 'places_autocomplete',
   PLACE_DETAILS: 'place_details',
   GET_FILE_URL: 'get_file_url',
+  GET_USER_AVAILABILITY: 'get_user_availability',
 } as const;
