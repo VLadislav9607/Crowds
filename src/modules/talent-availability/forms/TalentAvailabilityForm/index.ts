@@ -1,2 +1,3 @@
-export * from './TravelingForm';
 export * from './TalentAvailabilityForm';
+export * from './types';
+

@@ -4,6 +4,7 @@ import {
   TalentProfileSetupFormRef,
   TalentStripeSetupRef,
 } from '@modules/profile';
+import { TalentAvailabilityFormRef } from '@modules/talent-availability';
 import { useUpdateTalent } from '@actions';
 import { useGetMe } from '@actions';
 import { LogoutModalRef } from '../../../../profile/modals';
@@ -22,6 +23,7 @@ export const useOnboardingAuthTalentScreen = () => {
   const talentLocationSetupFormRef = useRef<TalentLocationSetupFormRef>(null);
   const profileIdentityVerificationRef = useRef<IdentityVerificationRef>(null);
   const talentStripeSetupRef = useRef<TalentStripeSetupRef>(null);
+  const talentAvailabilityFormRef = useRef<TalentAvailabilityFormRef>(null);
   const talentProfileSetupFormRef = useRef<TalentProfileSetupFormRef>(null);
   const [showFullScreenLoader, setShowFullScreenLoader] = useState(false);
 
@@ -35,18 +37,23 @@ export const useOnboardingAuthTalentScreen = () => {
       setTimeout(() => setShowFullScreenLoader(false), 1000);
     }
     step === 2 && talentStripeSetupRef.current?.onSetup();
-    step === 3 && talentProfileSetupFormRef.current?.onSubmit();
+    step === 3 && setStep(4); // Availability info -> Availability form
+    step === 4 && talentAvailabilityFormRef.current?.onSubmit();
+    step === 5 && talentProfileSetupFormRef.current?.onSubmit();
   };
 
   useEffect(() => {
     if (isLoadingKyc) return;
-    if (!me?.talent?.onboarding_copleted_step) return setStep(0);
 
-    if (!isVerified) return setStep(1);
+    const completedStep = me?.talent?.onboarding_copleted_step ?? 0;
 
-    if (isVerified) return setStep(2);
+    // Not verified yet - go to verification step
+    if (!isVerified) {
+      return setStep(Math.min(completedStep, 1));
+    }
 
-    setStep(me?.talent?.onboarding_copleted_step);
+    // Verified - continue from where user left off, minimum step 2 (Stripe)
+    setStep(Math.max(completedStep, 2));
   }, [isVerified, me?.talent?.onboarding_copleted_step, isLoadingKyc]);
 
   const onLocationSetupSuccess = () => {
@@ -71,13 +78,24 @@ export const useOnboardingAuthTalentScreen = () => {
       });
   };
 
+  const onAvailabilitySetupSuccess = () => {
+    if (step === null) return;
+    setStep(step + 1);
+    setShowFullScreenLoader(false);
+    step < 5 &&
+      updateTalentMutate({
+        id: me?.talent?.id!,
+        data: { onboarding_copleted_step: 5 },
+      });
+  };
+
   const onProfileSetupSuccess = () => {
     if (step === null) return;
     setShowFullScreenLoader(false);
-    step < 4 &&
+    step < 6 &&
       updateTalentMutate({
         id: me?.talent?.id!,
-        data: { onboarding_copleted_step: 4 },
+        data: { onboarding_copleted_step: 6 },
       });
     goToScreen(Screens.BottomTabs);
   };
@@ -96,6 +114,7 @@ export const useOnboardingAuthTalentScreen = () => {
     logoutModalRef,
     talentLocationSetupFormRef,
     talentStripeSetupRef,
+    talentAvailabilityFormRef,
     step,
     showFullScreenLoader: showFullScreenLoader || isLoading,
     profileIdentityVerificationRef,
@@ -105,6 +124,7 @@ export const useOnboardingAuthTalentScreen = () => {
     goToNextStep,
     goToPreviousStep,
     onStripeSetupSuccess,
+    onAvailabilitySetupSuccess,
     onProfileSetupSuccess,
     isVerified,
   };

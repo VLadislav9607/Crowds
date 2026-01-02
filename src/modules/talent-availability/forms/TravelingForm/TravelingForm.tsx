@@ -21,8 +21,6 @@ export const TravelingForm = ({
   const tripAvailability = watch('tripAvailability');
   const travelDays = watch('travelDays');
 
-  console.log('errors', errors);
-
   const handleStartDateChange = (date: Date) => {
     setValue('startDate', date);
     setValue('travelDays', generateTravelDays(date, endDate));
