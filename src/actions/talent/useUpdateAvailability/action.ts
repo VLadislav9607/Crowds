@@ -15,6 +15,5 @@ export const updateAvailabilityAction = async (
     p_travel_days: body.travelDays,
   });
 
-  console.log('error', error);
   if (error) throw error;
 };

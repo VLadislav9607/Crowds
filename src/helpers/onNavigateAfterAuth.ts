@@ -9,8 +9,9 @@ export const onNavigateAfterAuth = async () => {
 
   if (isTalent) {
     const lastCompletedStep = talent?.onboarding_copleted_step || 0;
+    // Step 6 is the final completed step (after profile setup)
     goToScreen(
-      lastCompletedStep < 4 ? Screens.OnboardingAuthTalent : Screens.BottomTabs,
+      lastCompletedStep < 6 ? Screens.OnboardingAuthTalent : Screens.BottomTabs,
     );
   } else if (isOrganizationMember) {
     const kycData = await fetchUserKycStatus(me?.id || '');
