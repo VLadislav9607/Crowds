@@ -31,6 +31,7 @@ export const VerificationPersonScreen = () => {
     userId: params?.userId || '',
     enabled: !!params?.userId,
     onStatusChange: status => {
+      console.log('status', status);
       if (status === 'completed') {
         handleVerificationSuccess();
       }

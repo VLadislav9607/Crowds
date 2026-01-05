@@ -13,6 +13,9 @@ export const styles = StyleSheet.create({
     borderBottomLeftRadius: 20,
     borderBottomRightRadius: 20,
   },
+  locationInput: {
+    paddingBottom: 18,
+  },
   dateRow: {
     flexDirection: 'row',
     alignItems: 'center',
@@ -20,6 +23,9 @@ export const styles = StyleSheet.create({
   },
   dateInput: {
     flex: 1,
+  },
+  dateField: {
+    paddingBottom: 12,
   },
   divider: {
     height: 1,

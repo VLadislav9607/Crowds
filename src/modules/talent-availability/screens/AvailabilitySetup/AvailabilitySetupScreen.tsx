@@ -1,6 +1,8 @@
-import { View, StyleSheet } from 'react-native';
+import { View, StyleSheet, ActivityIndicator } from 'react-native';
 
 import { If, ScreenWithScrollWrapper } from '@components';
+import { AppButton } from '@ui';
+import { goBack } from '@navigation';
 
 import {
   AvailabilitySelector,
@@ -11,9 +13,37 @@ import {
 import { TravelingForm } from '../../forms';
 import { useAvailabilitySetupForm } from '../../hooks';
 import { AvailabilityType } from '../../types';
+import { showSuccessToast } from '@helpers';
 
 export const AvailabilitySetupScreen = () => {
-  const { watch, setValue } = useAvailabilitySetupForm();
+  const {
+    watch,
+    setValue,
+    errors,
+    isValid,
+    isLoading,
+    isSubmitting,
+    onSubmit,
+  } = useAvailabilitySetupForm({
+    onSuccess: () => {
+      showSuccessToast('Availability updated successfully');
+      goBack();
+    },
+  });
+
+  if (isLoading) {
+    return (
+      <ScreenWithScrollWrapper
+        title="Set up availability"
+        headerVariant="withTitle"
+        colorHeader="black"
+      >
+        <View style={styles.loaderContainer}>
+          <ActivityIndicator size="large" />
+        </View>
+      </ScreenWithScrollWrapper>
+    );
+  }
 
   const availability = watch('availability');
   const selectedDays = watch('selectedDays');
@@ -25,6 +55,16 @@ export const AvailabilitySetupScreen = () => {
       title="Set up availability"
       headerVariant="withTitle"
       colorHeader="black"
+      footer={
+        <View style={styles.footer}>
+          <AppButton
+            title="Save"
+            onPress={onSubmit}
+            isDisabled={!isValid}
+            isLoading={isSubmitting}
+          />
+        </View>
+      }
     >
       <View style={styles.container}>
         <AvailabilitySelector
@@ -38,6 +78,7 @@ export const AvailabilitySetupScreen = () => {
             daySchedules={daySchedules}
             onChange={days => setValue('selectedDays', days)}
             onSchedulesChange={schedules => setValue('daySchedules', schedules)}
+            errorMessage={errors.selectedDays?.message}
           />
 
           <If condition={daySchedules.length > 0}>
@@ -55,7 +96,7 @@ export const AvailabilitySetupScreen = () => {
         />
 
         <If condition={isTraveling}>
-          <TravelingForm watch={watch} setValue={setValue} />
+          <TravelingForm watch={watch} setValue={setValue} errors={errors} />
         </If>
       </View>
     </ScreenWithScrollWrapper>
@@ -67,5 +108,14 @@ const styles = StyleSheet.create({
     paddingHorizontal: 20,
     paddingTop: 24,
     gap: 18,
+  },
+  footer: {
+    paddingHorizontal: 20,
+    paddingBottom: 16,
+  },
+  loaderContainer: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
   },
 });

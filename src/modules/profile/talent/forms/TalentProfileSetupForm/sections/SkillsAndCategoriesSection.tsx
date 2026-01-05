@@ -1,8 +1,11 @@
 import { Control, Controller, useWatch } from 'react-hook-form';
 import { AppTextarea } from '@ui';
 import { If } from '@components';
-import { CategoriesPicker, TagsPicker } from '@modules/common';
-import { Category, filterTagsByCategories, TagValue } from '@modules/profile';
+import {
+  CategoriesPicker,
+  SubcategoriesPicker,
+  TagsPicker,
+} from '@modules/common';
 
 import { TalentProfileSetupFormData } from '../types';
 import { styles } from '../styles';
@@ -15,6 +18,7 @@ export const SkillsAndCategoriesSection = ({
   control,
 }: SkillsAndCategoriesSectionProps) => {
   const categories = useWatch({ control, name: 'categories' }) || [];
+  const subcategories = useWatch({ control, name: 'subcategories' }) || [];
 
   return (
     <>
@@ -39,7 +43,7 @@ export const SkillsAndCategoriesSection = ({
         render={({ field }) => (
           <CategoriesPicker
             selectedCategories={field.value}
-            onCategoriesChange={item => field.onChange(item)}
+            onCategoriesChange={field.onChange}
             containerStyle={styles.categoriesPicker}
           />
         )}
@@ -48,18 +52,27 @@ export const SkillsAndCategoriesSection = ({
       <If condition={categories.length > 0}>
         <Controller
           control={control}
+          name="subcategories"
+          render={({ field }) => (
+            <SubcategoriesPicker
+              selectedCategoryIds={categories}
+              selectedSubcategories={field.value}
+              onSubcategoriesChange={field.onChange}
+              containerStyle={styles.subcategoriesPicker}
+            />
+          )}
+        />
+      </If>
+
+      <If condition={subcategories.length > 0}>
+        <Controller
+          control={control}
           name="tags"
           render={({ field }) => (
             <TagsPicker
-              selectedCategories={categories as Category[]}
-              selectedTags={field.value as TagValue[]}
-              onTagsChange={newTags => {
-                const validTags = filterTagsByCategories(
-                  newTags,
-                  categories as Category[],
-                );
-                field.onChange(validTags);
-              }}
+              selectedSubcategoryIds={subcategories}
+              selectedTags={field.value}
+              onTagsChange={field.onChange}
               containerStyle={styles.tagsPicker}
             />
           )}

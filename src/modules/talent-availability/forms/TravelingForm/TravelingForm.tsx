@@ -1,6 +1,6 @@
 import { View } from 'react-native';
 
-import { AppInput } from '@ui';
+import { AppInput, AppText } from '@ui';
 import { AppDateInput, If } from '@components';
 import { ICONS } from '@assets';
 
@@ -10,7 +10,11 @@ import { styles } from './styles';
 import { ITravelingFormProps } from './types';
 import { generateTravelDays } from './helpers';
 
-export const TravelingForm = ({ watch, setValue }: ITravelingFormProps) => {
+export const TravelingForm = ({
+  watch,
+  setValue,
+  errors,
+}: ITravelingFormProps) => {
   const location = watch('location');
   const startDate = watch('startDate');
   const endDate = watch('endDate');
@@ -32,14 +36,15 @@ export const TravelingForm = ({ watch, setValue }: ITravelingFormProps) => {
       <AppInput
         placeholder="Where are you going?"
         value={location}
-        style={{ paddingBottom: 18 }}
+        containerStyle={styles.locationInput}
         onChangeText={value => setValue('location', value)}
+        errorMessage={errors?.location?.message}
       />
 
       <View style={styles.dateRow}>
         <View style={styles.dateInput}>
           <AppDateInput
-            fieldStyle={{ paddingBottom: 12 }}
+            fieldStyle={styles.dateField}
             placeholder="From"
             customIcon={ICONS.clockV2('black')}
             defaultIconPosition="right"
@@ -49,7 +54,7 @@ export const TravelingForm = ({ watch, setValue }: ITravelingFormProps) => {
         </View>
         <View style={styles.dateInput}>
           <AppDateInput
-            fieldStyle={{ paddingBottom: 12 }}
+            fieldStyle={styles.dateField}
             placeholder="To"
             defaultIconPosition="right"
             customIcon={ICONS.clockV2('black')}
@@ -58,6 +63,12 @@ export const TravelingForm = ({ watch, setValue }: ITravelingFormProps) => {
           />
         </View>
       </View>
+
+      <If condition={!!errors?.startDate?.message}>
+        <AppText typography="medium_10" color="red" margin={{ top: -8 }}>
+          {errors?.startDate?.message}
+        </AppText>
+      </If>
 
       <If condition={travelDays.length > 0}>
         <View style={styles.divider} />

@@ -1,4 +1,10 @@
-import { View, StyleSheet, TouchableOpacity, StyleProp, ViewStyle } from 'react-native';
+import {
+  View,
+  StyleSheet,
+  TouchableOpacity,
+  StyleProp,
+  ViewStyle,
+} from 'react-native';
 import { SvgXml } from 'react-native-svg';
 
 import { ICONS } from '@assets';
@@ -11,6 +17,7 @@ export interface IForwardBackArrowsProps {
   disabledBack?: boolean;
   disabledForward?: boolean;
   hideBack?: boolean;
+  hideDots?: boolean;
   containerStyle?: StyleProp<ViewStyle>;
   ForwardButton?: React.ReactNode;
   onBackPress: () => void;
@@ -23,6 +30,7 @@ export const ForwardBackArrows = ({
   disabledBack,
   disabledForward,
   hideBack,
+  hideDots,
   containerStyle,
   ForwardButton,
   onBackPress,
@@ -54,7 +62,7 @@ export const ForwardBackArrows = ({
         </If>
       </View>
 
-      <If condition={!!steps}>
+      <If condition={!!steps && !hideDots}>
         <View style={styles.dotsContainer}>
           {Array.from({ length: steps || 0 }).map((_, index) => (
             <View key={index} style={styles.dotWrapper}>
@@ -75,7 +83,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
     marginTop: 'auto',
-    paddingBottom: 16,
+    paddingVertical: 16,
   },
   circle: {
     width: 50,

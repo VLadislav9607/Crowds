@@ -1,8 +1,9 @@
 import { TouchableOpacity, View } from 'react-native';
 import { styles } from './styles';
 import { AppText } from '@ui';
+import { Skeleton } from '@components';
 import { CategoriesPickerProps } from './types';
-import { Category, categoryOptions } from '@modules/profile';
+import { useGetEventsCategories } from '@actions';
 
 export const CategoriesPicker = ({
   selectedCategories = [],
@@ -10,46 +11,66 @@ export const CategoriesPicker = ({
   onCategoriesChange,
   onCategoryPress,
 }: CategoriesPickerProps) => {
-  const handleItemPress = (categoryValue: Category) => {
-    onCategoryPress?.(categoryValue);
+  const { data, isLoading } = useGetEventsCategories();
+  const categories = data?.categories ?? [];
+
+  const handleItemPress = (categoryId: string) => {
+    onCategoryPress?.(categoryId);
 
     if (onCategoriesChange) {
-      if (selectedCategories.includes(categoryValue)) {
-        const filteredValues = selectedCategories.filter(
-          v => v !== categoryValue,
-        );
+      if (selectedCategories.includes(categoryId)) {
+        const filteredValues = selectedCategories.filter(v => v !== categoryId);
         onCategoriesChange(filteredValues);
       } else {
-        const newValues = [...selectedCategories, categoryValue];
+        const newValues = [...selectedCategories, categoryId];
         onCategoriesChange(newValues);
       }
     }
   };
 
+  const renderSkeleton = () => (
+    <Skeleton>
+      <View style={styles.categoriesContainer}>
+        {Array.from({ length: 8 }).map((_, index) => (
+          <Skeleton.Item
+            key={index}
+            width={80 + Math.random() * 40}
+            height={30}
+            borderRadius={100}
+          />
+        ))}
+      </View>
+    </Skeleton>
+  );
+
   return (
     <View style={[styles.container, containerStyle]}>
       <AppText typography="semibold_18">Categories</AppText>
 
-      <View style={styles.categoriesContainer}>
-        {categoryOptions.map(category => {
-          const isSelected = selectedCategories.includes(category.value);
-          return (
-            <TouchableOpacity
-              onPress={() => handleItemPress(category.value)}
-              key={category.value}
-              style={[styles.item, isSelected && styles.itemSelected]}
-              activeOpacity={0.5}
-            >
-              <AppText
-                typography="regular_14"
-                color={isSelected ? 'white' : 'black'}
+      {isLoading ? (
+        renderSkeleton()
+      ) : (
+        <View style={styles.categoriesContainer}>
+          {categories.map(category => {
+            const isSelected = selectedCategories.includes(category.id);
+            return (
+              <TouchableOpacity
+                onPress={() => handleItemPress(category.id)}
+                key={category.id}
+                style={[styles.item, isSelected && styles.itemSelected]}
+                activeOpacity={0.5}
               >
-                {category.label}
-              </AppText>
-            </TouchableOpacity>
-          );
-        })}
-      </View>
+                <AppText
+                  typography="regular_14"
+                  color={isSelected ? 'white' : 'black'}
+                >
+                  {category.title}
+                </AppText>
+              </TouchableOpacity>
+            );
+          })}
+        </View>
+      )}
     </View>
   );
 };

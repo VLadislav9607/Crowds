@@ -3,6 +3,7 @@ import { StyleSheet, View } from 'react-native';
 import { ScreenWithScrollWrapper } from '@components';
 import { AppText, IAppHeaderProps } from '@ui';
 import { COLORS, TYPOGRAPHY } from '@styles';
+import { useKeyboard } from '@hooks';
 
 import { ForwardBackArrows, IForwardBackArrowsProps } from '../../components';
 
@@ -40,7 +41,8 @@ export const OnboardingScreenLayout = ({
   animatedScrollHandler,
   useAnimatedScrollView = false,
 }: IOnboardingScreenLayoutProps) => {
-  console.log('currentStep', currentStep);
+  const { isKeyboardVisible } = useKeyboard();
+
   if (currentStep === null) return null;
 
   return (
@@ -51,25 +53,29 @@ export const OnboardingScreenLayout = ({
       colorHeader="main"
       useAnimatedScrollView={useAnimatedScrollView}
       animatedScrollHandler={animatedScrollHandler}
+      resetKeyboardOffset={true}
       footer={
         <ForwardBackArrows
           steps={stepsCount}
           currentStep={currentStep}
           onBackPress={onBackPress}
           onForwardPress={onForwardPress}
+          hideDots={isKeyboardVisible}
           {...footerProps}
         />
       }
       {...headerProps}
     >
-      <View style={styles.titleContainer}>
-        <AppText typography="semibold_20" style={styles.titleText}>
-          {title}
-        </AppText>
-        <AppText renderIf={!!label} style={styles.label}>
-          {label}
-        </AppText>
-      </View>
+      <AppText
+        renderIf={!!title}
+        typography="semibold_20"
+        style={styles.titleText}
+      >
+        {title}
+      </AppText>
+      <AppText renderIf={!!label} style={styles.label}>
+        {label}
+      </AppText>
 
       <View style={styles.contentContainer}>{children}</View>
     </ScreenWithScrollWrapper>
@@ -81,16 +87,10 @@ const styles = StyleSheet.create({
     paddingHorizontal: 20,
     gap: 24,
   },
-  titleContainer: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'center',
-    gap: 10,
-    marginTop: 24,
-    marginBottom: 32,
-  },
   titleText: {
     textAlign: 'center',
+    marginTop: 24,
+    marginBottom: 32,
   },
   label: {
     paddingHorizontal: 10,

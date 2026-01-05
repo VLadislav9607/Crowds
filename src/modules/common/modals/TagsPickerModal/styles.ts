@@ -17,8 +17,8 @@ export const styles = StyleSheet.create({
     flexDirection: 'row',
     flexWrap: 'wrap',
     gap: 8,
-    marginBottom: 28,
-    flex: 1,
+    flexGrow: 1,
+    paddingBottom: 28,
   },
   item: {
     height: 30,

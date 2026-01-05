@@ -21,6 +21,7 @@ export const ScreenWithScrollWrapper = ({
   contentContainerStyle,
   showsVerticalScrollIndicator = false,
   showLoader = false,
+  resetKeyboardOffset = false,
   onScroll,
   animatedScrollHandler,
   useAnimatedScrollView = false,
@@ -56,6 +57,9 @@ export const ScreenWithScrollWrapper = ({
       style={styles.wrapper}
       behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
       enabled={keyboardAvoidingEnabled}
+      keyboardVerticalOffset={
+        Platform.OS === 'ios' ? (resetKeyboardOffset ? -bottom : 0) : 0
+      }
     >
       {headerProps.headerVariant && <AppHeader {...headerProps} />}
       {showLoader && (
