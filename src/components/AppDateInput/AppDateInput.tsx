@@ -7,6 +7,7 @@ import { SvgXml } from 'react-native-svg';
 import { useState } from 'react';
 import { If } from '@components';
 import DatePicker from 'react-native-date-picker';
+import { format } from 'date-fns';
 
 export const AppDateInput = ({
   label,
@@ -25,6 +26,9 @@ export const AppDateInput = ({
   description = '',
   onChange,
   maximumDate,
+  minimumDate,
+  valueFormat,
+  locale,
   ...props
 }: AppDateInputProps) => {
   const [showDatePicker, setShowDatePicker] = useState(false);
@@ -82,15 +86,12 @@ export const AppDateInput = ({
               {...valueProps}
               style={[styles.value, valueProps?.style]}
             >
-              {mode === 'time'
-                ? value
-                    ?.toLocaleTimeString('en-US', {
-                      hour: 'numeric',
-                      minute: '2-digit',
-                      hour12: true,
-                    })
-                    .toLowerCase()
-                : value?.toLocaleDateString()}
+              {value &&
+                (mode === 'time'
+                  ? format(value, valueFormat || 'h:mm a').toLowerCase()
+                  : mode === 'datetime'
+                  ? format(value, valueFormat || 'MM/dd/yyyy h:mm a')
+                  : format(value, valueFormat || 'MM/dd/yyyy'))}
             </AppText>
           </If>
 
@@ -129,6 +130,8 @@ export const AppDateInput = ({
         open={showDatePicker}
         date={value || new Date()}
         maximumDate={maximumDate}
+        minimumDate={minimumDate}
+        locale={locale}
         onConfirm={onConfirm}
         onCancel={onCancel}
       />

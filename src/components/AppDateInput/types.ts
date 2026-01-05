@@ -4,7 +4,7 @@ import { AppTextProps } from '../../ui/AppText/types';
 export interface AppDateInputProps {
   label?: string;
   description?: string;
-  mode?: 'date' | 'time';
+  mode?: 'date' | 'time' | 'datetime';
   customIcon?: string;
   placeholder?: string;
   errorMessage?: string;
@@ -19,5 +19,8 @@ export interface AppDateInputProps {
   placeholderProps?: Partial<AppTextProps>;
   valueProps?: Partial<AppTextProps>;
   onChange?: (date: Date) => void;
+  valueFormat?: string;
   maximumDate?: Date;
+  minimumDate?: Date;
+  locale?: string;
 }

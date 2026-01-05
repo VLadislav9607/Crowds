@@ -1,4 +1,4 @@
-import { View, StyleSheet } from 'react-native';
+import { View, StyleSheet, ActivityIndicator } from 'react-native';
 import { FlashList } from '@shopify/flash-list';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
@@ -6,6 +6,7 @@ import { TAB_BAR_TOTAL_HEIGHT } from '@navigation';
 import { AppButton, AppText } from '@ui';
 
 import { AppFlashListProps } from './types';
+import { COLORS } from '@styles';
 
 export const AppFlashList = <T,>({
   gap = 16,
@@ -14,12 +15,19 @@ export const AppFlashList = <T,>({
   contentContainerStyle,
   data,
   floatingButtonProps,
+  showBottomLoader = false,
   ...props
 }: AppFlashListProps<T>) => {
   const { bottom } = useSafeAreaInsets();
 
   const isEmpty = !data || data.length === 0;
   const bottomPadding = withBottomTab ? TAB_BAR_TOTAL_HEIGHT + bottom : 0;
+
+  const BottomLoaderComponent = (
+    <View style={styles.bottomLoader}>
+      <ActivityIndicator size="small" color={COLORS.black} />
+    </View>
+  );
 
   return (
     <>
@@ -36,6 +44,9 @@ export const AppFlashList = <T,>({
           <AppText typography="medium_14" color="gray" style={styles.emptyText}>
             {emptyText}
           </AppText>
+        }
+        ListFooterComponent={
+          showBottomLoader ? BottomLoaderComponent : undefined
         }
         {...props}
       />
@@ -55,5 +66,10 @@ const styles = StyleSheet.create({
   },
   emptyText: {
     textAlign: 'center',
+  },
+  bottomLoader: {
+    height: 50,
+    alignItems: 'center',
+    justifyContent: 'center',
   },
 });

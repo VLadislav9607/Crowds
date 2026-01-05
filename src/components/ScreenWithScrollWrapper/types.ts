@@ -3,6 +3,7 @@ import {
   NativeSyntheticEvent,
   StyleProp,
   ViewStyle,
+  ScrollView,
 } from 'react-native';
 import { IAppHeaderProps } from '@ui';
 
@@ -19,4 +20,5 @@ export interface IScreenWithScrollWrapperProps extends IAppHeaderProps {
   useAnimatedScrollView?: boolean;
   keyboardAvoidingEnabled?: boolean;
   showLoader?: boolean;
+  scrollViewRef?: React.RefObject<ScrollView | null>;
 }

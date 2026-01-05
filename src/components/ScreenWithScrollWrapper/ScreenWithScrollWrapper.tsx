@@ -26,6 +26,7 @@ export const ScreenWithScrollWrapper = ({
   useAnimatedScrollView = false,
   keyboardAvoidingEnabled = true,
   withBottomTabBar = false,
+  scrollViewRef,
   ...headerProps
 }: IScreenWithScrollWrapperProps) => {
   const { bottom } = useSafeAreaInsets();
@@ -57,31 +58,29 @@ export const ScreenWithScrollWrapper = ({
       enabled={keyboardAvoidingEnabled}
     >
       {headerProps.headerVariant && <AppHeader {...headerProps} />}
-      {showLoader && <View style={styles.footerContainer}>
-        <ActivityIndicator size="large" color={COLORS.white} />
-      </View>}
+      {showLoader && (
+        <View style={styles.footerContainer}>
+          <ActivityIndicator size="large" color={COLORS.white} />
+        </View>
+      )}
       <ScrollViewComponent
+        ref={scrollViewRef}
         style={styles.scrollView}
         contentContainerStyle={[
           styles.contentContainer,
-          { paddingBottom: withBottomTabBar ? 0 : bottom || 16 },
+          withBottomTabBar ? styles.noPadding : { paddingBottom: bottom || 16 },
           contentContainerStyle,
         ]}
         showsVerticalScrollIndicator={showsVerticalScrollIndicator}
         {...scrollProps}
         keyboardShouldPersistTaps="handled"
-
       >
-
         {children}
 
         {!isFloatFooter && footer && FooterComponent}
       </ScrollViewComponent>
 
-
-
       {isFloatFooter && footer && FooterComponent}
-
     </KeyboardAvoidingView>
   );
 };
@@ -95,6 +94,9 @@ const styles = StyleSheet.create({
   },
   contentContainer: {
     flexGrow: 1,
+  },
+  noPadding: {
+    paddingBottom: 0,
   },
   footer: {
     backgroundColor: 'transparent',

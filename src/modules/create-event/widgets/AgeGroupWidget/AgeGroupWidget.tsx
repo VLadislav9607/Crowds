@@ -1,4 +1,4 @@
-import { useRef, useState } from 'react';
+import { useRef, useState, useEffect } from 'react';
 import { View } from 'react-native';
 import { useWatch, useFormContext } from 'react-hook-form';
 import { BottomSheetModal } from '@gorhom/bottom-sheet';
@@ -31,16 +31,47 @@ export const AgeGroupWidget = ({
   control,
   index,
   onRemove,
+  widgetRef,
 }: AgeGroupWidgetProps) => {
   const [isExpanded, setIsExpanded] = useState(true);
   const rotation = useSharedValue(180);
-  const { setValue } = useFormContext<CreateEventFormData>();
+  const {
+    setValue,
+    formState: { errors },
+  } = useFormContext<CreateEventFormData>();
   const preferencesModalRef = useRef<BottomSheetModal>(null);
 
   const ageGroup = useWatch({
     control,
     name: `ageGroups.${index}`,
   });
+
+  // Check if there are any errors for this age group
+  const hasError = () => {
+    const ageGroupError = errors.ageGroups?.[index];
+    if (!ageGroupError) return false;
+
+    // Check for error on any field in this age group
+    if (ageGroupError.maleCount?.message) return true;
+    if (ageGroupError.femaleCount?.message) return true;
+    if (ageGroupError.othersCount?.message) return true;
+    if (ageGroupError.minAge?.message) return true;
+    if (ageGroupError.maxAge?.message) return true;
+    if (typeof ageGroupError === 'object' && 'message' in ageGroupError)
+      return true;
+
+    return false;
+  };
+
+  const hasGroupError = hasError();
+
+  // Ensure widget is expanded when there's an error
+  useEffect(() => {
+    if (hasGroupError && !isExpanded) {
+      setIsExpanded(true);
+      rotation.value = withTiming(180, { duration: 200 });
+    }
+  }, [hasGroupError, isExpanded, rotation]);
 
   const toggleExpanded = () => {
     setIsExpanded(!isExpanded);
@@ -98,7 +129,8 @@ export const AgeGroupWidget = ({
     const currentPreferences = ageGroup?.preferences || {};
     const config = PREFERENCE_CONFIG.find(c => c.key === key);
 
-    if (config?.type === 'array') {
+    // Handle array types (including additionalThings)
+    if (config?.type === 'array' || key === 'additionalThings') {
       const currentArray = (currentPreferences[key] as string[]) || [];
       const newArray = currentArray.filter(v => v !== valueToRemove);
       setValue(
@@ -119,7 +151,10 @@ export const AgeGroupWidget = ({
   };
 
   return (
-    <View style={styles.container}>
+    <View
+      ref={widgetRef}
+      style={[styles.container, hasGroupError && styles.containerError]}
+    >
       <AgeGroupHeader
         title={title}
         summaryText={getSummaryText()}

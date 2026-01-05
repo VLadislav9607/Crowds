@@ -85,13 +85,15 @@ export const HeadOfficeGlobalStep = forwardRef<
           name="parsed_location"
           render={({ field, fieldState }) => (
             <PlacesPredictionsInput
-              placeholder="Search head office location"
+              inputProps={{
+                placeholder: 'Search head office location',
+                errorMessage: fieldState.error?.message,
+              }}
               types={PlaceAutocompleteType.address}
               onChangeText={() => {
                 onFormReset();
                 onChangeText?.();
               }}
-              errorMessage={fieldState.error?.message}
               onSelectPlace={res => field.onChange(res.parsed_details)}
               defaultValue={parsedLocation?.autocomplete_description}
             />

@@ -1,30 +1,23 @@
+import { forwardRef } from 'react';
 import { AppModal } from '@components';
 import { AppButton } from '@ui';
-import { goToScreen, Screens } from '@navigation';
-import { BaseEventCard } from '../../../events/organization/ui';
+import { goBack, goToScreen, Screens } from '@navigation';
+import { OrgBaseEventCard } from '../../../events/organization/ui';
+import { useImperativeModal } from '@hooks';
+import { EventCreatedModalRef, EventCreatedModalRefProps } from './types';
 import { styles } from './styles';
 
-interface EventCreatedModalProps {
-  isVisible: boolean;
-  onClose: () => void;
-}
+export const EventCreatedModal = forwardRef<EventCreatedModalRef>((_, ref) => {
+  const { isVisible, close, refProps } =
+    useImperativeModal<EventCreatedModalRefProps>(ref);
 
-export const EventCreatedModal = ({
-  isVisible,
-  onClose,
-}: EventCreatedModalProps) => {
-  const mockedEvent = {
-    id: '1',
-    name: 'Event Preview Name',
-    image:
-      'https://img.freepik.com/free-photo/closeup-scarlet-macaw-from-side-view-scarlet-macaw-closeup-head_488145-3540.jpg?semt=ais_hybrid&w=740&q=80',
-    location: 'Location Preview',
-    date: '03 OCT, 2025',
-    duration: '1 h',
+  const onClose = () => {
+    close();
+    goBack();
   };
 
   const goToInviteTalents = () => {
-    onClose();
+    close();
 
     setTimeout(() => {
       goToScreen(Screens.InviteTalents);
@@ -33,13 +26,12 @@ export const EventCreatedModal = ({
 
   return (
     <AppModal
-      title="Event created successfully"
+      title="Event Created"
       subtitle="Start adding talents to your event."
-      subtitleProps={{ typography: 'medium_14' }}
       isVisible={isVisible}
       onClose={onClose}
     >
-      <BaseEventCard event={mockedEvent} />
+      <OrgBaseEventCard event={refProps?.event} />
 
       <AppButton
         title="Invite Talents"
@@ -49,4 +41,4 @@ export const EventCreatedModal = ({
       />
     </AppModal>
   );
-};
+});

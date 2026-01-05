@@ -1,4 +1,4 @@
 export * from './OrganizationEventCard';
-export * from './BaseEventCard';
+export * from './OrgBaseEventCard';
 export * from './types';
 export * from './styles';

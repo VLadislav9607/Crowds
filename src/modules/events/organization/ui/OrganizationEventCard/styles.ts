@@ -24,13 +24,13 @@ export const cardStyles = StyleSheet.create({
   },
   name: {
     flex: 1,
-    ...TYPOGRAPHY.bold_10_4,
     textTransform: 'uppercase',
   },
   image: {
     width: 45,
     height: 45,
     borderRadius: 5,
+    backgroundColor: COLORS.black_20,
   },
   dashedLine: {
     height: 0.5,
@@ -40,17 +40,19 @@ export const cardStyles = StyleSheet.create({
   },
   infoContainer: {
     flexDirection: 'row',
-    alignItems: 'center',
+    // alignItems: 'center',
     gap: 10,
+    paddingRight: 10,
   },
   infoContent: {
+    paddingVertical: 3.5,
     flex: 1,
     gap: 8,
   },
   row: {
     flexDirection: 'row',
     alignItems: 'center',
-    gap: 20,
+    gap: 12,
   },
   bottomButtons: {
     flexDirection: 'row',
@@ -71,8 +73,8 @@ export const cardStyles = StyleSheet.create({
     ...TYPOGRAPHY.semibold_10,
   },
   participants: {
-    ...TYPOGRAPHY.medium_9,
-    color: COLORS.red,
+    ...TYPOGRAPHY.medium_10,
+    color: COLORS.main,
   },
   inviteTalentButtonText: {
     color: COLORS.red,

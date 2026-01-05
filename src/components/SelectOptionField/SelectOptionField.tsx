@@ -9,6 +9,8 @@ import { SelectOptionFieldItem, SelectOptionFieldProps } from './types';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { RefObject, useRef } from 'react';
 import { BottomSheetModal } from '@gorhom/bottom-sheet';
+import { If } from '../If';
+import { Skeleton } from '../Skeleton';
 
 export const SelectOptionField = ({
   options = [],
@@ -16,6 +18,7 @@ export const SelectOptionField = ({
   fieldProps,
   containerStyle,
   enableAutoClose = true,
+  showSkeleton = false,
   onOptionSelect,
   onSelectedOptionsChange,
 }: SelectOptionFieldProps) => {
@@ -80,34 +83,54 @@ export const SelectOptionField = ({
           </AppText>
         )}
 
-        {options.map((item, index) => {
-          const isLastItem = index === options.length - 1;
-          const isSelected = selectedValuesArray.includes(item.value);
-          return (
-            <View key={item.value}>
-              <TouchableOpacity
-                key={item.value}
-                style={styles.selectItem}
-                onPress={() => handleSelect(item, index)}
-              >
-                <AppText key={item.value} color="black" typography="regular_14">
-                  {item.label}
-                </AppText>
+        <If condition={!showSkeleton}>
+          {options.map((item, index) => {
+            const isLastItem = index === options.length - 1;
+            const isSelected = selectedValuesArray.includes(item.value);
+            return (
+              <View key={item.value}>
+                <TouchableOpacity
+                  key={item.value}
+                  style={styles.selectItem}
+                  onPress={() => handleSelect(item, index)}
+                >
+                  <AppText
+                    key={item.value}
+                    color="black"
+                    typography="regular_14"
+                  >
+                    {item.label}
+                  </AppText>
 
-                {isSelected && (
-                  <SvgXml
-                    xml={ICONS.checked('black')}
-                    width={14}
-                    height={14}
-                    color={COLORS.main}
-                  />
-                )}
-              </TouchableOpacity>
+                  {isSelected && (
+                    <SvgXml
+                      xml={ICONS.checked('black')}
+                      width={14}
+                      height={14}
+                      color={COLORS.main}
+                    />
+                  )}
+                </TouchableOpacity>
 
-              {!isLastItem && <View style={styles.underline} />}
-            </View>
-          );
-        })}
+                {!isLastItem && <View style={styles.underline} />}
+              </View>
+            );
+          })}
+        </If>
+
+        <If condition={showSkeleton}>
+          <Skeleton>
+            {new Array(10).fill(0).map((_, index) => (
+              <Skeleton.Item
+                key={index}
+                width={'100%'}
+                height={44}
+                borderRadius={4}
+                marginBottom={10}
+              />
+            ))}
+          </Skeleton>
+        </If>
       </View>
     </BottomSheetField>
   );

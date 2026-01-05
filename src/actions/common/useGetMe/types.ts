@@ -1,10 +1,15 @@
-import { Database } from "@services";
+import { Tables } from '@services';
 
 export interface UseGetMeResDto {
-    isTalent: boolean;
-    isOrganizationMember: boolean;
-    talent?: Database["public"]["Tables"]["talents"]["Row"] & {
-        talent_location: Database["public"]["Tables"]["talent_location"]["Row"] | null;
+  isTalent: boolean;
+  isOrganizationMember: boolean;
+  talent?: Tables<'talents'> & {
+    talent_location: Tables<'talent_location'> | null;
+  };
+  organizationMember?: Tables<'organizations_members'> & {
+    organizations: {
+      organization_name: string;
+      organizations_locations: Tables<'organizations_locations'>[];
     };
-    organizationMember?: Database["public"]["Tables"]["organizations_members"]["Row"];
+  };
 }

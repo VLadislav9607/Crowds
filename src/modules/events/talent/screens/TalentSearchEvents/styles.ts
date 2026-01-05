@@ -1,16 +1,21 @@
-import { COLORS, SHADOWS } from "@styles";
-import { StyleSheet } from "react-native";
+import { COLORS, SHADOWS } from '@styles';
+import { StyleSheet } from 'react-native';
 
 export const styles = StyleSheet.create({
   searchContainer: {
-    flexDirection: 'row', alignItems: 'center', gap: 16, marginBottom: 14, paddingHorizontal: 20
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 16,
+    marginTop: 16,
+    marginBottom: 7,
+    paddingHorizontal: 20,
   },
   searchInputButton: {
-    flex:1
+    flex: 1,
   },
   searchInput: {
     height: 40,
-    flex:1,
+    flex: 1,
     borderColor: COLORS.off_white,
     backgroundColor: COLORS.white,
     ...SHADOWS.field,
@@ -45,6 +50,6 @@ export const styles = StyleSheet.create({
     paddingBottom: 0,
   },
   listContentContainer: {
-    paddingTop: 16,
+    paddingTop: 7,
   },
 });

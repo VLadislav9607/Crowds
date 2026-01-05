@@ -1,20 +1,17 @@
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 
-import {
-  CreateEventFormData,
-  createEventValidationSchema,
-} from '../validation';
+import { CreateEventFormData, createPublishedEventSchema } from '../validation';
 
 export const useCreateEventForm = () => {
   const formData = useForm<CreateEventFormData>({
-    resolver: zodResolver(createEventValidationSchema),
+    resolver: zodResolver(createPublishedEventSchema),
     defaultValues: {
       title: '',
-      location: '',
+      location: undefined,
       visibility: 'public',
-      startDate: undefined,
-      endDate: undefined,
+      startAt: undefined,
+      endAt: undefined,
       startTime: undefined,
       endTime: undefined,
       ageGroups: [],
@@ -25,7 +22,7 @@ export const useCreateEventForm = () => {
       eventBrief: '',
       uploadNDA: false,
       ndaDocument: undefined,
-      registrationClosingDate: undefined,
+      registrationClosingAt: undefined,
     },
     mode: 'onChange',
   });
