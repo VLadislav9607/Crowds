@@ -13,6 +13,7 @@ export const WeeklyDaySelector = ({
   onChange,
   onSchedulesChange,
   label = 'Select available days:',
+  errorMessage,
 }: IWeeklyDaySelectorProps) => {
   const handleDayPress = (day: DayOfWeek) => {
     const newDays = selectedDays.includes(day)
@@ -49,6 +50,10 @@ export const WeeklyDaySelector = ({
           );
         })}
       </View>
+
+      <AppText renderIf={!!errorMessage} typography="regular_12" color="red">
+        {errorMessage}
+      </AppText>
     </View>
   );
 };

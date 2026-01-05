@@ -21,4 +21,5 @@ export interface IScreenWithScrollWrapperProps extends IAppHeaderProps {
   keyboardAvoidingEnabled?: boolean;
   showLoader?: boolean;
   scrollViewRef?: React.RefObject<ScrollView | null>;
+  resetKeyboardOffset?: boolean;
 }

@@ -14,7 +14,7 @@ interface ProfileScreenLayoutProps {
 }
 
 export const ProfileScreenLayout = ({ children }: ProfileScreenLayoutProps) => {
-  const { data: me, isTalent } = useGetMe();
+  const { me, isTalent } = useGetMe();
 
   return (
     <ScreenWithScrollWrapper
@@ -24,12 +24,11 @@ export const ProfileScreenLayout = ({ children }: ProfileScreenLayoutProps) => {
       customElement={
         isTalent ? (
           <TalentProfileHeader
-            fullName={
-              me?.talent?.first_name ?? '' + ' ' + me?.talent?.last_name
-            }
-            gender={me?.talent?.gender || ''}
-            age={calculateAge(me?.talent?.birth_date)}
-            avatarUri={''}
+            fullName={me?.first_name ?? '' + ' ' + me?.last_name}
+            gender={me?.gender || ''}
+            age={calculateAge(me?.birth_date)}
+            avatarUri={me?.avatar_path}
+            location={`${me?.talent_location?.country}, ${me?.talent_location?.city}`}
           />
         ) : undefined
       }

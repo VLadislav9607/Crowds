@@ -5,14 +5,11 @@ export const styles = StyleSheet.create({
   headerContainer: {
     flexDirection: 'row',
     alignItems: 'center',
-    width: '100%',
-    justifyContent: 'space-between',
-  },
-  profileInfoContainer: {
-    flexDirection: 'row',
-    alignItems: 'center',
     gap: 16,
-    justifyContent: 'space-between',
+    width: '100%',
+  },
+  textContainer: {
+    flex: 1,
   },
   avatarImage: {
     width: 64,
@@ -40,9 +37,10 @@ export const styles = StyleSheet.create({
     letterSpacing: -0.01,
   },
   viewProfileButtonWrapper: {
-    width: 98,
-    paddingHorizontal: 0,
     gap: 2,
     paddingLeft: 6,
+  },
+  infoTextContainer: {
+    marginTop: 8,
   },
 });

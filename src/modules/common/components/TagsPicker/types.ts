@@ -1,11 +1,10 @@
 import { StyleProp, ViewStyle } from 'react-native';
-import { Category, TagValue } from '@modules/profile';
 
 export interface TagsPickerProps {
-  selectedCategories: Category[];
-  selectedTags?: TagValue[];
+  selectedSubcategoryIds: string[];
+  selectedTags?: string[];
   containerStyle?: StyleProp<ViewStyle>;
-  categoriesContainerStyle?: StyleProp<ViewStyle>;
-  onTagPress?: (tag: TagValue) => void;
-  onTagsChange?: (tags: TagValue[]) => void;
+  tagsContainerStyle?: StyleProp<ViewStyle>;
+  onTagPress?: (tagId: string) => void;
+  onTagsChange?: (tagIds: string[]) => void;
 }

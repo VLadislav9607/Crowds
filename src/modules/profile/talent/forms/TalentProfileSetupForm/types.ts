@@ -1,5 +1,4 @@
 import {
-  Category,
   Ethnicity,
   EyeColour,
   FacialAttributes,
@@ -13,15 +12,16 @@ export const talentProfileSetupSchema = z
   .object({
     hairColour: z.enum(HairColour).optional(),
     eyeColour: z.enum(EyeColour).optional(),
-    facialAttributes: z.array(z.enum(FacialAttributes)).optional(),
-    tattooSpot: z.array(z.enum(TattooSpot)).optional(),
+    facialAttributes: z.array(z.enum(FacialAttributes)).optional().nullable(),
+    tattooSpot: z.array(z.enum(TattooSpot)).optional().nullable(),
     ethnicity: z.enum(Ethnicity).optional(),
     build: z.number().optional(),
     height: z.number().optional(),
     skinTone: z.enum(SkinTone).optional(),
     isPregnant: z.boolean().optional(),
     months: z.string().optional(),
-    categories: z.array(z.enum(Category)).optional(),
+    categories: z.array(z.string()).optional(),
+    subcategories: z.array(z.string()).optional(),
     tags: z.array(z.string()).optional(),
     additionalSkills: z.string().optional(),
     photo: z

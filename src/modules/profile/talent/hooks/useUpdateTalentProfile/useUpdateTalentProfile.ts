@@ -33,6 +33,7 @@ export const useUpdateTalentProfile = (
     });
 
   const updateProfile = (data: TalentProfileSetupFormData) => {
+    console.log('data', data);
     if (!talentId) return;
 
     // TODO: Remove 'as any' after regenerating Supabase types
@@ -50,6 +51,7 @@ export const useUpdateTalentProfile = (
           facial_attributes: data.facialAttributes,
           tattoo_spot: data.tattooSpot,
           categories: data.categories,
+          subcategories: data.subcategories,
           tags: data.tags,
           is_pregnant: data.isPregnant,
           pregnancy_months:

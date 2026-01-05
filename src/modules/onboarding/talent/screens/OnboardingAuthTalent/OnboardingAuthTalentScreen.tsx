@@ -9,6 +9,11 @@ import {
   TalentProfileSetupForm,
   TalentStripeSetup,
 } from '@modules/profile';
+import {
+  TalentAvailabilityForm,
+  AvailabilityInfoStep,
+  TalentAvailabilityFormState,
+} from '@modules/talent-availability';
 import { IdentityVerification } from '@modules/kyc';
 import { AnimatedProfileSetupHeader } from '../../../../profile/components';
 import { AppButton, IAppHeaderProps } from '@ui';
@@ -24,6 +29,7 @@ export const OnboardingAuthTalentScreen = () => {
     logoutModalRef,
     talentLocationSetupFormRef,
     talentStripeSetupRef,
+    talentAvailabilityFormRef,
     step,
     showFullScreenLoader,
     profileIdentityVerificationRef,
@@ -33,14 +39,17 @@ export const OnboardingAuthTalentScreen = () => {
     goToNextStep,
     goToPreviousStep,
     onStripeSetupSuccess,
+    onAvailabilitySetupSuccess,
     onProfileSetupSuccess,
   } = useOnboardingAuthTalentScreen();
 
-  const titles = {
+  const titles: Record<number, string> = {
     0: 'Where do you live?',
     1: 'Identity Verification',
     2: 'Set Up Secure Banking\nwith Stripe',
-    3: '',
+    3: 'Please set up your current\navailability',
+    4: '',
+    5: '',
   };
 
   const renderForwardButton = () => {
@@ -87,13 +96,14 @@ export const OnboardingAuthTalentScreen = () => {
     ),
   };
 
-  const isProfileSetupStep = step === 3;
+  const isProfileSetupStep = step === 5;
+  const isAvailabilitySetupStep = step === 4;
 
   return (
     <OnboardingScreenLayout
-      title={titles[step as keyof typeof titles]}
+      title={titles[step as number] ?? ''}
       stepsCount={Object.keys(titles).length}
-      currentStep={step}
+      currentStep={step ?? 0}
       useAnimatedScrollView={isProfileSetupStep}
       animatedScrollHandler={scrollHandler}
       onBackPress={goToPreviousStep}
@@ -103,16 +113,20 @@ export const OnboardingAuthTalentScreen = () => {
       footerProps={{
         containerStyle: { paddingHorizontal: 35, paddingTop: 20 },
         ForwardButton: renderForwardButton(),
-        hideBack: step === 4,
+        hideBack: step === 6,
       }}
       headerProps={
         isProfileSetupStep ? setupProfileHeaderProps : defaultHeaderProps
       }
     >
       <View
-        style={[styles.container, isProfileSetupStep && { paddingTop: 70 }]}
+        style={[
+          styles.container,
+          isProfileSetupStep && { paddingTop: 120 },
+          isAvailabilitySetupStep && { paddingTop: 24 },
+        ]}
       >
-        <If condition={!step}>
+        <If condition={step === 0}>
           <TalentLocationSetupForm
             onFormStateChange={val =>
               setShowFullScreenLoader(val.isUpsertingLocation)
@@ -134,6 +148,20 @@ export const OnboardingAuthTalentScreen = () => {
         </If>
 
         <If condition={step === 3}>
+          <AvailabilityInfoStep />
+        </If>
+
+        <If condition={step === 4}>
+          <TalentAvailabilityForm
+            ref={talentAvailabilityFormRef}
+            onFormStateChange={(val: TalentAvailabilityFormState) =>
+              setShowFullScreenLoader(val.isSubmitting)
+            }
+            onSuccess={onAvailabilitySetupSuccess}
+          />
+        </If>
+
+        <If condition={step === 5}>
           <TalentProfileSetupForm
             onFormStateChange={val => setShowFullScreenLoader(val.isUpdating)}
             ref={talentProfileSetupFormRef}

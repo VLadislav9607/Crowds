@@ -2,7 +2,6 @@ import { useEffect, useMemo } from 'react';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useGetMe } from '@actions';
-import { Category } from '@modules/profile';
 import {
   TalentProfileSetupFormData,
   TalentProfileSetupFormProps,
@@ -35,18 +34,23 @@ export const useTalentProfileSetupForm = ({
     () => ({
       hairColour: talent?.hair_color ?? undefined,
       eyeColour: talent?.eye_color ?? undefined,
-      facialAttributes: talent?.facial_attributes,
-      tattooSpot: talent?.tattoo_spot,
+      facialAttributes: Array.isArray(talent?.facial_attributes)
+        ? talent.facial_attributes
+        : undefined,
+      tattooSpot: Array.isArray(talent?.tattoo_spot)
+        ? talent.tattoo_spot
+        : undefined,
       ethnicity: (talent as any)?.ethnicity ?? undefined,
-      build: talent?.build ?? undefined,
-      height: talent?.height ?? undefined,
+      build: talent?.build ?? 70,
+      height: talent?.height ?? 5.8,
       skinTone: talent?.skin_tone ?? undefined,
       isPregnant: (talent as any)?.is_pregnant ?? undefined,
       months: (talent as any)?.pregnancy_months?.toString() ?? undefined,
       categories: Array.isArray((talent as any)?.categories)
-        ? ((talent as any).categories.filter((cat: string) =>
-            Object.values(Category).includes(cat as Category),
-          ) as Category[])
+        ? (talent as any).categories
+        : undefined,
+      subcategories: Array.isArray((talent as any)?.subcategories)
+        ? (talent as any).subcategories
         : undefined,
       tags: Array.isArray((talent as any)?.tags)
         ? (talent as any).tags

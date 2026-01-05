@@ -24,6 +24,7 @@ module.exports = {
           "@modules/onboarding": "./src/modules/onboarding",
           "@modules/events": "./src/modules/events",
           "@modules/kyc": "./src/modules/kyc",
+          "@modules/talent-availability": "./src/modules/talent-availability",
           "@actions": "./src/actions",
           "@services": "./src/services",
           "@utils": "./src/utils",

@@ -6,4 +6,5 @@ export interface IWeeklyDaySelectorProps {
   onChange: (days: DayOfWeek[]) => void;
   onSchedulesChange: (schedules: IDaySchedule[]) => void;
   label?: string;
+  errorMessage?: string;
 }
