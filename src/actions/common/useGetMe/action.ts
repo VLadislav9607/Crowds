@@ -20,17 +20,15 @@ export const getMeAction = async (): Promise<UseGetMeResDto> => {
       talent: talent,
     };
   } else {
-    const { data: organizationMember, error: organizationMemberError } =
-      await supabase
-        .from('organizations_members')
-        .select('*')
-        .eq('id', data?.user?.id)
-        .single();
-    if (organizationMemberError) throw organizationMemberError;
+    const { data: orgMemberData, error: orgMemberError } = await (
+      supabase.rpc as any
+    )('get_me_org_member');
+    if (orgMemberError) throw orgMemberError;
     return {
       isTalent: false,
       isOrganizationMember: true,
-      organizationMember,
+      organizationMember:
+        orgMemberData as unknown as UseGetMeResDto['organizationMember'],
     };
   }
 };

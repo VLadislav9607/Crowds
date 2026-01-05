@@ -1,3 +1,5 @@
+import { OrgEventListItemDto } from '@actions';
+
 export type EventCardType = 'draft' | 'active' | 'upcoming' | 'past';
 
 export interface IEventData {
@@ -12,10 +14,9 @@ export interface IEventData {
 }
 
 export interface IBaseEventCardProps {
-  event: IEventData;
+  event: OrgEventListItemDto;
 }
 
 export interface IOrganizationEventCardProps {
-  event: IEventData;
-  cardType: EventCardType;
+  event: OrgEventListItemDto;
 }

@@ -1,4 +1,5 @@
-import { StyleSheet } from 'react-native';
+import { forwardRef } from 'react';
+import { StyleSheet, View } from 'react-native';
 import { Controller, useFormContext } from 'react-hook-form';
 
 import { CheckboxList } from '@components';
@@ -7,14 +8,14 @@ import { COLORS, TYPOGRAPHY } from '@styles';
 
 import { CreateEventFormData } from '../../validation';
 
-export const PaymentSection = () => {
+export const PaymentSection = forwardRef<View>((_props, ref) => {
   const {
     control,
     formState: { errors },
   } = useFormContext<CreateEventFormData>();
 
   return (
-    <>
+    <View ref={ref} collapsable={false} style={styles.container}>
       <Controller
         control={control}
         name="paymentMode"
@@ -48,11 +49,14 @@ export const PaymentSection = () => {
           />
         )}
       />
-    </>
+    </View>
   );
-};
+});
 
 const styles = StyleSheet.create({
+  container: {
+    gap: 24,
+  },
   paymentAmountInput: {
     marginTop: -14,
   },

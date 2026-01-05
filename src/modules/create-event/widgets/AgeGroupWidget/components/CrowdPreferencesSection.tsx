@@ -20,7 +20,7 @@ import { If } from '@components';
 
 type PreferenceKey = keyof CrowdPreferences;
 
-type PreferenceType = 'array' | 'weight' | 'height';
+type PreferenceType = 'array' | 'width' | 'height';
 
 const PREFERENCE_CONFIG: {
   key: PreferenceKey;
@@ -35,8 +35,8 @@ const PREFERENCE_CONFIG: {
     type: 'array',
   },
   { key: 'accent', label: 'Accent', options: accentOptions, type: 'array' },
-  { key: 'weight', label: 'Weight', type: 'weight' },
-  { key: 'height', label: 'Height', type: 'height' },
+  { key: 'minWeight', label: 'Weight', type: 'width' },
+  { key: 'minHeight', label: 'Height', type: 'height' },
   {
     key: 'eyeColour',
     label: 'Eye Colour',
@@ -73,14 +73,26 @@ const PREFERENCE_CONFIG: {
     options: skinToneOptions,
     type: 'array',
   },
+  {
+    key: 'additionalThings',
+    label: 'Additional Things',
+    options: [],
+    type: 'array',
+  },
 ];
 
-const formatWeight = (value: number) => `${value} Kg`;
+const formatHeight = (min: number, max: number) => {
+  const minFeet = Math.floor(min);
+  const minInches = Math.round((min % 1) * 10);
 
-const formatHeight = (value: number) => {
-  const feet = Math.floor(value);
-  const inches = Math.round((value % 1) * 10);
-  return inches ? `${feet}'${inches}"` : `${feet}'`;
+  const maxFeet = Math.floor(max);
+  const maxInches = Math.round((max % 1) * 10);
+
+  // return inches ? `${feet}'${inches}` : `${feet}'`;
+
+  return `${minFeet}${minInches ? `'${minInches}` : ''} - ${maxFeet}${
+    maxInches ? `'${maxInches}` : ''
+  }`;
 };
 
 const getLabel = (
@@ -103,16 +115,10 @@ export const CrowdPreferencesSection = ({
   onRemovePreference,
   onOpenModal,
 }: CrowdPreferencesSectionProps) => {
-  const hasPreferences = () => {
-    if (!preferences) return false;
-    return PREFERENCE_CONFIG.some(config => {
-      const value = preferences[config.key];
-      if (config.type === 'array') {
-        return Array.isArray(value) && value.length > 0;
-      }
-      return value !== undefined && value !== null;
-    });
-  };
+  const isPresentPreferences =
+    Object.values(preferences || {}).filter(
+      value => value !== undefined && value !== null,
+    ).length > 0;
 
   const renderPreferenceChips = () => {
     if (!preferences) return null;
@@ -155,10 +161,21 @@ export const CrowdPreferencesSection = ({
         if (numValue === undefined || numValue === null) return null;
 
         const displayValue =
-          config.type === 'weight'
-            ? formatWeight(numValue)
-            : formatHeight(numValue);
+          config.type === 'width'
+            ? `${preferences.minWeight} - ${preferences.maxWeight} Kg`
+            : formatHeight(preferences.minHeight!, preferences.maxHeight!);
 
+        const onRemoveWidth = () => {
+          onRemovePreference('minWeight', undefined);
+          onRemovePreference('maxWeight', undefined);
+        };
+
+        const onRemoveHeight = () => {
+          onRemovePreference('minHeight', undefined);
+          onRemovePreference('maxHeight', undefined);
+        };
+        const onRemove =
+          config.type === 'width' ? onRemoveWidth : onRemoveHeight;
         return (
           <View key={config.key} style={styles.preferenceCategory}>
             <AppText typography="medium_10" color="main">
@@ -167,7 +184,7 @@ export const CrowdPreferencesSection = ({
             <View style={styles.chipsContainer}>
               <TouchableOpacity
                 style={styles.chip}
-                onPress={() => onRemovePreference(config.key)}
+                onPress={onRemove}
                 activeOpacity={0.7}
               >
                 <AppText style={styles.chipText}>{displayValue}</AppText>
@@ -187,7 +204,7 @@ export const CrowdPreferencesSection = ({
           Crowd Preferences
         </AppText>
 
-        <If condition={hasPreferences()}>
+        <If condition={isPresentPreferences}>
           <AppButton
             title="Edit preferences"
             size="31"
@@ -198,15 +215,42 @@ export const CrowdPreferencesSection = ({
         </If>
       </View>
 
-      {hasPreferences() && renderPreferenceChips()}
+      {isPresentPreferences && renderPreferenceChips()}
 
-      <AppButton
-        title="Add preferences"
-        size="36"
-        icon={ICONS.chats('white')}
-        onPress={onOpenModal}
-        wrapperStyles={styles.addPreferencesButton}
-      />
+      <If condition={preferences?.isPregnant !== undefined}>
+        <View style={styles.preferenceCategory}>
+          <AppText typography="medium_10" color="main">
+            Pregnancy:
+          </AppText>
+          <View style={styles.chipsContainer}>
+            <TouchableOpacity
+              style={styles.chip}
+              onPress={() => {
+                onRemovePreference('months');
+                onRemovePreference('isPregnant');
+              }}
+              activeOpacity={0.7}
+            >
+              <AppText style={styles.chipText}>
+                {preferences?.isPregnant
+                  ? `${preferences?.months} months`
+                  : 'No'}
+              </AppText>
+              <SvgXml xml={ICONS.closeIcon('black')} width={10} height={10} />
+            </TouchableOpacity>
+          </View>
+        </View>
+      </If>
+
+      {!isPresentPreferences && (
+        <AppButton
+          title="Add preferences"
+          size="36"
+          icon={ICONS.chats('white')}
+          onPress={onOpenModal}
+          wrapperStyles={styles.addPreferencesButton}
+        />
+      )}
     </View>
   );
 };

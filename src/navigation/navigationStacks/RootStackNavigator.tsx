@@ -72,6 +72,7 @@ export const RootStackNavigator = () => {
       <RootStack.Screen
         name={Screens.BottomTabs}
         component={BottomTabsNavigator}
+        options={{ gestureEnabled: false }}
       />
       <RootStack.Screen name={Screens.SignIn} component={SignInScreen} />
       <RootStack.Screen
@@ -130,6 +131,7 @@ export const RootStackNavigator = () => {
       <RootStack.Screen
         name={Screens.CreateEvent}
         component={CreateEventScreen}
+        options={{ gestureEnabled: false }}
       />
       <RootStack.Screen
         name={Screens.TalentSearchEvents}

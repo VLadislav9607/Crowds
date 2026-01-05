@@ -1,15 +1,19 @@
-import { COLORS, SHADOWS } from "@styles";
-import { StyleSheet } from "react-native";
+import { COLORS, SHADOWS } from '@styles';
+import { StyleSheet } from 'react-native';
 
 export const styles = StyleSheet.create({
   container: {
-    paddingBottom: 0,
+    // paddingBottom: 0,
   },
   searchContainer: {
-    flexDirection: 'row', alignItems: 'center', gap: 16, marginBottom: 32, paddingHorizontal: 20
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 16,
+    marginBottom: 32,
+    paddingHorizontal: 20,
   },
   searchInputButton: {
-    flex:1
+    flex: 1,
   },
   searchInput: {
     height: 40,
@@ -32,7 +36,7 @@ export const styles = StyleSheet.create({
   categoriesScrollView: {
     flexDirection: 'column',
     rowGap: 16,
-    paddingHorizontal: 20
+    paddingHorizontal: 20,
   },
   categoriesRow: {
     flexDirection: 'row',
@@ -52,8 +56,7 @@ export const styles = StyleSheet.create({
     borderRadius: 20,
     overflow: 'hidden',
     justifyContent: 'flex-end',
-    backgroundColor: COLORS.light_purple
-
+    backgroundColor: COLORS.light_purple,
   },
   categoryOverlay: {
     backgroundColor: COLORS.black_50,
@@ -61,15 +64,17 @@ export const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
   },
-  listTitle:{
+  listTitle: {
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
     marginBottom: 16,
     marginTop: 32,
-    paddingHorizontal: 20
+    paddingHorizontal: 20,
   },
   listContentContainer: {
     paddingTop: 16,
+    // flex: 0,
+    justifyContent: 'flex-start',
   },
 });

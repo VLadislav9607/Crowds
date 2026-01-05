@@ -1,27 +1,28 @@
-import { StyleSheet } from "react-native";
+import { StyleSheet } from 'react-native';
 
 export const styles = StyleSheet.create({
   itemContainer: {
-    marginHorizontal: 20
+    marginHorizontal: 20,
   },
   itemSeparator: {
-    height: 9
+    height: 9,
   },
   footerLoader: {
     height: 60,
     alignItems: 'center',
-    justifyContent: 'center'
+    justifyContent: 'center',
   },
   emptyList: {
     height: 60,
     alignItems: 'center',
-    justifyContent: 'center'
+    justifyContent: 'center',
   },
   skeletonListContainer: {
+    flex: 1,
     width: '100%',
-    paddingHorizontal: 20
+    paddingHorizontal: 20,
   },
   skeletonItemsContainer: {
-    gap: 9
-  }
+    gap: 9,
+  },
 });

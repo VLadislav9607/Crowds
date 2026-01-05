@@ -1,8 +1,8 @@
 import { AppButton } from '@ui';
-import { BaseEventCard, cardStyles, IBaseEventCardProps } from '../../ui';
+import { OrgBaseEventCard, cardStyles, IOrgBaseEventCardProps } from '../../ui';
 import { ICONS } from '@assets';
 
-export const PastEventCard = ({ event }: IBaseEventCardProps) => {
+export const PastEventCard = ({ event }: IOrgBaseEventCardProps) => {
   const headerRight = (
     <AppButton
       title="VIEW"
@@ -16,5 +16,5 @@ export const PastEventCard = ({ event }: IBaseEventCardProps) => {
     />
   );
 
-  return <BaseEventCard event={event} headerRight={headerRight} />;
+  return <OrgBaseEventCard event={event} headerRight={headerRight} />;
 };

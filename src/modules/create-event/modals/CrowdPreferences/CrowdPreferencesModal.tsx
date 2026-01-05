@@ -46,15 +46,38 @@ export const CrowdPreferencesModal = ({
     }));
   };
 
-  const handleRangeChange = (key: 'weight' | 'height', value: number) => {
+  const handleChangeWeight = (min: number, max: number) => {
     setLocalPreferences(prev => ({
       ...prev,
-      [key]: value,
+      minWeight: min,
+      maxWeight: max,
+    }));
+  };
+
+  const handleChangeHeight = (min: number, max: number) => {
+    setLocalPreferences(prev => ({
+      ...prev,
+      minHeight: min,
+      maxHeight: max,
     }));
   };
 
   const handleSave = () => {
-    onSave(localPreferences);
+    const isMonthsPresent = Boolean(localPreferences.months);
+    const filledAdditionalThings =
+      localPreferences?.additionalThings?.filter(thing => Boolean(thing)) || [];
+
+    onSave({
+      ...localPreferences,
+      months: isMonthsPresent ? Number(localPreferences.months) : undefined,
+      isPregnant: isMonthsPresent
+        ? true
+        : localPreferences.isPregnant === true
+        ? undefined
+        : localPreferences.isPregnant,
+      additionalThings:
+        filledAdditionalThings.length > 0 ? filledAdditionalThings : undefined,
+    });
     bottomSheetRef.current?.dismiss();
   };
 
@@ -69,6 +92,7 @@ export const CrowdPreferencesModal = ({
       bottomSheetRef={bottomSheetRef}
       snapPoints={['90%']}
       enableDynamicSizing={false}
+      enableContentPanningGesture={false}
       keyboardBehavior="interactive"
       keyboardBlurBehavior="restore"
       android_keyboardInputMode="adjustResize"
@@ -99,46 +123,61 @@ export const CrowdPreferencesModal = ({
 
           <RangeSelector
             label="Weight"
-            disableRange
             min={20}
             max={150}
-            defaultMinValue={localPreferences.weight || 20}
-            defaultMaxValue={150}
+            defaultMinValue={localPreferences.minWeight || 20}
+            defaultMaxValue={localPreferences.maxWeight || 150}
             containerStyles={styles.rangeBackground}
             measure="Kg"
-            onRenderValue={values => `${values.min} Kg`}
-            onSlidingComplete={values => handleRangeChange('weight', values[0])}
+            onRenderValue={values => `${values.min} - ${values.max} Kg`}
+            onSlidingComplete={values => {
+              handleChangeWeight(values[0], values[1]);
+            }}
             bottomLabels={{ minValueLabel: '20 Kg', maxValueLabel: '150 Kg' }}
           />
 
           <RangeSelector
             label="Height"
             measure="Ft"
-            disableRange
             min={2}
             max={8}
-            defaultMinValue={localPreferences.height || 2}
-            defaultMaxValue={8}
+            defaultMinValue={localPreferences.minHeight || 2}
+            defaultMaxValue={localPreferences.maxHeight || 8}
             step={0.1}
             containerStyles={styles.rangeBackground}
-            onSlidingComplete={values => handleRangeChange('height', values[0])}
+            onSlidingComplete={values =>
+              handleChangeHeight(values[0], values[1])
+            }
             bottomLabels={{ minValueLabel: '2 Feet', maxValueLabel: '8 Feet' }}
             onRenderValue={values => {
-              const fractionalPart = Math.round((values.min % 1) * 10);
-              return `${Math.floor(values.min)} foot ${
-                fractionalPart ? `${fractionalPart} Inch` : ''
+              const minFractionalPart = Math.round((values.min % 1) * 10);
+              const maxFractionalPart = Math.round((values.max % 1) * 10);
+
+              return `${Math.floor(values.min)} foot${
+                minFractionalPart ? ` ${minFractionalPart} Inch` : ''
+              } - ${Math.floor(values.max)} foot ${
+                maxFractionalPart ? `${maxFractionalPart} Inch` : ''
               }`;
             }}
           />
 
           <PregnancyField
             isPregnant={localPreferences.isPregnant}
-            setIsPregnant={value =>
-              setLocalPreferences(prev => ({ ...prev, isPregnant: value }))
-            }
-            months={localPreferences.months}
+            setIsPregnant={value => {
+              const newValue =
+                value === localPreferences.isPregnant ? undefined : value;
+              setLocalPreferences({
+                ...localPreferences,
+                isPregnant: newValue,
+                months: newValue ? localPreferences.months : undefined,
+              });
+            }}
+            months={localPreferences.months?.toString()}
             setMonths={value =>
-              setLocalPreferences(prev => ({ ...prev, months: value }))
+              setLocalPreferences({
+                ...localPreferences,
+                months: value ? Number(value) : undefined,
+              })
             }
           />
 

@@ -11,6 +11,9 @@ export const styles = StyleSheet.create({
     borderWidth: 1,
     borderColor: COLORS.light_gray3,
   },
+  containerError: {
+    borderColor: COLORS.red,
+  },
   header: {
     flexDirection: 'row',
     justifyContent: 'space-between',
@@ -54,6 +57,9 @@ export const styles = StyleSheet.create({
   },
   genderLabel: {
     marginBottom: 4,
+  },
+  errorText: {
+    marginTop: 8,
   },
   underline: {
     textDecorationLine: 'underline',
@@ -102,6 +108,12 @@ export const styles = StyleSheet.create({
   },
   editPreferencesButtonText: {
     ...TYPOGRAPHY.bold_14,
+  },
+  pregnancyContainer: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    gap: 8,
   },
 });
 

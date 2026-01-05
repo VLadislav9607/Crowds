@@ -12,6 +12,7 @@ export const PregnancyField = ({
   setMonths,
   setIsPregnant,
 }: PregnancyFieldProps) => {
+  console.log('months', months);
   const handleMonthsChange = (text: string) => {
     // Allow empty string (for deletion)
     if (text === '') {
@@ -55,7 +56,7 @@ export const PregnancyField = ({
           placeholder="Enter Months"
           containerStyle={styles.inputContainer}
           keyboardType="numeric"
-          value={months}
+          value={months || ''}
           onChangeText={handleMonthsChange}
         />
       </If>

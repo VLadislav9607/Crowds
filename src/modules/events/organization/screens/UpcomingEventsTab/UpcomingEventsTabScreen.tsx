@@ -1,72 +1,16 @@
-import { useState } from 'react';
+import { useState, useMemo } from 'react';
 import { StyleSheet } from 'react-native';
 
 import { AppTabSelector, If, ScreenWrapper } from '@components';
 
 import { OrganizationEventsList } from '../../components';
-import { IEventData } from '../../ui';
-
-const events: IEventData[] = [
-  {
-    id: '1',
-    name: 'Fame game - Stadium extras',
-    location: '333 Bridge Road, Richmond VIC Australia',
-    image:
-      'https://media.istockphoto.com/id/814423752/photo/eye-of-model-with-colorful-art-make-up-close-up.jpg?s=612x612&w=0&k=20&c=l15OdMWjgCKycMMShP8UK94ELVlEGvt7GmB_esHWPYE=',
-    date: '03 OCT, 2025',
-    duration: '03 Hours',
-    participants: 55,
-    maxParticipants: 70,
-  },
-  {
-    id: '2',
-    name: 'Fame game - Stadium extras',
-    location: '333 Bridge Road, Richmond VIC Australia',
-    image:
-      'https://media.istockphoto.com/id/814423752/photo/eye-of-model-with-colorful-art-make-up-close-up.jpg?s=612x612&w=0&k=20&c=l15OdMWjgCKycMMShP8UK94ELVlEGvt7GmB_esHWPYE=',
-    date: '03 OCT, 2025',
-    duration: '03 Hours',
-    participants: 55,
-    maxParticipants: 70,
-  },
-  {
-    id: '3',
-    name: 'Fame game - Stadium extras',
-    location: '333 Bridge Road, Richmond VIC Australia',
-    image:
-      'https://media.istockphoto.com/id/814423752/photo/eye-of-model-with-colorful-art-make-up-close-up.jpg?s=612x612&w=0&k=20&c=l15OdMWjgCKycMMShP8UK94ELVlEGvt7GmB_esHWPYE=',
-    date: '03 OCT, 2025',
-    duration: '03 Hours',
-    participants: 55,
-    maxParticipants: 70,
-  },
-  {
-    id: '4',
-    name: 'Fame game - Stadium extras',
-    location: '333 Bridge Road, Richmond VIC Australia',
-    image:
-      'https://media.istockphoto.com/id/814423752/photo/eye-of-model-with-colorful-art-make-up-close-up.jpg?s=612x612&w=0&k=20&c=l15OdMWjgCKycMMShP8UK94ELVlEGvt7GmB_esHWPYE=',
-    date: '03 OCT, 2025',
-    duration: '03 Hours',
-    participants: 55,
-    maxParticipants: 70,
-  },
-  {
-    id: '5',
-    name: 'Fame game - Stadium extras',
-    location: '333 Bridge Road, Richmond VIC Australia',
-    image:
-      'https://media.istockphoto.com/id/814423752/photo/eye-of-model-with-colorful-art-make-up-close-up.jpg?s=612x612&w=0&k=20&c=l15OdMWjgCKycMMShP8UK94ELVlEGvt7GmB_esHWPYE=',
-    date: '03 OCT, 2025',
-    duration: '03 Hours',
-    participants: 55,
-    maxParticipants: 70,
-  },
-];
 
 export const UpcomingEventsTabScreen = () => {
   const [mainTab, setMainTab] = useState('active');
   const [activeSubTab, setActiveSubTab] = useState('job_board');
+
+  const now = useMemo(() => new Date().toISOString(), []);
+
   return (
     <ScreenWrapper
       showBackButton={false}
@@ -82,7 +26,7 @@ export const UpcomingEventsTabScreen = () => {
           options={[
             { label: 'Active', value: 'active' },
             { label: 'Drafts', value: 'drafts' },
-            { label: 'Past', value: 'upcoming' },
+            { label: 'Past', value: 'past' },
           ]}
           selectedValue={mainTab}
           onSelect={setMainTab}
@@ -100,7 +44,19 @@ export const UpcomingEventsTabScreen = () => {
         />
       </If>
 
-      <OrganizationEventsList events={events} cardType="upcoming" />
+      <OrganizationEventsList
+        filters={{
+          status_filter: mainTab === 'drafts' ? 'draft' : 'published',
+          ...(mainTab === 'past' && { end_before: now }),
+          ...(mainTab === 'active' && { end_after: now }),
+          visibility_filter:
+            mainTab === 'active'
+              ? activeSubTab === 'job_board'
+                ? 'public'
+                : 'private'
+              : undefined,
+        }}
+      />
     </ScreenWrapper>
   );
 };

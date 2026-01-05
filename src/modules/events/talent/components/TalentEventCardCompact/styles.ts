@@ -1,5 +1,5 @@
-import { COLORS, SHADOWS } from "@styles";
-import { StyleSheet } from "react-native";
+import { COLORS, SHADOWS } from '@styles';
+import { StyleSheet } from 'react-native';
 
 export const styles = StyleSheet.create({
   container: {
@@ -17,7 +17,7 @@ export const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
   },
-  iconContainer:{
+  iconContainer: {
     width: 40,
     height: 40,
     borderRadius: 5,
@@ -28,23 +28,26 @@ export const styles = StyleSheet.create({
   dateTimeContainer: {
     flexDirection: 'row',
     gap: 20,
-    flexWrap: 'wrap'
+    flexWrap: 'wrap',
   },
-  content:{
+  content: {
     padding: 10,
     flex: 1,
-    gap: 8
+    gap: 8,
   },
-  contentHeader:{
+  contentHeader: {
     flexDirection: 'row',
     justifyContent: 'space-between',
   },
-  priceContainer:{
+  contentHeaderLeft: {
+    flex: 1,
+  },
+  priceContainer: {
     flexDirection: 'row',
     alignItems: 'center',
-    gap: 8
+    gap: 8,
   },
-  pricePadge:{
+  pricePadge: {
     height: 26,
     flexDirection: 'row',
     gap: 4,
@@ -52,41 +55,41 @@ export const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     backgroundColor: COLORS.gray_20,
-    paddingHorizontal: 10
+    paddingHorizontal: 10,
   },
-  separatorDashedLine:{
+  separatorDashedLine: {
     height: 1,
     backgroundColor: COLORS.gray_20,
   },
-  redButton:{
+  redButton: {
     height: 36,
     justifyContent: 'center',
     alignItems: 'center',
     flex: 1,
     backgroundColor: COLORS.red_20,
-    borderRadius: 100
+    borderRadius: 100,
   },
-  greenButton:{
+  greenButton: {
     height: 36,
     justifyContent: 'center',
     alignItems: 'center',
     flex: 1,
     backgroundColor: COLORS.light_green_10,
-    borderRadius: 100
+    borderRadius: 100,
   },
-  buttonsContainer:{
+  buttonsContainer: {
     flexDirection: 'row',
-    gap: 8
+    gap: 8,
   },
-  eventDetailsButton:{
+  eventDetailsButton: {
     flexDirection: 'row',
     alignItems: 'center',
     gap: 3,
   },
-  approvedButtons:{
+  approvedButtons: {
     flexDirection: 'row',
     justifyContent: 'space-between',
-    flex: 1
+    flex: 1,
   },
   messageButtonWrapper: {
     width: 117,

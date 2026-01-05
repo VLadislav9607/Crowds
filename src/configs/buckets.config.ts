@@ -11,6 +11,12 @@ export const BUCKETS_CONFIG = {
     allowedTypes: ['image/jpeg', 'image/png'],
     expiresIn: 24 * 60 * 60, // 1 day
   },
+  event_nda: {
+    isPrivate: true,
+    maxSize: 1024 * 1024 * 3, // 3MB
+    allowedTypes: ['application/pdf'],
+    expiresIn: 24 * 60 * 60, // 1 day
+  },
 };
 
 export type BucketsTypes = keyof typeof BUCKETS_CONFIG;

@@ -9,23 +9,33 @@ import {
 import { styles } from './styles';
 import { PlacesPredictionsInputProps } from './types';
 import { AppInput } from '@ui';
-import { usePlaceDetails, usePlacePrediction } from '@actions';
-import { useDebounce, useDidUpdateEffect } from '@hooks';
-import { PlaceAutocompleteResult } from '@googlemaps/google-maps-services-js';
+import {
+  usePlaceDetails,
+  usePlacePrediction,
+  usePlaceTimezone,
+} from '@actions';
+import { useBoolean, useDebounce, useDidUpdateEffect } from '@hooks';
+import {
+  AddressType,
+  PlaceAutocompleteResult,
+  PlaceAutocompleteType,
+  TimeZoneResponseData,
+} from '@googlemaps/google-maps-services-js';
 import { If } from '../If';
 import {
   generateGooglePlacesSessionToken,
   parseGooglePlaceDetails,
 } from './helper';
+import { showInfoToast } from '@helpers';
 
 export const PlacesPredictionsInput = ({
   containerStyle,
   types,
-  errorMessage,
   defaultValue = '',
   onSelectPlace,
   onChangeText,
-  placeholder = 'Search',
+  includeTimezone = false,
+  inputProps,
 }: PlacesPredictionsInputProps) => {
   const [inputValue, setInputValue] = useState(defaultValue);
   const [listViewDisplayed, setListViewDisplayed] = useState(false);
@@ -37,15 +47,20 @@ export const PlacesPredictionsInput = ({
   const { data: predictions = [] } = usePlacePrediction({
     query: debouncedInputValue,
     sessiontoken: sessionToken,
-    types,
+    types: PlaceAutocompleteType.address,
+  });
+
+  const { mutateAsync: getPlaceTimezoneMutateAsync } = usePlaceTimezone();
+
+  const { mutateAsync: getPlaceDetailsMutateAsync } = usePlaceDetails({
+    onSuccess: () => setSessionToken(generateGooglePlacesSessionToken()),
   });
 
   const {
-    mutateAsync: getPlaceDetailsMutateAsync,
-    isPending: isDetailsLoading,
-  } = usePlaceDetails({
-    onSuccess: () => setSessionToken(generateGooglePlacesSessionToken()),
-  });
+    value: isDetailsLoading,
+    setTrue: setIsDetailsLoadingTrue,
+    setFalse: setIsDetailsLoadingFalse,
+  } = useBoolean();
 
   const handleTextChange = (text: string) => {
     setInputValue(text);
@@ -57,21 +72,48 @@ export const PlacesPredictionsInput = ({
 
   const handleSelectPlace = async (prediction: PlaceAutocompleteResult) => {
     setListViewDisplayed(false);
-    Keyboard.dismiss();
-    const result = await getPlaceDetailsMutateAsync({
+    setIsDetailsLoadingTrue();
+    const detailsResponse = await getPlaceDetailsMutateAsync({
       place_id: prediction.place_id,
       sessiontoken: sessionToken,
     });
 
+    if (
+      types === PlaceAutocompleteType.address &&
+      !detailsResponse.result.address_components?.some(component =>
+        component.types.includes(AddressType.street_number),
+      )
+    ) {
+      showInfoToast('Please select a full street address with street number');
+      setListViewDisplayed(true);
+      setIsDetailsLoadingFalse();
+      return;
+    }
+
+    Keyboard.dismiss();
+
+    let timezoneResponse: TimeZoneResponseData | undefined;
+
+    if (includeTimezone) {
+      timezoneResponse = await getPlaceTimezoneMutateAsync({
+        location: {
+          lat: detailsResponse.result.geometry?.location?.lat || 0,
+          lng: detailsResponse.result.geometry?.location?.lng || 0,
+        },
+      });
+    }
+    setIsDetailsLoadingFalse();
+
     setInputValue(prediction.description);
     onSelectPlace?.({
-      raw_details: result.result,
+      raw_details: detailsResponse.result,
       parsed_details: parseGooglePlaceDetails(
         prediction.place_id,
         prediction.description,
-        result,
+        detailsResponse,
       ),
       autocomplete_descripton: prediction.description,
+      timezone: timezoneResponse,
     });
   };
 
@@ -82,11 +124,11 @@ export const PlacesPredictionsInput = ({
   return (
     <View style={containerStyle}>
       <AppInput
-        placeholder={placeholder}
         value={inputValue}
-        errorMessage={errorMessage}
         onChangeText={handleTextChange}
         numberOfLines={1}
+        placeholder="Search"
+        {...inputProps}
       />
 
       <If condition={isDetailsLoading}>

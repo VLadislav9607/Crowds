@@ -6,10 +6,15 @@ import { AppSearchInputPrimary, AppText } from '@ui';
 import { SvgXml } from 'react-native-svg';
 import { styles } from './styles';
 import { EVENTS_CATEGORIES } from '../../../constants';
-import { TalentEventsList } from '../../components';
-import { goToScreen, Screens } from '@navigation';
+import { SearchEventsList } from '../../components';
+import { goToScreen, Screens, TAB_BAR_TOTAL_HEIGHT } from '@navigation';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 export const TalentEventsHomeTab = () => {
+  const { bottom } = useSafeAreaInsets();
+
+  const bottomPadding = TAB_BAR_TOTAL_HEIGHT + bottom;
+
   // Групуємо категорії по 4 елементи в рядок
   const groupedCategories = EVENTS_CATEGORIES.reduce(
     (
@@ -34,6 +39,7 @@ export const TalentEventsHomeTab = () => {
       headerStyles={{ backgroundColor: COLORS.black }}
       containerStyle={styles.container}
       customElement
+      withBottomTabBar={true}
       rightIcons={[
         {
           icon: () => ICONS.bell('white'),
@@ -42,9 +48,11 @@ export const TalentEventsHomeTab = () => {
         },
       ]}
     >
-      <TalentEventsList
-        type="random"
-        contentContainerStyle={styles.listContentContainer}
+      <SearchEventsList
+        contentContainerStyle={[
+          styles.listContentContainer,
+          { paddingBottom: bottomPadding },
+        ]}
         ListHeaderComponent={
           <>
             <View style={styles.searchContainer}>

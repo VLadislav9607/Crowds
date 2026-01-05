@@ -16,6 +16,8 @@ export const useGetMe = (options?: IQueryOptions<UseGetMeResDto>) => {
     me: data?.isTalent ? data.talent : data?.organizationMember,
     isTalent: data?.isTalent,
     isOrganizationMember: data?.isOrganizationMember,
+    talent: data?.talent,
+    organizationMember: data?.organizationMember,
     ...rest,
   };
 };
@@ -29,5 +31,9 @@ export const prefetchUseGetMe = async () => {
   return {
     data,
     me: data?.isTalent ? data.talent : data?.organizationMember,
+    isTalent: data?.isTalent,
+    isOrganizationMember: data?.isOrganizationMember,
+    talent: data?.talent,
+    organizationMember: data?.organizationMember,
   };
 };

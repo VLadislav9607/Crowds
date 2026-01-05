@@ -4,9 +4,9 @@ import { AppButton, AppText } from '@ui';
 import { ICONS } from '@assets';
 import { goToScreen, Screens } from '@navigation';
 
-import { BaseEventCard, IBaseEventCardProps, cardStyles } from '../../ui';
+import { OrgBaseEventCard, IOrgBaseEventCardProps, cardStyles } from '../../ui';
 
-interface IActiveUpcomingEventCardProps extends IBaseEventCardProps {
+interface IActiveUpcomingEventCardProps extends IOrgBaseEventCardProps {
   showParticipants?: boolean;
 }
 
@@ -18,9 +18,22 @@ export const ActiveUpcomingEventCard = ({
     // TODO: Navigate to view applicants
   };
 
+  const participantsCount = event?.event_age_groups?.reduce(
+    (acc, curr) =>
+      acc +
+      (curr.male_count || 0) +
+      (curr.female_count || 0) +
+      (curr.other_count || 0),
+    0,
+  );
+
   const headerRight = showParticipants ? (
+    // <AppText style={cardStyles.participants}>
+    //   TALENT FILLED {0}/{participantsCount}
+    // </AppText>
+
     <AppText style={cardStyles.participants}>
-      TALENT FILLED {event.participants}/{event.maxParticipants}
+      {0}/{participantsCount} TALENTS
     </AppText>
   ) : null;
 
@@ -48,6 +61,6 @@ export const ActiveUpcomingEventCard = ({
   );
 
   return (
-    <BaseEventCard event={event} headerRight={headerRight} footer={footer} />
+    <OrgBaseEventCard event={event} headerRight={headerRight} footer={footer} />
   );
 };

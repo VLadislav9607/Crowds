@@ -18,15 +18,20 @@ export const AppModal = ({
   contentContainerStyle,
   ...props
 }: AppModalProps) => {
-
   return (
     <Modal onBackdropPress={props.onClose} backdropOpacity={0.5} {...props}>
       <AppToast removeTopOffset />
-      <View style={[styles.container, hideCloseButton && styles.containerWithoutCloseButton, contentContainerStyle]}>
-        <If condition={!hideCloseButton && !props.onClose}>
+      <View
+        style={[
+          styles.container,
+          hideCloseButton && styles.containerWithoutCloseButton,
+          contentContainerStyle,
+        ]}
+      >
+        <If condition={!hideCloseButton && !!props.onClose}>
           <TouchableOpacity style={styles.closeButton} onPress={props.onClose}>
-          <SvgXml xml={ICONS.closeIcon('black_50')} width={11} height={11} />
-        </TouchableOpacity>
+            <SvgXml xml={ICONS.closeIcon('black_50')} width={11} height={11} />
+          </TouchableOpacity>
         </If>
 
         {title && (

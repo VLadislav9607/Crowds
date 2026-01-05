@@ -89,13 +89,15 @@ export const PrimaryLocationStep = forwardRef<
           name="parsed_location"
           render={({ field, fieldState }) => (
             <PlacesPredictionsInput
-              placeholder="Search primary location"
+              inputProps={{
+                placeholder: 'Search primary location',
+                errorMessage: fieldState.error?.message,
+              }}
               types={PlaceAutocompleteType.address}
               onChangeText={() => {
                 resetField('parsed_location');
                 onChangeText?.();
               }}
-              errorMessage={fieldState.error?.message}
               onSelectPlace={res => field.onChange(res.parsed_details)}
               defaultValue={parsedLocation?.autocomplete_description}
             />
@@ -125,13 +127,15 @@ export const PrimaryLocationStep = forwardRef<
             name="parsed_head_office_location"
             render={({ field, fieldState }) => (
               <PlacesPredictionsInput
-                placeholder="Search head office location"
+                inputProps={{
+                  placeholder: 'Search head office location',
+                  errorMessage: fieldState.error?.message,
+                }}
                 types={PlaceAutocompleteType.address}
                 onChangeText={() => {
                   resetField('parsed_head_office_location');
                   onChangeText?.();
                 }}
-                errorMessage={fieldState.error?.message}
                 onSelectPlace={res => field.onChange(res.parsed_details)}
                 defaultValue={
                   parsedHeadOfficeLocation?.autocomplete_description

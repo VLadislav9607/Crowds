@@ -1,14 +1,10 @@
 import { AppTabSelector, ITabOption, ScreenWrapper } from '@components';
-import { TalentEventsList } from '../../components';
 import { useState } from 'react';
 import { ScrollView } from 'react-native';
 import { TalentEventStatus } from '../../../types';
 import { styles } from './styles';
-import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 export const TalentEventsTab = () => {
-  const insets = useSafeAreaInsets(); 
-
   const [selectedTab, setSelectedTab] = useState<TalentEventStatus>('proposed');
 
   const tabOptions: ITabOption<TalentEventStatus>[] = [
@@ -20,27 +16,32 @@ export const TalentEventsTab = () => {
 
   return (
     <ScreenWrapper
-      headerVariant='withTitle'
+      headerVariant="withTitle"
       showBackButton={false}
       containerStyle={styles.container}
-      title='Events'
+      title="Events"
       titleProps={{ style: styles.title }}
       headerStyles={styles.header}
-      customElement={<ScrollView horizontal showsHorizontalScrollIndicator={false} contentContainerStyle={styles.scrollViewContent} style={styles.scrollView}>
-        <AppTabSelector
-          onSelect={(value) => setSelectedTab(value)}
-          theme='black'
-          options={tabOptions}
-          selectedValue={selectedTab}
-        />
-      </ScrollView>}
+      customElement={
+        <ScrollView
+          horizontal
+          showsHorizontalScrollIndicator={false}
+          contentContainerStyle={styles.scrollViewContent}
+          style={styles.scrollView}
+        >
+          <AppTabSelector
+            onSelect={value => setSelectedTab(value)}
+            theme="black"
+            options={tabOptions}
+            selectedValue={selectedTab}
+          />
+        </ScrollView>
+      }
     >
-
-      <TalentEventsList
+      {/* <TalentEventsList
         type={selectedTab}
         contentContainerStyle={[styles.eventsListContent, {paddingBottom: insets.bottom + 90}]}
-      />
-
+      /> */}
     </ScreenWrapper>
   );
 };

@@ -1,8 +1,9 @@
-import { StyleProp, ViewStyle } from "react-native";
-import { TalentEventStatus } from "../../../types";
-
+import { StyleProp, ViewStyle } from 'react-native';
+import { TalentEventStatus } from '../../../types';
+import { SearchPublicEventsListItemDto } from '@actions';
 
 export interface TalentEventCardCompactProps {
-    containerStyle?: StyleProp<ViewStyle>;
-    type?: TalentEventStatus;
+  event: SearchPublicEventsListItemDto;
+  containerStyle?: StyleProp<ViewStyle>;
+  type?: TalentEventStatus;
 }

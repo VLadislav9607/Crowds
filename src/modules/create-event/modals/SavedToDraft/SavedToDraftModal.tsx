@@ -1,15 +1,18 @@
+import { forwardRef } from 'react';
 import { AppModal } from '@components';
 import { AppButton } from '@ui';
+import { useImperativeModal } from '@hooks';
+import { SavedToDraftModalProps, SavedToDraftModalRef } from './types';
+import { goBack } from '@navigation';
 
-interface SavedToDraftModalProps {
-  isVisible: boolean;
-  onClose: () => void;
-}
+export const SavedToDraftModal = forwardRef<SavedToDraftModalRef>((_, ref) => {
+  const { isVisible, close } = useImperativeModal<SavedToDraftModalProps>(ref);
 
-export const SavedToDraftModal = ({
-  isVisible,
-  onClose,
-}: SavedToDraftModalProps) => {
+  const onClose = () => {
+    close();
+    goBack();
+  };
+
   return (
     <AppModal
       title="Saved to Draft!"
@@ -30,4 +33,4 @@ export const SavedToDraftModal = ({
       <AppButton title="Okay" variant="withBorder" onPress={onClose} />
     </AppModal>
   );
-};
+});

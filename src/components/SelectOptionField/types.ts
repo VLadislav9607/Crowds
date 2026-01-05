@@ -12,6 +12,7 @@ export interface SelectOptionFieldProps {
   selectedValues?: string | string[];
   containerStyle?: ViewStyle;
   enableAutoClose?: boolean;
+  showSkeleton?: boolean;
   onOptionSelect?: (value: SelectOptionFieldItem, index: number) => void;
   onSelectedOptionsChange?: (values: SelectOptionFieldItem[]) => void;
 }

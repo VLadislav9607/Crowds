@@ -1,10 +1,6 @@
-import { useState } from 'react';
 import { View, StyleSheet } from 'react-native';
 import { FormProvider } from 'react-hook-form';
-
 import { ScreenWithScrollWrapper } from '@components';
-
-import { useCreateEventForm } from '../../hooks';
 import {
   AgePeopleSection,
   BasicInfoSection,
@@ -12,78 +8,68 @@ import {
   EventBriefSection,
   OtherInfoSection,
   PaymentSection,
-  TagsSection,
   VisibilitySection,
 } from '../../forms';
 import { CreateEventFooter } from '../../components';
 import { EventCreatedModal, SavedToDraftModal } from '../../modals';
+import { useCreateEvents } from './useCreateEvents';
+import { ActionConfirmationModal } from '@modules/common';
 
 export const CreateEventScreen = () => {
-  const { formData } = useCreateEventForm();
-  const [isEventCreatedModalVisible, setIsEventCreatedModalVisible] =
-    useState(false);
-  const [isSavedToDraftModalVisible, setIsSavedToDraftModalVisible] =
-    useState(false);
-
-  const handleSaveDraft = () => {
-    // TODO: Implement save draft
-    console.log('Save draft:', formData.getValues());
-    setIsSavedToDraftModalVisible(true);
-  };
-
-  const handleNext = () => {
-    setIsEventCreatedModalVisible(true);
-
-    // formData.handleSubmit(
-    //   data => {
-    //     // TODO: Implement next step or submit
-    //     console.log('Form data:', data);
-    //     setIsEventCreatedModalVisible(true);
-    //   },
-    //   errors => {
-    //     console.log('Validation errors:', errors);
-    //   },
-    // )();
-  };
-
-  const handleCancel = () => {
-    // TODO: Navigate back or show confirmation
-    console.log('Cancel');
-  };
+  const {
+    formData,
+    actionConfirmationModalRef,
+    eventCreatedModalRef,
+    savedToDraftModalRef,
+    scrollViewRef,
+    basicInfoSectionRef,
+    dateTimeSectionRef,
+    eventBriefSectionRef,
+    visibilitySectionRef,
+    agePeopleSectionRef,
+    paymentSectionRef,
+    otherInfoSectionRef,
+    ageGroupWidgetRefs,
+    isCreating,
+    handleCreateDraft,
+    handleCreatePublishedEvent,
+    handleCancel,
+  } = useCreateEvents();
 
   return (
     <FormProvider {...formData}>
       <ScreenWithScrollWrapper
+        showLoader={isCreating}
         headerVariant="withTitleAndImageBg"
         title="Create New Event"
         isFloatFooter={false}
+        goBackCallback={handleCancel}
+        scrollViewRef={scrollViewRef}
         footer={
           <CreateEventFooter
             onCancel={handleCancel}
-            onSaveDraft={handleSaveDraft}
-            onNext={handleNext}
+            onSaveDraft={handleCreateDraft}
+            onNext={handleCreatePublishedEvent}
           />
         }
       >
         <View style={styles.container}>
-          <BasicInfoSection />
-          <DateTimeSection />
-          <EventBriefSection />
-          <VisibilitySection />
-          <AgePeopleSection />
-          <TagsSection />
-          <PaymentSection />
-          <OtherInfoSection />
+          <BasicInfoSection ref={basicInfoSectionRef} />
+          <DateTimeSection ref={dateTimeSectionRef} />
+          <EventBriefSection ref={eventBriefSectionRef} />
+          <VisibilitySection ref={visibilitySectionRef} />
+          <AgePeopleSection
+            ref={agePeopleSectionRef}
+            widgetRefs={ageGroupWidgetRefs}
+          />
+          {/* <TagsSection /> */}
+          <PaymentSection ref={paymentSectionRef} />
+          <OtherInfoSection ref={otherInfoSectionRef} />
         </View>
 
-        <EventCreatedModal
-          isVisible={isEventCreatedModalVisible}
-          onClose={() => setIsEventCreatedModalVisible(false)}
-        />
-        <SavedToDraftModal
-          isVisible={isSavedToDraftModalVisible}
-          onClose={() => setIsSavedToDraftModalVisible(false)}
-        />
+        <ActionConfirmationModal ref={actionConfirmationModalRef} />
+        <EventCreatedModal ref={eventCreatedModalRef} />
+        <SavedToDraftModal ref={savedToDraftModalRef} />
       </ScreenWithScrollWrapper>
     </FormProvider>
   );
