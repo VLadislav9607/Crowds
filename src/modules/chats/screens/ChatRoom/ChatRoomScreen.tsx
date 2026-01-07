@@ -1,133 +1,65 @@
-import { ScreenWithScrollWrapper } from '@components';
+import { useCallback, useMemo } from 'react';
+import { InfiniteData } from '@tanstack/react-query';
 
 import {
-  MessageList,
-  IMessageSection,
-  SendMessageInput,
-} from '../../components';
+  useChatParticipants,
+  useGetChatMessages,
+  GetChatMessagesResDto,
+} from '@actions';
+import { ScreenWrapper } from '@components';
+import { Screens, useScreenNavigation } from '@navigation';
 
-const SENDER_INFO = {
-  name: 'John Doe',
-  avatar: 'https://randomuser.me/api/portraits/men/32.jpg',
-};
-
-const MOCK_SECTIONS: IMessageSection[] = [
-  {
-    title: 'Today',
-    data: [
-      {
-        id: '1',
-        text: 'Hello',
-        time: '08:50 AM',
-        sender: 'other',
-        showTime: true,
-        senderName: SENDER_INFO.name,
-        senderAvatar: SENDER_INFO.avatar,
-      },
-      {
-        id: '223',
-        text: 'Can you tell me, will you supply costumes?',
-        time: '08:50 AM',
-        sender: 'other',
-        senderName: SENDER_INFO.name,
-        senderAvatar: SENDER_INFO.avatar,
-      },
-      {
-        id: '2',
-        text: 'Can you tell me, will you supply costumes?',
-        time: '08:50 AM',
-        sender: 'other',
-        senderName: SENDER_INFO.name,
-        senderAvatar: SENDER_INFO.avatar,
-      },
-      {
-        id: '3',
-        text: 'We will only supply branded t-shirts.',
-        time: '08:01 AM',
-        sender: 'me',
-        showTime: true,
-      },
-      {
-        id: '4',
-        text: 'Ok, I was told something else.',
-        time: '07:53 AM',
-        sender: 'me',
-        showTime: true,
-        senderName: SENDER_INFO.name,
-        senderAvatar: SENDER_INFO.avatar,
-      },
-      {
-        id: '5',
-        text: "I was under the impression you'd supply all.",
-        time: '07:53 AM',
-        sender: 'me',
-        senderName: SENDER_INFO.name,
-        senderAvatar: SENDER_INFO.avatar,
-      },
-      {
-        id: '7',
-        text: "Sorry, no this isn't the case.",
-        time: '07:52 AM',
-        sender: 'me',
-        showTime: true,
-      },
-    ],
-  },
-  {
-    title: 'Yesterday',
-    data: [
-      {
-        id: '8',
-        text: 'Hello, are you there?',
-        time: '06:30 PM',
-        sender: 'other',
-        showTime: true,
-        senderName: SENDER_INFO.name,
-        senderAvatar: SENDER_INFO.avatar,
-      },
-      {
-        id: '9',
-        text: 'Yes, I am here.',
-        time: '06:35 PM',
-        sender: 'me',
-        showTime: true,
-      },
-    ],
-  },
-  {
-    title: 'Last week',
-    data: [
-      {
-        id: '10',
-        text: 'Hello, are you there?',
-        time: '06:30 PM',
-        sender: 'other',
-        showTime: true,
-        senderName: SENDER_INFO.name,
-        senderAvatar: SENDER_INFO.avatar,
-      },
-      {
-        id: '11',
-        text: 'Yes, I am here.',
-        time: '06:35 PM',
-        sender: 'me',
-        showTime: true,
-      },
-    ],
-  },
-];
+import { MessageList, SendMessageInput } from '../../components';
+import { buildMessageSections } from '../../helpers';
+import { useChatMessagesRealtime } from '../../hooks';
 
 export const ChatRoomScreen = () => {
+  const { params } = useScreenNavigation<Screens.ChatRoom>();
+
+  const { data: participants, isLoading: isParticipantsLoading } =
+    useChatParticipants(params?.chatId ?? '');
+
+  const { data, fetchNextPage, hasNextPage, isFetchingNextPage, isLoading } =
+    useGetChatMessages({
+      chatId: params?.chatId ?? '',
+      limit: 50,
+    });
+
+  useChatMessagesRealtime({
+    chatId: params?.chatId ?? '',
+    limit: 50,
+  });
+
+  const sections = useMemo(() => {
+    const infiniteData = data as
+      | InfiniteData<GetChatMessagesResDto>
+      | undefined;
+    const messages = infiniteData?.pages.flatMap(page => page.messages) ?? [];
+    return buildMessageSections({
+      messages,
+      participants: participants ?? [],
+    });
+  }, [data, participants]);
+
+  const handleEndReached = useCallback(() => {
+    if (!hasNextPage || isFetchingNextPage) return;
+    fetchNextPage();
+  }, [fetchNextPage, hasNextPage, isFetchingNextPage]);
+
   return (
-    <ScreenWithScrollWrapper
+    <ScreenWrapper
       headerVariant="withTitleAndImageBg"
-      title="Christopher Nolan"
-      avatarUrl="https://randomuser.me/api/portraits/men/32.jpg"
+      title={params?.title ?? ''}
+      avatarUrl={params?.avatarUrl ?? ''}
       withBottomTabBar
-      footer={<SendMessageInput />}
-      footerStyle={{ paddingBottom: 0 }}
     >
-      <MessageList sections={MOCK_SECTIONS} />
-    </ScreenWithScrollWrapper>
+      <MessageList
+        sections={sections}
+        isLoading={isLoading || isParticipantsLoading}
+        onEndReached={handleEndReached}
+      />
+
+      <SendMessageInput chatId={params?.chatId ?? ''} />
+    </ScreenWrapper>
   );
 };

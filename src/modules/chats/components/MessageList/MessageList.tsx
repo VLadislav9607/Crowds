@@ -1,7 +1,9 @@
-import { View, SectionList } from 'react-native';
+import { useRef } from 'react';
+import { View, SectionList, ActivityIndicator } from 'react-native';
 
 import { AppText } from '@ui';
 
+import type { IMessageData } from '../../ui';
 import { Message } from '../../ui';
 import { getMessagePosition } from '../../helpers';
 import { styles } from './styles';
@@ -10,8 +12,22 @@ import {
   IMessageListProps,
   IMessageRenderItemProps,
 } from './types';
+import { useAutoScrollOnNewMessage } from './useAutoScrollOnNewMessage';
+import { COLORS } from '@styles';
 
-export const MessageList = ({ sections }: IMessageListProps) => {
+export const MessageList = ({
+  sections,
+  isLoading,
+  onEndReached,
+  onEndReachedThreshold = 0.2,
+}: IMessageListProps) => {
+  const sectionListRef = useRef<SectionList<
+    IMessageData,
+    IMessageSection
+  > | null>(null);
+
+  useAutoScrollOnNewMessage({ sections, listRef: sectionListRef });
+
   const renderMessage = ({ item, index, section }: IMessageRenderItemProps) => {
     const { isFirst, isLast } = getMessagePosition(section.data, index);
     return <Message message={item} isFirst={isFirst} isLast={isLast} />;
@@ -25,18 +41,38 @@ export const MessageList = ({ sections }: IMessageListProps) => {
     </View>
   );
 
+  const ListEmptyComponent = isLoading ? (
+    <ActivityIndicator size="small" color={COLORS.black} style={{ flex: 1 }} />
+  ) : (
+    <AppText renderIf={!isLoading} typography="medium_14" color="gray">
+      No messages
+    </AppText>
+  );
+
   return (
     <SectionList
+      ref={sectionListRef}
+      style={styles.list}
       sections={sections}
+      inverted
+      initialNumToRender={20}
       keyExtractor={item => item.id}
       renderItem={renderMessage}
       keyboardDismissMode="on-drag"
       keyboardShouldPersistTaps="handled"
-      renderSectionHeader={renderSectionHeader}
-      contentContainerStyle={styles.contentContainer}
+      renderSectionFooter={renderSectionHeader}
+      contentContainerStyle={[
+        styles.contentContainer,
+        !sections.length && styles.centeredContainer,
+      ]}
+      maintainVisibleContentPosition={{
+        minIndexForVisible: 0,
+      }}
       showsVerticalScrollIndicator={false}
       stickySectionHeadersEnabled={false}
-      scrollEnabled={false}
+      onEndReached={onEndReached}
+      onEndReachedThreshold={onEndReachedThreshold}
+      ListEmptyComponent={ListEmptyComponent}
     />
   );
 };

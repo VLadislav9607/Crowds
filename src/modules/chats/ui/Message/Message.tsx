@@ -1,13 +1,15 @@
-import { View } from 'react-native';
+import { ActivityIndicator, View } from 'react-native';
 
 import { AppText, Avatar } from '@ui';
 import { If } from '@components';
 
 import { styles } from './styles';
 import { IMessageProps } from './types';
+import { COLORS } from '@styles';
 
 export const Message = ({ message, isFirst, isLast }: IMessageProps) => {
-  const { text, time, sender, showTime, senderName, senderAvatar } = message;
+  const { text, time, sender, showTime, senderName, senderAvatar, id } =
+    message;
   const isMe = sender === 'me';
   const showAvatar = !isMe && !!isFirst;
 
@@ -49,6 +51,13 @@ export const Message = ({ message, isFirst, isLast }: IMessageProps) => {
         </If>
 
         <View style={getBubbleStyle()}>
+          <If condition={id.startsWith('temp-')}>
+            <ActivityIndicator
+              size={16}
+              color={isMe ? COLORS.white : COLORS.main}
+            />
+          </If>
+
           <AppText typography="regular_12" color={isMe ? 'white' : 'black'}>
             {text}
           </AppText>
@@ -57,4 +66,3 @@ export const Message = ({ message, isFirst, isLast }: IMessageProps) => {
     </View>
   );
 };
-

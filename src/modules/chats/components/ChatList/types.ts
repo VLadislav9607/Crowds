@@ -1,9 +1,10 @@
-import { IChatData, ChatVariant } from '../../ui';
+import { MyChatItem } from '@actions';
+import { ChatVariant } from '../../ui';
 
 export interface IChatListProps {
-  chats: IChatData[];
+  chats: MyChatItem[];
+  isLoading?: boolean;
   variant?: ChatVariant;
-  onChatPress?: (chat: IChatData) => void;
   withBottomTab?: boolean;
   emptyText?: string;
 }

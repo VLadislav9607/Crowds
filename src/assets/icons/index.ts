@@ -55,6 +55,7 @@ import { wallet } from './wallet';
 import { settings } from './settings';
 import { usersRound } from './usersRound';
 import { trash } from './trash';
+import { sendMessage } from './sendMessage';
 
 import { BOTTOM_TABS } from './bottomTabs';
 
@@ -116,4 +117,5 @@ export const ICONS = {
   settings,
   trash,
   usersRound,
+  sendMessage,
 };

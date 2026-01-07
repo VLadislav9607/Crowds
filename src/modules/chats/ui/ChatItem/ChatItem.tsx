@@ -1,4 +1,5 @@
 import { View, TouchableOpacity } from 'react-native';
+import { formatDistanceToNow } from 'date-fns';
 
 import { AppText, Avatar } from '@ui';
 import { If } from '@components';
@@ -14,18 +15,17 @@ export const ChatItem = ({
   isNextUnread,
   isPrevUnread,
 }: IChatItemProps) => {
-  const { name, avatar, lastMessage, time, isUnread, eventName } = chat;
-  const showEventLabel = variant === 'organization' && eventName;
+  const { title, avatarUrl, lastMessage, lastMessageAt, hasUnread } = chat;
   const hideBottomBorder =
-    variant === 'organization' && isNextUnread && !isUnread;
+    variant === 'organization' && isNextUnread && !hasUnread;
   const isConsecutiveUnread =
-    variant === 'organization' && isUnread && isPrevUnread;
+    variant === 'organization' && hasUnread && isPrevUnread;
 
   return (
     <TouchableOpacity
       style={[
         styles.container,
-        isUnread && styles.containerUnread,
+        hasUnread && styles.containerUnread,
         isConsecutiveUnread && styles.containerUnreadNotFirst,
         hideBottomBorder && styles.containerBeforeUnread,
         isFirstChat && styles.containerFirst,
@@ -33,47 +33,47 @@ export const ChatItem = ({
       onPress={onPress}
       activeOpacity={0.7}
     >
-      <If condition={!!showEventLabel}>
+      <If condition={variant === 'organization'}>
         <View style={styles.eventRow}>
           <View style={styles.eventLabel}>
             <AppText typography="bold_10" color="main">
               Event:{' '}
               <AppText typography="medium_10" color="main">
-                {eventName}
+                {title}
               </AppText>
             </AppText>
           </View>
           <AppText typography="regular_10" color="gray_primary">
-            {time}
+            {lastMessageAt ? formatDistanceToNow(lastMessageAt) : ''}
           </AppText>
         </View>
       </If>
 
       <View style={styles.mainRow}>
-        <Avatar size={40} uri={avatar} name={name} />
+        <Avatar
+          bucket={'talents_avatars'}
+          size={40}
+          imgPath={avatarUrl || ''}
+          name={title}
+        />
 
         <View style={styles.content}>
           <View style={styles.topRow}>
-            <AppText typography="bold_14">{name}</AppText>
-            <If condition={!showEventLabel}>
-              <AppText typography="regular_10" color="gray_primary">
-                {time}
-              </AppText>
-            </If>
+            <AppText typography="bold_14">{title}</AppText>
           </View>
 
           <View style={styles.topRow}>
             <AppText
-              typography={isUnread ? 'medium_12' : 'regular_12'}
+              typography={hasUnread ? 'medium_12' : 'regular_12'}
               numberOfLines={1}
               style={styles.messageText}
             >
-              {lastMessage}
+              {lastMessage || 'No messages yet'}
             </AppText>
           </View>
         </View>
 
-        <If condition={!!isUnread}>
+        <If condition={!!hasUnread}>
           <View style={styles.unreadDot} />
         </If>
       </View>
