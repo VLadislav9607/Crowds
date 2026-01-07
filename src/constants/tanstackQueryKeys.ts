@@ -11,4 +11,7 @@ export const TANSTACK_QUERY_KEYS = {
   PLACE_DETAILS: 'place_details',
   GET_FILE_URL: 'get_file_url',
   GET_USER_AVAILABILITY: 'get_user_availability',
+  MY_CHATS: 'my_chats',
+  GET_CHAT_MESSAGES: 'get_chat_messages',
+  GET_CHAT_PARTICIPANTS: 'get_chat_participants',
 } as const;

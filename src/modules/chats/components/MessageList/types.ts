@@ -7,6 +7,9 @@ export interface IMessageSection {
 
 export interface IMessageListProps {
   sections: IMessageSection[];
+  isLoading?: boolean;
+  onEndReached?: () => void;
+  onEndReachedThreshold?: number;
 }
 
 export interface IMessageRenderItemProps {

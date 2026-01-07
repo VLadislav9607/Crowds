@@ -43,6 +43,9 @@ export const styles = StyleSheet.create({
     marginRight: AVATAR_GAP,
   },
   bubble: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 8,
     maxWidth: '80%',
     paddingHorizontal: 14,
     paddingVertical: 10,

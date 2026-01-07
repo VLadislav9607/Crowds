@@ -41,7 +41,12 @@ export const AppFlashList = <T,>({
         ]}
         ItemSeparatorComponent={() => ItemSeparator(gap)}
         ListEmptyComponent={
-          <AppText typography="medium_14" color="gray" style={styles.emptyText}>
+          <AppText
+            renderIf={!showBottomLoader}
+            typography="medium_14"
+            color="gray"
+            style={styles.emptyText}
+          >
             {emptyText}
           </AppText>
         }

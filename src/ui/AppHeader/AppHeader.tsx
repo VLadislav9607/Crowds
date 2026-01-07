@@ -123,7 +123,14 @@ const HeaderContent = ({
         <SvgXml xml={ICONS.goBackArrow()} style={styles.backButton} />
       </Pressable>
     )}
-    {avatarUrl && <Avatar size={48} uri={avatarUrl} style={styles.avatar} />}
+    {avatarUrl && (
+      <Avatar
+        size={48}
+        bucket="talents_avatars"
+        imgPath={avatarUrl}
+        style={styles.avatar}
+      />
+    )}
     {title && (
       <AppText
         numberOfLines={1}
