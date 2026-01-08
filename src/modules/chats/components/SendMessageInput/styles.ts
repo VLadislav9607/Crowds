@@ -10,7 +10,8 @@ export const styles = StyleSheet.create({
   },
   input: {
     flex: 1,
-    height: 52,
+    minHeight: 52,
+    maxHeight: 120,
     padding: 16,
     borderRadius: 104,
     backgroundColor: COLORS.white,

@@ -54,13 +54,19 @@ export const styles = StyleSheet.create({
     borderRadius: 4,
   },
   unreadDot: {
-    width: 8,
-    height: 8,
+    width: 9,
+    height: 9,
     borderRadius: 50,
     backgroundColor: COLORS.main,
   },
   messageText: {
     flex: 1,
   },
+  timeTextLastMessageContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 5,
+    marginBottom: 'auto',
+    marginTop: 5,
+  },
 });
-

@@ -53,7 +53,12 @@ export type RootStackParamList = {
   [Screens.TalentProfileSetup]: undefined;
 
   // Chat screens
-  [Screens.ChatRoom]: { chatId: string; title: string; avatarUrl: string };
+  [Screens.ChatRoom]: {
+    chatId: string;
+    title: string;
+    imageUrl: string;
+    chatType: 'direct' | 'group';
+  };
 
   //Profile
   [Screens.NotificationSettings]: { role: Role };

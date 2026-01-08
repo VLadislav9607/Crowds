@@ -12,9 +12,13 @@ interface SendMessageInputProps {
   chatId: string;
 }
 
+const MIN_INPUT_HEIGHT = 32;
+const MAX_INPUT_HEIGHT = 120;
+
 export const SendMessageInput = ({ chatId }: SendMessageInputProps) => {
   const { bottom } = useSafeAreaInsets();
   const [message, setMessage] = useState('');
+  const [inputHeight, setInputHeight] = useState(MIN_INPUT_HEIGHT);
   const { mutateAsync, isPending } = useSendMessage();
   const { me } = useGetMe();
 
@@ -22,15 +26,24 @@ export const SendMessageInput = ({ chatId }: SendMessageInputProps) => {
     setMessage(text);
   };
 
-  const handleSubmit = useCallback(async () => {
-    const trimmed = message.trim();
-    if (!trimmed || !chatId) return;
+  const handleContentSizeChange = (event: any) => {
+    const { height } = event.nativeEvent.contentSize;
+    const newHeight = Math.min(
+      Math.max(height, MIN_INPUT_HEIGHT),
+      MAX_INPUT_HEIGHT,
+    );
+    setInputHeight(newHeight);
+  };
+
+  const handleSendMessage = useCallback(async () => {
+    setMessage('');
+    setInputHeight(MIN_INPUT_HEIGHT);
 
     // Create optimistic message
     const tempId = `temp-${Date.now()}-${Math.random()}`;
     const optimisticMessage = {
       id: tempId,
-      text: trimmed,
+      text: message.trim(),
       created_at: new Date().toISOString(),
       sender_identity_id: me?.id || '',
       is_mine: true,
@@ -43,9 +56,7 @@ export const SendMessageInput = ({ chatId }: SendMessageInputProps) => {
     });
 
     try {
-      setMessage('');
-
-      await mutateAsync({ chatId, text: trimmed });
+      await mutateAsync({ chatId, text: message.trim() });
     } catch (error) {
       // Remove optimistic message on error
       messagesCache.removeMessage({
@@ -60,18 +71,21 @@ export const SendMessageInput = ({ chatId }: SendMessageInputProps) => {
     <View style={[styles.container, { paddingBottom: bottom || 16 }]}>
       <TextInput
         placeholder="Type your message"
-        style={styles.input}
+        style={[styles.input, { height: inputHeight }]}
         value={message}
         onChangeText={handleChange}
+        onContentSizeChange={handleContentSizeChange}
         editable={!isPending}
         returnKeyType="send"
+        multiline
+        textAlignVertical="top"
       />
 
       <IconButton
         icon={ICONS.sendMessage(message?.trim() ? 'main' : 'gray')}
         iconSize={20}
         disabled={isPending || !message.trim()}
-        onPress={handleSubmit}
+        onPress={handleSendMessage}
         style={[styles.sendButton, message.trim() && styles.activeSendButton]}
       />
     </View>
