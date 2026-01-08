@@ -8,7 +8,7 @@ export interface MyChatItem {
   type: ChatType;
 
   title: string;
-  subtitle?: string | null;
+  eventName?: string | null;
   avatarUrl?: string | null;
 
   lastMessage?: string | null;

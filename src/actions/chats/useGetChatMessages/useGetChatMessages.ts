@@ -12,6 +12,7 @@ export const useGetChatMessages = (
   return useInfiniteQuery({
     queryKey: [TANSTACK_QUERY_KEYS.GET_CHAT_MESSAGES, JSON.stringify(params)],
     initialPageParam: null,
+    staleTime: 0,
     queryFn: ({ pageParam }) =>
       getChatMessagesAction({
         ...params,

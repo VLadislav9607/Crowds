@@ -4,7 +4,7 @@ import { realtimeService, queryClient } from '@services';
 import { ChatMessage, useGetMe, IChatParticipant } from '@actions';
 import { TANSTACK_QUERY_KEYS } from '@constants';
 
-import { messagesCache } from '../../cache';
+import { messagesCache, chatsCache } from '../../cache';
 
 interface IParams {
   chatId: string;
@@ -44,6 +44,14 @@ export const useChatMessagesRealtime = ({ chatId, limit = 50 }: IParams) => {
               is_mine: participant?.id === message.sender_identity_id,
             },
             limit,
+          });
+
+          // Update chat cache with last message info
+          chatsCache.updateChat({
+            chatId,
+            lastMessage: message.text,
+            lastMessageAt: message.created_at,
+            hasUnread: false,
           });
         },
       });

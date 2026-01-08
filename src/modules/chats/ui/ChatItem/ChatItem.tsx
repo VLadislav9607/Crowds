@@ -15,7 +15,8 @@ export const ChatItem = ({
   isNextUnread,
   isPrevUnread,
 }: IChatItemProps) => {
-  const { title, avatarUrl, lastMessage, lastMessageAt, hasUnread } = chat;
+  const { title, eventName, avatarUrl, lastMessage, lastMessageAt, hasUnread } =
+    chat;
   const hideBottomBorder =
     variant === 'organization' && isNextUnread && !hasUnread;
   const isConsecutiveUnread =
@@ -39,7 +40,7 @@ export const ChatItem = ({
             <AppText typography="bold_10" color="main">
               Event:{' '}
               <AppText typography="medium_10" color="main">
-                {title}
+                {eventName}
               </AppText>
             </AppText>
           </View>
@@ -73,7 +74,19 @@ export const ChatItem = ({
           </View>
         </View>
 
-        <If condition={!!hasUnread}>
+        <If condition={variant === 'talent'}>
+          <View style={styles.timeTextLastMessageContainer}>
+            <AppText typography="regular_10" color="gray_primary">
+              {lastMessageAt ? formatDistanceToNow(lastMessageAt) : ''}
+            </AppText>
+
+            <If condition={!!hasUnread}>
+              <View style={styles.unreadDot} />
+            </If>
+          </View>
+        </If>
+
+        <If condition={!!hasUnread && variant === 'organization'}>
           <View style={styles.unreadDot} />
         </If>
       </View>

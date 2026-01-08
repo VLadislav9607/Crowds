@@ -1,10 +1,9 @@
 import { useRef } from 'react';
 import { View, SectionList, ActivityIndicator } from 'react-native';
-
 import { AppText } from '@ui';
+import { COLORS } from '@styles';
 
-import type { IMessageData } from '../../ui';
-import { Message } from '../../ui';
+import { IMessageData, Message } from '../../ui';
 import { getMessagePosition } from '../../helpers';
 import { styles } from './styles';
 import {
@@ -13,7 +12,6 @@ import {
   IMessageRenderItemProps,
 } from './types';
 import { useAutoScrollOnNewMessage } from './useAutoScrollOnNewMessage';
-import { COLORS } from '@styles';
 
 export const MessageList = ({
   sections,

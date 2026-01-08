@@ -28,7 +28,8 @@ export const ChatList = ({
           goToScreen(Screens.ChatRoom, {
             chatId: item.chatId,
             title: item.title,
-            avatarUrl: item.avatarUrl ?? '',
+            chatType: item.type,
+            imageUrl: item.avatarUrl ?? '',
           })
         }
         isFirstChat={isFirstChat}
