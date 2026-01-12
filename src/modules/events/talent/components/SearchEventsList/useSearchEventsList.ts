@@ -4,16 +4,18 @@ import { TalentEventAlreadyBookedModalRef } from '../../modals';
 import { TalentEventApplyConfirmModalRef } from '../../modals';
 import { useSearchPublicEvents } from '@actions';
 import { SearchEventsListProps } from './types';
+import { useRefetchQuery } from '@hooks';
 
 export const useSearchEventsList = ({ filters }: SearchEventsListProps) => {
   const {
     data: eventsResponse,
     fetchNextPage,
     refetch,
-    isRefetching,
     isLoading,
     hasNextPage,
-  } = useSearchPublicEvents({ ...filters });
+  } = useSearchPublicEvents({ ...filters }, { staleTime: 0, gcTime: 0 });
+
+  const { isRefetchingQuery, refetchQuery } = useRefetchQuery(refetch);
 
   const events = eventsResponse?.data && !isLoading ? eventsResponse?.data : [];
 
@@ -28,9 +30,9 @@ export const useSearchEventsList = ({ filters }: SearchEventsListProps) => {
     applyConfirmModalRef,
     isLoading,
     events,
-    isRefetching,
+    isRefetchingQuery,
     hasNextPage,
-    refetch,
+    refetchQuery,
     fetchNextPage,
   };
 };

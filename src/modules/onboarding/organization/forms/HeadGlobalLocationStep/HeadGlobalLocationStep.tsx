@@ -1,11 +1,11 @@
 import { StyleSheet, View } from 'react-native';
 import { Controller, useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { forwardRef, useEffect, useImperativeHandle } from 'react';
+import { forwardRef, useEffect, useImperativeHandle, useRef } from 'react';
 
 import { AppText } from '@ui';
-import { TYPOGRAPHY } from '@styles';
-import { CheckboxList, PlacesPredictionsInput } from '@components';
+import { COLORS, TYPOGRAPHY } from '@styles';
+import { AppImage, PlacesPredictionsInput } from '@components';
 import { PlaceAutocompleteType } from '@googlemaps/google-maps-services-js';
 
 import {
@@ -14,6 +14,13 @@ import {
   HeadGlobalLocationFormRef,
   headGlobalLocationFormSchema,
 } from './types';
+import { ICONS } from '@assets';
+import { SvgXml } from 'react-native-svg';
+import {
+  ImageSourcePickerModal,
+  ImageSourcePickerModalData,
+} from '@modules/common';
+import { BottomSheetModal } from '@gorhom/bottom-sheet';
 
 export const HeadOfficeGlobalStep = forwardRef<
   HeadGlobalLocationFormRef,
@@ -23,11 +30,16 @@ export const HeadOfficeGlobalStep = forwardRef<
     {
       defaultValues: defaultValuesExternal,
       containerStyle,
+      pickedLogo,
+      onPickLogo,
       onChangeText,
       onFormStateChange,
     },
     ref,
   ) => {
+    const imageSourcePickerModalRef =
+      useRef<BottomSheetModal<ImageSourcePickerModalData>>(null);
+
     const defaultValues: HeadGlobalLocationFormData = defaultValuesExternal
       ? defaultValuesExternal
       : {
@@ -100,7 +112,7 @@ export const HeadOfficeGlobalStep = forwardRef<
           )}
         />
 
-        <Controller
+        {/* <Controller
           control={control}
           name="haveBranches"
           render={({ field }) => (
@@ -115,6 +127,45 @@ export const HeadOfficeGlobalStep = forwardRef<
               onCheckboxPress={item => field.onChange(item.value === 'yes')}
             />
           )}
+        /> */}
+
+        <View>
+          <AppText
+            typography="medium_14"
+            color="black"
+            margin={{ bottom: 14, top: 20 }}
+          >
+            Add you Logo/Brand
+          </AppText>
+          <AppImage
+            onPress={() =>
+              imageSourcePickerModalRef.current?.present({
+                onImagePicked: logo => {
+                  onPickLogo?.({
+                    uri: logo.uri,
+                    type: logo.type,
+                    size: logo.size!,
+                    name: logo.name,
+                  });
+                  imageSourcePickerModalRef.current?.dismiss();
+                },
+              })
+            }
+            imgUri={pickedLogo?.uri}
+            containerStyle={styles.imageContainer}
+            bucket="organizations_avatars"
+            placeholderIcon={ICONS.orgAvatarLogo('lihgt_gray4')}
+            CustomElements={
+              <View style={styles.cameraWrapper}>
+                <SvgXml width={14} height={14} xml={ICONS.camera('black')} />
+              </View>
+            }
+          />
+        </View>
+
+        <ImageSourcePickerModal
+          bottomSheetRef={imageSourcePickerModalRef}
+          validateForBucket="organizations_avatars"
         />
       </View>
     );
@@ -128,5 +179,25 @@ const styles = StyleSheet.create({
   },
   checkboxListContainer: {
     marginTop: 24,
+  },
+  imageContainer: {
+    width: 148,
+    height: 148,
+    backgroundColor: COLORS.gray_bg,
+    borderRadius: 10,
+    justifyContent: 'center',
+    alignItems: 'center',
+    overflow: 'hidden',
+  },
+  cameraWrapper: {
+    width: 22,
+    height: 22,
+    borderRadius: 100,
+    backgroundColor: COLORS.white,
+    justifyContent: 'center',
+    alignItems: 'center',
+    position: 'absolute',
+    top: 6,
+    right: 6,
   },
 });

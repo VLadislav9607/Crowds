@@ -98,8 +98,8 @@ export const CrowdPreferencesModal = ({
       android_keyboardInputMode="adjustResize"
     >
       <View style={styles.container}>
-        <AppText typography="h3_mob" color="black" style={styles.title}>
-          Crowd Preferences
+        <AppText typography="medium_16" color="black" style={styles.title}>
+          Select Your Preferences
         </AppText>
 
         <BottomSheetScrollView

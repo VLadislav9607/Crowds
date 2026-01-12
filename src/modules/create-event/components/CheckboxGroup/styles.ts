@@ -21,7 +21,9 @@ export const styles = StyleSheet.create({
   optionItem: {
     width: '50%',
     flexDirection: 'row',
-    alignItems: 'center',
+    // alignItems: 'center',
+    justifyContent: 'flex-start',
+    alignItems: 'flex-start',
     gap: 10,
     marginBottom: 12,
   },
@@ -34,6 +36,14 @@ export const styles = StyleSheet.create({
     borderRadius: 3,
   },
   checkbox: {
+    gap: 10,
+    flex: 1,
+    alignItems: 'flex-start',
+  },
+  gap36: {
     gap: 36,
+  },
+  flex1: {
+    flex: 1,
   },
 });

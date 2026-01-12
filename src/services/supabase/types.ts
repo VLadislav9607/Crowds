@@ -16,38 +16,60 @@ export type Database = {
     Tables: {
       chat_identities: {
         Row: {
+          avatar_url: string | null;
+          chat_id: string;
           created_at: string | null;
+          first_name: string;
           id: string;
+          last_name: string;
           organization_id: string | null;
           talent_id: string | null;
           type: string;
+          user_id: string;
         };
         Insert: {
+          avatar_url?: string | null;
+          chat_id: string;
           created_at?: string | null;
+          first_name: string;
           id?: string;
+          last_name: string;
           organization_id?: string | null;
           talent_id?: string | null;
           type: string;
+          user_id: string;
         };
         Update: {
+          avatar_url?: string | null;
+          chat_id?: string;
           created_at?: string | null;
+          first_name?: string;
           id?: string;
+          last_name?: string;
           organization_id?: string | null;
           talent_id?: string | null;
           type?: string;
+          user_id?: string;
         };
         Relationships: [
           {
+            foreignKeyName: 'chat_identities_chat_id_fkey';
+            columns: ['chat_id'];
+            isOneToOne: false;
+            referencedRelation: 'chats';
+            referencedColumns: ['id'];
+          },
+          {
             foreignKeyName: 'chat_identities_organization_id_fkey';
             columns: ['organization_id'];
-            isOneToOne: true;
+            isOneToOne: false;
             referencedRelation: 'organizations';
             referencedColumns: ['id'];
           },
           {
             foreignKeyName: 'chat_identities_talent_id_fkey';
             columns: ['talent_id'];
-            isOneToOne: true;
+            isOneToOne: false;
             referencedRelation: 'talents';
             referencedColumns: ['id'];
           },
@@ -56,23 +78,23 @@ export type Database = {
       chat_participants: {
         Row: {
           chat_id: string;
-          has_unread: boolean | null;
           identity_id: string | null;
           joined_at: string | null;
+          last_seen_at: string | null;
           user_id: string;
         };
         Insert: {
           chat_id: string;
-          has_unread?: boolean | null;
           identity_id?: string | null;
           joined_at?: string | null;
+          last_seen_at?: string | null;
           user_id: string;
         };
         Update: {
           chat_id?: string;
-          has_unread?: boolean | null;
           identity_id?: string | null;
           joined_at?: string | null;
+          last_seen_at?: string | null;
           user_id?: string;
         };
         Relationships: [
@@ -234,7 +256,7 @@ export type Database = {
           latitude: number;
           longitude: number;
           place_id: string;
-          postal_code: string;
+          postal_code: string | null;
           region: string;
           street_name: string | null;
           street_number: string | null;
@@ -252,7 +274,7 @@ export type Database = {
           latitude: number;
           longitude: number;
           place_id: string;
-          postal_code: string;
+          postal_code?: string | null;
           region: string;
           street_name?: string | null;
           street_number?: string | null;
@@ -270,7 +292,7 @@ export type Database = {
           latitude?: number;
           longitude?: number;
           place_id?: string;
-          postal_code?: string;
+          postal_code?: string | null;
           region?: string;
           street_name?: string | null;
           street_number?: string | null;
@@ -726,20 +748,68 @@ export type Database = {
           },
         ];
       };
+      messages: {
+        Row: {
+          chat_id: string;
+          created_at: string;
+          deleted_at: string | null;
+          edited_at: string | null;
+          id: string;
+          sender_identity_id: string;
+          text: string | null;
+        };
+        Insert: {
+          chat_id: string;
+          created_at?: string;
+          deleted_at?: string | null;
+          edited_at?: string | null;
+          id?: string;
+          sender_identity_id: string;
+          text?: string | null;
+        };
+        Update: {
+          chat_id?: string;
+          created_at?: string;
+          deleted_at?: string | null;
+          edited_at?: string | null;
+          id?: string;
+          sender_identity_id?: string;
+          text?: string | null;
+        };
+        Relationships: [
+          {
+            foreignKeyName: 'messages_chat_id_fkey';
+            columns: ['chat_id'];
+            isOneToOne: false;
+            referencedRelation: 'chats';
+            referencedColumns: ['id'];
+          },
+          {
+            foreignKeyName: 'messages_sender_identity_id_fkey';
+            columns: ['sender_identity_id'];
+            isOneToOne: false;
+            referencedRelation: 'chat_identities';
+            referencedColumns: ['id'];
+          },
+        ];
+      };
       organizations: {
         Row: {
+          avatar_path: string | null;
           created_at: string;
           deleted_at: string | null;
           id: string;
           organization_name: string;
         };
         Insert: {
+          avatar_path?: string | null;
           created_at?: string;
           deleted_at?: string | null;
           id?: string;
           organization_name: string;
         };
         Update: {
+          avatar_path?: string | null;
           created_at?: string;
           deleted_at?: string | null;
           id?: string;
@@ -1250,10 +1320,12 @@ export type Database = {
           isSetofReturn: true;
         };
       };
+      create_draft_or_event: { Args: { payload: Json }; Returns: string };
       create_event_with_preferences: {
         Args: { payload: Json };
         Returns: string;
       };
+      delete_draft_event: { Args: { event_id_param: string }; Returns: string };
       dto_event_details_org_member: {
         Args: { e: Database['public']['Tables']['events']['Row'] };
         Returns: Json;
@@ -1275,6 +1347,10 @@ export type Database = {
         Args: { p_event_id: string };
         Returns: Json;
       };
+      get_events_stats_by_organization: {
+        Args: { p_organization_id: string };
+        Returns: Json;
+      };
       get_me_org_member: { Args: never; Returns: Json };
       get_organization_events: {
         Args: {
@@ -1292,6 +1368,10 @@ export type Database = {
       };
       get_public_events_search: {
         Args: {
+          filter_date_from?: string;
+          filter_date_to?: string;
+          filter_distance_km?: number;
+          filter_payment_type?: string;
           limit_param?: number;
           offset_param?: number;
           search_query?: string;
@@ -1314,6 +1394,10 @@ export type Database = {
         Args: { p_at: string; p_user_id: string };
         Returns: boolean;
       };
+      publish_event_draft: {
+        Args: { event_id_param: string };
+        Returns: string;
+      };
       timeslot_range: {
         Args: {
           p_custom_from: string;
@@ -1321,6 +1405,18 @@ export type Database = {
           p_slot: Database['public']['Enums']['time_slot'];
         };
         Returns: unknown;
+      };
+      update_event_draft: {
+        Args: { event_id_param: string; payload: Json };
+        Returns: string;
+      };
+      update_organization: {
+        Args: {
+          p_avatar_path?: string;
+          p_organization_id: string;
+          p_organization_name?: string;
+        };
+        Returns: Json;
       };
       update_talent_availability: {
         Args: {
@@ -1360,6 +1456,10 @@ export type Database = {
           talent_id: string;
           url: string;
         }[];
+      };
+      validate_event_for_publish: {
+        Args: { payload: Json };
+        Returns: undefined;
       };
     };
     Enums: {

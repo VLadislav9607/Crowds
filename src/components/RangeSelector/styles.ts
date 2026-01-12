@@ -48,4 +48,7 @@ export const styles = StyleSheet.create({
     marginTop: 2,
     paddingHorizontal: 2,
   },
+  disabled: {
+    opacity: 0.3,
+  },
 });

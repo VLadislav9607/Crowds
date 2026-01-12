@@ -13,6 +13,11 @@ export const searchPublicEventsAction = async (
     search_query: params.search_query,
     user_lat: params.user_lat,
     user_lng: params.user_lng,
+    sort_mode: params.sort_mode,
+    filter_distance_km: params.filter_distance_km,
+    filter_date_from: params.filter_date_from,
+    filter_date_to: params.filter_date_to,
+    filter_payment_type: params.filter_payment_type,
   });
 
   if (error) throw error;

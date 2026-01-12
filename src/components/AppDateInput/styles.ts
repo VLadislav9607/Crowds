@@ -20,14 +20,17 @@ export const styles = StyleSheet.create({
   placeholder: {
     height: 17,
     lineHeight: 17,
-    flex:1
+    flex: 1,
   },
   value: {
     height: 17,
     lineHeight: 17,
-    flex:1
+    flex: 1,
   },
   errorMessage: {
     marginTop: 8,
+  },
+  disabledField: {
+    opacity: 0.5,
   },
 });

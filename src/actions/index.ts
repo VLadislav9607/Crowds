@@ -4,6 +4,6 @@ export * from './location';
 export * from './auth';
 export * from './organization';
 export * from './orgnanization-member';
-export * from './kyc';
 export * from './events';
 export * from './chats';
+export * from './kyc';

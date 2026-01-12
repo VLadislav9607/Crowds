@@ -52,7 +52,6 @@ export interface CreateEventDraftBodyDto {
   payment_mode?: Enums<'EventPaymentMode'>;
   payment_amount?: number;
   eventBrief?: string;
-  uploadNDA?: boolean;
   ndaDocumentName?: string;
   ndaDocumentPath?: string;
   location?: EventLocationDto;

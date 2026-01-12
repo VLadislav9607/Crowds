@@ -29,7 +29,7 @@ export type RootStackParamList = {
 
   // Organization screens
   [Screens.CopyInviteLink]: undefined;
-  [Screens.CreateEvent]: undefined;
+  [Screens.CreateEvent]: { draftId?: string };
   [Screens.EventsDashboard]: undefined;
   [Screens.InviteNewMember]: undefined;
   [Screens.CopyInviteLink]: undefined;
