@@ -9,6 +9,7 @@ import { isFuture, isPast } from 'date-fns';
 
 export const OrganizationEventCard = ({
   event,
+  actionConfirmationModalRef,
 }: IOrganizationEventCardProps) => {
   const getOrgEventCardType = (
     eventData: OrgEventListItemDto,
@@ -35,7 +36,12 @@ export const OrganizationEventCard = ({
 
   switch (cardType) {
     case 'draft':
-      return <DraftEventCard event={event} />;
+      return (
+        <DraftEventCard
+          event={event}
+          actionConfirmationModalRef={actionConfirmationModalRef}
+        />
+      );
 
     case 'active':
       return <ActiveUpcomingEventCard event={event} showParticipants={false} />;

@@ -4,6 +4,7 @@ import { AppText } from '@ui';
 
 import { IGridBoardProps } from './types';
 import { styles } from './styles';
+import { Skeleton } from '@components';
 
 export const GridBoard = ({ items }: IGridBoardProps) => {
   return (
@@ -13,7 +14,7 @@ export const GridBoard = ({ items }: IGridBoardProps) => {
         <TouchableOpacity
           activeOpacity={0.8}
           key={index}
-          disabled={!event.onPress}
+          disabled={!event.onPress || event.showSkeleton}
           onPress={event.onPress}
           style={[
             styles.eventItem,
@@ -23,6 +24,24 @@ export const GridBoard = ({ items }: IGridBoardProps) => {
             },
           ]}
         >
+          {event.showSkeleton && (
+            <View
+              style={{
+                backgroundColor: 'white',
+                position: 'absolute',
+                left: 0,
+                top: 0,
+                right: 0,
+                bottom: 0,
+                zIndex: 1,
+              }}
+            >
+              <Skeleton>
+                <Skeleton.Item width={'100%'} height={'100%'} />
+              </Skeleton>
+            </View>
+          )}
+
           <AppText
             style={[
               styles.eventItemTitle,

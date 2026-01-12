@@ -2,7 +2,6 @@ import { View } from 'react-native';
 
 import { AppCheckbox, AppText } from '@ui';
 import { If } from '@components';
-
 import { styles } from './styles';
 
 interface CheckboxGroupProps {
@@ -64,9 +63,9 @@ export const CheckboxGroup = ({
               checked={selectedValues.includes(option.value)}
               onChange={() => handleToggleOption(option.value)}
               label={option.label}
-              labelProps={{ color: 'dark_gray' }}
+              labelProps={{ color: 'dark_gray', style: styles.flex1 }}
               color="main"
-              containerStyle={styles.checkbox}
+              containerStyle={[styles.checkbox, !!option.hex && styles.gap36]}
               colorChecked="main"
             />
           </View>

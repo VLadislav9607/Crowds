@@ -16,10 +16,12 @@ export const COLORS = {
   grayscale_900: '#212121',
   grayscale_500: '#888888',
   grayscale_400: '#838383',
+
   dark_gray: '#4E4E4E',
   light_gray: '#DAD9D2',
   light_gray2: '#DDDDDD',
   light_gray3: '#E5E5E5',
+  lihgt_gray4: '#D9D9D9',
   gray_100: '#F0F0F0',
   gray_200: '#F5F5F5',
   gray_bg: '#EFF0F3',

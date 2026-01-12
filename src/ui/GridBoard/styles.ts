@@ -15,6 +15,7 @@ export const styles = StyleSheet.create({
     paddingVertical: 16,
     paddingHorizontal: 12,
     borderRadius: 10,
+    overflow: 'hidden',
   },
   eventItemSubTitle: {
     ...TYPOGRAPHY.regular_9,

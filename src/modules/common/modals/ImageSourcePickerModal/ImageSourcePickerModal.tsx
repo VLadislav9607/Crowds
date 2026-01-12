@@ -20,12 +20,15 @@ import {
   ImagePickerResponse,
   MediaType,
 } from 'react-native-image-picker';
+import { validateBucketFileSafe } from '@actions';
+import { showErrorToast } from '@helpers';
 
 export const ImageSourcePickerModal = ({
   bottomSheetProps,
   bottomSheetRef,
   imagePickerOptions,
   cameraOptions,
+  validateForBucket,
 }: ImageSourcePickerModalProps) => {
   const insets = useSafeAreaInsets();
 
@@ -70,6 +73,21 @@ export const ImageSourcePickerModal = ({
 
       if (response.assets && response.assets[0]) {
         const asset = response.assets[0];
+
+        if (validateForBucket) {
+          const validation = validateBucketFileSafe(
+            validateForBucket,
+            asset.type!,
+            asset.fileSize!,
+          );
+
+          if (!validation.isValid) {
+            handleCloseSheet?.();
+            showErrorToast(validation.error!);
+            return;
+          }
+        }
+
         onImagePicked?.({
           uri: asset.uri || '',
           name: asset.fileName || `photo_${Date.now()}.jpg`,
@@ -79,7 +97,7 @@ export const ImageSourcePickerModal = ({
         handleCloseSheet?.();
       }
     },
-    [handleCloseSheet],
+    [handleCloseSheet, validateForBucket],
   );
 
   const handlePickFromGallery = useCallback(

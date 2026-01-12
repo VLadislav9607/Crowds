@@ -1,17 +1,19 @@
-import { Image, View } from 'react-native';
+import { View } from 'react-native';
 import { ReactNode } from 'react';
 import { IconText, AppText, DashedLine } from '@ui';
 import { ICONS } from '@assets';
 import { cardStyles } from './styles';
-import { OrgEventListItemDto } from '@actions';
+import { OrgEventListItemDto, useGetMe } from '@actions';
 import { formatInTimeZone } from 'date-fns-tz';
-import { If } from '@components';
+import { AppImage, If } from '@components';
 import { calculateEventDuration } from '../../../helpers';
+import { ActionConfirmationModalRef } from '@modules/common';
 
 export interface IOrgBaseEventCardProps {
   event?: OrgEventListItemDto;
   headerRight?: ReactNode;
   footer?: ReactNode;
+  actionConfirmationModalRef?: React.RefObject<ActionConfirmationModalRef | null>;
 }
 
 export const OrgBaseEventCard = ({
@@ -20,6 +22,7 @@ export const OrgBaseEventCard = ({
   footer,
 }: IOrgBaseEventCardProps) => {
   const timezone = event?.event_location?.timezone || 'UTC';
+  const { organizationMember } = useGetMe();
 
   const startAt = event?.start_at
     ? formatInTimeZone(event.start_at, timezone, 'dd MMM, yyyy')
@@ -62,7 +65,13 @@ export const OrgBaseEventCard = ({
       {/* Info Section */}
       <If condition={isSomeDetailsPresent}>
         <View style={cardStyles.infoContainer}>
-          <Image style={cardStyles.image} />
+          <If condition={!!organizationMember?.organization?.avatar_path}>
+            <AppImage
+              imgPath={organizationMember?.organization?.avatar_path}
+              bucket="organizations_avatars"
+              containerStyle={cardStyles.image}
+            />
+          </If>
           <View style={cardStyles.infoContent}>
             <If condition={isSomeDetailsPresent}>
               <View style={cardStyles.row}>

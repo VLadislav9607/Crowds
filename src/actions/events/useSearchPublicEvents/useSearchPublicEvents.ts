@@ -21,7 +21,10 @@ export const useSearchPublicEvents = (
   >,
 ) => {
   return useInfiniteQuery({
-    queryKey: [TANSTACK_QUERY_KEYS.GET_ORG_EVENTS, JSON.stringify(params)],
+    queryKey: [
+      TANSTACK_QUERY_KEYS.SEARCH_PUBLIC_EVENTS,
+      JSON.stringify(params),
+    ],
     initialPageParam: 1,
     queryFn: getInfiniteQueryFn(searchPublicEventsAction, params),
     getNextPageParam: getInfiniteQueryNextPageParams,

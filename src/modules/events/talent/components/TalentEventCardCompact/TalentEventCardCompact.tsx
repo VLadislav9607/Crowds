@@ -1,7 +1,7 @@
-import { TouchableOpacity, View } from 'react-native';
+import { ImageBackground, TouchableOpacity, View } from 'react-native';
 import { AppButton, AppText, IconText } from '@ui';
 import { styles } from './styles';
-import { ICONS } from '@assets';
+import { ICONS, IMAGES } from '@assets';
 import { SvgXml } from 'react-native-svg';
 import { TalentEventCardCompactProps } from './types';
 import { If } from '@components';
@@ -9,6 +9,7 @@ import { COLORS } from '@styles';
 import { goToScreen, Screens } from '@navigation';
 import { formatInTimeZone } from 'date-fns-tz';
 import { calculateEventDuration } from '../../../helpers';
+import { getEventIcon } from '../../../helpers';
 
 export const TalentEventCardCompact = ({
   event,
@@ -25,13 +26,18 @@ export const TalentEventCardCompact = ({
       ? calculateEventDuration(event.start_at, event.end_at)
       : { formatted: '' };
 
+  const eventIcon = getEventIcon(event.category_id!);
+
   return (
     <View style={[styles.container, containerStyle]}>
-      <View style={styles.imageContainer}>
+      <ImageBackground
+        source={IMAGES.cardCrowdBg}
+        style={styles.imageContainer}
+      >
         <View style={styles.iconContainer}>
-          <SvgXml xml={ICONS.camera('white')} width={20} height={20} />
+          <SvgXml xml={eventIcon('white')} width={20} height={20} />
         </View>
-      </View>
+      </ImageBackground>
 
       <View style={styles.content}>
         <View style={styles.contentHeader}>

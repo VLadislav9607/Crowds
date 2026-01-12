@@ -7,6 +7,7 @@ export interface UseBucketUploadBodyDto {
     type: string;
     name: string;
   };
+  folderName?: string;
 }
 
 export interface UseBucketUploadRespDto {

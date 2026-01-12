@@ -12,12 +12,13 @@ export interface IRangeSelectorProps {
   disableRange?: boolean;
   labelProps?: Partial<AppTextProps>;
   measure?: string;
+  disabled?: boolean;
   bottomLabels?: {
     minValueLabel: string;
     maxValueLabel: string;
     containerStyles?: StyleProp<ViewStyle>;
     labelProps?: Partial<AppTextProps>;
   };
-  onRenderValue: (values: {min: number, max: number}) => string;
+  onRenderValue: (values: { min: number; max: number }) => string;
   onSlidingComplete: (values: Array<number>) => void;
 }

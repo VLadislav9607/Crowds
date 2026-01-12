@@ -7,6 +7,7 @@ export const styles = StyleSheet.create({
     borderRadius: 10,
     ...SHADOWS.card,
     flexDirection: 'row',
+    overflow: 'hidden',
   },
   imageContainer: {
     width: 80,
