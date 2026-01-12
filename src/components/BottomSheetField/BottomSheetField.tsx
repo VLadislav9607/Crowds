@@ -1,4 +1,4 @@
-import { Dimensions, TouchableOpacity, View } from 'react-native';
+import { Dimensions, Keyboard, TouchableOpacity, View } from 'react-native';
 import { AppText } from '@ui';
 import { BottomSheetFieldProps } from './types';
 import { ICONS } from '@assets';
@@ -45,8 +45,8 @@ export const BottomSheetField = ({
   );
 
   const handleOpenSheet = useCallback(() => {
+    Keyboard.dismiss();
     disableRenderWhenClosed && setRenderContent(true);
-
     bottomSheetRef.current?.present();
   }, [bottomSheetRef, disableRenderWhenClosed]);
 

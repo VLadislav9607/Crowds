@@ -8,10 +8,12 @@ import { styles } from './styles';
 import { SearchEventsList } from '../../components';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { TalentEventsFilterData, TalentEventsFilterModal } from '../../modals';
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
 import { BottomSheetModal } from '@gorhom/bottom-sheet';
 import { Screens, useScreenNavigation } from '@navigation';
 import { useDebounce } from '@hooks';
+import { useGetMe } from '@actions';
+import { convertFiltersToSearchParams } from '../../components/SearchEventsList/helpers';
 
 export const TalentSearchEventsScreen = () => {
   const insets = useSafeAreaInsets();
@@ -20,11 +22,39 @@ export const TalentSearchEventsScreen = () => {
 
   const [filters, setFilters] = useState<TalentEventsFilterData>({});
 
-  const filtersCount = Object.keys(filters).length;
-
   const filterModalRef = useRef<BottomSheetModal<null>>(null);
 
   const debouncedSearchValue = useDebounce(searchValue, 450);
+
+  // Отримуємо локацію профілю користувача
+  const { data: me } = useGetMe();
+  const profileLocation = useMemo(
+    () =>
+      me?.talent?.talent_location
+        ? {
+            latitude: me.talent.talent_location.latitude,
+            longitude: me.talent.talent_location.longitude,
+          }
+        : null,
+    [me?.talent?.talent_location],
+  );
+
+  // Конвертуємо фільтри в параметри для запиту
+  const searchFilters = useMemo(() => {
+    const convertedFilters = convertFiltersToSearchParams(
+      filters,
+      profileLocation,
+    );
+    return {
+      ...convertedFilters,
+      search_query: debouncedSearchValue || undefined,
+    };
+  }, [filters, profileLocation, debouncedSearchValue]);
+
+  // Підраховуємо кількість активних фільтрів (без search_query)
+  const filtersCount = useMemo(() => {
+    return Object.keys(filters).length;
+  }, [filters]);
 
   const handleOpenFilterModal = () => {
     filterModalRef.current?.present();
@@ -78,9 +108,7 @@ export const TalentSearchEventsScreen = () => {
       </View>
 
       <SearchEventsList
-        filters={{
-          search_query: debouncedSearchValue,
-        }}
+        filters={searchFilters}
         contentContainerStyle={[
           styles.listContentContainer,
           { paddingBottom: insets.bottom || 24 },

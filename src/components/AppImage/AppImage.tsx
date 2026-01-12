@@ -8,6 +8,7 @@ import { useState } from 'react';
 import FastImage from '@d11/react-native-fast-image';
 
 export const AppImage = ({
+  imgUri,
   imgPath,
   bucket,
   placeholderImage,
@@ -24,7 +25,7 @@ export const AppImage = ({
   });
   const [isLoaded, setIsLoaded] = useState(false);
 
-  const url = response?.url;
+  const url = response?.url || imgUri;
 
   const Container = onPress ? TouchableOpacity : View;
 

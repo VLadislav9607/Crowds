@@ -1,4 +1,5 @@
 import { OrgEventListItemDto } from '@actions';
+import { ActionConfirmationModalRef } from '@modules/common';
 
 export type EventCardType = 'draft' | 'active' | 'upcoming' | 'past';
 
@@ -19,4 +20,5 @@ export interface IBaseEventCardProps {
 
 export interface IOrganizationEventCardProps {
   event: OrgEventListItemDto;
+  actionConfirmationModalRef?: React.RefObject<ActionConfirmationModalRef | null>;
 }

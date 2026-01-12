@@ -1,5 +1,5 @@
 import { useRef, useState, useEffect } from 'react';
-import { View } from 'react-native';
+import { Keyboard, View } from 'react-native';
 import { useWatch, useFormContext } from 'react-hook-form';
 import { BottomSheetModal } from '@gorhom/bottom-sheet';
 import {
@@ -143,6 +143,7 @@ export const AgeGroupWidget = ({
   };
 
   const handleOpenPreferencesModal = () => {
+    Keyboard.dismiss();
     preferencesModalRef.current?.present();
   };
 

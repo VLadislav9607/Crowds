@@ -12,12 +12,13 @@ import {
 } from '../../forms';
 import { CreateEventFooter } from '../../components';
 import { EventCreatedModal, SavedToDraftModal } from '../../modals';
-import { useCreateEvents } from './useCreateEvents';
+import { useCreateEventScreen } from './hooks/useCreateEventScreen';
 import { ActionConfirmationModal } from '@modules/common';
 
 export const CreateEventScreen = () => {
   const {
     formData,
+    isDraftEditing,
     actionConfirmationModalRef,
     eventCreatedModalRef,
     savedToDraftModalRef,
@@ -30,18 +31,18 @@ export const CreateEventScreen = () => {
     paymentSectionRef,
     otherInfoSectionRef,
     ageGroupWidgetRefs,
-    isCreating,
+    showFullScreenLoader,
     handleCreateDraft,
     handleCreatePublishedEvent,
     handleCancel,
-  } = useCreateEvents();
+  } = useCreateEventScreen();
 
   return (
     <FormProvider {...formData}>
       <ScreenWithScrollWrapper
-        showLoader={isCreating}
+        showLoader={showFullScreenLoader}
         headerVariant="withTitleAndImageBg"
-        title="Create New Event"
+        title={isDraftEditing ? 'Edit Draft' : 'Create New Event'}
         isFloatFooter={false}
         goBackCallback={handleCancel}
         scrollViewRef={scrollViewRef}

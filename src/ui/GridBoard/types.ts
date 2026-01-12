@@ -1,10 +1,11 @@
 interface IGridBoardItem {
   title: string;
   subTitle?: string;
-  label: string;
+  label?: string;
   count: number;
   bgColor: string;
   textColor: string;
+  showSkeleton?: boolean;
   onPress?: () => void;
 }
 

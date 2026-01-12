@@ -63,7 +63,7 @@ export const YourInformationStep = ({ control, errors }: IProps) => {
         name="isAuthorizedOnBehalfOfCompany"
         render={({ field: { onChange, value } }) => (
           <CheckboxList
-            label="Are you authorized on behalf of the company to make decisions; and or in an Executive, C Suite or Board Position?"
+            label="I am authorized on behalf of the company to make decisions; and or in an Executive, C Suite or Board Position?"
             items={[
               { label: 'Yes', value: 'yes' },
               { label: 'No', value: 'no' },

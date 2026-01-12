@@ -1,3 +1,4 @@
+import { PickedImage } from '@modules/common';
 import { UseFormGetValues, UseFormHandleSubmit } from 'react-hook-form';
 import { ViewStyle } from 'react-native';
 import { z } from 'zod';
@@ -14,6 +15,8 @@ export interface HeadGlobalLocationFormState {
 export interface HeadGlobalLocationFormProps {
   defaultValues?: HeadGlobalLocationFormData;
   containerStyle?: ViewStyle;
+  pickedLogo?: PickedImage;
+  onPickLogo?: (logo: PickedImage) => void;
   onChangeText?: () => void;
   onFormStateChange?: (state: HeadGlobalLocationFormState) => void;
 }

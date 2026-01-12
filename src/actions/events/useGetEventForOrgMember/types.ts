@@ -12,14 +12,14 @@ export interface EventPreferenceDto {
   pregnancy_allowed: boolean | null;
   pregnancy_months: number | null;
   additional_notes: string | null;
-  ethnicity: Tables<'event_preference_ethnicities'>[] | null;
-  accent: Tables<'event_preference_accents'>[] | null;
-  eye_colour: Tables<'event_preference_eye_colors'>[] | null;
-  hair_colour: Tables<'event_preference_hair_colors'>[] | null;
+  ethnicities: Tables<'event_preference_ethnicities'>[] | null;
+  accents: Tables<'event_preference_accents'>[] | null;
+  eye_colors: Tables<'event_preference_eye_colors'>[] | null;
+  hair_colors: Tables<'event_preference_hair_colors'>[] | null;
   facial_attributes: Tables<'event_preference_facial_attributes'>[] | null;
   body_attributes: Tables<'event_preference_body_attributes'>[] | null;
-  tattoo_spot: Tables<'event_preference_tattoo_spots'>[] | null;
-  skin_tone: Tables<'event_preference_skin_tones'>[] | null;
+  tattoo_spots: Tables<'event_preference_tattoo_spots'>[] | null;
+  skin_tones: Tables<'event_preference_skin_tones'>[] | null;
 }
 
 export interface EventForOrgMemberDto

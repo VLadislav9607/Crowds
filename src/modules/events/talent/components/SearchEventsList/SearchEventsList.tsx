@@ -22,9 +22,9 @@ export const SearchEventsList = ({ ...props }: SearchEventsListProps) => {
     events,
     hasNextPage,
     isLoading,
-    isRefetching,
+    isRefetchingQuery,
     fetchNextPage,
-    refetch,
+    refetchQuery,
   } = useSearchEventsList(props);
 
   const renderItem = ({ item }: { item: SearchPublicEventsListItemDto }) => (
@@ -81,8 +81,8 @@ export const SearchEventsList = ({ ...props }: SearchEventsListProps) => {
   return (
     <>
       <FlashList
-        refreshing={isRefetching}
-        onRefresh={refetch}
+        refreshing={isRefetchingQuery}
+        onRefresh={refetchQuery}
         data={events}
         renderItem={renderItem}
         keyExtractor={item => item.id}

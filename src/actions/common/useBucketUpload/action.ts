@@ -9,7 +9,7 @@ import {
 export const bucketUploadAction = async (
   body: UseBucketUploadBodyDto,
 ): Promise<UseBucketUploadRespDto> => {
-  const { bucket, file } = body;
+  const { bucket, file, folderName } = body;
 
   const { data: sessionData } = await supabase.auth.getSession();
 
@@ -19,13 +19,13 @@ export const bucketUploadAction = async (
   }
 
   const [filePath, arrayBuffer] = await Promise.all([
-    generateFilePathForBucket(file.name, uploaderId),
+    generateFilePathForBucket(file.name, folderName || uploaderId),
     convertFileToArrayBuffer(file.uri, file.type),
   ]);
 
   const size = arrayBuffer.byteLength;
 
-  await validateFile(bucket, file.type, size);
+  validateFile(bucket, file.type, size);
 
   const { data, error } = await supabase.storage
     .from(bucket)

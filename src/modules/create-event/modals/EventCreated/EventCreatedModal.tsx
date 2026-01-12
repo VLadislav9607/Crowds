@@ -26,7 +26,7 @@ export const EventCreatedModal = forwardRef<EventCreatedModalRef>((_, ref) => {
 
   return (
     <AppModal
-      title="Event Created"
+      title={refProps?.isDraftPublished ? 'Event Published' : 'Event Created'}
       subtitle="Start adding talents to your event."
       isVisible={isVisible}
       onClose={onClose}

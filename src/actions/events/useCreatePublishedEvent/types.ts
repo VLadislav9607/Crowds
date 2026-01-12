@@ -54,8 +54,8 @@ export interface CreatePublishedEventBodyDto {
   payment_mode: Enums<'EventPaymentMode'>;
   payment_amount: number;
   eventBrief: string;
-  uploadNDA: boolean;
-  ndaDocument?: string;
+  ndaDocumentName?: string;
+  ndaDocumentPath?: string;
   location?: EventLocationDto;
   ageGroups: AgeGroupDto[];
 }

@@ -1,8 +1,9 @@
-import { UseGetEventDetailsResDto } from '@actions';
+import { EventForOrgMemberDto } from '@actions';
 import { ImperativeModalRef } from '@hooks';
 
 export interface EventCreatedModalRefProps {
-  event: UseGetEventDetailsResDto;
+  event: EventForOrgMemberDto;
+  isDraftPublished?: boolean;
 }
 export type EventCreatedModalRef =
   ImperativeModalRef<EventCreatedModalRefProps>;
