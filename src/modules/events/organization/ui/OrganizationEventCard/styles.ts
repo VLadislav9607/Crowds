@@ -30,6 +30,7 @@ export const cardStyles = StyleSheet.create({
     width: 45,
     height: 45,
     borderRadius: 5,
+    overflow: 'hidden',
     backgroundColor: COLORS.black_20,
   },
   dashedLine: {

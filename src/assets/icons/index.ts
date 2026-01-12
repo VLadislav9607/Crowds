@@ -55,11 +55,14 @@ import { wallet } from './wallet';
 import { settings } from './settings';
 import { usersRound } from './usersRound';
 import { trash } from './trash';
-
+import { orgAvatarLogo } from './orgAvatarLogo';
+import { globe } from './globe';
 import { BOTTOM_TABS } from './bottomTabs';
+import { EVENT_CATEGORIES } from './eventCategories';
 
 export const ICONS = {
   BOTTOM_TABS,
+  EVENT_CATEGORIES,
   moneyBag,
   firstScreenLogo,
   fullLogo,
@@ -116,4 +119,6 @@ export const ICONS = {
   settings,
   trash,
   usersRound,
+  orgAvatarLogo,
+  globe,
 };

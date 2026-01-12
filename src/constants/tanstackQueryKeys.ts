@@ -1,8 +1,11 @@
 export const TANSTACK_QUERY_KEYS = {
   GET_EVENT: 'get_event',
   GET_EVENTS: 'get_events',
+  GET_EVENT_FOR_ORG_MEMBER: 'get_event_for_org_member',
   GET_ORG_EVENTS: 'get_org_events',
+  SEARCH_PUBLIC_EVENTS: 'search_public_events',
   GET_EVENTS_CATEGORIES: 'get_events_categories',
+  GET_ORG_EVENTS_COUNTERS: 'get_org_events_counters',
   GET_TALENT_LOCATION: 'get_talent_location',
   GET_ME: 'get_me',
   GET_EVENTS_SUB_CATEGORIES: 'get_events_sub_categories',

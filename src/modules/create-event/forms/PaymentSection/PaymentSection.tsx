@@ -37,17 +37,33 @@ export const PaymentSection = forwardRef<View>((_props, ref) => {
       <Controller
         control={control}
         name="paymentAmount"
-        render={({ field: { value, onChange } }) => (
-          <AppInput
-            value={value ? String(value) : ''}
-            onChangeText={text => onChange(text ? Number(text) : undefined)}
-            keyboardType="numeric"
-            errorMessage={errors.paymentAmount?.message}
-            placeholder="$15 minimum"
-            description="Minimum 3-hour payment applies, even for 1-hour shifts (legal requirement)."
-            containerStyle={styles.paymentAmountInput}
-          />
-        )}
+        render={({ field: { value, onChange } }) => {
+          console.log('value', value);
+          return (
+            <AppInput
+              value={value ? String(value) : ''}
+              onChangeText={text => {
+                // Якщо текст порожній або "0" - передаємо undefined
+                if (!text || text.trim() === '' || text.trim() === '0') {
+                  onChange(undefined);
+                } else {
+                  const numValue = Number(text);
+                  // Якщо число валідне і більше 0 - передаємо його
+                  if (!isNaN(numValue) && numValue > 0) {
+                    onChange(numValue);
+                  } else {
+                    onChange(undefined);
+                  }
+                }
+              }}
+              keyboardType="numeric"
+              errorMessage={errors.paymentAmount?.message}
+              placeholder="$15 minimum"
+              description="Minimum 3-hour payment applies, even for 1-hour shifts (legal requirement)."
+              containerStyle={styles.paymentAmountInput}
+            />
+          );
+        }}
       />
     </View>
   );

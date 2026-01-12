@@ -27,7 +27,7 @@ export const CreateEventFooter = ({
         onPress={onSaveDraft}
         titleStyles={styles.buttonTitle}
       />
-      <AppButton title="Next" onPress={onNext} />
+      <AppButton title="Publish event" onPress={onNext} />
     </View>
   );
 };

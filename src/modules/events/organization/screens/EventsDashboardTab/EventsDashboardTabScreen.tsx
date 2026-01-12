@@ -1,12 +1,53 @@
 import { AppText, GridBoard } from '@ui';
 
 import { EventsDashboardScreenLayout } from '../../layouts';
-import { eventDashboardConfig } from '../../configs';
-import { useGetOrgEvents } from '@actions';
+import { useGetMe, useGetOrgEventsCounters } from '@actions';
+import { COLORS } from '@styles';
 
 export const EventsDashboardTabScreen = () => {
-  const { data: eventsTest } = useGetOrgEvents({});
-  console.log('eventsTest', eventsTest);
+  const { organizationMember } = useGetMe();
+
+  const { data: eventsCountersResp, isLoading } = useGetOrgEventsCounters({
+    organization_id: organizationMember?.organization_id!,
+  });
+
+  const eventDashboardConfig = [
+    {
+      title: 'Active Posted Events',
+      subTitle: 'For invited talents & publicly posted events',
+      count: eventsCountersResp?.upcoming_public || 0,
+      bgColor: COLORS.light_purple,
+      textColor: COLORS.main,
+      // label: 'View',
+      showSkeleton: isLoading,
+    },
+    {
+      title: 'Active Private Events',
+      subTitle: 'For invited talents only',
+      count: eventsCountersResp?.upcoming_private || 0,
+      bgColor: COLORS.light_purple,
+      textColor: COLORS.main,
+      // label: 'View',
+      showSkeleton: isLoading,
+    },
+    {
+      title: 'Past Events',
+      count: eventsCountersResp?.past || 0,
+      bgColor: '#E0025214',
+      textColor: COLORS.red,
+      // label: 'View',
+      showSkeleton: isLoading,
+    },
+    {
+      title: 'Drafts',
+      count: eventsCountersResp?.draft || 0,
+      bgColor: '#F5F5F5',
+      textColor: COLORS.main,
+      // label: 'View',
+      showSkeleton: isLoading,
+    },
+  ];
+
   return (
     <EventsDashboardScreenLayout>
       <GridBoard items={eventDashboardConfig} />

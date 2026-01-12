@@ -5,7 +5,7 @@ import { REGEX } from '@constants';
 
 export const generateFilePathForBucket = async (
   fileName: string,
-  uploaderId: string,
+  folderName: string,
 ) => {
   const timestamp = Date.now();
 
@@ -16,12 +16,12 @@ export const generateFilePathForBucket = async (
   const cleanFileName = nameWithoutExtension.replace(REGEX.cleanFileName, '_');
   const finalFileName = `${timestamp}-${cleanFileName}`;
 
-  const filePath = `${uploaderId}/${finalFileName}`;
+  const filePath = `${folderName}/${finalFileName}`;
 
   return filePath;
 };
 
-export const validateFile = async (
+export const validateFile = (
   bucket: BucketsTypes,
   type: string,
   size: number,
@@ -43,6 +43,19 @@ export const validateFile = async (
   }
 
   return true;
+};
+
+export const validateFileSafe = (
+  bucket: BucketsTypes,
+  type: string,
+  size: number,
+): { isValid: boolean; error?: string } => {
+  try {
+    validateFile(bucket, type, size);
+    return { isValid: true };
+  } catch (error) {
+    return { isValid: false, error: (error as Error).message };
+  }
 };
 
 export const convertFileToArrayBuffer = async (

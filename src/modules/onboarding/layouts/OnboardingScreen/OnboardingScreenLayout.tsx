@@ -66,16 +66,18 @@ export const OnboardingScreenLayout = ({
       }
       {...headerProps}
     >
-      <AppText
-        renderIf={!!title}
-        typography="semibold_20"
-        style={styles.titleText}
-      >
-        {title}
-      </AppText>
-      <AppText renderIf={!!label} style={styles.label}>
-        {label}
-      </AppText>
+      <View style={styles.header}>
+        <AppText
+          renderIf={!!title}
+          typography="semibold_20"
+          style={styles.titleText}
+        >
+          {title}
+        </AppText>
+        <AppText renderIf={!!label} style={styles.label}>
+          {label}
+        </AppText>
+      </View>
 
       <View style={styles.contentContainer}>{children}</View>
     </ScreenWithScrollWrapper>
@@ -87,10 +89,16 @@ const styles = StyleSheet.create({
     paddingHorizontal: 20,
     gap: 24,
   },
-  titleText: {
-    textAlign: 'center',
+  header: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+    gap: 10,
     marginTop: 24,
     marginBottom: 32,
+  },
+  titleText: {
+    textAlign: 'center',
   },
   label: {
     paddingHorizontal: 10,

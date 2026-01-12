@@ -47,6 +47,12 @@ const validateRegistrationClosingDate = (data: {
   return true;
 };
 
+const pickedDocumentSchema = z.object({
+  uri: z.string(),
+  name: z.string(),
+  type: z.string(),
+  size: z.number().optional(),
+});
 const parsedLocationSchema = z.object(
   {
     autocomplete_description: z.string(),
@@ -119,7 +125,11 @@ export const createPublishedEventSchema = z
     title: z.string().min(1, 'Title of the event is required'),
     location: parsedLocationSchema,
     visibility: z.enum(['public', 'private']),
-    startAt: z.date({ message: 'Start date is required' }),
+    startAt: z
+      .date({ message: 'Start date is required' })
+      .refine(validateEndDateNotInPast, {
+        message: 'Start date and time cannot be in the past',
+      }),
     endAt: z
       .date({ message: 'End date is required' })
       .refine(validateEndDateNotInPast, {
@@ -137,11 +147,16 @@ export const createPublishedEventSchema = z
       .number('Payment is required')
       .min(15, 'Minimum payment is AUD $15.00'),
     eventBrief: z.string().min(1, 'Event brief is required'),
-    uploadNDA: z.boolean(),
-    ndaDocument: z.any().optional(),
-    registrationClosingAt: z.date({
-      message: 'Registration closing date is required',
-    }),
+    ndaDocument: pickedDocumentSchema.optional(),
+    ndaDocumentName: z.string().optional(),
+    ndaDocumentPath: z.string().optional(),
+    registrationClosingAt: z
+      .date({
+        message: 'Registration closing date is required',
+      })
+      .refine(validateEndDateNotInPast, {
+        message: 'Registration closing date and time cannot be in the past',
+      }),
   })
   .refine(validateStartBeforeEnd, {
     message: 'Start date and time must be earlier than end date and time',

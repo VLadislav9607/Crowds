@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import {
   View,
   TouchableOpacity,
@@ -120,6 +120,12 @@ export const PlacesPredictionsInput = ({
   useDidUpdateEffect(() => {
     !inputValue && setSessionToken(generateGooglePlacesSessionToken());
   }, [inputValue]);
+
+  useEffect(() => {
+    if (!!defaultValue && !inputValue) {
+      setInputValue(defaultValue);
+    }
+  }, [defaultValue, inputValue]);
 
   return (
     <View style={containerStyle}>

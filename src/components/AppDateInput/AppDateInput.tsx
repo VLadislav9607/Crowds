@@ -1,4 +1,4 @@
-import { TouchableOpacity, View } from 'react-native';
+import { Keyboard, TouchableOpacity, View } from 'react-native';
 import { AppText } from '../../ui/AppText';
 import { AppDateInputProps } from './types';
 import { ICONS } from '@assets';
@@ -33,6 +33,12 @@ export const AppDateInput = ({
 }: AppDateInputProps) => {
   const [showDatePicker, setShowDatePicker] = useState(false);
 
+  const onShowPicker = () => {
+    if (props.disabled) return;
+    Keyboard.dismiss();
+    requestAnimationFrame(() => setShowDatePicker(true));
+  };
+
   const onConfirm = (date: Date) => {
     setShowDatePicker(false);
     onChange?.(date);
@@ -58,8 +64,13 @@ export const AppDateInput = ({
 
         <TouchableOpacity
           activeOpacity={0.5}
-          onPress={() => setShowDatePicker(true)}
-          style={[styles.field, fieldStyle]}
+          onPress={onShowPicker}
+          disabled={props.disabled}
+          style={[
+            styles.field,
+            fieldStyle,
+            props.disabled && styles.disabledField,
+          ]}
         >
           <If condition={defaultIconPosition === 'left'}>
             <SvgXml

@@ -76,6 +76,13 @@ const crowdPreferencesSchema = z
     path: ['months'],
   });
 
+const pickedDocumentSchema = z.object({
+  uri: z.string(),
+  name: z.string(),
+  type: z.string(),
+  size: z.number().optional(),
+});
+
 const ageGroupDraftSchema = z
   .object({
     id: z.string(),
@@ -114,8 +121,9 @@ export const createEventDraftSchema = z
       .optional()
       .nullable(),
     eventBrief: z.string().optional().nullable(),
-    uploadNDA: z.boolean().optional().nullable(),
-    ndaDocument: z.any().optional().nullable(),
+    ndaDocument: pickedDocumentSchema.optional().nullable(),
+    ndaDocumentName: z.string().optional().nullable(),
+    ndaDocumentPath: z.string().optional().nullable(),
     registrationClosingAt: z.date().optional().nullable(),
   })
   .refine(validateStartBeforeEnd, {

@@ -1,9 +1,15 @@
 import { goBack, goToScreen, Screens } from '@navigation';
 import { useRef, useState } from 'react';
 
-import { OrganizationType, OtpVerificationFormRef } from '@modules/common';
+import {
+  OrganizationType,
+  OtpVerificationFormRef,
+  PickedImage,
+} from '@modules/common';
 
 import {
+  BranchesSetupStepData,
+  BranchesSetupStepRef,
   HeadGlobalLocationFormData,
   HeadGlobalLocationFormRef,
   OrganizationCreatorInformationFormData,
@@ -16,9 +22,11 @@ import {
 import {
   CreateOrganizationResDto,
   prefetchUseGetMe,
+  useBucketUpload,
   useCheckUsernameExist,
   useCreateOrganizationAndCreator,
   useSendOtp,
+  useUpdateOrganization,
   useVerifyOtp,
 } from '@actions';
 import { showErrorToast, showMutationErrorToast } from '@helpers';
@@ -33,6 +41,10 @@ export const useOnboardingUnAuthOrganization = () => {
   const otpVerificationFormRef = useRef<OtpVerificationFormRef>(null);
   const createPasswordFormRef = useRef<CreatePasswordFormRef>(null);
   const uinSaveConfirmationModalRef = useRef<UINSaveConfirmationModalRef>(null);
+  const branchesSetupFormRef = useRef<BranchesSetupStepRef>(null);
+  const { mutateAsync: uploadToBucketMutationAsync } = useBucketUpload();
+  const { mutateAsync: updateOrganizationMutateAsync } =
+    useUpdateOrganization();
 
   const organizationCreatorInformationFormRef =
     useRef<OrganizationCreatorInformationFormRef>(null);
@@ -49,7 +61,22 @@ export const useOnboardingUnAuthOrganization = () => {
       access_token: responseData.session.access_token,
       refresh_token: responseData.session.refresh_token,
     });
-    await prefetchUseGetMe();
+    const me = await prefetchUseGetMe();
+
+    const logo = data.image;
+
+    if (logo) {
+      const fileResp = await uploadToBucketMutationAsync({
+        bucket: 'organizations_avatars',
+        file: { uri: logo.uri, type: logo.type, name: logo.name },
+        folderName: me.organizationMember?.organization_id,
+      });
+      await updateOrganizationMutateAsync({
+        organization_id: me.organizationMember?.organization_id!,
+        avatar_path: fileResp.uploadedFile.path,
+      });
+    }
+
     uinSaveConfirmationModalRef.current?.open({
       uin: responseData.uin,
       onConfirm: () => goToScreen(Screens.OrgIdentityVerification),
@@ -69,35 +96,33 @@ export const useOnboardingUnAuthOrganization = () => {
       onError: e => showErrorToast(e?.message),
     });
   const { mutateAsync: sendOtpMutateAsync, isPending: isSendingOtp } =
-    useSendOtp();
+    useSendOtp({
+      onError: showMutationErrorToast,
+    });
 
   const [step, setStep] = useState(0);
 
   const [data, setData] = useState<{
     organizationNameFormData?: OrganizationNameFormData;
+    branchesSetupFormData?: BranchesSetupStepData;
     headGlobalLocationFormData?: HeadGlobalLocationFormData;
     primaryLocationFormData?: Partial<PrimaryLocationFormData>;
     organizationCreatorInformationFormData?: OrganizationCreatorInformationFormData;
     verificationToken?: string;
+    image?: PickedImage;
   }>({});
 
   const isGlobal =
     data.organizationNameFormData?.organizationType === OrganizationType.GLOBAL;
 
-  const totalSteps = 5;
+  const totalSteps = isGlobal ? 6 : 5;
 
-  const goToNextStep = () => {
+  const goToNextStepInSingle = () => {
     !step &&
       organizationNameFormRef.current?.handleSubmit(
         handleOrganizationNameFormSubmit,
       )();
     step === 1 &&
-      isGlobal &&
-      headGlobalLocationFormRef.current?.handleSubmit(
-        handleHeadGlobalLocationFormSubmit,
-      )();
-    step === 1 &&
-      !isGlobal &&
       primaryLocationFormRef.current?.handleSubmit(
         handlePrimaryLocationFormSubmit,
         error =>
@@ -114,6 +139,30 @@ export const useOnboardingUnAuthOrganization = () => {
       createPasswordFormRef.current?.handleSubmit(onCreatePasswordFormSubmit)();
   };
 
+  const goToNextStepInGlobal = () => {
+    !step &&
+      organizationNameFormRef.current?.handleSubmit(
+        handleOrganizationNameFormSubmit,
+      )();
+    step === 1 &&
+      branchesSetupFormRef.current?.handleSubmit(
+        handleBranchesSetupFormSubmit,
+      )();
+    step === 2 &&
+      headGlobalLocationFormRef.current?.handleSubmit(
+        handleHeadGlobalLocationFormSubmit,
+      )();
+    step === 3 &&
+      organizationCreatorInformationFormRef.current?.handleSubmit(
+        handleOrganizationCreatorInformationFormSubmit,
+      )();
+    step === 4 && onOtpVerificationFormSubmit();
+    step === 5 &&
+      createPasswordFormRef.current?.handleSubmit(onCreatePasswordFormSubmit)();
+  };
+
+  const goToNextStep = isGlobal ? goToNextStepInGlobal : goToNextStepInSingle;
+
   const onCreatePasswordFormSubmit = async (
     formData: CreatePasswordFormData,
   ) => {
@@ -121,8 +170,9 @@ export const useOnboardingUnAuthOrganization = () => {
       !data.verificationToken ||
       !data.organizationCreatorInformationFormData ||
       (!data.primaryLocationFormData && !data.headGlobalLocationFormData)
-    )
+    ) {
       return;
+    }
 
     createOrganizationAndCreatorMutateAsync({
       organization_name: data.organizationNameFormData?.organizationName || '',
@@ -144,21 +194,28 @@ export const useOnboardingUnAuthOrganization = () => {
     values: OrganizationNameFormData,
   ) => {
     setData({ ...data, organizationNameFormData: values });
-    setStep(1);
+    setStep(step + 1);
   };
 
   const handleHeadGlobalLocationFormSubmit = async (
     values: HeadGlobalLocationFormData,
   ) => {
     setData({ ...data, headGlobalLocationFormData: values });
-    setStep(2);
+    setStep(step + 1);
+  };
+
+  const handleBranchesSetupFormSubmit = async (
+    values: BranchesSetupStepData,
+  ) => {
+    setData({ ...data, branchesSetupFormData: values });
+    setStep(step + 1);
   };
 
   const handlePrimaryLocationFormSubmit = async (
     values: PrimaryLocationFormData,
   ) => {
     setData({ ...data, primaryLocationFormData: values });
-    setStep(2);
+    setStep(step + 1);
   };
 
   const onResendOtpCode = () =>
@@ -185,7 +242,7 @@ export const useOnboardingUnAuthOrganization = () => {
     }
     await sendOtpMutateAsync({ email: values.email });
     setData({ ...data, organizationCreatorInformationFormData: values });
-    setStep(3);
+    setStep(step + 1);
   };
 
   const onOtpVerificationFormSubmit = async () => {
@@ -200,7 +257,7 @@ export const useOnboardingUnAuthOrganization = () => {
     });
     setData({ ...data, verificationToken: response.verification_token });
     if (response.success) {
-      setStep(4);
+      setStep(step + 1);
     }
   };
 
@@ -209,8 +266,12 @@ export const useOnboardingUnAuthOrganization = () => {
       goBack();
       return;
     }
-    if (step === 4) {
+    if (step === 4 && !isGlobal) {
       setStep(2);
+      return;
+    }
+    if (step === 5 && isGlobal) {
+      setStep(3);
       return;
     }
     setStep(step - 1);
@@ -236,6 +297,7 @@ export const useOnboardingUnAuthOrganization = () => {
     otpVerificationFormRef,
     uinSaveConfirmationModalRef,
     createPasswordFormRef,
+    branchesSetupFormRef,
     setData,
     onResendOtpCode,
     goToNextStep,

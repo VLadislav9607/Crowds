@@ -5,23 +5,37 @@ import { AppText } from '@ui';
 import { StyleSheet, View } from 'react-native';
 import { IOrganizationEventsListProps } from './types';
 import SkeletonPlaceholder from 'react-native-skeleton-placeholder';
+import { useRefetchQuery } from '@hooks';
+import {
+  ActionConfirmationModal,
+  ActionConfirmationModalRef,
+} from '@modules/common';
+import { useRef } from 'react';
 
 export const OrganizationEventsList = ({
   filters,
 }: IOrganizationEventsListProps) => {
+  const actionConfirmationModalRef = useRef<ActionConfirmationModalRef>(null);
+
   const {
     data: eventsResponse,
     isLoading,
-    isRefetching,
     refetch,
     hasNextPage,
   } = useGetOrgEvents(filters);
 
+  const { isRefetchingQuery, refetchQuery } = useRefetchQuery(refetch);
+
   const renderEventCard = ({ item }: { item: OrgEventListItemDto }) => (
-    <OrganizationEventCard event={item} />
+    <OrganizationEventCard
+      event={item}
+      actionConfirmationModalRef={actionConfirmationModalRef}
+    />
   );
 
   const events = eventsResponse?.data && !isLoading ? eventsResponse?.data : [];
+
+  console.log('events', events);
 
   const ListSkeletonComponent = (
     <View style={styles.skeletonListContainer}>
@@ -58,17 +72,21 @@ export const OrganizationEventsList = ({
     : ListNoEventsComponent;
 
   return (
-    <AppFlashList
-      data={events}
-      keyExtractor={item => item.id}
-      renderItem={renderEventCard}
-      gap={4}
-      withBottomTab
-      ListEmptyComponent={ListEmptyComponent}
-      onRefresh={refetch}
-      refreshing={isRefetching}
-      showBottomLoader={hasNextPage}
-    />
+    <>
+      <AppFlashList
+        data={events}
+        keyExtractor={item => item.id}
+        renderItem={renderEventCard}
+        gap={4}
+        withBottomTab
+        ListEmptyComponent={ListEmptyComponent}
+        onRefresh={refetchQuery}
+        refreshing={isRefetchingQuery}
+        showBottomLoader={hasNextPage}
+      />
+
+      <ActionConfirmationModal ref={actionConfirmationModalRef} />
+    </>
   );
 };
 

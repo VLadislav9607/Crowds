@@ -18,6 +18,7 @@ export const RangeSelector = ({
   labelProps,
   bottomLabels,
   measure,
+  disabled = false,
   onRenderValue,
   onSlidingComplete,
 }: IRangeSelectorProps) => {
@@ -43,7 +44,7 @@ export const RangeSelector = ({
       )}
 
       <View style={styles.sliderContainer}>
-        <View style={styles.flex1}>
+        <View style={[styles.flex1, disabled && styles.disabled]}>
           <Slider
             value={disableRange ? values.min : [values.min, values.max]}
             onValueChange={value => {
@@ -56,6 +57,7 @@ export const RangeSelector = ({
             renderMinimumTrackComponent={RailSelected}
             step={step}
             onSlidingComplete={onSlidingComplete}
+            disabled={disabled}
           />
 
           <If condition={!!bottomLabels}>
@@ -91,7 +93,12 @@ export const RangeSelector = ({
         </If>
       </View>
 
-      <AppText color="black" typography="semibold_14" margin={{ top: 10 }}>
+      <AppText
+        color="black"
+        typography="semibold_14"
+        margin={{ top: 10 }}
+        style={disabled && styles.disabled}
+      >
         {onRenderValue(values)}
       </AppText>
     </View>

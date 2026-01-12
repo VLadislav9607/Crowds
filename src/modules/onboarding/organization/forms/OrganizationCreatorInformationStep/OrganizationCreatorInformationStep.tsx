@@ -54,13 +54,23 @@ export const OrganizationCreatorInformationStep = forwardRef<
         control={control}
         name="username"
         render={({ field: { onChange, value }, fieldState }) => (
-          <AppInput
-            placeholder="Username"
-            value={value}
-            onChangeText={onChange}
-            containerStyle={styles.nameInput}
-            errorMessage={fieldState.error?.message}
-          />
+          <View>
+            <AppInput
+              placeholder="Username"
+              value={value}
+              onChangeText={onChange}
+              containerStyle={styles.nameInput}
+              errorMessage={fieldState.error?.message}
+            />
+
+            <AppText
+              typography="regular_14"
+              color="gray_primary"
+              margin={{ top: 8 }}
+            >
+              This will be your login username.
+            </AppText>
+          </View>
         )}
       />
 
@@ -156,8 +166,8 @@ export const OrganizationCreatorInformationStep = forwardRef<
               onChange={onChange}
             />
             <AppText typography="regular_14" style={styles.checkboxText}>
-              Are you authorized on behalf of the company to make decisions; and
-              or in an Executive, C Suite or Board Position?
+              I am authorized on behalf of the company to make decisions; and or
+              in an Executive, C Suite or Board Position?
             </AppText>
           </View>
         )}

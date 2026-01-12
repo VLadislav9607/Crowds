@@ -1,4 +1,3 @@
-import { useState } from 'react';
 import { TouchableOpacity, View } from 'react-native';
 import { SvgXml } from 'react-native-svg';
 import {
@@ -16,18 +15,20 @@ import { DocumentPickerProps, PickedDocument } from './types';
 import { styles } from './styles';
 
 export const DocumentPicker = ({
-  title = 'Upload Document',
+  placeholder = 'Upload Document',
   description,
   icon,
   titleIcon,
   iconSize = 28,
   titleIconSize = 20,
-  onDocumentSelect,
+  selectedDocumentName,
   documentTypes = [types.pdf, types.doc],
   style,
+  onDocumentSelect,
+  onDocumentRemove,
 }: DocumentPickerProps) => {
-  const [selectedDocument, setSelectedDocument] =
-    useState<PickedDocument | null>(null);
+  // const [selectedDocument, setSelectedDocument] =
+  //   useState<PickedDocument | null>(null);
 
   const handlePickDocument = async () => {
     try {
@@ -42,7 +43,7 @@ export const DocumentPicker = ({
           type: result.type ?? undefined,
           size: result.size ?? undefined,
         };
-        setSelectedDocument(document);
+        // setSelectedDocument(document);
         onDocumentSelect?.(document);
       }
     } catch (err) {
@@ -50,11 +51,6 @@ export const DocumentPicker = ({
         console.error('Document picker error:', err);
       }
     }
-  };
-
-  const handleRemoveDocument = () => {
-    setSelectedDocument(null);
-    onDocumentSelect?.(null);
   };
 
   return (
@@ -65,11 +61,23 @@ export const DocumentPicker = ({
         style={[styles.container, style]}
       >
         <View style={styles.textWrapper}>
-          <AppText typography="bold_14" color="main">
-            {selectedDocument ? selectedDocument.name : title}
+          <AppText
+            renderIf={!!selectedDocumentName}
+            typography="bold_14"
+            color="main"
+          >
+            {selectedDocumentName}
           </AppText>
 
-          <If condition={!!titleIcon && !selectedDocument}>
+          <AppText
+            renderIf={!selectedDocumentName && !!placeholder}
+            typography="bold_14"
+            color="main"
+          >
+            {placeholder}
+          </AppText>
+
+          <If condition={!!titleIcon && !selectedDocumentName}>
             <SvgXml
               xml={titleIcon!}
               width={titleIconSize}
@@ -77,9 +85,9 @@ export const DocumentPicker = ({
             />
           </If>
 
-          <If condition={!!selectedDocument}>
+          <If condition={!!selectedDocumentName}>
             <TouchableOpacity
-              onPress={handleRemoveDocument}
+              onPress={onDocumentRemove}
               hitSlop={{ top: 10, bottom: 10, left: 10, right: 10 }}
             >
               <SvgXml xml={ICONS.closeIcon('main')} width={16} height={16} />
@@ -92,7 +100,7 @@ export const DocumentPicker = ({
         </If>
       </TouchableOpacity>
 
-      <If condition={!!description && !selectedDocument}>
+      <If condition={!!description && !selectedDocumentName}>
         <AppText
           typography="medium_12"
           color="gray_primary"

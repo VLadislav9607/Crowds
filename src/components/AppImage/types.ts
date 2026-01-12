@@ -5,6 +5,7 @@ import { BucketsTypes } from '@configs';
 export interface AppImageProps {
   containerStyle?: StyleProp<ViewStyle>;
   imgPath?: string | null;
+  imgUri?: string;
   style?: StyleProp<ImageStyle>;
   bucket: BucketsTypes;
   placeholderImage?: ImageRequireSource;

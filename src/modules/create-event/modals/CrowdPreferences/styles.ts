@@ -13,8 +13,8 @@ export const styles = StyleSheet.create({
     padding: 10,
   },
   title: {
-    textAlign: 'center',
     marginBottom: 16,
+    marginTop: 8,
   },
   scrollContent: {
     gap: 12,
