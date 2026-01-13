@@ -5,3 +5,5 @@ export * from './useUpdateTalent';
 export * from './useIsAvailableTalent';
 export * from './useUpdateAvailability';
 export * from './useGetUserAvailability';
+export * from './useGetInvitableTalents';
+export * from './useInviteTalent';

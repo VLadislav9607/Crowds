@@ -1,49 +1,17 @@
 import { useState } from 'react';
 import { StyleSheet } from 'react-native';
-
 import { AppTabSelector, If, ScreenWrapper } from '@components';
 import { COLORS, TYPOGRAPHY } from '@styles';
 import { AppText, SearchWithFilter } from '@ui';
-import { TalentFlag } from '@modules/common';
+import { Screens, useScreenNavigation } from '@navigation';
 
 import { TalentsList, MyCustomTalentsLists } from '../../components';
-import { useTalentsFilter } from '../../hooks';
+import { useSendInvite, useTalentsForInvite } from '../../hooks';
 import { FilterTalentsModal } from '../../modals';
 
-const MOCK_LISTS = [
-  { id: '1', listName: 'List 1', countTalents: 123 },
-  { id: '2', listName: 'List 2', countTalents: 0 },
-  { id: '3', listName: 'List 3', countTalents: 12 },
-];
-
-const MOCK_TALENTS = [
-  {
-    id: '1',
-    name: 'Talent 1',
-    location: 'Location 1',
-    flag: TalentFlag.GREEN,
-    avatarUrl:
-      'https://images.unsplash.com/photo-1765734208128-b3c05bc25204?q=80&w=830&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D',
-  },
-  {
-    id: '2',
-    name: 'Talent 2',
-    location: 'Location 2',
-    flag: TalentFlag.RED,
-    avatarUrl:
-      'https://images.unsplash.com/photo-1765734208128-b3c05bc25204?q=80&w=830&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D',
-  },
-  {
-    id: '3',
-    name: 'Talent 3',
-    location: 'Location 3',
-    flag: TalentFlag.YELLOW,
-    avatarUrl:
-      'https://images.unsplash.com/photo-1765734208128-b3c05bc25204?q=80&w=830&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D',
-  },
-];
-
 export const InviteTalentsScreen = () => {
+  const { params } = useScreenNavigation<Screens.InviteTalents>();
+
   const [selectedTab, setSelectedTab] = useState('my_lists');
 
   const {
@@ -52,8 +20,15 @@ export const InviteTalentsScreen = () => {
     activeFiltersCount,
     filterModalRef,
     handleOpenFilter,
-    filteredTalents,
-  } = useTalentsFilter(MOCK_TALENTS);
+    talentsForInviteList,
+    hasNextPage,
+    isFetchingNextPage,
+    isLoading,
+    handleEndReached,
+  } = useTalentsForInvite(params?.eventId ?? '');
+
+  const { invitingTalentId, setInvitingTalentId, inviteTalent } =
+    useSendInvite();
 
   const tabOptions = [
     { label: 'My lists', value: 'my_lists' },
@@ -80,7 +55,7 @@ export const InviteTalentsScreen = () => {
       />
 
       <If condition={selectedTab === 'my_lists'}>
-        <MyCustomTalentsLists lists={MOCK_LISTS} />
+        <MyCustomTalentsLists lists={[]} />
       </If>
 
       <If condition={showTalentsList}>
@@ -90,7 +65,19 @@ export const InviteTalentsScreen = () => {
           activeFiltersCount={activeFiltersCount}
           onFilterPress={handleOpenFilter}
         />
-        <TalentsList data={filteredTalents} variant="invite" />
+        <TalentsList
+          data={talentsForInviteList}
+          variant="invite"
+          isLoading={isLoading}
+          onEndReached={handleEndReached}
+          hasNextPage={hasNextPage}
+          isFetchingNextPage={isFetchingNextPage}
+          isSendingInvite={invitingTalentId}
+          onInviteTalent={talentId => {
+            setInvitingTalentId(talentId);
+            inviteTalent({ eventId: params?.eventId ?? '', talentId });
+          }}
+        />
       </If>
 
       <FilterTalentsModal bottomSheetRef={filterModalRef} />

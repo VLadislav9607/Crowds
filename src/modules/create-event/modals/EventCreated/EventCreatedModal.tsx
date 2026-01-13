@@ -20,7 +20,7 @@ export const EventCreatedModal = forwardRef<EventCreatedModalRef>((_, ref) => {
     close();
 
     setTimeout(() => {
-      goToScreen(Screens.InviteTalents);
+      goToScreen(Screens.InviteTalents, { eventId: refProps?.event?.id });
     }, 300);
   };
 

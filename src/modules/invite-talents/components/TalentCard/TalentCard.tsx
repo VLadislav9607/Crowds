@@ -12,6 +12,7 @@ export const TalentCard = ({
   isInvited = false,
   variant = 'invite',
   isAddedToList = false,
+  isSendingInvite = false,
   onMenuSelect,
   onPressActionButton,
 }: TalentCardProps) => {
@@ -33,7 +34,13 @@ export const TalentCard = ({
 
   return (
     <View style={styles.container}>
-      <Avatar size={48} name={name} flag={flag} uri={avatarUrl} />
+      <Avatar
+        size={48}
+        name={name}
+        flag={flag}
+        imgPath={avatarUrl}
+        bucket="talents_avatars"
+      />
 
       <View style={styles.infoContainer}>
         <AppText typography="bold_14">{name}</AppText>
@@ -54,6 +61,7 @@ export const TalentCard = ({
           onPress={onPressActionButton}
           size="36"
           width={71}
+          isLoading={isSendingInvite}
         />
       )}
 

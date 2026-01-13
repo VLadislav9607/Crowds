@@ -1,12 +1,19 @@
 import { StyleSheet, View } from 'react-native';
-
 import { AppFlashList } from '@components';
 import { AppText } from '@ui';
 
 import { TalentCard } from '../TalentCard';
 import { TalentsListProps } from './types';
 
-export const TalentsList = ({ data, variant = 'invite' }: TalentsListProps) => {
+export const TalentsList = ({
+  data,
+  variant = 'invite',
+  onEndReached,
+  hasNextPage,
+  isFetchingNextPage,
+  onInviteTalent,
+  isSendingInvite,
+}: TalentsListProps) => {
   return (
     <View style={styles.container}>
       <AppText typography="bold_12" style={styles.sortBy}>
@@ -17,6 +24,7 @@ export const TalentsList = ({ data, variant = 'invite' }: TalentsListProps) => {
         data={data}
         emptyText="No talents found"
         gap={0}
+        showBottomLoader={isFetchingNextPage}
         floatingButtonProps={{
           title: variant === 'invite' ? 'Invite All' : 'Add All to List',
           onPress: () => {},
@@ -25,10 +33,12 @@ export const TalentsList = ({ data, variant = 'invite' }: TalentsListProps) => {
           <TalentCard
             talent={item}
             variant={variant}
+            isSendingInvite={isSendingInvite === item.id}
             onMenuSelect={() => {}}
-            onPressActionButton={() => {}}
+            onPressActionButton={() => onInviteTalent(item.id)}
           />
         )}
+        onEndReached={hasNextPage ? onEndReached : undefined}
       />
     </View>
   );

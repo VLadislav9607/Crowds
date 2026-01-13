@@ -1,4 +1,5 @@
 export const TANSTACK_QUERY_KEYS = {
+  GET_INVITABLE_TALENTS: 'get_invitable_talents',
   GET_EVENT: 'get_event',
   GET_EVENTS: 'get_events',
   GET_EVENT_FOR_ORG_MEMBER: 'get_event_for_org_member',

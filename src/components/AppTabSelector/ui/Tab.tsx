@@ -86,7 +86,7 @@ export const Tab = <T = string,>({
       style={[
         tabStyle,
         !isPill && { borderColor: colors.border },
-        shouldScroll ? {} : { flex: 1 / totalOptions },
+        shouldScroll ? { paddingHorizontal: 12 } : { flex: 1 / totalOptions },
         !isPill && isFirst && styles.firstTab,
         !isPill && isLast && styles.lastTab,
       ]}

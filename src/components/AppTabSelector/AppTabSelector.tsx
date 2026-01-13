@@ -27,6 +27,7 @@ export function AppTabSelector<T = string>({
   theme = 'white',
   variant = 'default',
   marginBottom = 16,
+  containerStyle,
 }: IAppTabSelectorProps<T>) {
   const animatedValue = useRef(new Animated.Value(0)).current;
   const animatedWidth = useRef(new Animated.Value(0)).current;
@@ -160,7 +161,10 @@ export function AppTabSelector<T = string>({
     </>
   );
 
-  const containerStyle = { backgroundColor: CONTAINER_COLORS[theme] };
+  const tabsContainerStyle = {
+    backgroundColor: CONTAINER_COLORS[theme],
+    ...containerStyle,
+  };
   const containerBaseStyle = isPill ? styles.containerPill : styles.container;
   const scrollContentStyle = isPill
     ? styles.scrollContentPill
@@ -180,7 +184,7 @@ export function AppTabSelector<T = string>({
             ref={scrollViewRef}
             horizontal
             showsHorizontalScrollIndicator={false}
-            contentContainerStyle={[scrollContentStyle, containerStyle]}
+            contentContainerStyle={[scrollContentStyle, tabsContainerStyle]}
           >
             {tabsContent}
           </ScrollView>
@@ -192,7 +196,7 @@ export function AppTabSelector<T = string>({
   return (
     <>
       <TabsLabel label={label} badgeLabel={badgeLabel} />
-      <View style={[containerBaseStyle, { marginBottom }, containerStyle]}>
+      <View style={[containerBaseStyle, { marginBottom }, tabsContainerStyle]}>
         {tabsContent}
       </View>
     </>

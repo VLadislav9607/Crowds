@@ -50,15 +50,13 @@ export const ManageEventScreenLayout = ({
 const styles = StyleSheet.create({
   header: {
     height: 230,
+    justifyContent: 'flex-start',
   },
   headerContent: {
-    position: 'absolute',
-    bottom: 10,
-    left: 0,
-    right: 0,
     flexDirection: 'row',
     alignItems: 'center',
     gap: 20,
+    marginTop: 20,
   },
   headerContentTitle: {
     flex: 1,
