@@ -45,7 +45,7 @@ export const ActiveUpcomingEventCard = ({
         icon={ICONS.chevronRight('main')}
         iconPlace="right"
         width={141}
-        onPress={() => goToScreen(Screens.ManageEvent)}
+        onPress={() => goToScreen(Screens.ManageEvent, { eventId: event?.id ?? '' })}
         wrapperStyles={cardStyles.primaryButton}
         titleStyles={cardStyles.primaryButtonText}
       />

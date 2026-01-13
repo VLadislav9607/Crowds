@@ -6,6 +6,7 @@ export interface TalentCardProps {
   variant?: 'invite' | 'add_to_list';
   isInvited?: boolean;
   isAddedToList?: boolean;
+  isSendingInvite?: boolean;
   onMenuSelect: (item: IPopupMenuItem) => void;
   onPressActionButton: () => void;
 }

@@ -2,12 +2,17 @@ import { StyleSheet, View } from 'react-native';
 import { ICONS } from '@assets';
 import { IconText } from '@ui';
 import { COLORS } from '@styles';
+import { goToScreen, Screens } from '@navigation';
 
-export const ManageActionsList = () => {
+export const ManageActionsList = ({ eventId }: { eventId: string }) => {
   const manageActions = [
     {
       label: 'Generate QR Code',
       onPress: () => {},
+    },
+    {
+      label: 'Invite Talents',
+      onPress: () => goToScreen(Screens.InviteTalents, { eventId }),
     },
     {
       label: 'Message Talents',
@@ -30,6 +35,7 @@ export const ManageActionsList = () => {
       onPress: () => {},
     },
   ];
+
   return (
     <View style={styles.container}>
       {manageActions.map(action => (

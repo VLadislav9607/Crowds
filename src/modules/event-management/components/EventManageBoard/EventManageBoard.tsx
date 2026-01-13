@@ -1,13 +1,13 @@
-import { StyleSheet, TouchableOpacity, View } from 'react-native';
+import { TouchableOpacity, View } from 'react-native';
 import { SvgXml } from 'react-native-svg';
 
 import { AppText } from '@ui';
-import { TYPOGRAPHY } from '@styles';
 import { ICONS } from '@assets';
 import { If } from '@components';
 
 import { boardConfig } from './config';
 import { BoardItemType, IEventManageBoardProps } from './types';
+import { styles } from './styles';
 
 export const EventManageBoard = ({
   onOpenEditCheckIn,
@@ -44,34 +44,3 @@ export const EventManageBoard = ({
     </View>
   );
 };
-
-const GAP = 12;
-
-const styles = StyleSheet.create({
-  container: {
-    flexDirection: 'row',
-    justifyContent: 'center',
-    flexWrap: 'wrap',
-    gap: GAP,
-    marginBottom: 35,
-    paddingHorizontal: 12,
-  },
-  borderItem: {
-    width: `${(100 - GAP / 2) / 2}%`,
-    justifyContent: 'center',
-    alignItems: 'center',
-    borderRadius: 10,
-    height: 125,
-  },
-  value: {
-    ...TYPOGRAPHY.bold_40,
-  },
-  label: {
-    ...TYPOGRAPHY.bold_14,
-  },
-  editIcon: {
-    position: 'absolute',
-    right: 12,
-    top: 12,
-  },
-});

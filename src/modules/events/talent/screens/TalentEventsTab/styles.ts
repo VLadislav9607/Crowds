@@ -1,5 +1,5 @@
-import { COLORS } from "@styles";
-import { StyleSheet } from "react-native";
+import { COLORS } from '@styles';
+import { StyleSheet } from 'react-native';
 
 export const styles = StyleSheet.create({
   container: {
@@ -10,15 +10,12 @@ export const styles = StyleSheet.create({
     marginBottom: 12,
   },
   header: {
-    backgroundColor: COLORS.black,
-    paddingBottom: 16,
+    height: 156,
     paddingHorizontal: 0,
+    backgroundColor: COLORS.black,
   },
-  scrollView: {
-    width: '100%',
-  },
-  scrollViewContent: {
-    paddingHorizontal: 17,
+  tabsContainer: {
+    paddingHorizontal: 16,
   },
   eventsListContent: {
     paddingTop: 16,

@@ -1,3 +1,5 @@
+import { StyleProp, ViewStyle } from "react-native";
+
 export type TabSelectorTheme = 'white' | 'black';
 export type TabSelectorVariant = 'default' | 'pill';
 
@@ -16,4 +18,5 @@ export interface IAppTabSelectorProps<T = string> {
   theme?: TabSelectorTheme;
   variant?: TabSelectorVariant;
   marginBottom?: number;
+  containerStyle?: StyleProp<ViewStyle>;
 }
