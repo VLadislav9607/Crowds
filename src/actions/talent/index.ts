@@ -6,4 +6,5 @@ export * from './useIsAvailableTalent';
 export * from './useUpdateAvailability';
 export * from './useGetUserAvailability';
 export * from './useGetInvitableTalents';
-export * from './useInviteTalent';
+export * from './useAcceptProposal';
+export * from './useDeclineProposal';

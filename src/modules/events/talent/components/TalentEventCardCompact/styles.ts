@@ -8,6 +8,7 @@ export const styles = StyleSheet.create({
     ...SHADOWS.card,
     flexDirection: 'row',
     overflow: 'hidden',
+    boxShadow: '0px 1px 8px 0px #0000001F',
   },
   imageContainer: {
     width: 80,

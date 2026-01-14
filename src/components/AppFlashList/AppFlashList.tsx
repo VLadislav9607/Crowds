@@ -16,6 +16,7 @@ export const AppFlashList = <T,>({
   data,
   floatingButtonProps,
   showBottomLoader = false,
+  skeleton,
   ...props
 }: AppFlashListProps<T>) => {
   const { bottom } = useSafeAreaInsets();
@@ -41,14 +42,16 @@ export const AppFlashList = <T,>({
         ]}
         ItemSeparatorComponent={() => ItemSeparator(gap)}
         ListEmptyComponent={
-          <AppText
-            renderIf={!showBottomLoader}
-            typography="medium_14"
-            color="gray"
-            style={styles.emptyText}
-          >
-            {emptyText}
-          </AppText>
+          skeleton || (
+            <AppText
+              renderIf={!showBottomLoader}
+              typography="medium_14"
+              color="gray"
+              style={styles.emptyText}
+            >
+              {emptyText}
+            </AppText>
+          )
         }
         ListFooterComponent={
           showBottomLoader ? BottomLoaderComponent : undefined

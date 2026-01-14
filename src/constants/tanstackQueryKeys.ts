@@ -18,4 +18,6 @@ export const TANSTACK_QUERY_KEYS = {
   MY_CHATS: 'my_chats',
   GET_CHAT_MESSAGES: 'get_chat_messages',
   GET_CHAT_PARTICIPANTS: 'get_chat_participants',
+  GET_TALENT_PROPOSALS: 'get_talent_proposals',
+  GET_TALENT_EVENTS_COUNTS: 'get_talent_events_counts',
 } as const;
