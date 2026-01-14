@@ -6,3 +6,5 @@ export * from './useSearchPublicEvents';
 export * from './useUpdateEventDraft';
 export * from './usePublishEventDraft';
 export * from './useDeleteDraft';
+export * from './useTalentEventsByStatus';
+export * from './useTalentEventsCounts';

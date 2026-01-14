@@ -1,19 +1,77 @@
+import { useMemo, useState } from 'react';
 import { AppTabSelector, ITabOption, ScreenWrapper } from '@components';
-import { useState } from 'react';
+import { useTalentEventsByStatus, useTalentEventsCounts } from '@actions';
+
 import { TalentEventStatus } from '../../../types';
 import { styles } from './styles';
 import { TalentEventsList } from '../../components';
-import { View } from 'react-native';
+
+const TAB_PARAMS: Record<
+  TalentEventStatus,
+  {
+    status: 'pending' | 'approved' | 'rejected';
+    initiatedBy?: 'organization' | 'talent';
+  }
+> = {
+  proposed: {
+    status: 'pending',
+    initiatedBy: 'organization',
+  },
+  pending: {
+    status: 'pending',
+    initiatedBy: 'talent',
+  },
+  approved: {
+    status: 'approved',
+  },
+  denied: {
+    status: 'rejected',
+  },
+  random: {
+    status: 'pending',
+    initiatedBy: 'organization',
+  },
+};
 
 export const TalentEventsTab = () => {
   const [selectedTab, setSelectedTab] = useState<TalentEventStatus>('proposed');
 
-  const tabOptions: ITabOption<TalentEventStatus>[] = [
-    { label: 'Proposals', value: 'proposed', badge: 10 },
-    { label: 'Pending', value: 'pending', badge: 5 },
-    { label: 'Approved', value: 'approved', badge: 3 },
-    { label: 'Denied', value: 'denied', badge: 2 },
-  ];
+  const currentParams = useMemo(() => TAB_PARAMS[selectedTab], [selectedTab]);
+
+  const {
+    data,
+    isLoading,
+    hasNextPage,
+    isFetchingNextPage,
+    fetchNextPage,
+    refetch,
+  } = useTalentEventsByStatus(currentParams);
+
+  const { proposals, pending, approved, denied } = useTalentEventsCounts();
+
+  const eventsData = data?.pages.flatMap(page => page.data) || [];
+
+  const tabOptions: ITabOption<TalentEventStatus>[] = useMemo(
+    () => [
+      {
+        label: 'Proposals',
+        value: 'proposed',
+        badge: proposals || 0,
+      },
+      {
+        label: 'Pending',
+        value: 'pending',
+        badge: pending || 0,
+      },
+      {
+        label: 'Approved',
+        value: 'approved',
+        badge: approved || 0,
+      },
+      { label: 'Denied', value: 'denied', badge: denied || 0 },
+    ],
+    [proposals, pending, approved, denied],
+  );
 
   return (
     <ScreenWrapper
@@ -33,14 +91,16 @@ export const TalentEventsTab = () => {
         />
       }
     >
-      <View />
-      {/* <TalentEventsList
+      <TalentEventsList
         type={selectedTab}
-        contentContainerStyle={[
-          styles.eventsListContent,
-          { paddingBottom: 90 },
-        ]}
-      /> */}
+        data={eventsData}
+        isLoading={isLoading}
+        isRefetching={isFetchingNextPage}
+        hasMoreItems={hasNextPage}
+        onRefresh={() => refetch()}
+        onLoadMore={() => fetchNextPage()}
+        contentContainerStyle={styles.eventsListContent}
+      />
     </ScreenWrapper>
   );
 };

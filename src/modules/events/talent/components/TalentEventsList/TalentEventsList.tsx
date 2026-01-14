@@ -1,37 +1,90 @@
-import { ActivityIndicator, View } from 'react-native';
-import { FlashList } from '@shopify/flash-list';
-import { TalentEventsListProps } from './types';
-import { TalentEventCardCompact } from '../TalentEventCardCompact';
-import { COLORS } from '@styles';
-import { AppText } from '@ui';
+import { useRef } from 'react';
 import SkeletonPlaceholder from 'react-native-skeleton-placeholder';
-import { styles } from './styles';
+import { View } from 'react-native';
+import { AppFlashList } from '@components';
+import { useAcceptProposal, useDeclineProposal } from '@actions';
+import { queryClient } from '@services';
+import { TANSTACK_QUERY_KEYS } from '@constants';
+import { showSuccessToast, showErrorToast } from '@helpers';
 import {
   TalentEventAlreadyBookedModal,
   TalentEventUnavailableTimeModal,
   TalentEventApplyConfirmModal,
+  TalentEventUnavailableTimeModalRef,
+  TalentEventAlreadyBookedModalRef,
+  TalentEventApplyConfirmModalRef,
 } from '../../modals';
-import { useTalentEventsList } from './useTalentEventsList';
+import { TalentEventsListProps } from './types';
+import { TalentEventCardCompact } from '../TalentEventCardCompact';
+import { styles } from './styles';
 
-export const TalentEventsList = ({ ...props }: TalentEventsListProps) => {
-  const {
-    unavailableTimeModalRef,
-    alreadyBookedModalRef,
-    applyConfirmModalRef,
-    hasMoreItems,
-    isLoading,
-    refetch,
-    isRefetching,
-  } = useTalentEventsList();
+export const TalentEventsList = ({
+  type,
+  data = [],
+  isLoading = false,
+  isRefetching = false,
+  hasMoreItems = false,
+  onRefresh,
+  onLoadMore,
+  ...props
+}: TalentEventsListProps) => {
+  const unavailableTimeModalRef =
+    useRef<TalentEventUnavailableTimeModalRef>(null);
+  const alreadyBookedModalRef = useRef<TalentEventAlreadyBookedModalRef>(null);
+  const applyConfirmModalRef = useRef<TalentEventApplyConfirmModalRef>(null);
 
-  const renderItem = () => (
-    <TalentEventCardCompact containerStyle={styles.itemContainer} />
-  );
-  const renderItemSeparator = () => <View style={styles.itemSeparator} />;
-  const renderFooterLoader = () => (
-    <View style={styles.footerLoader}>
-      <ActivityIndicator size="small" color={COLORS.black} />
-    </View>
+  const acceptProposal = useAcceptProposal({
+    onSuccess: async () => {
+      await Promise.allSettled([
+        queryClient.invalidateQueries({
+          queryKey: [TANSTACK_QUERY_KEYS.GET_TALENT_PROPOSALS],
+        }),
+        queryClient.invalidateQueries({
+          queryKey: [TANSTACK_QUERY_KEYS.GET_TALENT_EVENTS_COUNTS],
+        }),
+      ]);
+      showSuccessToast('Proposal accepted successfully');
+      onRefresh?.();
+    },
+    onError: (error: any) => {
+      showErrorToast(error?.message || 'Failed to accept proposal');
+    },
+  });
+
+  const declineProposal = useDeclineProposal({
+    onSuccess: async () => {
+      await Promise.allSettled([
+        queryClient.invalidateQueries({
+          queryKey: [TANSTACK_QUERY_KEYS.GET_TALENT_PROPOSALS],
+        }),
+        queryClient.invalidateQueries({
+          queryKey: [TANSTACK_QUERY_KEYS.GET_TALENT_EVENTS_COUNTS],
+        }),
+      ]);
+      showSuccessToast('Proposal declined successfully');
+      onRefresh?.();
+    },
+    onError: (error: any) => {
+      showErrorToast(error?.message || 'Failed to decline proposal');
+    },
+  });
+
+  const handleAccept = (participationId: string) => {
+    acceptProposal.mutate({ participationId });
+  };
+
+  const handleDecline = (participationId: string) => {
+    declineProposal.mutate({ participationId });
+  };
+
+  const renderItem = ({ item }: { item: any }) => (
+    <TalentEventCardCompact
+      event={item}
+      containerStyle={styles.itemContainer}
+      type={type}
+      onPressAccept={type === 'proposed' ? handleAccept : undefined}
+      onPressDecline={type === 'proposed' ? handleDecline : undefined}
+    />
   );
 
   const ListSkeletonComponent = (
@@ -68,44 +121,27 @@ export const TalentEventsList = ({ ...props }: TalentEventsListProps) => {
     </View>
   );
 
-  const ListNoEventsComponent = (
-    <AppText typography="medium_14" color="gray">
-      No events found
-    </AppText>
-  );
-  const ListEmptyComponent = isLoading
-    ? ListSkeletonComponent
-    : ListNoEventsComponent;
+  const skeletonEvents = isLoading ? ListSkeletonComponent : undefined;
 
   return (
     <>
-      <FlashList
-        refreshing={isRefetching}
-        onRefresh={refetch}
-        data={isLoading ? [] : [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]}
+      <AppFlashList
+        data={data}
+        emptyText="No events found"
         renderItem={renderItem}
-        keyExtractor={item => item.toString()}
-        ItemSeparatorComponent={renderItemSeparator}
-        ListEmptyComponent={ListEmptyComponent}
-        ListFooterComponent={() =>
-          hasMoreItems && !isLoading ? renderFooterLoader() : null
-        }
+        onRefresh={onRefresh}
+        refreshing={isRefetching}
+        keyExtractor={item => item.eventId}
+        gap={9}
+        skeleton={skeletonEvents}
+        showBottomLoader={hasMoreItems && !isLoading}
+        onEndReached={hasMoreItems && !isLoading ? onLoadMore : undefined}
+        onEndReachedThreshold={0.5}
         {...props}
       />
 
-      {/* <AppFlashList
-        data={events}
-        renderItem={renderItem}
-        ListEmptyComponent={ListEmptyComponent}
-        refreshing={isRefetching}
-        onRefresh={refetch}
-        contentContainerStyle={{ paddingTop: 20 }}
-      /> */}
-
       <TalentEventUnavailableTimeModal ref={unavailableTimeModalRef} />
-
       <TalentEventAlreadyBookedModal ref={alreadyBookedModalRef} />
-
       <TalentEventApplyConfirmModal ref={applyConfirmModalRef} />
     </>
   );

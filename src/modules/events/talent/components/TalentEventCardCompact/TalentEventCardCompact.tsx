@@ -15,18 +15,21 @@ export const TalentEventCardCompact = ({
   event,
   containerStyle,
   type = 'random',
+  onPressAccept,
+  onPressDecline,
 }: TalentEventCardCompactProps) => {
-  const timezone = event?.event_location?.timezone || 'UTC';
+  const timezone = 'UTC';
 
-  const startAt = event?.start_at
-    ? formatInTimeZone(event.start_at, timezone, 'dd MMM, yyyy')
+  const startAt = event?.startAt
+    ? formatInTimeZone(event.startAt, timezone, 'dd MMM, yyyy')
     : '';
+
   const eventDuration =
-    event?.start_at && event?.end_at
-      ? calculateEventDuration(event.start_at, event.end_at)
+    event?.startAt && event?.endAt
+      ? calculateEventDuration(event.startAt, event.endAt)
       : { formatted: '' };
 
-  const eventIcon = getEventIcon(event.category_id!);
+  const eventIcon = getEventIcon(event.categoryId);
 
   return (
     <View style={[styles.container, containerStyle]}>
@@ -42,9 +45,14 @@ export const TalentEventCardCompact = ({
       <View style={styles.content}>
         <View style={styles.contentHeader}>
           <View style={styles.contentHeaderLeft}>
-            <AppText typography="semibold_16" margin={{ bottom: 8 }}>
-              {event.title}
+            <AppText
+              renderIf={type === 'approved'}
+              typography="semibold_16"
+              margin={{ bottom: 8 }}
+            >
+              {event.eventTitle}
             </AppText>
+
             <View style={styles.dateTimeContainer}>
               <IconText
                 icon={ICONS.calendarIcon('main')}
@@ -58,7 +66,27 @@ export const TalentEventCardCompact = ({
                 text={eventDuration.formatted}
                 textProps={{ typography: 'medium_12', color: 'black_50' }}
               />
+
+              <IconText
+                icon={ICONS.usersRound('main')}
+                iconSize={14}
+                text={event.participantsCount}
+                textProps={{ typography: 'medium_12', color: 'black_50' }}
+              />
             </View>
+
+            <If condition={!!event.formattedAddress}>
+              <IconText
+                icon={ICONS.locationPin('main')}
+                iconSize={14}
+                style={{ marginTop: 6 }}
+                text={event.formattedAddress}
+                textProps={{
+                  typography: 'medium_12',
+                  color: 'black_50',
+                }}
+              />
+            </If>
           </View>
 
           <TouchableOpacity
@@ -71,20 +99,20 @@ export const TalentEventCardCompact = ({
         <View style={styles.separatorDashedLine} />
 
         <AppText typography="regular_14" color="black">
-          {event.brief}
+          {event.description}
         </AppText>
 
         <View style={styles.priceContainer}>
           <View style={styles.pricePadge}>
             <AppText typography="bold_14" color="main">
-              ${event.payment_amount}
+              ${event.paymentAmount}
             </AppText>
             <AppText typography="medium_10" color="main">
               AUD
             </AppText>
           </View>
           <AppText typography="medium_12" color="black_50">
-            {event.payment_mode === 'fixed' ? 'Fixed price' : 'Price per hour'}
+            {event.paymentMode === 'fixed' ? 'Fixed price' : 'Price per hour'}
           </AppText>
         </View>
 
@@ -107,12 +135,20 @@ export const TalentEventCardCompact = ({
           </If>
 
           <If condition={type === 'proposed'}>
-            <TouchableOpacity activeOpacity={0.8} style={styles.redButton}>
+            <TouchableOpacity
+              activeOpacity={0.8}
+              style={styles.redButton}
+              onPress={() => onPressDecline?.(event.participationId)}
+            >
               <AppText typography="bold_14" color="red">
                 Decline
               </AppText>
             </TouchableOpacity>
-            <TouchableOpacity activeOpacity={0.8} style={styles.greenButton}>
+            <TouchableOpacity
+              activeOpacity={0.8}
+              style={styles.greenButton}
+              onPress={() => onPressAccept?.(event.participationId)}
+            >
               <AppText typography="bold_14" color="green">
                 Accept
               </AppText>
