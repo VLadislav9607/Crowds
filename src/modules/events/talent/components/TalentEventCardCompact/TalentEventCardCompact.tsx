@@ -1,35 +1,39 @@
-import { ImageBackground, TouchableOpacity, View } from 'react-native';
-import { AppButton, AppText, IconText } from '@ui';
-import { styles } from './styles';
-import { ICONS, IMAGES } from '@assets';
 import { SvgXml } from 'react-native-svg';
-import { TalentEventCardCompactProps } from './types';
+import { ImageBackground, TouchableOpacity, View } from 'react-native';
+import { formatInTimeZone } from 'date-fns-tz';
+import { AppButton, AppText, IconText } from '@ui';
+import { ICONS, IMAGES } from '@assets';
 import { If } from '@components';
 import { COLORS } from '@styles';
 import { goToScreen, Screens } from '@navigation';
-import { formatInTimeZone } from 'date-fns-tz';
+
 import { calculateEventDuration } from '../../../helpers';
+import { styles } from './styles';
 import { getEventIcon } from '../../../helpers';
+import { TalentEventCardCompactProps } from './types';
 
 export const TalentEventCardCompact = ({
   event,
   containerStyle,
   type = 'random',
+  isLoadingCancellation,
   onPressAccept,
   onPressDecline,
+  onPressApply,
+  onCancelApplication,
 }: TalentEventCardCompactProps) => {
   const timezone = 'UTC';
 
-  const startAt = event?.startAt
-    ? formatInTimeZone(event.startAt, timezone, 'dd MMM, yyyy')
+  const startAt = event?.start_at
+    ? formatInTimeZone(event.start_at, timezone, 'dd MMM, yyyy')
     : '';
 
   const eventDuration =
-    event?.startAt && event?.endAt
-      ? calculateEventDuration(event.startAt, event.endAt)
+    event?.start_at && event?.end_at
+      ? calculateEventDuration(event.start_at, event.end_at)
       : { formatted: '' };
 
-  const eventIcon = getEventIcon(event.categoryId);
+  const eventIcon = getEventIcon(event.category_id);
 
   return (
     <View style={[styles.container, containerStyle]}>
@@ -50,7 +54,7 @@ export const TalentEventCardCompact = ({
               typography="semibold_16"
               margin={{ bottom: 8 }}
             >
-              {event.eventTitle}
+              {event.event_title}
             </AppText>
 
             <View style={styles.dateTimeContainer}>
@@ -70,17 +74,17 @@ export const TalentEventCardCompact = ({
               <IconText
                 icon={ICONS.usersRound('main')}
                 iconSize={14}
-                text={event.participantsCount}
+                text={event.max_participations || 0}
                 textProps={{ typography: 'medium_12', color: 'black_50' }}
               />
             </View>
 
-            <If condition={!!event.formattedAddress}>
+            <If condition={!!event.formatted_address}>
               <IconText
                 icon={ICONS.locationPin('main')}
                 iconSize={14}
                 style={{ marginTop: 6 }}
-                text={event.formattedAddress}
+                text={event.formatted_address}
                 textProps={{
                   typography: 'medium_12',
                   color: 'black_50',
@@ -99,20 +103,20 @@ export const TalentEventCardCompact = ({
         <View style={styles.separatorDashedLine} />
 
         <AppText typography="regular_14" color="black">
-          {event.description}
+          {event.brief}
         </AppText>
 
         <View style={styles.priceContainer}>
           <View style={styles.pricePadge}>
             <AppText typography="bold_14" color="main">
-              ${event.paymentAmount}
+              ${event.payment_amount}
             </AppText>
             <AppText typography="medium_10" color="main">
               AUD
             </AppText>
           </View>
           <AppText typography="medium_12" color="black_50">
-            {event.paymentMode === 'fixed' ? 'Fixed price' : 'Price per hour'}
+            {event.payment_mode === 'fixed' ? 'Fixed price' : 'Price per hour'}
           </AppText>
         </View>
 
@@ -127,7 +131,11 @@ export const TalentEventCardCompact = ({
                 Reject
               </AppText>
             </TouchableOpacity>
-            <TouchableOpacity activeOpacity={0.8} style={styles.greenButton}>
+            <TouchableOpacity
+              activeOpacity={0.8}
+              style={styles.greenButton}
+              onPress={() => onPressApply?.(event)}
+            >
               <AppText typography="bold_14" color="green">
                 Apply
               </AppText>
@@ -138,7 +146,7 @@ export const TalentEventCardCompact = ({
             <TouchableOpacity
               activeOpacity={0.8}
               style={styles.redButton}
-              onPress={() => onPressDecline?.(event.participationId)}
+              onPress={() => onPressDecline?.(event.participation_id)}
             >
               <AppText typography="bold_14" color="red">
                 Decline
@@ -147,7 +155,7 @@ export const TalentEventCardCompact = ({
             <TouchableOpacity
               activeOpacity={0.8}
               style={styles.greenButton}
-              onPress={() => onPressAccept?.(event.participationId)}
+              onPress={() => onPressAccept?.(event)}
             >
               <AppText typography="bold_14" color="green">
                 Accept
@@ -161,7 +169,9 @@ export const TalentEventCardCompact = ({
               size="36"
               titleStyles={{ color: COLORS.black }}
               title="Cancel application"
-              onPress={() => {}}
+              loadingColor="black"
+              isLoading={isLoadingCancellation}
+              onPress={() => onCancelApplication?.(event.participation_id)}
             />
           </If>
 

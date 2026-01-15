@@ -20,6 +20,8 @@ export const searchPublicEventsAction = async (
     filter_payment_type: params.filter_payment_type,
   });
 
+  console.log(error);
+
   if (error) throw error;
 
   return data as unknown as UseSearchPublicEventsResDto;

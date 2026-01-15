@@ -11,6 +11,7 @@ export type ButtonSize =
   | '31'
   | '28'
   | '25';
+
 export type ButtonVariant = 'primary' | 'withBorder';
 
 export interface ButtonProps {
@@ -25,6 +26,7 @@ export interface ButtonProps {
   icon?: string | null;
   iconPlace?: 'left' | 'right';
   iconSize?: NumberProp;
+  loadingColor?: string;
   iconStyle?: StyleProp<ViewStyle>;
   wrapperStyles?: StyleProp<ViewStyle>;
   titleStyles?: StyleProp<TextStyle>;

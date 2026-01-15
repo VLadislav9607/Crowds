@@ -1,8 +1,12 @@
-import { useRef } from 'react';
+import { useRef, useState } from 'react';
 import SkeletonPlaceholder from 'react-native-skeleton-placeholder';
 import { View } from 'react-native';
 import { AppFlashList } from '@components';
-import { useAcceptProposal, useDeclineProposal } from '@actions';
+import {
+  useAcceptProposal,
+  useCancelApplication,
+  useDeclineProposal,
+} from '@actions';
 import { queryClient } from '@services';
 import { TANSTACK_QUERY_KEYS } from '@constants';
 import { showSuccessToast, showErrorToast } from '@helpers';
@@ -28,6 +32,8 @@ export const TalentEventsList = ({
   onLoadMore,
   ...props
 }: TalentEventsListProps) => {
+  const [cancellationId, setCancellationId] = useState<string | null>(null);
+
   const unavailableTimeModalRef =
     useRef<TalentEventUnavailableTimeModalRef>(null);
   const alreadyBookedModalRef = useRef<TalentEventAlreadyBookedModalRef>(null);
@@ -37,17 +43,19 @@ export const TalentEventsList = ({
     onSuccess: async () => {
       await Promise.allSettled([
         queryClient.invalidateQueries({
-          queryKey: [TANSTACK_QUERY_KEYS.GET_TALENT_PROPOSALS],
+          queryKey: [TANSTACK_QUERY_KEYS.TALENT_EVENTS_BY_STATUS],
         }),
         queryClient.invalidateQueries({
           queryKey: [TANSTACK_QUERY_KEYS.GET_TALENT_EVENTS_COUNTS],
         }),
       ]);
       showSuccessToast('Proposal accepted successfully');
+      applyConfirmModalRef.current?.handleSuccess();
       onRefresh?.();
     },
     onError: (error: any) => {
       showErrorToast(error?.message || 'Failed to accept proposal');
+      applyConfirmModalRef.current?.handleError();
     },
   });
 
@@ -55,7 +63,7 @@ export const TalentEventsList = ({
     onSuccess: async () => {
       await Promise.allSettled([
         queryClient.invalidateQueries({
-          queryKey: [TANSTACK_QUERY_KEYS.GET_TALENT_PROPOSALS],
+          queryKey: [TANSTACK_QUERY_KEYS.TALENT_EVENTS_BY_STATUS],
         }),
         queryClient.invalidateQueries({
           queryKey: [TANSTACK_QUERY_KEYS.GET_TALENT_EVENTS_COUNTS],
@@ -69,12 +77,45 @@ export const TalentEventsList = ({
     },
   });
 
-  const handleAccept = (participationId: string) => {
-    acceptProposal.mutate({ participationId });
+  const cancelApplication = useCancelApplication({
+    onSuccess: async () => {
+      await Promise.allSettled([
+        queryClient.invalidateQueries({
+          queryKey: [TANSTACK_QUERY_KEYS.TALENT_EVENTS_BY_STATUS],
+        }),
+        queryClient.invalidateQueries({
+          queryKey: [TANSTACK_QUERY_KEYS.GET_TALENT_EVENTS_COUNTS],
+        }),
+      ]);
+      showSuccessToast('Application canceled successfully');
+      onRefresh?.();
+      setCancellationId(null);
+    },
+    onError: (error: any) => {
+      showErrorToast(error?.message || 'Failed to cancel application');
+      setCancellationId(null);
+    },
+  });
+
+  const handleAccept = (event: any) => {
+    applyConfirmModalRef.current?.open({
+      eventTitle: event.event_title,
+      formattedAddress: event.formatted_address,
+      startAt: event.start_at,
+      endAt: event.end_at,
+      onConfirm: () => {
+        acceptProposal.mutate({ participationId: event.participation_id });
+      },
+    });
   };
 
   const handleDecline = (participationId: string) => {
     declineProposal.mutate({ participationId });
+  };
+
+  const handleCancelApplication = (participationId: string) => {
+    setCancellationId(participationId);
+    cancelApplication.mutate({ participationId });
   };
 
   const renderItem = ({ item }: { item: any }) => (
@@ -82,8 +123,10 @@ export const TalentEventsList = ({
       event={item}
       containerStyle={styles.itemContainer}
       type={type}
+      isLoadingCancellation={cancellationId === item.participation_id}
       onPressAccept={type === 'proposed' ? handleAccept : undefined}
       onPressDecline={type === 'proposed' ? handleDecline : undefined}
+      onCancelApplication={handleCancelApplication}
     />
   );
 
@@ -131,7 +174,7 @@ export const TalentEventsList = ({
         renderItem={renderItem}
         onRefresh={onRefresh}
         refreshing={isRefetching}
-        keyExtractor={item => item.eventId}
+        keyExtractor={item => item.event_id}
         gap={9}
         skeleton={skeletonEvents}
         showBottomLoader={hasMoreItems && !isLoading}

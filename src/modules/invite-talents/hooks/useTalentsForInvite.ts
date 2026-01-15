@@ -18,8 +18,6 @@ export const useTalentsForInvite = (eventId: string) => {
     isLoading,
   } = useGetInvitableTalents(eventId);
 
-  console.log('talentsForInviteResponse', talentsForInviteResponse);
-
   const talentsForInviteList = useMemo<InvitedTalent[]>(() => {
     if (!talentsForInviteResponse) return [];
     return talentsForInviteResponse.pages.flatMap(page =>

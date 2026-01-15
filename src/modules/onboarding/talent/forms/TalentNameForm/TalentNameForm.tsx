@@ -55,7 +55,7 @@ export const TalentNameForm = forwardRef<
             label="Username"
             placeholder="Enter your username"
             value={field.value}
-            onChangeText={field.onChange}
+            onChangeText={text => field.onChange(text.toLowerCase())}
             errorMessage={fieldState.error?.message}
           />
         )}

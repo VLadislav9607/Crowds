@@ -3,17 +3,19 @@ export interface InvitableTalentsBodyDto {
   offset: number;
 }
 
+export interface InvitableTalentDto {
+  id: string;
+  first_name: string;
+  last_name: string;
+  avatar_path: string;
+  location: {
+    city: string;
+    country: string;
+  };
+}
+
 export interface InvitableTalentsRespDto {
-  data: {
-    id: string;
-    first_name: string;
-    last_name: string;
-    avatar_path: string;
-    location: {
-      city: string;
-      country: string;
-    };
-  }[];
+  data: InvitableTalentDto[];
   pagination: {
     offset: number;
     total: number;

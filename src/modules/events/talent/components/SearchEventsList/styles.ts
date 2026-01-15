@@ -4,9 +4,6 @@ export const styles = StyleSheet.create({
   itemContainer: {
     marginHorizontal: 20,
   },
-  itemSeparator: {
-    height: 9,
-  },
   footerLoader: {
     height: 60,
     alignItems: 'center',
