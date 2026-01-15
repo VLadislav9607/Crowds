@@ -1,6 +1,6 @@
+import { FunctionsHttpError } from '@supabase/supabase-js';
 import { supabase } from '@services';
 import { InviteTalentBodyDto, InviteTalentResDto } from './types';
-import { FunctionsHttpError } from '@supabase/supabase-js';
 
 export const inviteTalentAction = async (
   body: InviteTalentBodyDto,
@@ -10,7 +10,6 @@ export const inviteTalentAction = async (
   });
 
   if (error && error instanceof FunctionsHttpError) {
-    console.log('error', error);
     const errorMessage = await error.context.json();
     throw errorMessage;
   }

@@ -2,7 +2,7 @@ import { useRef } from 'react';
 import { TalentEventUnavailableTimeModalRef } from '../../modals';
 import { TalentEventAlreadyBookedModalRef } from '../../modals';
 import { TalentEventApplyConfirmModalRef } from '../../modals';
-import { useSearchPublicEvents } from '@actions';
+import { useTalentPublicEvents } from '@actions';
 import { SearchEventsListProps } from './types';
 import { useRefetchQuery } from '@hooks';
 
@@ -13,7 +13,7 @@ export const useSearchEventsList = ({ filters }: SearchEventsListProps) => {
     refetch,
     isLoading,
     hasNextPage,
-  } = useSearchPublicEvents({ ...filters }, { staleTime: 0, gcTime: 0 });
+  } = useTalentPublicEvents({ ...filters }, { staleTime: 0, gcTime: 0 });
 
   const { isRefetchingQuery, refetchQuery } = useRefetchQuery(refetch);
 

@@ -1,5 +1,5 @@
 import { TalentEventsFilterData } from '../../modals';
-import { UseSearchPublicEventsBodyDto } from '@actions';
+import { TalentPublicEventsBodyDto } from '@actions';
 
 /**
  * Конвертує TalentEventsFilterData в формат для SQL функції
@@ -7,8 +7,8 @@ import { UseSearchPublicEventsBodyDto } from '@actions';
 export const convertFiltersToSearchParams = (
   filters: TalentEventsFilterData,
   profileLocation?: { latitude: number; longitude: number } | null,
-): Omit<UseSearchPublicEventsBodyDto, 'limit' | 'offset'> => {
-  const params: Omit<UseSearchPublicEventsBodyDto, 'limit' | 'offset'> = {};
+): Omit<TalentPublicEventsBodyDto, 'limit' | 'offset'> => {
+  const params: Omit<TalentPublicEventsBodyDto, 'limit' | 'offset'> = {};
 
   // Визначаємо координати для сортування та фільтрації
   let userLat: number | undefined;

@@ -15,6 +15,7 @@ export const AppButton = ({
   variant = 'primary',
   isDisabled = false,
   isLoading = false,
+  loadingColor = 'white',
   icon = null,
   iconPlace = 'left',
   iconSize,
@@ -55,7 +56,7 @@ export const AppButton = ({
       disabled={isDisabled || isLoading}
     >
       {isLoading ? (
-        <ActivityIndicator color="white" size={loadingSize} />
+        <ActivityIndicator color={loadingColor} size={loadingSize} />
       ) : (
         <>
           <If condition={!!icon}>

@@ -21,6 +21,7 @@ export interface OrgEventListItemPublishedDto
     Tables<'event_age_groups'>,
     'male_count' | 'female_count' | 'other_count'
   >[];
+  participants_count?: number;
 }
 
 export interface OrgEventListDraftItemDto
@@ -37,6 +38,7 @@ export interface UseGetOrgEventsBodyDto {
   search_query?: string;
   status_filter?: Database['public']['Enums']['EventStatus'];
   visibility_filter?: Database['public']['Enums']['EventVisibility'];
+  participants_count?: number;
   limit?: number;
   offset?: number;
   start_after?: string; // ISO datetime string - фільтрує: start_at > start_after

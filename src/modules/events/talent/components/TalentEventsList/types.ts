@@ -1,11 +1,11 @@
 import { FlashListProps } from '@shopify/flash-list';
-import { ITalentEvent } from '@actions';
+import { ITalentEventCard } from '@actions';
 import { TalentEventStatus } from '../../../types';
 
 export interface TalentEventsListProps
   extends Partial<Omit<FlashListProps<any>, 'data'>> {
   type: TalentEventStatus;
-  data?: ITalentEvent[];
+  data?: ITalentEventCard[];
   isLoading?: boolean;
   isRefetching?: boolean;
   hasMoreItems?: boolean;

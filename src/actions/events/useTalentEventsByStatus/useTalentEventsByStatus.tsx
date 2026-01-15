@@ -8,7 +8,7 @@ export const useTalentEventsByStatus = (
 ) => {
   return useInfiniteQuery({
     queryKey: [
-      TANSTACK_QUERY_KEYS.GET_TALENT_PROPOSALS,
+      TANSTACK_QUERY_KEYS.TALENT_EVENTS_BY_STATUS,
       params.status,
       params.initiatedBy,
     ],

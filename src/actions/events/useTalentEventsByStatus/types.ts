@@ -1,18 +1,18 @@
-export interface ITalentEvent {
-  participationId: string;
-  eventId: string;
-  description: string;
-  categoryId: string;
-  eventTitle: string;
-  paymentAmount: number;
-  paymentMode: string;
-  formattedAddress: string;
+export interface ITalentEventCard {
+  participation_id: string;
+  event_id: string;
+  brief: string;
+  category_id: string;
+  event_title: string;
+  payment_amount: number;
+  payment_mode: string;
+  formatted_address: string;
   latitude: number;
   longitude: number;
-  startAt: string;
-  endAt: string;
-  participantsCount: number;
-  createdAt: string;
+  start_at: string;
+  end_at: string;
+  max_participations: number;
+  created_at: string;
 }
 
 export interface UseTalentEventsByStatusBodyDto {
@@ -22,7 +22,7 @@ export interface UseTalentEventsByStatusBodyDto {
 }
 
 export interface UseTalentEventsByStatusResDto {
-  data: ITalentEvent[];
+  data: ITalentEventCard[];
   pagination: {
     offset: number;
   };

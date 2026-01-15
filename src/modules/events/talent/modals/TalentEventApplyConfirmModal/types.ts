@@ -1,8 +1,15 @@
-import { ImperativeModalRef } from "@hooks";
+import { ImperativeModalRef } from '@hooks';
 
-export interface TalentEventApplyConfirmModalProps{
-  eventId: string;
+export interface TalentEventApplyConfirmModalProps {
+  eventTitle: string;
+  formattedAddress: string;
+  startAt: string;
+  endAt: string;
   onConfirm: () => void;
 }
 
-export type TalentEventApplyConfirmModalRef = ImperativeModalRef<TalentEventApplyConfirmModalProps>;
+export interface TalentEventApplyConfirmModalRef
+  extends ImperativeModalRef<TalentEventApplyConfirmModalProps> {
+  handleSuccess: () => void;
+  handleError: () => void;
+}

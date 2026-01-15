@@ -33,7 +33,7 @@ export const ActiveUpcomingEventCard = ({
     // </AppText>
 
     <AppText style={cardStyles.participants}>
-      {0}/{participantsCount} TALENTS
+      {event?.participants_count || 0}/{participantsCount} TALENTS
     </AppText>
   ) : null;
 
@@ -45,7 +45,9 @@ export const ActiveUpcomingEventCard = ({
         icon={ICONS.chevronRight('main')}
         iconPlace="right"
         width={141}
-        onPress={() => goToScreen(Screens.ManageEvent, { eventId: event?.id ?? '' })}
+        onPress={() =>
+          goToScreen(Screens.ManageEvent, { eventId: event?.id ?? '' })
+        }
         wrapperStyles={cardStyles.primaryButton}
         titleStyles={cardStyles.primaryButtonText}
       />

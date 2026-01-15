@@ -1,7 +1,6 @@
 import { AppFlashList } from '@components';
 import { OrganizationEventCard } from '../../ui';
 import { OrgEventListItemDto, useGetOrgEvents } from '@actions';
-import { AppText } from '@ui';
 import { StyleSheet, View } from 'react-native';
 import { IOrganizationEventsListProps } from './types';
 import SkeletonPlaceholder from 'react-native-skeleton-placeholder';
@@ -35,8 +34,6 @@ export const OrganizationEventsList = ({
 
   const events = eventsResponse?.data && !isLoading ? eventsResponse?.data : [];
 
-  console.log('events', events);
-
   const ListSkeletonComponent = (
     <View style={styles.skeletonListContainer}>
       <SkeletonPlaceholder>
@@ -62,15 +59,6 @@ export const OrganizationEventsList = ({
     </View>
   );
 
-  const ListNoEventsComponent = (
-    <AppText typography="medium_14" color="gray">
-      No events found
-    </AppText>
-  );
-  const ListEmptyComponent = isLoading
-    ? ListSkeletonComponent
-    : ListNoEventsComponent;
-
   return (
     <>
       <AppFlashList
@@ -79,7 +67,8 @@ export const OrganizationEventsList = ({
         renderItem={renderEventCard}
         gap={4}
         withBottomTab
-        ListEmptyComponent={ListEmptyComponent}
+        skeleton={isLoading ? ListSkeletonComponent : undefined}
+        emptyText="No events found"
         onRefresh={refetchQuery}
         refreshing={isRefetchingQuery}
         showBottomLoader={hasNextPage}

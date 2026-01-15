@@ -1,18 +1,20 @@
-import { ActivityIndicator, View } from 'react-native';
-import { FlashList } from '@shopify/flash-list';
-import { SearchEventsListProps } from './types';
-import { TalentEventCardCompact } from '../TalentEventCardCompact';
-import { COLORS } from '@styles';
-import { AppText } from '@ui';
+import { View } from 'react-native';
 import SkeletonPlaceholder from 'react-native-skeleton-placeholder';
+import { useApplyEvent, ITalentEventCard } from '@actions';
+import { AppFlashList } from '@components';
+import { queryClient } from '@services';
+import { TANSTACK_QUERY_KEYS } from '@constants';
+import { showSuccessToast, showErrorToast } from '@helpers';
+
+import { SearchEventsListProps } from './types';
 import { styles } from './styles';
+import { TalentEventCardCompact } from '../TalentEventCardCompact';
 import {
   TalentEventAlreadyBookedModal,
   TalentEventUnavailableTimeModal,
   TalentEventApplyConfirmModal,
 } from '../../modals';
 import { useSearchEventsList } from './useSearchEventsList';
-import { SearchPublicEventsListItemDto } from '@actions';
 
 export const SearchEventsList = ({ ...props }: SearchEventsListProps) => {
   const {
@@ -27,19 +29,41 @@ export const SearchEventsList = ({ ...props }: SearchEventsListProps) => {
     refetchQuery,
   } = useSearchEventsList(props);
 
-  const renderItem = ({ item }: { item: SearchPublicEventsListItemDto }) => (
+  const applyEvent = useApplyEvent({
+    onSuccess: async () => {
+      await Promise.allSettled([
+        queryClient.invalidateQueries({
+          queryKey: [TANSTACK_QUERY_KEYS.GET_TALENT_EVENTS_COUNTS],
+        }),
+        queryClient.invalidateQueries({
+          queryKey: [TANSTACK_QUERY_KEYS.TALENT_EVENTS_BY_STATUS],
+        }),
+      ]);
+      showSuccessToast('Application submitted successfully');
+      applyConfirmModalRef.current?.handleSuccess();
+    },
+    onError: (error: any) => {
+      showErrorToast(error?.message || 'Failed to submit application');
+      applyConfirmModalRef.current?.handleError();
+    },
+  });
+
+  const handleApply = (event: ITalentEventCard) => {
+    applyConfirmModalRef.current?.open({
+      eventTitle: event.event_title,
+      formattedAddress: event?.formatted_address || '',
+      startAt: event.start_at || '',
+      endAt: event.end_at || '',
+      onConfirm: () => applyEvent.mutate({ eventId: event.event_id }),
+    });
+  };
+
+  const renderItem = ({ item }: { item: ITalentEventCard }) => (
     <TalentEventCardCompact
       event={item}
       containerStyle={styles.itemContainer}
+      onPressApply={() => handleApply(item)}
     />
-  );
-
-  const renderItemSeparator = () => <View style={styles.itemSeparator} />;
-
-  const ListFooterLoader = (
-    <View style={styles.footerLoader}>
-      <ActivityIndicator size="small" color={COLORS.black} />
-    </View>
   );
 
   const ListSkeletonComponent = (
@@ -66,29 +90,18 @@ export const SearchEventsList = ({ ...props }: SearchEventsListProps) => {
     </View>
   );
 
-  const ListNoEventsComponent = (
-    <View style={styles.noEventsContainer}>
-      <AppText typography="medium_14" color="gray">
-        No events found
-      </AppText>
-    </View>
-  );
-
-  const ListEmptyComponent = isLoading
-    ? ListSkeletonComponent
-    : ListNoEventsComponent;
-
   return (
     <>
-      <FlashList
+      <AppFlashList
         refreshing={isRefetchingQuery}
         onRefresh={refetchQuery}
         data={events}
         renderItem={renderItem}
-        keyExtractor={item => item.id}
-        ItemSeparatorComponent={renderItemSeparator}
-        ListEmptyComponent={ListEmptyComponent}
-        ListFooterComponent={hasNextPage ? ListFooterLoader : null}
+        keyExtractor={item => item.event_id}
+        gap={9}
+        emptyText="No events found"
+        skeleton={isLoading ? ListSkeletonComponent : undefined}
+        showBottomLoader={hasNextPage}
         onEndReached={hasNextPage ? fetchNextPage : null}
         {...props}
       />

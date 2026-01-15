@@ -8,3 +8,5 @@ export * from './useGetUserAvailability';
 export * from './useGetInvitableTalents';
 export * from './useAcceptProposal';
 export * from './useDeclineProposal';
+export * from './useApplyEvent';
+export * from './useCancelApplication';

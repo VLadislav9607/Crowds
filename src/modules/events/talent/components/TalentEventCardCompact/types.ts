@@ -1,11 +1,14 @@
 import { StyleProp, ViewStyle } from 'react-native';
 import { TalentEventStatus } from '../../../types';
-import { ITalentEvent } from '@actions';
+import { ITalentEventCard } from '@actions';
 
 export interface TalentEventCardCompactProps {
-  event: ITalentEvent;
+  event: ITalentEventCard;
   containerStyle?: StyleProp<ViewStyle>;
   type?: TalentEventStatus;
-  onPressAccept?: (participationId: string) => void;
+  isLoadingCancellation?: boolean;
+  onCancelApplication?: (participationId: string) => void;
+  onPressAccept?: (event: ITalentEventCard) => void;
   onPressDecline?: (participationId: string) => void;
+  onPressApply?: (event: ITalentEventCard) => void;
 }
