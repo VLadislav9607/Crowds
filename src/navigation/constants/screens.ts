@@ -38,6 +38,7 @@ export enum Screens {
   ApplicantProfile = 'ApplicantProfile',
   ManageEvent = 'ManageEvent',
   EventParticipants = 'EventParticipants',
+  EventApplicants = 'EventApplicants',
   FlagParticipant = 'FlagParticipant',
   InviteTalents = 'InviteTalents',
   CustomTalentsList = 'CustomTalentsList',

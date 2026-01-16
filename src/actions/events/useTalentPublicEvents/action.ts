@@ -1,12 +1,9 @@
 import { supabase } from '@services';
-import {
-  UseSearchPublicEventsBodyDto,
-  UseSearchPublicEventsResDto,
-} from './types';
+import { TalentPublicEventsBodyDto, TalentPublicEventsResDto } from './types';
 
 export const searchPublicEventsAction = async (
-  params: UseSearchPublicEventsBodyDto = {},
-): Promise<UseSearchPublicEventsResDto> => {
+  params: TalentPublicEventsBodyDto = {},
+): Promise<TalentPublicEventsResDto> => {
   const { data, error } = await supabase.rpc('get_public_events_search', {
     limit_param: params.limit,
     offset_param: params.offset,
@@ -24,5 +21,5 @@ export const searchPublicEventsAction = async (
 
   if (error) throw error;
 
-  return data as unknown as UseSearchPublicEventsResDto;
+  return data as unknown as TalentPublicEventsResDto;
 };

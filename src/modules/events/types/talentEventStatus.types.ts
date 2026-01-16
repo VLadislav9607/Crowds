@@ -1,1 +1,6 @@
-export type TalentEventStatus =  'random' | 'proposed' | 'pending' | 'approved' | 'denied';
+export type TalentEventStatus =
+  | 'random'
+  | 'proposed'
+  | 'pending'
+  | 'approved'
+  | 'denied';

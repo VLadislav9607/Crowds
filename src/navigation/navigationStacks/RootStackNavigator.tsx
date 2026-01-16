@@ -43,7 +43,10 @@ import {
   EventParticipantsScreen,
   FlagParticipantScreen,
 } from '../../modules/event-participants';
-import { ApplicantProfileScreen } from '../../modules/event-applicants';
+import {
+  ApplicantProfileScreen,
+  EventApplicantsScreen,
+} from '../../modules/event-applicants';
 import {
   AddTalentsToListScreen,
   CustomTalentsListScreen,
@@ -155,6 +158,11 @@ export const RootStackNavigator = () => {
       <RootStack.Screen
         name={Screens.EventParticipants}
         component={EventParticipantsScreen}
+      />
+
+      <RootStack.Screen
+        name={Screens.EventApplicants}
+        component={EventApplicantsScreen}
       />
 
       <RootStack.Screen

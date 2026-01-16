@@ -48,6 +48,8 @@ export type RootStackParamList = {
   [Screens.ManageEvent]: { eventId: string };
   [Screens.EventParticipants]: undefined;
   [Screens.FlagParticipant]: { participantId: string };
+  [Screens.EventApplicants]: { eventId: string; capacity: number };
+  
   // Talent screens
   [Screens.AvailabilitySetup]: undefined;
   [Screens.TalentProfileSetup]: undefined;

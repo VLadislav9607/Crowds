@@ -1,55 +1,38 @@
-import { StyleSheet, View } from 'react-native';
 import { AppFlashList } from '@components';
-import { AppText } from '@ui';
+import { TalentProfileRow } from '@modules/common';
 
-import { TalentCard } from '../TalentCard';
-import { TalentsListProps } from './types';
+import { TalentsListProps, INVITE_TALENT_POPUP_ITEMS } from './types';
+import { AppButton } from '@ui';
 
 export const TalentsList = ({
   data,
-  variant = 'invite',
   onEndReached,
   hasNextPage,
   isFetchingNextPage,
-  onInviteTalent,
-  isSendingInvite,
+  onPressRightAction,
 }: TalentsListProps) => {
   return (
-    <View style={styles.container}>
-      <AppText typography="bold_12" style={styles.sortBy}>
-        Sort by: <AppText typography="regular_12">{'Gender'}</AppText>
-      </AppText>
-
-      <AppFlashList
-        data={data}
-        emptyText="No talents found"
-        gap={0}
-        showBottomLoader={isFetchingNextPage}
-        floatingButtonProps={{
-          title: variant === 'invite' ? 'Invite All' : 'Add All to List',
-          onPress: () => {},
-        }}
-        renderItem={({ item }) => (
-          <TalentCard
-            talent={item}
-            variant={variant}
-            isSendingInvite={isSendingInvite === item.id}
-            onMenuSelect={() => {}}
-            onPressActionButton={() => onInviteTalent(item.id)}
-          />
-        )}
-        onEndReached={hasNextPage ? onEndReached : undefined}
-      />
-    </View>
+    <AppFlashList
+      data={data}
+      emptyText="No talents found"
+      gap={0}
+      showBottomLoader={isFetchingNextPage}
+      renderItem={({ item }) => (
+        <TalentProfileRow
+          talent={item}
+          popUpItems={INVITE_TALENT_POPUP_ITEMS}
+          onMenuSelect={() => {}}
+          renderRightAction={() => (
+            <AppButton
+              title="Invite"
+              onPress={() => onPressRightAction(item.id)}
+              size="36"
+              width={71}
+            />
+          )}
+        />
+      )}
+      onEndReached={hasNextPage ? onEndReached : undefined}
+    />
   );
 };
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    gap: 14,
-  },
-  sortBy: {
-    marginLeft: 'auto',
-  },
-});

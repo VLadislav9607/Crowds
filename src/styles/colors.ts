@@ -24,6 +24,7 @@ export const COLORS = {
   lihgt_gray4: '#D9D9D9',
   gray_100: '#F0F0F0',
   gray_200: '#F5F5F5',
+  gray_300: '#EEEEEE',
   gray_bg: '#EFF0F3',
   gray_primary: '#6E777E',
   dark_blue: '#192B43',

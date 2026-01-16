@@ -1,4 +1,6 @@
 export const TANSTACK_QUERY_KEYS = {
+  EVENT_PARTICIPANTS_BY_STATUS: 'event_participants_by_status',
+  GET_EVENT_PARTICIPANTS_COUNTS: 'get_event_participants_counts',
   GET_INVITABLE_TALENTS: 'get_invitable_talents',
   GET_EVENT: 'get_event',
   GET_EVENTS: 'get_events',

@@ -1,12 +1,15 @@
 import { supabase } from '@services';
 import { FunctionsHttpError } from '@supabase/supabase-js';
-import { AcceptProposalBodyDto, AcceptProposalResDto } from './types';
+import {
+  RejectTalentApplicationBodyDto,
+  RejectTalentApplicationResDto,
+} from './types';
 
-export const acceptProposalAction = async (
-  body: AcceptProposalBodyDto,
-): Promise<AcceptProposalResDto> => {
+export const rejectTalentApplicationAction = async (
+  body: RejectTalentApplicationBodyDto,
+): Promise<RejectTalentApplicationResDto> => {
   const { data, error } = await supabase.functions.invoke(
-    'accept-organization-proposal',
+    'reject-talent-application',
     {
       body,
     },

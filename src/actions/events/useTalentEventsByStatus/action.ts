@@ -14,10 +14,7 @@ export const getTalentEventsByStatusAction = async (
     p_offset: body.offset,
   });
 
-  console.log('data', data);
-  if (error) {
-    throw error;
-  }
+  if (error) throw error;
 
   // Handle empty array or array with undefined/null values
   const eventsData = Array.isArray(data)

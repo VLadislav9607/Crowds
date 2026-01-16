@@ -1,14 +1,17 @@
-import { ButtonProps } from '@ui';
-import { InvitedTalent } from '../../types';
-
+import { IPopupMenuItem } from '@components';
+import { IEventParticipant } from '@modules/common';
 export interface TalentsListProps {
-  data: InvitedTalent[];
-  variant?: 'invite' | 'add_to_list';
-  floatingButtonProps?: ButtonProps;
+  data: IEventParticipant[];
   isLoading?: boolean;
-  onEndReached?: () => void;
   hasNextPage?: boolean;
   isFetchingNextPage?: boolean;
-  onInviteTalent: (talentId: string) => void;
   isSendingInvite?: string | null;
+  onEndReached?: () => void;
+  onPressRightAction: (talentId: string) => void;
 }
+
+export const INVITE_TALENT_POPUP_ITEMS: IPopupMenuItem[] = [
+  { label: 'Add to My list', value: 'add_to_my_list' },
+  { label: 'Add flag', value: 'add_flag' },
+  { label: 'Report', value: 'report' },
+];

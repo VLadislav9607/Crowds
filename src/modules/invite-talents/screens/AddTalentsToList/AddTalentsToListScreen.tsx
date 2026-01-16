@@ -1,49 +1,24 @@
 import { StyleSheet, View } from 'react-native';
 
-import { TalentFlag } from '@modules/common';
 import { ScreenWrapper } from '@components';
 import { SearchWithFilter } from '@ui';
 
 import { TalentsList } from '../../components';
-import { useTalentsFilter } from '../../hooks';
 import { FilterTalentsModal } from '../../modals';
-
-const MOCK_TALENTS = [
-  {
-    id: '1',
-    name: 'Talent 1',
-    location: 'Location 1',
-    flag: TalentFlag.GREEN,
-  },
-  {
-    id: '2',
-    name: 'Talent 2',
-    location: 'Location 2',
-    flag: TalentFlag.RED,
-  },
-  {
-    id: '3',
-    name: 'Talent 3',
-    location: 'Location 3',
-    flag: TalentFlag.YELLOW,
-  },
-  {
-    id: '4',
-    name: 'Talent 4',
-    location: 'Location 4',
-    flag: TalentFlag.BLACK,
-  },
-];
+import { useTalentsForInvite } from '../../hooks';
+import { Screens, useScreenNavigation } from '@navigation';
 
 export const AddTalentsToListScreen = () => {
+  const { params } = useScreenNavigation<Screens.AddTalentsToList>();
+
   const {
     search,
     setSearch,
     activeFiltersCount,
     filterModalRef,
+    talentsForInviteList,
     handleOpenFilter,
-    filteredTalents,
-  } = useTalentsFilter(MOCK_TALENTS);
+  } = useTalentsForInvite(params?.listId ?? '');
 
   return (
     <ScreenWrapper
@@ -58,7 +33,11 @@ export const AddTalentsToListScreen = () => {
           activeFiltersCount={activeFiltersCount}
           onFilterPress={handleOpenFilter}
         />
-        <TalentsList data={filteredTalents} variant="add_to_list" />
+
+        <TalentsList
+          data={talentsForInviteList}
+          onPressRightAction={() => {}}
+        />
       </View>
 
       <FilterTalentsModal bottomSheetRef={filterModalRef} />

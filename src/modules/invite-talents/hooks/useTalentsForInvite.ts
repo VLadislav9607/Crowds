@@ -1,9 +1,7 @@
 import { useMemo, useRef, useState } from 'react';
 import { BottomSheetModal } from '@gorhom/bottom-sheet';
-
 import { useGetInvitableTalents } from '@actions';
-import { InvitedTalent } from '../types';
-import { TalentFlag } from '@modules/common';
+import { TalentFlag, IEventParticipant } from '@modules/common';
 
 export const useTalentsForInvite = (eventId: string) => {
   const [search, setSearch] = useState('');
@@ -18,7 +16,7 @@ export const useTalentsForInvite = (eventId: string) => {
     isLoading,
   } = useGetInvitableTalents(eventId);
 
-  const talentsForInviteList = useMemo<InvitedTalent[]>(() => {
+  const talentsForInviteList = useMemo<IEventParticipant[]>(() => {
     if (!talentsForInviteResponse) return [];
     return talentsForInviteResponse.pages.flatMap(page =>
       page.data.map(talent => ({

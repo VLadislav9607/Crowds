@@ -1,5 +1,4 @@
 import { View } from 'react-native';
-
 import { AppButton, AppText } from '@ui';
 import { ICONS } from '@assets';
 import { goToScreen, Screens } from '@navigation';
@@ -14,10 +13,6 @@ export const ActiveUpcomingEventCard = ({
   event,
   showParticipants = true,
 }: IActiveUpcomingEventCardProps) => {
-  const handleViewApplicants = () => {
-    // TODO: Navigate to view applicants
-  };
-
   const participantsCount = event?.event_age_groups?.reduce(
     (acc, curr) =>
       acc +
@@ -26,6 +21,13 @@ export const ActiveUpcomingEventCard = ({
       (curr.other_count || 0),
     0,
   );
+
+  const goToEventApplicants = () => {
+    goToScreen(Screens.EventApplicants, {
+      eventId: event?.id ?? '',
+      capacity: participantsCount || 0,
+    });
+  };
 
   const headerRight = showParticipants ? (
     // <AppText style={cardStyles.participants}>
@@ -55,7 +57,7 @@ export const ActiveUpcomingEventCard = ({
         title="VIEW APPLICANTS"
         size="28"
         width={93}
-        onPress={handleViewApplicants}
+        onPress={goToEventApplicants}
         wrapperStyles={cardStyles.transparentButton}
         titleStyles={cardStyles.transparentButtonText}
       />
