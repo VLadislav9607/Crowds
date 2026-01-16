@@ -1,32 +1,30 @@
 import { View, GestureResponderEvent } from 'react-native';
 
-import { AppButton, AppText, Avatar, IconButton } from '@ui';
+import { AppText, Avatar, IconButton } from '@ui';
 import { ICONS } from '@assets';
 import { usePopupMenu } from '@components';
 
-import { TalentCardProps, INVITE_TALENT_POPUP_ITEMS } from './types';
+import { TalentProfileRowProps } from './types';
 import { styles } from './styles';
+import { TalentFlag } from '../../types';
 
-export const TalentCard = ({
+export const TalentProfileRow = ({
   talent,
-  isInvited = false,
-  variant = 'invite',
-  isAddedToList = false,
-  isSendingInvite = false,
+  popUpItems,
   onMenuSelect,
-  onPressActionButton,
-}: TalentCardProps) => {
-  const { name, location, flag, avatarUrl } = talent;
+  renderRightAction,
+}: TalentProfileRowProps) => {
+  const { name, location, avatarUrl } = talent;
   const { showPopup } = usePopupMenu();
 
-  const isCompleted = variant === 'invite' ? isInvited : isAddedToList;
-  const buttonTitle = variant === 'invite' ? 'Invite' : 'Add';
+  // const isCompleted = variant === 'invite' ? isInvited : isAddedToList;
+  // const buttonTitle = variant === 'invite' ? 'Invite' : 'Add';
 
   const handleOpenMenu = (event: GestureResponderEvent) => {
     const { pageX, pageY } = event.nativeEvent;
 
     showPopup({
-      items: INVITE_TALENT_POPUP_ITEMS,
+      items: popUpItems,
       position: { x: pageX, y: pageY },
       onSelect: onMenuSelect,
     });
@@ -37,7 +35,7 @@ export const TalentCard = ({
       <Avatar
         size={48}
         name={name}
-        flag={flag}
+        flag={TalentFlag.GREEN}
         imgPath={avatarUrl}
         bucket="talents_avatars"
       />
@@ -49,7 +47,9 @@ export const TalentCard = ({
         </AppText>
       </View>
 
-      {isCompleted ? (
+      {renderRightAction()}
+
+      {/* {isCompleted ? (
         <IconButton
           style={styles.invitedIcon}
           icon={ICONS.checked('green')}
@@ -63,7 +63,7 @@ export const TalentCard = ({
           width={71}
           isLoading={isSendingInvite}
         />
-      )}
+      )} */}
 
       <IconButton
         icon={ICONS.dotsVertical()}

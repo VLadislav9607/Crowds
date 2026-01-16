@@ -65,15 +65,15 @@ export const InviteTalentsScreen = () => {
           activeFiltersCount={activeFiltersCount}
           onFilterPress={handleOpenFilter}
         />
+
         <TalentsList
           data={talentsForInviteList}
-          variant="invite"
           isLoading={isLoading}
           onEndReached={handleEndReached}
           hasNextPage={hasNextPage}
           isFetchingNextPage={isFetchingNextPage}
           isSendingInvite={invitingTalentId}
-          onInviteTalent={talentId => {
+          onPressRightAction={talentId => {
             setInvitingTalentId(talentId);
             inviteTalent({ eventId: params?.eventId ?? '', talentId });
           }}

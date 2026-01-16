@@ -1,12 +1,15 @@
 import { supabase } from '@services';
 import { FunctionsHttpError } from '@supabase/supabase-js';
-import { AcceptProposalBodyDto, AcceptProposalResDto } from './types';
+import {
+  AcceptTalentApplicationBodyDto,
+  AcceptTalentApplicationResDto,
+} from './types';
 
-export const acceptProposalAction = async (
-  body: AcceptProposalBodyDto,
-): Promise<AcceptProposalResDto> => {
+export const acceptTalentApplicationAction = async (
+  body: AcceptTalentApplicationBodyDto,
+): Promise<AcceptTalentApplicationResDto> => {
   const { data, error } = await supabase.functions.invoke(
-    'accept-organization-proposal',
+    'accept-talent-application',
     {
       body,
     },
@@ -14,6 +17,7 @@ export const acceptProposalAction = async (
 
   if (error && error instanceof FunctionsHttpError) {
     const errorMessage = await error.context.json();
+    console.log('errorMessage', errorMessage);
     throw errorMessage;
   }
 

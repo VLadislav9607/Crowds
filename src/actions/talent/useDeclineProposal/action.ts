@@ -6,7 +6,7 @@ export const declineProposalAction = async (
   body: DeclineProposalBodyDto,
 ): Promise<DeclineProposalResDto> => {
   const { data, error } = await supabase.functions.invoke(
-    'decline-talent-proposal',
+    'decline-organization-proposal',
     {
       body,
     },

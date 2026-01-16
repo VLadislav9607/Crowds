@@ -27,10 +27,6 @@ const TAB_PARAMS: Record<
   denied: {
     status: 'rejected',
   },
-  random: {
-    status: 'pending',
-    initiatedBy: 'organization',
-  },
 };
 
 export const TalentEventsTab = () => {
