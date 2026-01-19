@@ -37,6 +37,7 @@ export type RootStackParamList = {
   [Screens.InviteTalents]: undefined;
   [Screens.CustomTalentsList]: { listName: string; listId: string };
   [Screens.AddTalentsToList]: { listId: string };
+  [Screens.ManageOrgTeam]: undefined;
   // Talent screens
   [Screens.TalentSearchEvents]?: {
     autofocus?: boolean;

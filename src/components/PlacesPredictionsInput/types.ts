@@ -14,6 +14,7 @@ export interface ParsedLocationAdditionalFields {
   city?: string;
   region?: string;
   country?: string;
+  country_code?: string;
   postal_code?: string;
 }
 

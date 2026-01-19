@@ -1,4 +1,5 @@
 export const TANSTACK_QUERY_KEYS = {
+  GET_ORG_PERMISSIONS: 'get_org_permissions',
   GET_EVENT: 'get_event',
   GET_EVENTS: 'get_events',
   GET_EVENT_FOR_ORG_MEMBER: 'get_event_for_org_member',

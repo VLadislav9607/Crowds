@@ -75,6 +75,11 @@ export enum TattooSpot {
   ON_BODY = 'on_body',
   ON_NECK = 'on_neck',
   ON_HAND = 'on_hand',
+  ON_ARM = 'on_arm',
+  ON_BACK = 'on_back',
+  ON_THIGH = 'on_thigh',
+  ON_CALF = 'on_calf',
+  ON_ANKLE = 'on_ankle',
 }
 
 export enum SkinTone {

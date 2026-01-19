@@ -89,6 +89,11 @@ export const tattooSpotOptions = [
   { label: 'On Body', value: TattooSpot.ON_BODY },
   { label: 'On Neck', value: TattooSpot.ON_NECK },
   { label: 'On Hand', value: TattooSpot.ON_HAND },
+  { label: 'On Arm', value: TattooSpot.ON_ARM },
+  { label: 'On Back', value: TattooSpot.ON_BACK },
+  { label: 'On Thigh', value: TattooSpot.ON_THIGH },
+  { label: 'On Calf', value: TattooSpot.ON_CALF },
+  { label: 'On Ankle', value: TattooSpot.ON_ANKLE },
 ];
 
 export const skinToneOptions = [

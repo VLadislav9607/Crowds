@@ -167,7 +167,7 @@ export const OrganizationCreatorInformationStep = forwardRef<
             />
             <AppText typography="regular_14" style={styles.checkboxText}>
               I am authorized on behalf of the company to make decisions; and or
-              in an Executive, C Suite or Board Position?
+              in an Executive, C Suite or Board Position
             </AppText>
           </View>
         )}

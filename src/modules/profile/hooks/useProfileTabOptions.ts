@@ -85,6 +85,11 @@ export const useProfileTabOptions = ({
       onPress: () => {},
     },
     {
+      title: 'Manage team',
+      icon: ICONS.user(),
+      onPress: () => goToScreen(Screens.ManageOrgTeam),
+    },
+    {
       title: 'Wallet / Payment details',
       icon: ICONS.wallet(),
       onPress: () => {},

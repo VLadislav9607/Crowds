@@ -43,10 +43,21 @@ export const OnboardingUnAuthOrganizationScreen = () => {
     4: 'Create a password',
   };
 
+  // const titlesGlobal = {
+  //   0: 'Organization Details',
+  //   1: 'Add company locations',
+  //   2: 'Primary Location',
+  //   3: 'Your Information',
+  //   4: 'Verification Code',
+  //   5: 'Create a password',
+  // };
+
   const titlesGlobal = {
     0: 'Organization Details',
-    1: 'Add company locations',
-    2: 'Primary Location',
+    1: 'Primary Location',
+    2: data.headGlobalLocationFormData?.isHeadquartered
+      ? 'Branches locations'
+      : 'Head office location',
     3: 'Your Information',
     4: 'Verification Code',
     5: 'Create a password',
@@ -116,13 +127,11 @@ export const OnboardingUnAuthOrganizationScreen = () => {
       {/* IS GLOBAL */}
 
       <If condition={step === 1 && isGlobal}>
-        <BranchesSetupStep
+        {/* <BranchesSetupStep
           ref={branchesSetupFormRef}
           defaultValues={data.branchesSetupFormData}
-        />
-      </If>
+        /> */}
 
-      <If condition={step === 2 && isGlobal}>
         <HeadOfficeGlobalStep
           ref={headGlobalLocationFormRef}
           defaultValues={data.headGlobalLocationFormData}
@@ -134,6 +143,26 @@ export const OnboardingUnAuthOrganizationScreen = () => {
             data.headGlobalLocationFormData &&
             setData({ ...data, headGlobalLocationFormData: undefined })
           }
+        />
+      </If>
+
+      <If condition={step === 2 && isGlobal}>
+        {/* <HeadOfficeGlobalStep
+          ref={headGlobalLocationFormRef}
+          defaultValues={data.headGlobalLocationFormData}
+          pickedLogo={data.image}
+          onPickLogo={img => {
+            setData({ ...data, image: img });
+          }}
+          onChangeText={() =>
+            data.headGlobalLocationFormData &&
+            setData({ ...data, headGlobalLocationFormData: undefined })
+          }
+        /> */}
+        <BranchesSetupStep
+          ref={branchesSetupFormRef}
+          defaultValues={data.branchesSetupFormData}
+          globalLocation={data.headGlobalLocationFormData}
         />
       </If>
 

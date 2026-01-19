@@ -5,7 +5,7 @@ import { forwardRef, useEffect, useImperativeHandle, useRef } from 'react';
 
 import { AppText } from '@ui';
 import { COLORS, TYPOGRAPHY } from '@styles';
-import { AppImage, PlacesPredictionsInput } from '@components';
+import { AppImage, CheckboxList, PlacesPredictionsInput } from '@components';
 import { PlaceAutocompleteType } from '@googlemaps/google-maps-services-js';
 
 import {
@@ -40,22 +40,8 @@ export const HeadOfficeGlobalStep = forwardRef<
     const imageSourcePickerModalRef =
       useRef<BottomSheetModal<ImageSourcePickerModalData>>(null);
 
-    const defaultValues: HeadGlobalLocationFormData = defaultValuesExternal
-      ? defaultValuesExternal
-      : {
-          haveBranches: false,
-          parsed_location: {
-            autocomplete_description: '',
-            city: '',
-            coords: '',
-            country: '',
-            formatted_address: '',
-            latitude: 0,
-            longitude: 0,
-            place_id: '',
-            region: '',
-          },
-        };
+    const defaultValues: HeadGlobalLocationFormData | undefined =
+      defaultValuesExternal ? defaultValuesExternal : undefined;
 
     const {
       control,
@@ -67,7 +53,7 @@ export const HeadOfficeGlobalStep = forwardRef<
     } = useForm<HeadGlobalLocationFormData>({
       resolver: zodResolver(headGlobalLocationFormSchema),
       mode: 'onBlur',
-      defaultValues,
+      defaultValues: defaultValues,
     });
 
     const parsedLocation = watch('parsed_location');
@@ -98,7 +84,7 @@ export const HeadOfficeGlobalStep = forwardRef<
           render={({ field, fieldState }) => (
             <PlacesPredictionsInput
               inputProps={{
-                placeholder: 'Search head office location',
+                placeholder: 'Search office location',
                 errorMessage: fieldState.error?.message,
               }}
               types={PlaceAutocompleteType.address}
@@ -112,22 +98,38 @@ export const HeadOfficeGlobalStep = forwardRef<
           )}
         />
 
-        {/* <Controller
+        <Controller
           control={control}
-          name="haveBranches"
-          render={({ field }) => (
-            <CheckboxList
-              label="Do you have branches?"
-              containerStyle={styles.checkboxListContainer}
-              items={[
-                { label: 'Yes', value: 'yes' },
-                { label: 'No', value: 'no' },
-              ]}
-              checkedValues={field.value ? 'yes' : 'no'}
-              onCheckboxPress={item => field.onChange(item.value === 'yes')}
-            />
+          name="isHeadquartered"
+          render={({ field, fieldState }) => (
+            <View>
+              <CheckboxList
+                label="Is this location a headquarter?"
+                containerStyle={styles.checkboxListContainer}
+                items={[
+                  { label: 'Yes', value: 'yes' },
+                  { label: 'No', value: 'no' },
+                ]}
+                checkedValues={
+                  field.value
+                    ? 'yes'
+                    : typeof field.value === 'boolean'
+                    ? 'no'
+                    : undefined
+                }
+                onCheckboxPress={item => field.onChange(item.value === 'yes')}
+              />
+              <AppText
+                renderIf={!!fieldState.error?.message}
+                typography="medium_10"
+                color="red"
+                margin={{ top: 8 }}
+              >
+                {fieldState.error?.message}
+              </AppText>
+            </View>
           )}
-        /> */}
+        />
 
         <View>
           <AppText

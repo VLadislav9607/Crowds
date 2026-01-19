@@ -42,6 +42,7 @@ export enum Screens {
   InviteTalents = 'InviteTalents',
   CustomTalentsList = 'CustomTalentsList',
   AddTalentsToList = 'AddTalentsToList',
+  ManageOrgTeam = 'ManageOrgTeam',
 
   // Talent screens
   TalentSearchEvents = 'TalentSearchEvents',

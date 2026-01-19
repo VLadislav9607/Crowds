@@ -6,7 +6,9 @@ import { COLORS, TYPOGRAPHY } from '@styles';
 
 import { RoleAccess } from '../../types';
 import { InviteMemberFormData } from '../../hooks';
-import { CheckboxRowList, MasterAccessNote } from '../../ui';
+import { CheckboxRowList } from '../../ui';
+import { useGetMe, useGetOrgPremissions } from '@actions';
+import { If } from '@components';
 
 interface RoleAccessFormProps {
   control: Control<InviteMemberFormData>;
@@ -14,6 +16,17 @@ interface RoleAccessFormProps {
 }
 
 export const RoleAccessForm = ({ control }: RoleAccessFormProps) => {
+  const { organizationMember } = useGetMe();
+
+  console.log('organizationMember', organizationMember);
+
+  const { data: orgPermissions } = useGetOrgPremissions();
+
+  const talentPermissions = orgPermissions?.groupedPermissions?.talent;
+  const eventsPermissions = orgPermissions?.groupedPermissions?.events;
+  const checkinsPermissions = orgPermissions?.groupedPermissions?.checkins;
+  const settingsPermissions = orgPermissions?.groupedPermissions?.settings;
+
   return (
     <>
       <AppText style={styles.title}>Role Access</AppText>
@@ -23,7 +36,109 @@ export const RoleAccessForm = ({ control }: RoleAccessFormProps) => {
       </AppText>
 
       <View style={styles.container}>
-        <View style={styles.masterAdminContainer}>
+        <If condition={!!talentPermissions}>
+          <Controller
+            control={control}
+            name="roleAccess"
+            render={({ field: { onChange, value } }) => (
+              <CheckboxRowList
+                label="Talent"
+                items={
+                  talentPermissions?.map(permission => ({
+                    label: permission.label!,
+                    value: permission.id!,
+                  })) || []
+                }
+                checkedValues={value?.map(v => v) || []}
+                onCheckedValuesChange={values =>
+                  onChange(values as RoleAccess[])
+                }
+              />
+            )}
+          />
+        </If>
+
+        <If condition={!!eventsPermissions}>
+          <Controller
+            control={control}
+            name="roleAccess"
+            render={({ field: { onChange, value } }) => (
+              <CheckboxRowList
+                label="Events"
+                items={
+                  eventsPermissions?.map(permission => ({
+                    label: permission.label!,
+                    value: permission.id!,
+                  })) || []
+                }
+                checkedValues={value?.map(v => v) || []}
+                onCheckedValuesChange={values =>
+                  onChange(values as RoleAccess[])
+                }
+              />
+            )}
+          />
+        </If>
+
+        <If condition={!!checkinsPermissions}>
+          <Controller
+            control={control}
+            name="roleAccess"
+            render={({ field: { onChange, value } }) => (
+              <CheckboxRowList
+                label="Check-ins"
+                items={
+                  checkinsPermissions?.map(permission => ({
+                    label: permission.label!,
+                    value: permission.id!,
+                  })) || []
+                }
+                checkedValues={value?.map(v => v) || []}
+                onCheckedValuesChange={values =>
+                  onChange(values as RoleAccess[])
+                }
+              />
+            )}
+          />
+        </If>
+
+        <If condition={!!settingsPermissions}>
+          <Controller
+            control={control}
+            name="roleAccess"
+            render={({ field: { onChange, value } }) => (
+              <CheckboxRowList
+                label="Settings"
+                items={
+                  settingsPermissions?.map(permission => ({
+                    label: permission.label!,
+                    value: permission.id!,
+                  })) || []
+                }
+                checkedValues={value?.map(v => v) || []}
+                onCheckedValuesChange={values =>
+                  onChange(values as RoleAccess[])
+                }
+              />
+            )}
+          />
+        </If>
+
+        {/* <ScrollView
+          horizontal
+          showsHorizontalScrollIndicator={false}
+          contentContainerStyle={{ alignItems: 'center', alignSelf: 'center', flexGrow: 1 }}
+        >
+          <AppTabSelector
+          
+            onSelect={value => setActiveBranch(value)}
+            options={branchItems || []}
+            selectedValue={activeBranch}
+            
+          />
+        </ScrollView> */}
+
+        {/* <View style={styles.masterAdminContainer}>
           <Controller
             control={control}
             name="roleAccess"
@@ -46,9 +161,9 @@ export const RoleAccessForm = ({ control }: RoleAccessFormProps) => {
           />
 
           <MasterAccessNote />
-        </View>
+        </View> */}
 
-        <Controller
+        {/* <Controller
           control={control}
           name="roleAccess"
           render={({ field: { onChange, value } }) => (
@@ -70,9 +185,9 @@ export const RoleAccessForm = ({ control }: RoleAccessFormProps) => {
               onCheckedValuesChange={values => onChange(values as RoleAccess[])}
             />
           )}
-        />
+        /> */}
 
-        <Controller
+        {/* <Controller
           control={control}
           name="roleAccess"
           render={({ field: { onChange, value } }) => (
@@ -98,9 +213,9 @@ export const RoleAccessForm = ({ control }: RoleAccessFormProps) => {
               onCheckedValuesChange={values => onChange(values as RoleAccess[])}
             />
           )}
-        />
+        /> */}
 
-        <Controller
+        {/* <Controller
           control={control}
           name="roleAccess"
           render={({ field: { onChange, value } }) => (
@@ -116,22 +231,9 @@ export const RoleAccessForm = ({ control }: RoleAccessFormProps) => {
               onCheckedValuesChange={values => onChange(values as RoleAccess[])}
             />
           )}
-        />
+        /> */}
 
-        <Controller
-          control={control}
-          name="roleAccess"
-          render={({ field: { onChange, value } }) => (
-            <CheckboxRowList
-              label="Regions"
-              items={[{ label: 'Nations', value: RoleAccess.NATIONS }]}
-              checkedValues={value?.map(v => v) || []}
-              onCheckedValuesChange={values => onChange(values as RoleAccess[])}
-            />
-          )}
-        />
-
-        <Controller
+        {/* <Controller
           control={control}
           name="roleAccess"
           render={({ field: { onChange, value } }) => (
@@ -155,9 +257,9 @@ export const RoleAccessForm = ({ control }: RoleAccessFormProps) => {
               onCheckedValuesChange={values => onChange(values as RoleAccess[])}
             />
           )}
-        />
+        /> */}
 
-        <Controller
+        {/* <Controller
           control={control}
           name="roleAccess"
           render={({ field: { onChange, value } }) => (
@@ -175,7 +277,7 @@ export const RoleAccessForm = ({ control }: RoleAccessFormProps) => {
               onCheckedValuesChange={values => onChange(values as RoleAccess[])}
             />
           )}
-        />
+        /> */}
       </View>
     </>
   );
