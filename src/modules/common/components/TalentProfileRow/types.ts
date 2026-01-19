@@ -2,7 +2,7 @@ import { IPopupMenuItem } from '@components';
 import { AvatarFlag } from '@ui';
 
 export interface IEventParticipant {
-  participationId: string;
+  participationId?: string;
   talentId: string;
   name: string;
   location: string;

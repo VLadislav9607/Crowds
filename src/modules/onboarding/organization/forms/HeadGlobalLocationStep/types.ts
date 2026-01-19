@@ -28,16 +28,21 @@ export const headGlobalLocationFormSchema = z.object({
       city: z.string(),
       coords: z.string(),
       country: z.string(),
+      country_code: z.string(),
       formatted_address: z.string(),
       latitude: z.number(),
       longitude: z.number(),
       place_id: z.string(),
       postal_code: z.string().optional(),
       region: z.string(),
+      street_name: z.string(),
+      street_number: z.string(),
     },
     { message: 'Head office location is required' },
   ),
-  haveBranches: z.boolean(),
+  isHeadquartered: z.boolean(
+    'Please select if this is where your organization is headquartered',
+  ),
 });
 
 export interface HeadGlobalLocationFormData

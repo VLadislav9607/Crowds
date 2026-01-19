@@ -38,7 +38,7 @@ export const InviteTalentsScreen = () => {
 
   const showTalentsList =
     selectedTab === 'matching_talent' || selectedTab === 'all_talent';
-
+    
   return (
     <ScreenWrapper
       headerVariant="withTitleAndImageBg"

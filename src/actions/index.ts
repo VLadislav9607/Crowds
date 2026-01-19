@@ -7,3 +7,4 @@ export * from './orgnanization-member';
 export * from './events';
 export * from './chats';
 export * from './kyc';
+export * from './organizations-permissions';

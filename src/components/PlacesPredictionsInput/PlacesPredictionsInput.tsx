@@ -105,6 +105,16 @@ export const PlacesPredictionsInput = ({
     setIsDetailsLoadingFalse();
 
     setInputValue(prediction.description);
+    console.log({
+      raw_details: detailsResponse.result,
+      parsed_details: parseGooglePlaceDetails(
+        prediction.place_id,
+        prediction.description,
+        detailsResponse,
+      ),
+      autocomplete_descripton: prediction.description,
+      timezone: timezoneResponse,
+    });
     onSelectPlace?.({
       raw_details: detailsResponse.result,
       parsed_details: parseGooglePlaceDetails(

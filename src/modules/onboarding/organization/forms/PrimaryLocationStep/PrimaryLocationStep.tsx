@@ -55,6 +55,7 @@ export const PrimaryLocationStep = forwardRef<
               city: '',
               coords: '',
               country: '',
+              country_code: '',
               formatted_address: '',
               latitude: 0,
               longitude: 0,

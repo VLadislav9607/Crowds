@@ -28,6 +28,8 @@ import {
   useSendOtp,
   useUpdateOrganization,
   useVerifyOtp,
+  CreateOrganizationLocationBodyDto,
+  CreateOrganizationBranchBodyDto,
 } from '@actions';
 import { showErrorToast, showMutationErrorToast } from '@helpers';
 import { CreatePasswordFormData, CreatePasswordFormRef } from '../../../forms';
@@ -136,7 +138,9 @@ export const useOnboardingUnAuthOrganization = () => {
       )();
     step === 3 && onOtpVerificationFormSubmit();
     step === 4 &&
-      createPasswordFormRef.current?.handleSubmit(onCreatePasswordFormSubmit)();
+      createPasswordFormRef.current?.handleSubmit(
+        onCreateSingleCountryOrganization,
+      )();
   };
 
   const goToNextStepInGlobal = () => {
@@ -145,12 +149,13 @@ export const useOnboardingUnAuthOrganization = () => {
         handleOrganizationNameFormSubmit,
       )();
     step === 1 &&
-      branchesSetupFormRef.current?.handleSubmit(
-        handleBranchesSetupFormSubmit,
-      )();
-    step === 2 &&
       headGlobalLocationFormRef.current?.handleSubmit(
         handleHeadGlobalLocationFormSubmit,
+      )();
+
+    step === 2 &&
+      branchesSetupFormRef.current?.handleSubmit(
+        handleBranchesSetupFormSubmit,
       )();
     step === 3 &&
       organizationCreatorInformationFormRef.current?.handleSubmit(
@@ -158,12 +163,68 @@ export const useOnboardingUnAuthOrganization = () => {
       )();
     step === 4 && onOtpVerificationFormSubmit();
     step === 5 &&
-      createPasswordFormRef.current?.handleSubmit(onCreatePasswordFormSubmit)();
+      createPasswordFormRef.current?.handleSubmit(
+        onCreateGlobalCountryOrganization,
+      )();
   };
 
   const goToNextStep = isGlobal ? goToNextStepInGlobal : goToNextStepInSingle;
 
-  const onCreatePasswordFormSubmit = async (
+  const onCreateSingleCountryOrganization = async (
+    formData: CreatePasswordFormData,
+  ) => {
+    if (
+      !data.verificationToken ||
+      !data.organizationCreatorInformationFormData ||
+      !data.primaryLocationFormData
+    ) {
+      return;
+    }
+
+    let locations: CreateOrganizationLocationBodyDto[] = [
+      {
+        ...(data.primaryLocationFormData
+          ?.parsed_location as CreateOrganizationLocationBodyDto),
+        is_head_office:
+          !data.primaryLocationFormData?.parsed_head_office_location,
+      },
+    ];
+
+    if (data.primaryLocationFormData?.parsed_head_office_location) {
+      locations.push({
+        ...(data.primaryLocationFormData
+          ?.parsed_head_office_location as CreateOrganizationLocationBodyDto),
+        is_head_office:
+          !!data.primaryLocationFormData?.parsed_head_office_location,
+      });
+    }
+
+    createOrganizationAndCreatorMutateAsync({
+      organization_name: data.organizationNameFormData?.organizationName!,
+      password: formData.password,
+      verification_token: data.verificationToken,
+      branches: [
+        {
+          country_code:
+            data.primaryLocationFormData?.parsed_location?.country_code!,
+          country_name: data.primaryLocationFormData?.parsed_location?.country!,
+          is_headquarter: true,
+        },
+      ],
+      locations,
+      owner: {
+        first_name: data.organizationCreatorInformationFormData?.firstName,
+        last_name: data.organizationCreatorInformationFormData?.lastName,
+        gender: data.organizationCreatorInformationFormData?.gender,
+        position:
+          data.organizationCreatorInformationFormData?.positionInCompany,
+        username: data.organizationCreatorInformationFormData?.username,
+        email: data.organizationCreatorInformationFormData?.email,
+      },
+    });
+  };
+
+  const onCreateGlobalCountryOrganization = async (
     formData: CreatePasswordFormData,
   ) => {
     if (
@@ -174,10 +235,44 @@ export const useOnboardingUnAuthOrganization = () => {
       return;
     }
 
+    const location = data.headGlobalLocationFormData
+      ?.parsed_location as CreateOrganizationLocationBodyDto;
+
+    let branches: CreateOrganizationBranchBodyDto[] = [
+      {
+        country_code: location.country_code!,
+        country_name: location.country!,
+        is_headquarter: data.headGlobalLocationFormData?.isHeadquartered!,
+      },
+    ];
+
+    if (
+      data.branchesSetupFormData?.selectedHeadOfficeCountry &&
+      !data.headGlobalLocationFormData?.isHeadquartered
+    ) {
+      branches.push({
+        country_code:
+          data.branchesSetupFormData?.selectedHeadOfficeCountry.code!,
+        country_name:
+          data.branchesSetupFormData?.selectedHeadOfficeCountry.name!,
+        is_headquarter: true,
+      });
+    }
+
+    data.branchesSetupFormData?.selectedBrachesCountries.forEach(country => {
+      branches.push({
+        country_code: country.code!,
+        country_name: country.name!,
+        is_headquarter: false,
+      });
+    });
+
     createOrganizationAndCreatorMutateAsync({
       organization_name: data.organizationNameFormData?.organizationName || '',
       password: formData.password,
       verification_token: data.verificationToken,
+      locations: [location],
+      branches,
       owner: {
         first_name: data.organizationCreatorInformationFormData?.firstName,
         last_name: data.organizationCreatorInformationFormData?.lastName,
@@ -214,6 +309,19 @@ export const useOnboardingUnAuthOrganization = () => {
   const handlePrimaryLocationFormSubmit = async (
     values: PrimaryLocationFormData,
   ) => {
+    if (
+      !!values.parsed_head_office_location &&
+      values.parsed_head_office_location.country_code !==
+        values.parsed_location.country_code
+    ) {
+      showErrorToast(
+        'Head office location must be in the same country as the primary location, or use global organization flow',
+        {
+          visibilityTime: 10000,
+        },
+      );
+      return;
+    }
     setData({ ...data, primaryLocationFormData: values });
     setStep(step + 1);
   };

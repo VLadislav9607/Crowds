@@ -34,6 +34,9 @@ export const useTalentProfileSetupForm = ({
     () => ({
       hairColour: talent?.hair_color ?? undefined,
       eyeColour: talent?.eye_color ?? undefined,
+      bodyAttributes: Array.isArray(talent?.body_attributes)
+        ? talent.body_attributes
+        : undefined,
       facialAttributes: Array.isArray(talent?.facial_attributes)
         ? talent.facial_attributes
         : undefined,
@@ -41,6 +44,7 @@ export const useTalentProfileSetupForm = ({
         ? talent.tattoo_spot
         : undefined,
       ethnicity: (talent as any)?.ethnicity ?? undefined,
+      accent: (talent as any)?.accent ?? undefined,
       build: talent?.build ?? 70,
       height: talent?.height ?? 5.8,
       skinTone: talent?.skin_tone ?? undefined,

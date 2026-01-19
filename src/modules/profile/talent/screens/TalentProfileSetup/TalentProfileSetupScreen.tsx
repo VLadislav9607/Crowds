@@ -9,6 +9,8 @@ import {
 } from '../../../components';
 import { TalentProfileSetupForm, TalentProfileSetupFormRef } from '../../forms';
 import { styles } from './styles';
+import { queryClient } from '@services';
+import { TANSTACK_QUERY_KEYS } from '@constants';
 
 export const TalentProfileSetupScreen = () => {
   const navigation = useNavigation();
@@ -22,6 +24,9 @@ export const TalentProfileSetupScreen = () => {
   };
 
   const handleSuccess = () => {
+    queryClient.invalidateQueries({
+      queryKey: [TANSTACK_QUERY_KEYS.SEARCH_PUBLIC_EVENTS],
+    });
     navigation.goBack();
   };
 

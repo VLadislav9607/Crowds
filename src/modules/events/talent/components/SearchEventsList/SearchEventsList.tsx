@@ -29,6 +29,8 @@ export const SearchEventsList = ({ ...props }: SearchEventsListProps) => {
     refetchQuery,
   } = useSearchEventsList(props);
 
+  console.log('events', events.length);
+
   const applyEvent = useApplyEvent({
     onSuccess: async () => {
       await Promise.allSettled([

@@ -5,6 +5,8 @@ import {
   HairColour,
   SkinTone,
   TattooSpot,
+  BodyAttributes,
+  Accent,
 } from '@modules/profile';
 import { z } from 'zod';
 
@@ -13,8 +15,10 @@ export const talentProfileSetupSchema = z
     hairColour: z.enum(HairColour).optional(),
     eyeColour: z.enum(EyeColour).optional(),
     facialAttributes: z.array(z.enum(FacialAttributes)).optional().nullable(),
+    bodyAttributes: z.array(z.enum(BodyAttributes)).optional().nullable(),
     tattooSpot: z.array(z.enum(TattooSpot)).optional().nullable(),
     ethnicity: z.enum(Ethnicity).optional(),
+    accent: z.enum(Accent).optional(),
     build: z.number().optional(),
     height: z.number().optional(),
     skinTone: z.enum(SkinTone).optional(),
