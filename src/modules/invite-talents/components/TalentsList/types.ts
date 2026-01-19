@@ -5,7 +5,7 @@ export interface TalentsListProps {
   isLoading?: boolean;
   hasNextPage?: boolean;
   isFetchingNextPage?: boolean;
-  isSendingInvite?: string | null;
+  invitingTalentId?: string | null;
   onEndReached?: () => void;
   onPressRightAction: (talentId: string) => void;
 }

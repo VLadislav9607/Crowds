@@ -8,3 +8,4 @@ export * from './usePublishEventDraft';
 export * from './useDeleteDraft';
 export * from './useTalentEventsByStatus';
 export * from './useTalentEventsCounts';
+export * from './useHideEvent';

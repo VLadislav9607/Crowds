@@ -57,6 +57,7 @@ export const AppFlashList = <T,>({
           showBottomLoader ? BottomLoaderComponent : undefined
         }
         {...props}
+        scrollEnabled={!isEmpty || !!skeleton || props.scrollEnabled}
       />
 
       {!!floatingButtonProps && <AppButton {...floatingButtonProps} />}

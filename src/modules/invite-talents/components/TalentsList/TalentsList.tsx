@@ -10,6 +10,7 @@ export const TalentsList = ({
   hasNextPage,
   isFetchingNextPage,
   onPressRightAction,
+  invitingTalentId,
 }: TalentsListProps) => {
   return (
     <AppFlashList
@@ -25,7 +26,8 @@ export const TalentsList = ({
           renderRightAction={() => (
             <AppButton
               title="Invite"
-              onPress={() => onPressRightAction(item.id)}
+              isLoading={invitingTalentId === item.talentId}
+              onPress={() => onPressRightAction(item.talentId)}
               size="36"
               width={71}
             />

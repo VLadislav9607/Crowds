@@ -1,6 +1,6 @@
 import { View } from 'react-native';
 import SkeletonPlaceholder from 'react-native-skeleton-placeholder';
-import { useApplyEvent, ITalentEventCard } from '@actions';
+import { useApplyEvent, useHideEvent, ITalentEventCard } from '@actions';
 import { AppFlashList } from '@components';
 import { queryClient } from '@services';
 import { TANSTACK_QUERY_KEYS } from '@constants';
@@ -8,7 +8,7 @@ import { showSuccessToast, showErrorToast } from '@helpers';
 
 import { SearchEventsListProps } from './types';
 import { styles } from './styles';
-import { TalentEventCardCompact } from '../TalentEventCardCompact';
+import { TalentEventCard } from '../TalentEventCard';
 import {
   TalentEventAlreadyBookedModal,
   TalentEventUnavailableTimeModal,
@@ -48,6 +48,20 @@ export const SearchEventsList = ({ ...props }: SearchEventsListProps) => {
     },
   });
 
+  const hideEvent = useHideEvent({
+    onSuccess: async () => {
+      await Promise.allSettled([
+        queryClient.invalidateQueries({
+          queryKey: [TANSTACK_QUERY_KEYS.SEARCH_PUBLIC_EVENTS],
+        }),
+      ]);
+      showSuccessToast('Event rejected successfully');
+    },
+    onError: (error: any) => {
+      showErrorToast(error?.message || 'Failed to hide event');
+    },
+  });
+
   const handleApply = (event: ITalentEventCard) => {
     applyConfirmModalRef.current?.open({
       eventTitle: event.event_title,
@@ -58,11 +72,18 @@ export const SearchEventsList = ({ ...props }: SearchEventsListProps) => {
     });
   };
 
+  const handleReject = (eventId: string) => {
+    hideEvent.mutate({ eventId });
+  };
+
   const renderItem = ({ item }: { item: ITalentEventCard }) => (
-    <TalentEventCardCompact
+    <TalentEventCard
       event={item}
       containerStyle={styles.itemContainer}
+      isLoadingApply={applyEvent.isPending}
+      isLoadingReject={hideEvent.isPending}
       onPressApply={() => handleApply(item)}
+      onPressReject={handleReject}
     />
   );
 

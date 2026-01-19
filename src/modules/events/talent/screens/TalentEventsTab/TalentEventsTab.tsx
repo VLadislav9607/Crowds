@@ -2,14 +2,14 @@ import { useMemo, useState } from 'react';
 import { AppTabSelector, ITabOption, ScreenWrapper } from '@components';
 import { useTalentEventsByStatus, useTalentEventsCounts } from '@actions';
 
-import { TalentEventStatus } from '../../../types';
+import { TalentEventStatus, TalentEventsTabs } from '../../../types';
 import { styles } from './styles';
 import { TalentEventsList } from '../../components';
 
 const TAB_PARAMS: Record<
-  TalentEventStatus,
+  TalentEventsTabs,
   {
-    status: 'pending' | 'approved' | 'rejected';
+    status:TalentEventStatus;
     initiatedBy?: 'organization' | 'talent';
   }
 > = {
@@ -30,7 +30,7 @@ const TAB_PARAMS: Record<
 };
 
 export const TalentEventsTab = () => {
-  const [selectedTab, setSelectedTab] = useState<TalentEventStatus>('proposed');
+  const [selectedTab, setSelectedTab] = useState<TalentEventsTabs>('proposed');
 
   const currentParams = useMemo(() => TAB_PARAMS[selectedTab], [selectedTab]);
 
@@ -47,7 +47,7 @@ export const TalentEventsTab = () => {
 
   const eventsData = data?.pages.flatMap(page => page.data) || [];
 
-  const tabOptions: ITabOption<TalentEventStatus>[] = useMemo(
+  const tabOptions: ITabOption<TalentEventsTabs>[] = useMemo(
     () => [
       {
         label: 'Proposals',
@@ -64,7 +64,10 @@ export const TalentEventsTab = () => {
         value: 'approved',
         badge: approved || 0,
       },
-      { label: 'Denied', value: 'denied', badge: denied || 0 },
+      {
+        label: 'Denied',
+        value: 'denied', badge: denied || 0
+      },
     ],
     [proposals, pending, approved, denied],
   );
