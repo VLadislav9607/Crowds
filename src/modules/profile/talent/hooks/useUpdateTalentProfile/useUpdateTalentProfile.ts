@@ -54,6 +54,8 @@ export const useUpdateTalentProfile = (
           subcategories: data.subcategories,
           tags: data.tags,
           is_pregnant: data.isPregnant,
+          accent: data.accent,
+          body_attributes: data.bodyAttributes,
           pregnancy_months:
             data.months && data.isPregnant ? parseInt(data.months, 10) : null,
         } as any,

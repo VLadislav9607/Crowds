@@ -1,5 +1,12 @@
 import { Tables } from '@services';
 
+export interface OrganizationBranchDto
+  extends Omit<
+    Tables<'organization_branches'>,
+    'created_at' | 'organization_id'
+  > {
+  locations: Tables<'organizations_locations'>[];
+}
 export interface UseGetMeResDto {
   isTalent: boolean;
   isOrganizationMember: boolean;
@@ -10,7 +17,7 @@ export interface UseGetMeResDto {
     organization: {
       name: string;
       avatar_path: string;
-      locations: Tables<'organizations_locations'>[];
+      branches: OrganizationBranchDto[];
     };
   };
 }

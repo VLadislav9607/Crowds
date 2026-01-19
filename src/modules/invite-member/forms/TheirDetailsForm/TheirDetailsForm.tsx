@@ -47,6 +47,19 @@ export const TheirDetailsForm = ({
 
         <Controller
           control={control}
+          name="email"
+          render={({ field: { onChange, value } }) => (
+            <AppInput
+              placeholder="Email"
+              value={value}
+              onChangeText={onChange}
+              errorMessage={errors.email?.message}
+            />
+          )}
+        />
+
+        <Controller
+          control={control}
           name="positionInCompany"
           render={({ field: { onChange, value } }) => (
             <AppInput

@@ -27,7 +27,7 @@ export const TalentEventCard = ({
   onPressReject,
   onCancelApplication,
 }: TalentEventCardProps) => {
-  const timezone = 'UTC';
+  const timezone = 'UTC';  
 
   const startAt = event?.start_at
     ? formatInTimeZone(event.start_at, timezone, 'dd MMM, yyyy')
@@ -55,7 +55,6 @@ export const TalentEventCard = ({
         <View style={styles.contentHeader}>
           <View style={styles.contentHeaderLeft}>
             <AppText
-              renderIf={type === 'approved'}
               typography="semibold_16"
               margin={{ bottom: 8 }}
             >

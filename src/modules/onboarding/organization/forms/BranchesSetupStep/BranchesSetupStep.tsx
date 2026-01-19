@@ -1,5 +1,5 @@
 import { ICONS } from '@assets';
-import { ICountryWithFlag } from '@constants';
+import { ICountryWithFlag, countriesWithFlag } from '@constants';
 import { BottomSheetModal } from '@gorhom/bottom-sheet';
 import { CountryPickerModal, CountryPickerModalData } from '@modules/common';
 import { AppButton, AppInput, AppText } from '@ui';
@@ -20,38 +20,81 @@ import { BranchesSetupStepProps, BranchesSetupStepRef } from './types';
 export const BranchesSetupStep = forwardRef<
   BranchesSetupStepRef,
   BranchesSetupStepProps
->(({ defaultValues }, ref) => {
+>(({ defaultValues, globalLocation }, ref) => {
   const countryPickerModalRef =
     useRef<BottomSheetModal<CountryPickerModalData>>(null);
 
-  const [selectedHeadOfficeCountry, setSelectedHeadOfficeCountry] =
-    useState<ICountryWithFlag | null>(
-      defaultValues?.selectedHeadOfficeCountry ?? null,
+  const isHeadquartered = globalLocation?.isHeadquartered === true;
+  const globalLocationCountryCode =
+    globalLocation?.parsed_location?.country_code;
+
+  // Знаходимо країну з globalLocation якщо isHeadquartered === true
+  const getCountryFromGlobalLocation = (): ICountryWithFlag | null => {
+    if (!globalLocationCountryCode) return null;
+    return (
+      countriesWithFlag.find(
+        country => country.code === globalLocationCountryCode,
+      ) ?? null
     );
+  };
+
+  const [selectedHeadOfficeCountry, setSelectedHeadOfficeCountry] =
+    useState<ICountryWithFlag | null>(() => {
+      if (isHeadquartered) {
+        return getCountryFromGlobalLocation();
+      }
+      return defaultValues?.selectedHeadOfficeCountry ?? null;
+    });
+
   const [selectedBrachesCountries, setSelectedBrachesCountries] = useState<
     ICountryWithFlag[]
   >(defaultValues?.selectedBrachesCountries ?? []);
+
   const [branchManagerEmails, setBranchManagerEmails] = useState<
     Record<string, string>
   >(defaultValues?.branchManagerEmails ?? {});
 
+  const [headquartersManagerEmail, setHeadquartersManagerEmail] =
+    useState<string>(defaultValues?.headquartersManagerEmail ?? '');
+
   useEffect(() => {
     if (defaultValues) {
-      setSelectedHeadOfficeCountry(
-        defaultValues.selectedHeadOfficeCountry ?? null,
-      );
+      if (!isHeadquartered) {
+        setSelectedHeadOfficeCountry(
+          defaultValues.selectedHeadOfficeCountry ?? null,
+        );
+      }
       setSelectedBrachesCountries(defaultValues.selectedBrachesCountries ?? []);
       setBranchManagerEmails(defaultValues.branchManagerEmails ?? {});
     }
-  }, [defaultValues]);
+  }, [defaultValues, isHeadquartered]);
+
+  // Автоматично встановлюємо країну з globalLocation якщо isHeadquartered === true
+  useEffect(() => {
+    if (isHeadquartered && globalLocationCountryCode) {
+      const country = countriesWithFlag.find(
+        country => country.code === globalLocationCountryCode,
+      );
+      if (country) {
+        setSelectedHeadOfficeCountry(country);
+      }
+    }
+  }, [isHeadquartered, globalLocationCountryCode]);
 
   const onSelectHeadOfficeCountry = () => {
+    // Якщо isHeadquartered === true, не дозволяємо змінювати head office location
+    if (isHeadquartered) return;
+
     countryPickerModalRef.current?.present({
       title: 'Select head office location',
       selectedCodesDefault: selectedHeadOfficeCountry?.code
         ? [selectedHeadOfficeCountry.code]
         : [],
       selectedMarkerElement: HQBadge,
+      // Забороняємо країну з globalLocation якщо isHeadquartered === false
+      disabledCodes: globalLocationCountryCode
+        ? [globalLocationCountryCode]
+        : [],
       onCountryPicked: country => {
         setSelectedHeadOfficeCountry(country);
         onRemoveBranch(country);
@@ -60,6 +103,8 @@ export const BranchesSetupStep = forwardRef<
   };
 
   const onSelectBrachesCountries = () => {
+    // Якщо isHeadquartered === false, не дозволяємо вибирати бренчі
+    if (!isHeadquartered) return;
     if (!selectedHeadOfficeCountry) return;
     countryPickerModalRef.current?.present({
       title: 'Select branches countries',
@@ -132,6 +177,7 @@ export const BranchesSetupStep = forwardRef<
 
   const handleSubmit = (
     onSubmit: (data: {
+      headquartersManagerEmail: string;
       selectedHeadOfficeCountry: ICountryWithFlag | null;
       selectedBrachesCountries: ICountryWithFlag[];
       branchManagerEmails: Record<string, string>;
@@ -143,8 +189,21 @@ export const BranchesSetupStep = forwardRef<
         return;
       }
 
+      if (!isHeadquartered && !headquartersManagerEmail.trim()) {
+        showErrorToast("Please enter headquarter's manager email");
+        return;
+      }
+
+      if (!isHeadquartered && !isValidEmail(headquartersManagerEmail.trim())) {
+        showErrorToast(
+          "Please enter a valid email address for headquarter's manager",
+        );
+        return;
+      }
+
       if (selectedBrachesCountries.length === 0) {
         onSubmit({
+          headquartersManagerEmail,
           selectedHeadOfficeCountry,
           selectedBrachesCountries,
           branchManagerEmails,
@@ -171,6 +230,7 @@ export const BranchesSetupStep = forwardRef<
       }
 
       onSubmit({
+        headquartersManagerEmail,
         selectedHeadOfficeCountry,
         selectedBrachesCountries,
         branchManagerEmails,
@@ -183,8 +243,9 @@ export const BranchesSetupStep = forwardRef<
   return (
     <View>
       <AppText typography="regular_14" margin={{ bottom: 16 }}>
-        Select the country where your organization’s headquarters is located and
-        all countries where you have branch offices.
+        {isHeadquartered
+          ? 'Select all countries where you have branch offices'
+          : "Select the country where your organization's headquarters is located"}
       </AppText>
 
       <If condition={!selectedHeadOfficeCountry}>
@@ -206,26 +267,41 @@ export const BranchesSetupStep = forwardRef<
 
       <If condition={!!selectedHeadOfficeCountry}>
         <View style={styles.hqContainer}>
-          <View style={styles.hqInfo}>
-            <AppText style={styles.flag}>
-              {selectedHeadOfficeCountry?.flag}
-            </AppText>
-            <AppText
-              typography="semibold_16"
-              style={styles.countryName}
-              color="black"
-            >
-              {selectedHeadOfficeCountry?.name}
-            </AppText>
-            {HQBadge}
+          <View style={styles.hqInfoContainer}>
+            <View style={styles.hqInfo}>
+              <AppText style={styles.flag}>
+                {selectedHeadOfficeCountry?.flag}
+              </AppText>
+              <AppText
+                typography="semibold_16"
+                style={styles.countryName}
+                color="black"
+              >
+                {selectedHeadOfficeCountry?.name}
+              </AppText>
+              {HQBadge}
+            </View>
+            {/* Показуємо кнопку "Change" тільки якщо isHeadquartered === false */}
+            <If condition={!isHeadquartered}>
+              <AppButton
+                onPress={onSelectHeadOfficeCountry}
+                title="Change"
+                variant="withBorder"
+                size="36"
+                wrapperStyles={styles.changeButton}
+              />
+            </If>
           </View>
-          <AppButton
-            onPress={onSelectHeadOfficeCountry}
-            title="Change"
-            variant="withBorder"
-            size="36"
-            wrapperStyles={styles.changeButton}
-          />
+
+          {!isHeadquartered && (
+            <AppInput
+              placeholder="Headquarter's manager email"
+              value={headquartersManagerEmail}
+              onChangeText={email => setHeadquartersManagerEmail(email)}
+              keyboardType="email-address"
+              autoCapitalize="none"
+            />
+          )}
         </View>
 
         <If condition={selectedBrachesCountries.length > 0}>
@@ -267,16 +343,19 @@ export const BranchesSetupStep = forwardRef<
           </View>
         </If>
 
-        <TouchableOpacity
-          onPress={onSelectBrachesCountries}
-          activeOpacity={0.5}
-          style={styles.addBranchButton}
-        >
-          <SvgXml xml={ICONS.plus('main')} width={24} height={24} />
-          <AppText typography="semibold_16" color="main">
-            Add Branch Office
-          </AppText>
-        </TouchableOpacity>
+        {/* Показуємо кнопку "Add Branch Office" тільки якщо isHeadquartered === true */}
+        <If condition={isHeadquartered}>
+          <TouchableOpacity
+            onPress={onSelectBrachesCountries}
+            activeOpacity={0.5}
+            style={styles.addBranchButton}
+          >
+            <SvgXml xml={ICONS.plus('main')} width={24} height={24} />
+            <AppText typography="semibold_16" color="main">
+              Add Branch Office
+            </AppText>
+          </TouchableOpacity>
+        </If>
       </If>
 
       <CountryPickerModal bottomSheetRef={countryPickerModalRef} />

@@ -111,6 +111,14 @@ export const CrowdPreferencesModal = ({
           showsVerticalScrollIndicator={false}
           keyboardShouldPersistTaps="handled"
         >
+          <AppText typography="regular_14" color="black">
+            <AppText typography="bold_14" color="red">
+              Fill in preferences carefully
+            </AppText>
+            : only talents matching the selected criteria will be able to apply.
+            If you don’t want to set restrictions, leave preferences empty.
+          </AppText>
+
           {CHECKBOX_CONFIGS.map(config => (
             <CheckboxGroup
               key={config.key}

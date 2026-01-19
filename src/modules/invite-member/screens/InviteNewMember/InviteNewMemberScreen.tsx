@@ -1,4 +1,5 @@
-import { StyleSheet } from 'react-native';
+import { StyleSheet, ScrollView } from 'react-native';
+import { useRef } from 'react';
 
 import { ScreenWithScrollWrapper } from '@components';
 import { AppButton } from '@ui';
@@ -9,12 +10,18 @@ import { useInviteMemberForm } from '../../hooks';
 
 export const InviteNewMemberScreen = () => {
   const { formData } = useInviteMemberForm();
+  const scrollViewRef = useRef<ScrollView>(null);
 
   const handleCreateInvitationLink = () => {
-    formData.handleSubmit(data => {
-      console.log('Form data:', data);
-      goToScreen(Screens.CopyInviteLink);
-    })();
+    formData.handleSubmit(
+      data => {
+        console.log('Form data:', data);
+        goToScreen(Screens.CopyInviteLink);
+      },
+      () => {
+        scrollViewRef.current?.scrollTo({ y: 0, animated: true });
+      },
+    )();
   };
 
   return (
@@ -24,6 +31,7 @@ export const InviteNewMemberScreen = () => {
       headerImageBg="purple"
       isFloatFooter={false}
       contentContainerStyle={styles.contentContainer}
+      scrollViewRef={scrollViewRef}
       footer={
         <AppButton
           title="Create Invitation Link"

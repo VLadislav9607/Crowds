@@ -19,6 +19,7 @@ export const useSearchEventsList = ({ filters }: SearchEventsListProps) => {
 
   const events = eventsResponse?.data && !isLoading ? eventsResponse?.data : [];
 
+
   const unavailableTimeModalRef =
     useRef<TalentEventUnavailableTimeModalRef>(null);
   const alreadyBookedModalRef = useRef<TalentEventAlreadyBookedModalRef>(null);

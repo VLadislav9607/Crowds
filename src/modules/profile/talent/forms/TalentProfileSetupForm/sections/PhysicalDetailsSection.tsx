@@ -3,6 +3,8 @@ import { Control, Controller, useWatch } from 'react-hook-form';
 import { AppText } from '@ui';
 import { If, RangeSelector, SelectOptionField } from '@components';
 import {
+  accentOptions,
+  bodyAttributesOptions,
   ethnicityOptions,
   eyeColourOptions,
   facialAttributesOptions,
@@ -151,6 +153,31 @@ export const PhysicalDetailsSection = ({
 
       <Controller
         control={control}
+        name="bodyAttributes"
+        render={({ field }) => (
+          <SelectOptionField
+            fieldProps={{
+              label: 'Body Attributes',
+              placeholderText: 'Select body attributes',
+              labelProps: { color: 'main' },
+              value: field.value
+                ?.map(
+                  o => bodyAttributesOptions.find(f => f.value === o)?.label,
+                )
+                ?.join(', '),
+            }}
+            options={bodyAttributesOptions}
+            enableAutoClose={false}
+            selectedValues={field.value || []}
+            onSelectedOptionsChange={item =>
+              field.onChange(item.map(o => o.value))
+            }
+          />
+        )}
+      />
+
+      <Controller
+        control={control}
         name="tattooSpot"
         render={({ field }) => (
           <SelectOptionField
@@ -184,6 +211,24 @@ export const PhysicalDetailsSection = ({
               value: ethnicityOptions.find(e => e.value === field.value)?.label,
             }}
             options={ethnicityOptions}
+            selectedValues={field.value}
+            onOptionSelect={item => field.onChange(item.value)}
+          />
+        )}
+      />
+
+      <Controller
+        control={control}
+        name="accent"
+        render={({ field }) => (
+          <SelectOptionField
+            fieldProps={{
+              label: 'Accent',
+              placeholderText: 'Select accent',
+              labelProps: { color: 'main' },
+              value: accentOptions.find(e => e.value === field.value)?.label,
+            }}
+            options={accentOptions}
             selectedValues={field.value}
             onOptionSelect={item => field.onChange(item.value)}
           />

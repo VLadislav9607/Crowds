@@ -16,11 +16,14 @@ export const useTalentsForInvite = (eventId: string) => {
     isLoading,
   } = useGetInvitableTalents(eventId);
 
+  console.log('data', talentsForInviteResponse);
+  
+
   const talentsForInviteList = useMemo<IEventParticipant[]>(() => {
     if (!talentsForInviteResponse) return [];
     return talentsForInviteResponse.pages.flatMap(page =>
       page.data.map(talent => ({
-        id: talent.id,
+        talentId: talent.id,
         name: `${talent.first_name} ${talent.last_name}`.trim(),
         location: `${talent.location.city}, ${talent.location.country}`,
         avatarUrl: talent.avatar_path,

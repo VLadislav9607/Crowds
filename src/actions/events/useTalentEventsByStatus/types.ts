@@ -7,8 +7,6 @@ export interface ITalentEventCard {
   payment_amount: number;
   payment_mode: string;
   formatted_address: string;
-  latitude: number;
-  longitude: number;
   start_at: string;
   end_at: string;
   max_participations: number;
