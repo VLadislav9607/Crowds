@@ -1,5 +1,8 @@
 import Toast from 'react-native-toast-message';
-import { ToastCustomProps } from 'src/components/AppToast/types';
+import {
+  ToastCustomProps,
+  ToastOptionsWithCustomProps,
+} from 'src/components/AppToast/types';
 
 export const showSuccessToast = (message: string, props?: ToastCustomProps) => {
   Toast.show({
@@ -9,11 +12,14 @@ export const showSuccessToast = (message: string, props?: ToastCustomProps) => {
   });
 };
 
-export const showErrorToast = (message: string, props?: ToastCustomProps) => {
+export const showErrorToast = (
+  message: string,
+  options?: ToastOptionsWithCustomProps,
+) => {
   Toast.show({
     text1: message,
     type: 'error',
-    props,
+    ...options,
   });
 };
 

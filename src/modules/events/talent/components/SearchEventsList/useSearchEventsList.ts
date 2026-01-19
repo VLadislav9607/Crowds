@@ -13,7 +13,11 @@ export const useSearchEventsList = ({ filters }: SearchEventsListProps) => {
     refetch,
     isLoading,
     hasNextPage,
+    error,
   } = useSearchPublicEvents({ ...filters }, { staleTime: 0, gcTime: 0 });
+
+  console.log('eventsResponse', eventsResponse);
+  console.log('error', error);
 
   const { isRefetchingQuery, refetchQuery } = useRefetchQuery(refetch);
 

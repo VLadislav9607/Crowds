@@ -347,6 +347,63 @@ export type Database = {
           },
         ];
       };
+      event_participations: {
+        Row: {
+          created_at: string;
+          event_id: string;
+          id: string;
+          initiated_by: Database['public']['Enums']['participation_initiator'];
+          organization_member_id: string;
+          rejected_by:
+            | Database['public']['Enums']['participation_initiator']
+            | null;
+          status: Database['public']['Enums']['participation_status'];
+          talent_id: string;
+          updated_at: string;
+        };
+        Insert: {
+          created_at?: string;
+          event_id: string;
+          id?: string;
+          initiated_by: Database['public']['Enums']['participation_initiator'];
+          organization_member_id: string;
+          rejected_by?:
+            | Database['public']['Enums']['participation_initiator']
+            | null;
+          status: Database['public']['Enums']['participation_status'];
+          talent_id: string;
+          updated_at?: string;
+        };
+        Update: {
+          created_at?: string;
+          event_id?: string;
+          id?: string;
+          initiated_by?: Database['public']['Enums']['participation_initiator'];
+          organization_member_id?: string;
+          rejected_by?:
+            | Database['public']['Enums']['participation_initiator']
+            | null;
+          status?: Database['public']['Enums']['participation_status'];
+          talent_id?: string;
+          updated_at?: string;
+        };
+        Relationships: [
+          {
+            foreignKeyName: 'event_participations_event_id_fkey';
+            columns: ['event_id'];
+            isOneToOne: false;
+            referencedRelation: 'events';
+            referencedColumns: ['id'];
+          },
+          {
+            foreignKeyName: 'event_participations_talent_id_fkey';
+            columns: ['talent_id'];
+            isOneToOne: false;
+            referencedRelation: 'talents';
+            referencedColumns: ['id'];
+          },
+        ];
+      };
       event_preference_accents: {
         Row: {
           id: string;
@@ -748,6 +805,32 @@ export type Database = {
           },
         ];
       };
+      hidden_events: {
+        Row: {
+          created_at: string;
+          event_id: string;
+          user_id: string;
+        };
+        Insert: {
+          created_at?: string;
+          event_id: string;
+          user_id: string;
+        };
+        Update: {
+          created_at?: string;
+          event_id?: string;
+          user_id?: string;
+        };
+        Relationships: [
+          {
+            foreignKeyName: 'hidden_events_event_id_fkey';
+            columns: ['event_id'];
+            isOneToOne: false;
+            referencedRelation: 'events';
+            referencedColumns: ['id'];
+          },
+        ];
+      };
       messages: {
         Row: {
           chat_id: string;
@@ -793,6 +876,62 @@ export type Database = {
           },
         ];
       };
+      organization_branches: {
+        Row: {
+          country_code: string;
+          country_name: string;
+          created_at: string;
+          id: string;
+          is_headquarter: boolean;
+          organization_id: string;
+        };
+        Insert: {
+          country_code: string;
+          country_name: string;
+          created_at?: string;
+          id?: string;
+          is_headquarter: boolean;
+          organization_id: string;
+        };
+        Update: {
+          country_code?: string;
+          country_name?: string;
+          created_at?: string;
+          id?: string;
+          is_headquarter?: boolean;
+          organization_id?: string;
+        };
+        Relationships: [
+          {
+            foreignKeyName: 'organization_branches_organization_id_fkey';
+            columns: ['organization_id'];
+            isOneToOne: false;
+            referencedRelation: 'organizations';
+            referencedColumns: ['id'];
+          },
+        ];
+      };
+      organization_permissions: {
+        Row: {
+          category: Database['public']['Enums']['OrgPermissionsCategories'];
+          id: Database['public']['Enums']['OrgMemberPermissions'];
+          label: string;
+          sort_order: number;
+        };
+        Insert: {
+          category: Database['public']['Enums']['OrgPermissionsCategories'];
+          id: Database['public']['Enums']['OrgMemberPermissions'];
+          label: string;
+          sort_order: number;
+        };
+        Update: {
+          category?: Database['public']['Enums']['OrgPermissionsCategories'];
+          id?: Database['public']['Enums']['OrgMemberPermissions'];
+          label?: string;
+          sort_order?: number;
+        };
+        Relationships: [];
+      };
       organizations: {
         Row: {
           avatar_path: string | null;
@@ -820,16 +959,17 @@ export type Database = {
       organizations_locations: {
         Row: {
           autocomplete_description: string;
+          branch_id: string;
           city: string;
           coords: unknown;
           country: string;
+          country_code: string;
           created_at: string;
           formatted_address: string;
           id: string;
-          is_head_office: boolean;
+          is_head_office: boolean | null;
           latitude: number;
           longitude: number;
-          organization_id: string;
           place_id: string;
           postal_code: string;
           region: string;
@@ -838,16 +978,17 @@ export type Database = {
         };
         Insert: {
           autocomplete_description: string;
+          branch_id: string;
           city: string;
           coords: unknown;
           country: string;
+          country_code: string;
           created_at?: string;
           formatted_address: string;
           id?: string;
-          is_head_office: boolean;
+          is_head_office?: boolean | null;
           latitude: number;
           longitude: number;
-          organization_id: string;
           place_id: string;
           postal_code: string;
           region: string;
@@ -856,16 +997,17 @@ export type Database = {
         };
         Update: {
           autocomplete_description?: string;
+          branch_id?: string;
           city?: string;
           coords?: unknown;
           country?: string;
+          country_code?: string;
           created_at?: string;
           formatted_address?: string;
           id?: string;
-          is_head_office?: boolean;
+          is_head_office?: boolean | null;
           latitude?: number;
           longitude?: number;
-          organization_id?: string;
           place_id?: string;
           postal_code?: string;
           region?: string;
@@ -874,10 +1016,10 @@ export type Database = {
         };
         Relationships: [
           {
-            foreignKeyName: 'organizations_locations_organization_id_fkey';
-            columns: ['organization_id'];
+            foreignKeyName: 'organizations_locations_branch_id_fkey';
+            columns: ['branch_id'];
             isOneToOne: false;
-            referencedRelation: 'organizations';
+            referencedRelation: 'organization_branches';
             referencedColumns: ['id'];
           },
         ];
@@ -931,6 +1073,52 @@ export type Database = {
             columns: ['organization_id'];
             isOneToOne: false;
             referencedRelation: 'organizations';
+            referencedColumns: ['id'];
+          },
+        ];
+      };
+      organizations_members_access: {
+        Row: {
+          branch_id: string | null;
+          created_at: string;
+          id: string;
+          member_id: string;
+          permission_id: Database['public']['Enums']['OrgMemberPermissions'];
+        };
+        Insert: {
+          branch_id?: string | null;
+          created_at?: string;
+          id?: string;
+          member_id: string;
+          permission_id: Database['public']['Enums']['OrgMemberPermissions'];
+        };
+        Update: {
+          branch_id?: string | null;
+          created_at?: string;
+          id?: string;
+          member_id?: string;
+          permission_id?: Database['public']['Enums']['OrgMemberPermissions'];
+        };
+        Relationships: [
+          {
+            foreignKeyName: 'organizations_members_access_branch_id_fkey';
+            columns: ['branch_id'];
+            isOneToOne: false;
+            referencedRelation: 'organization_branches';
+            referencedColumns: ['id'];
+          },
+          {
+            foreignKeyName: 'organizations_members_access_member_id_fkey';
+            columns: ['member_id'];
+            isOneToOne: false;
+            referencedRelation: 'organizations_members';
+            referencedColumns: ['id'];
+          },
+          {
+            foreignKeyName: 'organizations_members_access_permission_id_fkey';
+            columns: ['permission_id'];
+            isOneToOne: false;
+            referencedRelation: 'organization_permissions';
             referencedColumns: ['id'];
           },
         ];
@@ -993,11 +1181,14 @@ export type Database = {
       };
       talents: {
         Row: {
+          accent: Database['public']['Enums']['Accent'] | null;
           additional_skills: string | null;
           avatar_full_path: string | null;
           avatar_path: string | null;
           birth_date: string;
-          body_attributes: Database['public']['Enums']['BodyAttributes'] | null;
+          body_attributes:
+            | Database['public']['Enums']['BodyAttributes'][]
+            | null;
           build: number | null;
           categories: string[] | null;
           created_at: string;
@@ -1023,12 +1214,13 @@ export type Database = {
           username: string;
         };
         Insert: {
+          accent?: Database['public']['Enums']['Accent'] | null;
           additional_skills?: string | null;
           avatar_full_path?: string | null;
           avatar_path?: string | null;
           birth_date: string;
           body_attributes?:
-            | Database['public']['Enums']['BodyAttributes']
+            | Database['public']['Enums']['BodyAttributes'][]
             | null;
           build?: number | null;
           categories?: string[] | null;
@@ -1055,12 +1247,13 @@ export type Database = {
           username: string;
         };
         Update: {
+          accent?: Database['public']['Enums']['Accent'] | null;
           additional_skills?: string | null;
           avatar_full_path?: string | null;
           avatar_path?: string | null;
           birth_date?: string;
           body_attributes?:
-            | Database['public']['Enums']['BodyAttributes']
+            | Database['public']['Enums']['BodyAttributes'][]
             | null;
           build?: number | null;
           categories?: string[] | null;
@@ -1326,6 +1519,10 @@ export type Database = {
         Returns: string;
       };
       delete_draft_event: { Args: { event_id_param: string }; Returns: string };
+      dto_event_details_for_talent: {
+        Args: { e: Database['public']['Tables']['events']['Row'] };
+        Returns: Json;
+      };
       dto_event_details_org_member: {
         Args: { e: Database['public']['Tables']['events']['Row'] };
         Returns: Json;
@@ -1343,13 +1540,55 @@ export type Database = {
         Returns: Json;
       };
       earth: { Args: never; Returns: number };
+      get_event_details_for_talent: {
+        Args: { p_event_id: string };
+        Returns: Json;
+      };
       get_event_details_org_member: {
         Args: { p_event_id: string };
         Returns: Json;
       };
+      get_event_participants_by_status: {
+        Args: {
+          p_event_id: string;
+          p_initiated_by?: Database['public']['Enums']['participation_initiator'];
+          p_limit?: number;
+          p_offset?: number;
+          p_status: Database['public']['Enums']['participation_status'];
+        };
+        Returns: {
+          avatar_url: string;
+          flag: string;
+          location: string;
+          name: string;
+          participationId: string;
+          talentId: string;
+        }[];
+      };
+      get_event_participants_counts: {
+        Args: { p_event_id: string };
+        Returns: {
+          applied: number;
+          approved: number;
+          invited: number;
+          rejected: number;
+        }[];
+      };
       get_events_stats_by_organization: {
         Args: { p_organization_id: string };
         Returns: Json;
+      };
+      get_invitable_talents: {
+        Args: { p_event_id: string; p_limit?: number; p_offset?: number };
+        Returns: {
+          avatar_path: string;
+          city: string;
+          country: string;
+          first_name: string;
+          id: string;
+          last_name: string;
+          total: number;
+        }[];
       };
       get_me_org_member: { Args: never; Returns: Json };
       get_organization_events: {
@@ -1381,6 +1620,65 @@ export type Database = {
         };
         Returns: Json;
       };
+      get_public_events_search_with_preferences: {
+        Args: {
+          filter_date_from?: string;
+          filter_date_to?: string;
+          filter_distance_km?: number;
+          filter_payment_type?: string;
+          limit_param?: number;
+          offset_param?: number;
+          search_query?: string;
+          sort_mode?: string;
+          user_lat?: number;
+          user_lng?: number;
+        };
+        Returns: Json;
+      };
+      get_talent_event_counters: {
+        Args: never;
+        Returns: {
+          approved: number;
+          declined: number;
+          denied: number;
+          pending: number;
+          proposals: number;
+        }[];
+      };
+      get_talent_events_by_status: {
+        Args: {
+          p_initiated_by?: Database['public']['Enums']['participation_initiator'];
+          p_limit?: number;
+          p_offset?: number;
+          p_status: Database['public']['Enums']['participation_status'];
+        };
+        Returns: {
+          brief: string;
+          can_reaccept: boolean;
+          category_id: string;
+          created_at: string;
+          end_at: string;
+          event_id: string;
+          event_title: string;
+          formatted_address: string;
+          latitude: number;
+          longitude: number;
+          max_participations: number;
+          participation_id: string;
+          payment_amount: number;
+          payment_mode: string;
+          start_at: string;
+        }[];
+      };
+      get_talent_events_counts: {
+        Args: never;
+        Returns: {
+          approved: number;
+          denied: number;
+          pending: number;
+          proposals: number;
+        }[];
+      };
       get_talent_own_events: {
         Args: {
           limit_param?: number;
@@ -1389,6 +1687,14 @@ export type Database = {
           visibility_filter?: string;
         };
         Returns: Json;
+      };
+      has_org_member_permission: {
+        Args: {
+          p_branch_id: string;
+          p_member_id: string;
+          p_permission: string;
+        };
+        Returns: boolean;
       };
       is_user_available: {
         Args: { p_at: string; p_user_id: string };
@@ -1532,6 +1838,35 @@ export type Database = {
         | 'bald_shaved'
         | 'other_not_sure';
       OrganizationMemberRole: 'owner' | 'admin';
+      OrgMemberPermissions:
+        | 'master'
+        | 'branch_master_admin'
+        | 'recruit_applicants'
+        | 'approve_applicants'
+        | 'give_feedback'
+        | 'rate_applicants'
+        | 'create_events'
+        | 'view_events'
+        | 'message_applicants'
+        | 'group_message'
+        | 'one_on_one_message'
+        | 'manage_checkins'
+        | 'invite_team_members'
+        | 'edit_team_members'
+        | 'edit_business_info'
+        | 'view_earnings'
+        | 'authorize_talent_one_on_one_payments'
+        | 'authorize_talent_payments'
+        | 'edit_bank_info';
+      OrgPermissionsCategories:
+        | 'talent'
+        | 'events'
+        | 'checkins'
+        | 'settings'
+        | 'financial'
+        | 'master';
+      participation_initiator: 'organization' | 'talent';
+      participation_status: 'pending' | 'approved' | 'rejected';
       SkinTone:
         | 'porcelain'
         | 'ivory'
@@ -1760,6 +2095,37 @@ export const Constants = {
         'other_not_sure',
       ],
       OrganizationMemberRole: ['owner', 'admin'],
+      OrgMemberPermissions: [
+        'master',
+        'branch_master_admin',
+        'recruit_applicants',
+        'approve_applicants',
+        'give_feedback',
+        'rate_applicants',
+        'create_events',
+        'view_events',
+        'message_applicants',
+        'group_message',
+        'one_on_one_message',
+        'manage_checkins',
+        'invite_team_members',
+        'edit_team_members',
+        'edit_business_info',
+        'view_earnings',
+        'authorize_talent_one_on_one_payments',
+        'authorize_talent_payments',
+        'edit_bank_info',
+      ],
+      OrgPermissionsCategories: [
+        'talent',
+        'events',
+        'checkins',
+        'settings',
+        'financial',
+        'master',
+      ],
+      participation_initiator: ['organization', 'talent'],
+      participation_status: ['pending', 'approved', 'rejected'],
       SkinTone: [
         'porcelain',
         'ivory',

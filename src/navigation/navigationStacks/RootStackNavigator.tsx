@@ -50,6 +50,7 @@ import {
   InviteTalentsScreen,
 } from '../../modules/invite-talents';
 import { VerificationPersonScreen } from '../../modules/kyc';
+import { ManageOrgTeamScreen } from '../../modules/organization-team';
 
 const RootStack = createStackNavigator<RootStackParamList>();
 
@@ -191,6 +192,10 @@ export const RootStackNavigator = () => {
       <RootStack.Screen
         name={Screens.AddTalentsToList}
         component={AddTalentsToListScreen}
+      />
+      <RootStack.Screen
+        name={Screens.ManageOrgTeam}
+        component={ManageOrgTeamScreen}
       />
     </RootStack.Navigator>
   );

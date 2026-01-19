@@ -9,6 +9,7 @@ import {
 } from '../../../components';
 import { TalentProfileSetupForm, TalentProfileSetupFormRef } from '../../forms';
 import { styles } from './styles';
+import { useGetMe } from '@actions';
 
 export const TalentProfileSetupScreen = () => {
   const navigation = useNavigation();
@@ -24,6 +25,10 @@ export const TalentProfileSetupScreen = () => {
   const handleSuccess = () => {
     navigation.goBack();
   };
+
+  const { data: me } = useGetMe();
+
+  console.log('me', me);
 
   return (
     <ScreenWithScrollWrapper

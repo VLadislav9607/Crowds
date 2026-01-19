@@ -35,6 +35,7 @@ export const parseLocationAdditionalFields = (
         result.region = component.long_name;
       } else if (types.includes(AddressType.country)) {
         result.country = component.long_name;
+        result.country_code = component.short_name;
       } else if (types.includes(AddressType.postal_code)) {
         result.postal_code = component.long_name;
       } else if (types.includes(AddressType.route)) {
