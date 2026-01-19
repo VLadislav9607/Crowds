@@ -72,7 +72,7 @@ export const InviteTalentsScreen = () => {
           onEndReached={handleEndReached}
           hasNextPage={hasNextPage}
           isFetchingNextPage={isFetchingNextPage}
-          isSendingInvite={invitingTalentId}
+          invitingTalentId={invitingTalentId}
           onPressRightAction={talentId => {
             setInvitingTalentId(talentId);
             inviteTalent({ eventId: params?.eventId ?? '', talentId });

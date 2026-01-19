@@ -10,18 +10,23 @@ import { goToScreen, Screens } from '@navigation';
 import { calculateEventDuration } from '../../../helpers';
 import { styles } from './styles';
 import { getEventIcon } from '../../../helpers';
-import { TalentEventCardCompactProps } from './types';
+import { TalentEventCardProps } from './types';
 
-export const TalentEventCardCompact = ({
+export const TalentEventCard = ({
   event,
   containerStyle,
   type = 'random',
   isLoadingCancellation,
+  isLoadingAccept = false,
+  isLoadingDecline = false,
+  isLoadingApply = false,
+  isLoadingReject = false,
   onPressAccept,
   onPressDecline,
   onPressApply,
+  onPressReject,
   onCancelApplication,
-}: TalentEventCardCompactProps) => {
+}: TalentEventCardProps) => {
   const timezone = 'UTC';
 
   const startAt = event?.start_at
@@ -126,41 +131,51 @@ export const TalentEventCardCompact = ({
 
         <View style={styles.buttonsContainer}>
           <If condition={type === 'random'}>
-            <TouchableOpacity activeOpacity={0.8} style={styles.redButton}>
-              <AppText typography="bold_14" color="red">
-                Reject
-              </AppText>
-            </TouchableOpacity>
-            <TouchableOpacity
-              activeOpacity={0.8}
-              style={styles.greenButton}
+            <AppButton
+              title="Reject"
+              size="36"
+              isLoading={isLoadingReject}
+              loadingColor={COLORS.red}
+              wrapperStyles={styles.redButton}
+              titleStyles={{ color: COLORS.red }}
+              onPress={() => onPressReject?.(event.event_id)}
+            />
+            <AppButton
+              title="Apply"
+              size="36"
+              isLoading={isLoadingApply}
+              loadingColor={COLORS.green}
+              wrapperStyles={styles.greenButton}
+              titleStyles={{ color: COLORS.green }}
               onPress={() => onPressApply?.(event)}
-            >
-              <AppText typography="bold_14" color="green">
-                Apply
-              </AppText>
-            </TouchableOpacity>
+            />
           </If>
 
           <If condition={type === 'proposed'}>
-            <TouchableOpacity
-              activeOpacity={0.8}
-              style={styles.redButton}
+            <AppButton
+              title="Decline"
+              size="36"
+              isLoading={isLoadingDecline}
+              loadingColor={COLORS.red}
+              wrapperStyles={styles.redButton}
+              titleStyles={{ color: COLORS.red }}
               onPress={() => onPressDecline?.(event.participation_id)}
-            >
-              <AppText typography="bold_14" color="red">
-                Decline
-              </AppText>
-            </TouchableOpacity>
-            <TouchableOpacity
-              activeOpacity={0.8}
-              style={styles.greenButton}
+            />
+          </If>
+          <If
+            condition={
+              type === 'proposed' || (type === 'denied' && event.can_reaccept)
+            }
+          >
+            <AppButton
+              title="Accept"
+              size="36"
+              isLoading={isLoadingAccept}
+              loadingColor={COLORS.green}
+              wrapperStyles={styles.greenButton}
+              titleStyles={{ color: COLORS.green }}
               onPress={() => onPressAccept?.(event)}
-            >
-              <AppText typography="bold_14" color="green">
-                Accept
-              </AppText>
-            </TouchableOpacity>
+            />
           </If>
 
           <If condition={type === 'pending'}>

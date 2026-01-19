@@ -13,6 +13,7 @@ export interface ITalentEventCard {
   end_at: string;
   max_participations: number;
   created_at: string;
+  can_reaccept: boolean;
 }
 
 export interface UseTalentEventsByStatusBodyDto {

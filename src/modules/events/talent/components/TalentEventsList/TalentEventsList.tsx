@@ -19,7 +19,7 @@ import {
   TalentEventApplyConfirmModalRef,
 } from '../../modals';
 import { TalentEventsListProps } from './types';
-import { TalentEventCardCompact } from '../TalentEventCardCompact';
+import { TalentEventCard } from '../TalentEventCard';
 import { styles } from './styles';
 
 export const TalentEventsList = ({
@@ -109,6 +109,7 @@ export const TalentEventsList = ({
     });
   };
 
+
   const handleDecline = (participationId: string) => {
     declineProposal.mutate({ participationId });
   };
@@ -119,13 +120,15 @@ export const TalentEventsList = ({
   };
 
   const renderItem = ({ item }: { item: any }) => (
-    <TalentEventCardCompact
+    <TalentEventCard
       event={item}
       containerStyle={styles.itemContainer}
       type={type}
       isLoadingCancellation={cancellationId === item.participation_id}
-      onPressAccept={type === 'proposed' ? handleAccept : undefined}
-      onPressDecline={type === 'proposed' ? handleDecline : undefined}
+      isLoadingAccept={acceptProposal.isPending}
+      isLoadingDecline={declineProposal.isPending}
+      onPressAccept={handleAccept}
+      onPressDecline={handleDecline}
       onCancelApplication={handleCancelApplication}
     />
   );
@@ -172,6 +175,7 @@ export const TalentEventsList = ({
         data={data}
         emptyText="No events found"
         renderItem={renderItem}
+        withBottomTab
         onRefresh={onRefresh}
         refreshing={isRefetching}
         keyExtractor={item => item.event_id}
