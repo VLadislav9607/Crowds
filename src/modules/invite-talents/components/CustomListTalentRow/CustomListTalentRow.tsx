@@ -8,7 +8,7 @@ interface CustomListTalentRowProps {
   talent: IEventParticipant & { status?: EventParticipantStatus };
   invitingTalentId: string | null;
   onInvite: (talentId: string) => void;
-  onRemove: () => void;
+  onRemove: (talentId: string) => void;
 }
 
 export const CustomListTalentRow = ({
@@ -37,7 +37,7 @@ export const CustomListTalentRow = ({
     <TalentProfileRow
       talent={talent}
       popUpItems={[{ label: 'Remove from list', value: 'remove' }]}
-      onMenuSelect={onRemove}
+      onMenuSelect={() => onRemove(talent.talentId)}
       renderRightAction={renderRightAction}
     />
   );

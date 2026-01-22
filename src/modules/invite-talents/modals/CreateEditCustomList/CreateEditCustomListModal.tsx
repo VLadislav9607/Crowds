@@ -12,21 +12,27 @@ interface CreateListModalProps {
   onConfirm: (listName: string) => void;
   onClose: () => void;
   isLoading?: boolean;
+  initialValue?: string;
+  isEdit?: boolean;
 }
 
-export const CreateInvitedTalentsListModal = ({
+export const CreateEditCustomList = ({
   isVisible,
   onClose,
   onConfirm,
   isLoading = false,
+  initialValue = '',
+  isEdit = false,
 }: CreateListModalProps) => {
   const [listName, setListName] = useState('');
 
   useEffect(() => {
-    if (!isVisible && !isLoading) {
+    if (isVisible) {
+      setListName(initialValue);
+    } else if (!isLoading) {
       setListName('');
     }
-  }, [isVisible, isLoading]);
+  }, [isVisible, isLoading, initialValue]);
 
   const handleCancel = () => {
     if (isLoading) return;
@@ -41,7 +47,7 @@ export const CreateInvitedTalentsListModal = ({
 
   return (
     <AppModal
-      title="Create a List"
+      title={isEdit ? 'Edit List Name' : 'Create a List'}
       hideCloseButton
       isVisible={isVisible}
       onClose={handleCancel}
@@ -62,7 +68,7 @@ export const CreateInvitedTalentsListModal = ({
           isDisabled={isLoading}
         />
         <AppButton
-          title="Create"
+          title={isEdit ? 'Save' : 'Create'}
           size="37"
           width={74}
           onPress={handleConfirm}
