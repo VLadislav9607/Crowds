@@ -47,4 +47,14 @@ export const styles = StyleSheet.create({
     width: 8,
     height: 8,
   },
+  plusIcon: {
+    // backgroundColor: COLORS.main,
+    width: 24,
+    height: 24,
+    borderRadius: 4,
+    justifyContent: 'center',
+    alignItems: 'center',
+    borderWidth: 1,
+    borderColor: COLORS.main,
+  },
 });

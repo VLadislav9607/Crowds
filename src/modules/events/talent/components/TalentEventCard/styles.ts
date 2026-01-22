@@ -96,4 +96,10 @@ export const styles = StyleSheet.create({
   messageButtonWrapper: {
     width: 117,
   },
+  saveButton: {
+    width: 18,
+    height: 18,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
 });

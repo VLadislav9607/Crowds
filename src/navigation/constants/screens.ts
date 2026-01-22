@@ -10,6 +10,12 @@ export enum Screens {
   ChangePassword = 'ChangePassword',
   OnboardingUnAuthTalent = 'OnboardingUnAuthTalent',
 
+  // Events Folders
+  TalentFolders = 'TalentFolders',
+  CreateEventsFolder = 'CreateEventsFolder',
+  TalentEventsFolder = 'TalentEventsFolder',
+  RenameEventsFolder = 'RenameEventsFolder',
+
   // Onboarding
   OnboardingUnAuthOrganization = 'OnboardingUnAuthOrganization',
   OrgIdentityVerification = 'OrgIdentityVerification',

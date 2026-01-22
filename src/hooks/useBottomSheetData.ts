@@ -11,9 +11,21 @@ export const useBottomSheetData = <T>(
     ref,
     () => ({
       present: presentData => {
+        console.log('useBottomSheetData present called with:', presentData);
         const nextEntry = presentData ?? defaultValue;
         setData(nextEntry || null);
-        modalRef.current?.present(presentData);
+        // Використовуємо setTimeout для синхронізації з рендером
+        setTimeout(() => {
+          console.log(
+            'useBottomSheetData calling present on modalRef, current:',
+            modalRef.current,
+          );
+          if (modalRef.current) {
+            modalRef.current.present();
+          } else {
+            console.error('modalRef.current is null!');
+          }
+        }, 0);
       },
       dismiss: conf => modalRef.current?.dismiss(conf),
       snapToIndex: (index, conf) => modalRef.current?.snapToIndex(index, conf),

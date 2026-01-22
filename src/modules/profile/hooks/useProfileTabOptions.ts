@@ -23,7 +23,7 @@ export const useProfileTabOptions = ({
     {
       title: 'My folders',
       icon: ICONS.notification(),
-      onPress: () => {},
+      onPress: () => goToScreen(Screens.TalentFolders),
     },
     {
       title: 'Notification settings',
