@@ -3,7 +3,7 @@ import { COLORS } from '@styles';
 
 const { height: SCREEN_HEIGHT } = Dimensions.get('window');
 
-export const MAX_CONTENT_HEIGHT = SCREEN_HEIGHT * 0.9;
+export const MAX_CONTENT_HEIGHT = SCREEN_HEIGHT * 0.85;
 
 export const styles = StyleSheet.create({
   contentWrapper: {

@@ -2,14 +2,20 @@ import { StyleSheet, View } from 'react-native';
 
 import { ScreenWrapper } from '@components';
 import { SearchWithFilter } from '@ui';
-
-import { TalentsList } from '../../components';
-import { FilterTalentsModal } from '../../modals';
-import { useTalentsForInvite } from '../../hooks';
 import { Screens, useScreenNavigation } from '@navigation';
+
+import { AddTalentsList } from '../../components';
+import { FilterTalentsModal } from '../../modals';
+import {
+  useTalentsForCustomList,
+  useAddTalentToCustomList,
+} from '../../hooks';
 
 export const AddTalentsToListScreen = () => {
   const { params } = useScreenNavigation<Screens.AddTalentsToList>();
+  const eventId = params?.eventId ?? '';
+  const listId = params?.listId ?? '';
+  const listName = params?.listName ?? '';
 
   const {
     search,
@@ -17,13 +23,22 @@ export const AddTalentsToListScreen = () => {
     activeFiltersCount,
     filterModalRef,
     talentsForInviteList,
+    hasNextPage,
+    isFetchingNextPage,
+    isLoading,
     handleOpenFilter,
-  } = useTalentsForInvite(params?.listId ?? '');
+    handleEndReached,
+  } = useTalentsForCustomList(eventId, listId);
+
+  const { addingTalentId, handleAddTalent } = useAddTalentToCustomList(
+    eventId,
+    listId,
+  );
 
   return (
     <ScreenWrapper
       headerVariant="withTitleAndImageBg"
-      title="Add Talents to List"
+      title={`Add to ${listName}`}
       contentContainerStyle={styles.contentContainer}
     >
       <View style={styles.content}>
@@ -34,9 +49,14 @@ export const AddTalentsToListScreen = () => {
           onFilterPress={handleOpenFilter}
         />
 
-        <TalentsList
+        <AddTalentsList
           data={talentsForInviteList}
-          onPressRightAction={() => {}}
+          isLoading={isLoading}
+          hasNextPage={hasNextPage}
+          isFetchingNextPage={isFetchingNextPage}
+          actionTalentId={addingTalentId}
+          onEndReached={handleEndReached}
+          onPressRightAction={handleAddTalent}
         />
       </View>
 
