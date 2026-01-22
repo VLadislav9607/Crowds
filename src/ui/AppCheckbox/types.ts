@@ -5,7 +5,7 @@ import { ColorsKeys } from '@styles';
 export interface AppCheckboxProps
   extends Omit<TouchableOpacityProps, 'onPress'> {
   checked?: boolean;
-  type?: 'square' | 'circle' | 'checkedIcon';
+  type?: 'square' | 'circle' | 'checkedIcon' | 'plusIcon';
   label?: string;
   labelProps?: Partial<AppTextProps>;
   checkedStyle?: StyleProp<ViewStyle>;

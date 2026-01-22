@@ -15,6 +15,7 @@ export const AppInput = ({
   labelProps,
   containerStyle,
   errorMessageProps,
+  inputContainerStyle,
   ...props
 }: AppInputProps) => {
   const [isHidden, setIsHidden] = useState(props.secureTextEntry);
@@ -36,6 +37,7 @@ export const AppInput = ({
         style={[
           styles.inputWrapper,
           props.disabled && styles.disabledInputWrapper,
+          inputContainerStyle,
         ]}
       >
         <TextInput

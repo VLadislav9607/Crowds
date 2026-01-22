@@ -10,3 +10,4 @@ export * from './useAcceptProposal';
 export * from './useDeclineProposal';
 export * from './useApplyEvent';
 export * from './useCancelApplication';
+export * from './useGetMatchingTalents';

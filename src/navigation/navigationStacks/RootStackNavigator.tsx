@@ -54,6 +54,12 @@ import {
 } from '../../modules/invite-talents';
 import { VerificationPersonScreen } from '../../modules/kyc';
 import { ManageOrgTeamScreen } from '../../modules/organization-team';
+import {
+  TalentFoldersScreen,
+  CreateEventsFolder,
+  TalentEventsFolder,
+  RenameEventsFolder,
+} from '../../modules/events-folders';
 
 const RootStack = createStackNavigator<RootStackParamList>();
 
@@ -204,6 +210,22 @@ export const RootStackNavigator = () => {
       <RootStack.Screen
         name={Screens.ManageOrgTeam}
         component={ManageOrgTeamScreen}
+      />
+      <RootStack.Screen
+        name={Screens.TalentFolders}
+        component={TalentFoldersScreen}
+      />
+      <RootStack.Screen
+        name={Screens.CreateEventsFolder}
+        component={CreateEventsFolder}
+      />
+      <RootStack.Screen
+        name={Screens.TalentEventsFolder}
+        component={TalentEventsFolder}
+      />
+      <RootStack.Screen
+        name={Screens.RenameEventsFolder}
+        component={RenameEventsFolder}
       />
     </RootStack.Navigator>
   );
