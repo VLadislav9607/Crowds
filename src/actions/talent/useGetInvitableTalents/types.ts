@@ -1,6 +1,7 @@
 export interface InvitableTalentsBodyDto {
   eventId: string;
   offset: number;
+  search: string;
 }
 
 export interface InvitableTalentDto {
@@ -20,4 +21,9 @@ export interface InvitableTalentsRespDto {
     offset: number;
     total: number;
   };
+}
+
+export interface GetInvitableTalentsParams {
+  eventId: string;
+  search: string;
 }

@@ -1,34 +1,29 @@
 import { useMemo, useRef, useState } from 'react';
 import { BottomSheetModal } from '@gorhom/bottom-sheet';
 import { useGetInvitableTalents } from '@actions';
-import { TalentFlag, IEventParticipant } from '@modules/common';
+import { IEventParticipant } from '@modules/common';
+import { useDebounce } from '@hooks';
+
+import { mapInviteTalent } from '../helpers';
 
 export const useTalentsForInvite = (eventId: string) => {
   const [search, setSearch] = useState('');
   const [activeFiltersCount, setActiveFiltersCount] = useState(0);
   const filterModalRef = useRef<BottomSheetModal<null>>(null);
-
+  const debouncedSearch = useDebounce(search, 400);
+  
   const {
     data: talentsForInviteResponse,
     fetchNextPage,
     hasNextPage,
     isFetchingNextPage,
     isLoading,
-  } = useGetInvitableTalents(eventId);
-
-  console.log('data', talentsForInviteResponse);
-  
+  } = useGetInvitableTalents({ eventId, search: debouncedSearch });
 
   const talentsForInviteList = useMemo<IEventParticipant[]>(() => {
     if (!talentsForInviteResponse) return [];
     return talentsForInviteResponse.pages.flatMap(page =>
-      page.data.map(talent => ({
-        talentId: talent.id,
-        name: `${talent.first_name} ${talent.last_name}`.trim(),
-        location: `${talent.location.city}, ${talent.location.country}`,
-        avatarUrl: talent.avatar_path,
-        flag: TalentFlag.GREEN, // Default flag, can be updated based on business logic
-      })),
+      page.data.map(talent => mapInviteTalent(talent)),
     );
   }, [talentsForInviteResponse]);
 

@@ -17,9 +17,6 @@ export const TalentProfileRow = ({
   const { name, location, avatarUrl } = talent;
   const { showPopup } = usePopupMenu();
 
-  // const isCompleted = variant === 'invite' ? isInvited : isAddedToList;
-  // const buttonTitle = variant === 'invite' ? 'Invite' : 'Add';
-
   const handleOpenMenu = (event: GestureResponderEvent) => {
     const { pageX, pageY } = event.nativeEvent;
 
@@ -48,22 +45,6 @@ export const TalentProfileRow = ({
       </View>
 
       {renderRightAction()}
-
-      {/* {isCompleted ? (
-        <IconButton
-          style={styles.invitedIcon}
-          icon={ICONS.checked('green')}
-          iconSize={14}
-        />
-      ) : (
-        <AppButton
-          title={buttonTitle}
-          onPress={onPressActionButton}
-          size="36"
-          width={71}
-          isLoading={isSendingInvite}
-        />
-      )} */}
 
       <IconButton
         icon={ICONS.dotsVertical()}

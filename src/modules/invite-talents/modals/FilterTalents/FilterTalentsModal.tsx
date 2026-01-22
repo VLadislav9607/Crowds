@@ -1,5 +1,5 @@
 import { BottomSheetView } from '@gorhom/bottom-sheet';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { ScrollView, TouchableOpacity, View } from 'react-native';
 
@@ -22,21 +22,34 @@ import { FilterTalentsModalProps, FiltersState } from './types';
 
 export const FilterTalentsModal = ({
   bottomSheetRef,
+  onApplyFilters,
+  initialFilters,
 }: FilterTalentsModalProps) => {
   const insets = useSafeAreaInsets();
   const [contentHeight, setContentHeight] = useState(0);
-  const [filters, setFilters] = useState<FiltersState>({
-    weight: 60,
-    height: 5,
-  });
+  const [filters, setFilters] = useState<FiltersState>(
+   {
+      weight: 60,
+      height: 5,
+    }
+  );
 
+  useEffect(() => {
+    if (initialFilters && Object.keys(initialFilters).length > 0) {
+      setFilters(initialFilters);
+    }
+  }, [initialFilters]);
+  
   const isScrollable = contentHeight > MAX_CONTENT_HEIGHT;
 
   const handleClearFilters = () => {
-    setFilters({ weight: 60, height: 5 });
+    const clearedFilters = { weight: 60, height: 5 };
+    setFilters(clearedFilters);
+    onApplyFilters?.(clearedFilters);
   };
 
   const handleApplyFilters = () => {
+    onApplyFilters?.(filters);
     bottomSheetRef?.current?.dismiss();
   };
 
