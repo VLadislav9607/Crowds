@@ -1,2 +1,2 @@
-export * from './CreateInvitedTalentsList';
+export * from './CreateEditCustomList';
 export * from './FilterTalents';

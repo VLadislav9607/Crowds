@@ -2,6 +2,7 @@ import { ScreenWrapper, AppFlashList, If } from '@components';
 import { goToScreen, Screens, useScreenNavigation } from '@navigation';
 import { IconButton } from '@ui';
 import { ICONS } from '@assets';
+import { useRemoveTalentFromCustomList } from '@actions';
 
 import { styles } from './styles';
 import { useSendInvite, useCustomTalentsList } from '../../hooks';
@@ -24,13 +25,22 @@ export const CustomTalentsListScreen = () => {
     hasTalents,
   } = useCustomTalentsList(eventId, listId);
 
+  const { mutate: removeTalent } = useRemoveTalentFromCustomList(
+    eventId,
+    listId,
+  );
+
   const handleInvite = (talentId: string) => {
     setInvitingTalentId(talentId);
     inviteTalent({ eventId, talentId });
   };
 
-  const handleRemove = () => {
-    // TODO: Implement remove from list functionality
+  const handleRemove = (talentId: string) => {
+    removeTalent({
+      listId,
+      eventId,
+      talentId,
+    });
   };
 
   return (
