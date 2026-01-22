@@ -15,6 +15,7 @@ import {
   TalentEventApplyConfirmModal,
 } from '../../modals';
 import { useSearchEventsList } from './useSearchEventsList';
+import { AddEventToForderModal } from '../../../../events-folders';
 
 export const SearchEventsList = ({ ...props }: SearchEventsListProps) => {
   const {
@@ -27,9 +28,8 @@ export const SearchEventsList = ({ ...props }: SearchEventsListProps) => {
     isRefetchingQuery,
     fetchNextPage,
     refetchQuery,
+    addEventToForderModalRef,
   } = useSearchEventsList(props);
-
-  console.log('events', events.length);
 
   const applyEvent = useApplyEvent({
     onSuccess: async () => {
@@ -80,6 +80,7 @@ export const SearchEventsList = ({ ...props }: SearchEventsListProps) => {
 
   const renderItem = ({ item }: { item: ITalentEventCard }) => (
     <TalentEventCard
+      addEventToForderModalRef={addEventToForderModalRef}
       event={item}
       containerStyle={styles.itemContainer}
       isLoadingApply={applyEvent.isPending}
@@ -113,6 +114,7 @@ export const SearchEventsList = ({ ...props }: SearchEventsListProps) => {
     </View>
   );
 
+  console.log('events', events);
   return (
     <>
       <AppFlashList
@@ -134,6 +136,8 @@ export const SearchEventsList = ({ ...props }: SearchEventsListProps) => {
       <TalentEventAlreadyBookedModal ref={alreadyBookedModalRef} />
 
       <TalentEventApplyConfirmModal ref={applyConfirmModalRef} />
+
+      <AddEventToForderModal bottomSheetRef={addEventToForderModalRef} />
     </>
   );
 };

@@ -6,11 +6,11 @@ import { ICONS, IMAGES } from '@assets';
 import { If } from '@components';
 import { COLORS } from '@styles';
 import { goToScreen, Screens } from '@navigation';
-
 import { calculateEventDuration } from '../../../helpers';
 import { styles } from './styles';
 import { getEventIcon } from '../../../helpers';
 import { TalentEventCardProps } from './types';
+import { useState } from 'react';
 
 export const TalentEventCard = ({
   event,
@@ -21,13 +21,16 @@ export const TalentEventCard = ({
   isLoadingDecline = false,
   isLoadingApply = false,
   isLoadingReject = false,
+  addEventToForderModalRef,
   onPressAccept,
   onPressDecline,
   onPressApply,
   onPressReject,
   onCancelApplication,
 }: TalentEventCardProps) => {
-  const timezone = 'UTC';  
+  const timezone = 'UTC';
+
+  const [isInAnyFolder, setIsInAnyFolder] = useState(event.is_in_any_folder);
 
   const startAt = event?.start_at
     ? formatInTimeZone(event.start_at, timezone, 'dd MMM, yyyy')
@@ -39,6 +42,15 @@ export const TalentEventCard = ({
       : { formatted: '' };
 
   const eventIcon = getEventIcon(event.category_id);
+
+  const handleSavePress = () => {
+    if (addEventToForderModalRef?.current) {
+      addEventToForderModalRef.current.present({
+        eventId: event.event_id,
+        onChangeIsInAnyFolder: setIsInAnyFolder,
+      });
+    }
+  };
 
   return (
     <View style={[styles.container, containerStyle]}>
@@ -54,10 +66,7 @@ export const TalentEventCard = ({
       <View style={styles.content}>
         <View style={styles.contentHeader}>
           <View style={styles.contentHeaderLeft}>
-            <AppText
-              typography="semibold_16"
-              margin={{ bottom: 8 }}
-            >
+            <AppText typography="semibold_16" margin={{ bottom: 8 }}>
               {event.event_title}
             </AppText>
 
@@ -98,9 +107,17 @@ export const TalentEventCard = ({
           </View>
 
           <TouchableOpacity
+            style={styles.saveButton}
+            onPress={() => handleSavePress()}
             hitSlop={{ top: 10, bottom: 10, left: 10, right: 10 }}
           >
-            <SvgXml xml={ICONS.saved('main')} width={18} height={18} />
+            <SvgXml
+              xml={
+                isInAnyFolder ? ICONS.savedFilled('main') : ICONS.saved('main')
+              }
+              width={18}
+              height={18}
+            />
           </TouchableOpacity>
         </View>
 

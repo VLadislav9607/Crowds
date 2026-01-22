@@ -1,5 +1,5 @@
 import { NavigatorScreenParams } from '@react-navigation/native';
-import { Role, OrganizationType } from '@modules/common';
+import { OrganizationType, Role } from '@modules/common';
 import { Screens } from '../constants';
 import { BottomTabsParamList } from './bottomStackNavigator.types';
 
@@ -15,6 +15,12 @@ export type RootStackParamList = {
   [Screens.TalentProfileSetup]: undefined;
   [Screens.ChangePassword]: undefined;
   [Screens.OnboardingUnAuthTalent]: undefined;
+
+  // Events Folders
+  [Screens.TalentFolders]: undefined;
+  [Screens.CreateEventsFolder]: undefined;
+  [Screens.TalentEventsFolder]: { folderId: string; folderName: string };
+  [Screens.RenameEventsFolder]: { folderId: string; folderName: string };
 
   // Bottom Tabs
   [Screens.BottomTabs]: NavigatorScreenParams<BottomTabsParamList>;
@@ -50,7 +56,7 @@ export type RootStackParamList = {
   [Screens.EventParticipants]: undefined;
   [Screens.FlagParticipant]: { participantId: string };
   [Screens.EventApplicants]: { eventId: string; capacity: number };
-  
+
   // Talent screens
   [Screens.AvailabilitySetup]: undefined;
   [Screens.TalentProfileSetup]: undefined;

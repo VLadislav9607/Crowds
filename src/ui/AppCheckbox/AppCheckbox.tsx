@@ -26,6 +26,8 @@ export const AppCheckbox = ({
   const buttonStyles: StyleProp<ViewStyle> = [
     styles[type],
     actualColor && { borderColor: COLORS[actualColor] },
+    type === 'plusIcon' &&
+      checked && { backgroundColor: COLORS[colorChecked || 'main'] },
     props.style,
   ];
 
@@ -40,7 +42,7 @@ export const AppCheckbox = ({
         hitSlop={hitSlop}
         onPress={() => onChange?.(!checked)}
         {...props}
-        style={buttonStyles}
+        style={[buttonStyles]}
       >
         {checked && type === 'circle' && (
           <View style={[styles.circleChecked, ...checkedContentStyles]} />
@@ -54,6 +56,11 @@ export const AppCheckbox = ({
             width={14}
             height={14}
           />
+        )}
+        {type === 'plusIcon' && checked ? (
+          <SvgXml xml={ICONS.checked('white')} width={12} height={12} />
+        ) : (
+          <SvgXml xml={ICONS.plus('main')} width={16} height={16} />
         )}
       </TouchableOpacity>
 

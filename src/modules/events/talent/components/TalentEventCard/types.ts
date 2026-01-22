@@ -1,8 +1,11 @@
 import { StyleProp, ViewStyle } from 'react-native';
 import { TalentEventsTabs } from '../../../types';
 import { ITalentEventCard } from '@actions';
+import { BottomSheetModal } from '@gorhom/bottom-sheet';
+import { AddEventToForderModalData } from 'src/modules/events-folders';
 
 export interface TalentEventCardProps {
+  addEventToForderModalRef?: React.RefObject<BottomSheetModal<AddEventToForderModalData> | null>;
   event: ITalentEventCard;
   containerStyle?: StyleProp<ViewStyle>;
   type?: TalentEventsTabs | 'random';

@@ -9,3 +9,4 @@ export * from './chats';
 export * from './kyc';
 export * from './organizations-permissions';
 export * from './custom-lists';
+export * from './events-folders';
