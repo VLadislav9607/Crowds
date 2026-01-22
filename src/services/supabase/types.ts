@@ -169,6 +169,71 @@ export type Database = {
           },
         ];
       };
+      custom_list_talents: {
+        Row: {
+          created_at: string;
+          id: string;
+          list_id: string;
+          talent_id: string;
+        };
+        Insert: {
+          created_at?: string;
+          id?: string;
+          list_id: string;
+          talent_id: string;
+        };
+        Update: {
+          created_at?: string;
+          id?: string;
+          list_id?: string;
+          talent_id?: string;
+        };
+        Relationships: [
+          {
+            foreignKeyName: 'custom_list_talents_list_id_fkey';
+            columns: ['list_id'];
+            isOneToOne: false;
+            referencedRelation: 'custom_lists';
+            referencedColumns: ['id'];
+          },
+          {
+            foreignKeyName: 'custom_list_talents_talent_id_fkey';
+            columns: ['talent_id'];
+            isOneToOne: false;
+            referencedRelation: 'talents';
+            referencedColumns: ['id'];
+          },
+        ];
+      };
+      custom_lists: {
+        Row: {
+          created_at: string;
+          id: string;
+          name: string;
+          owner_id: string;
+        };
+        Insert: {
+          created_at?: string;
+          id?: string;
+          name: string;
+          owner_id: string;
+        };
+        Update: {
+          created_at?: string;
+          id?: string;
+          name?: string;
+          owner_id?: string;
+        };
+        Relationships: [
+          {
+            foreignKeyName: 'custom_lists_owner_id_fkey';
+            columns: ['owner_id'];
+            isOneToOne: false;
+            referencedRelation: 'organizations_members';
+            referencedColumns: ['id'];
+          },
+        ];
+      };
       email_verifications: {
         Row: {
           created_at: string;
@@ -1123,6 +1188,74 @@ export type Database = {
           },
         ];
       };
+      talent_event_folder_items: {
+        Row: {
+          added_at: string;
+          event_id: string;
+          folder_id: string;
+          id: string;
+        };
+        Insert: {
+          added_at?: string;
+          event_id: string;
+          folder_id: string;
+          id?: string;
+        };
+        Update: {
+          added_at?: string;
+          event_id?: string;
+          folder_id?: string;
+          id?: string;
+        };
+        Relationships: [
+          {
+            foreignKeyName: 'talent_event_folder_items_event_id_fkey';
+            columns: ['event_id'];
+            isOneToOne: false;
+            referencedRelation: 'events';
+            referencedColumns: ['id'];
+          },
+          {
+            foreignKeyName: 'talent_event_folder_items_folder_id_fkey';
+            columns: ['folder_id'];
+            isOneToOne: false;
+            referencedRelation: 'talent_event_folders';
+            referencedColumns: ['id'];
+          },
+        ];
+      };
+      talent_event_folders: {
+        Row: {
+          created_at: string;
+          id: string;
+          name: string;
+          talent_id: string;
+          updated_at: string;
+        };
+        Insert: {
+          created_at?: string;
+          id?: string;
+          name: string;
+          talent_id: string;
+          updated_at?: string;
+        };
+        Update: {
+          created_at?: string;
+          id?: string;
+          name?: string;
+          talent_id?: string;
+          updated_at?: string;
+        };
+        Relationships: [
+          {
+            foreignKeyName: 'talent_event_folders_talent_id_fkey';
+            columns: ['talent_id'];
+            isOneToOne: false;
+            referencedRelation: 'talents';
+            referencedColumns: ['id'];
+          },
+        ];
+      };
       talent_location: {
         Row: {
           autocomplete_description: string;
@@ -1475,6 +1608,14 @@ export type Database = {
       };
     };
     Functions: {
+      add_event_to_talent_events_folder: {
+        Args: { p_event_id: string; p_folder_id: string };
+        Returns: undefined;
+      };
+      add_talent_to_custom_list: {
+        Args: { p_list_id: string; p_talent_id: string };
+        Returns: undefined;
+      };
       available_users_at: {
         Args: { p_at: string; p_user_ids: string[] };
         Returns: {
@@ -1513,12 +1654,35 @@ export type Database = {
           isSetofReturn: true;
         };
       };
+      create_custom_list: {
+        Args: { p_name: string };
+        Returns: {
+          created_at: string;
+          id: string;
+          name: string;
+          owner_id: string;
+        };
+        SetofOptions: {
+          from: '*';
+          to: 'custom_lists';
+          isOneToOne: true;
+          isSetofReturn: false;
+        };
+      };
       create_draft_or_event: { Args: { payload: Json }; Returns: string };
       create_event_with_preferences: {
         Args: { payload: Json };
         Returns: string;
       };
+      create_talent_events_folder: {
+        Args: { p_name: string };
+        Returns: string;
+      };
       delete_draft_event: { Args: { event_id_param: string }; Returns: string };
+      delete_talent_events_folder: {
+        Args: { p_folder_id: string };
+        Returns: undefined;
+      };
       dto_event_details_for_talent: {
         Args: { e: Database['public']['Tables']['events']['Row'] };
         Returns: Json;
@@ -1540,6 +1704,34 @@ export type Database = {
         Returns: Json;
       };
       earth: { Args: never; Returns: number };
+      get_custom_list_talents: {
+        Args: {
+          p_event_id: string;
+          p_limit: number;
+          p_list_id: string;
+          p_offset: number;
+        };
+        Returns: {
+          avatar_path: string;
+          city: string;
+          country: string;
+          first_name: string;
+          id: string;
+          last_name: string;
+          status: Database['public']['Enums']['participation_status'];
+          total: number;
+        }[];
+      };
+      get_custom_lists: {
+        Args: never;
+        Returns: {
+          created_at: string;
+          id: string;
+          members_count: number;
+          name: string;
+          owner_id: string;
+        }[];
+      };
       get_event_details_for_talent: {
         Args: { p_event_id: string };
         Returns: Json;
@@ -1579,7 +1771,12 @@ export type Database = {
         Returns: Json;
       };
       get_invitable_talents: {
-        Args: { p_event_id: string; p_limit?: number; p_offset?: number };
+        Args: {
+          p_event_id: string;
+          p_limit: number;
+          p_offset: number;
+          p_search?: string;
+        };
         Returns: {
           avatar_path: string;
           city: string;
@@ -1589,6 +1786,35 @@ export type Database = {
           last_name: string;
           total: number;
         }[];
+      };
+      get_invitable_talents_for_custom_list: {
+        Args: {
+          p_event_id: string;
+          p_limit: number;
+          p_list_id: string;
+          p_offset: number;
+          p_search?: string;
+        };
+        Returns: {
+          avatar_path: string;
+          city: string;
+          country: string;
+          first_name: string;
+          id: string;
+          is_in_list: boolean;
+          last_name: string;
+          total: number;
+        }[];
+      };
+      get_matching_talents: {
+        Args: {
+          filter_distance_km?: number;
+          limit_param?: number;
+          offset_param?: number;
+          p_event_id: string;
+          search_query?: string;
+        };
+        Returns: Json;
       };
       get_me_org_member: { Args: never; Returns: Json };
       get_organization_events: {
@@ -1696,13 +1922,34 @@ export type Database = {
         };
         Returns: boolean;
       };
+      hide_event: { Args: { p_event_id: string }; Returns: undefined };
       is_user_available: {
         Args: { p_at: string; p_user_id: string };
         Returns: boolean;
       };
+      list_events_in_talent_events_folder: {
+        Args: {
+          limit_param?: number;
+          offset_param?: number;
+          p_folder_id: string;
+        };
+        Returns: Json;
+      };
+      list_talent_events_folders: {
+        Args: { p_event_id?: string };
+        Returns: Json;
+      };
       publish_event_draft: {
         Args: { event_id_param: string };
         Returns: string;
+      };
+      remove_event_from_talent_events_folder: {
+        Args: { p_event_id: string; p_folder_id: string };
+        Returns: undefined;
+      };
+      rename_talent_events_folder: {
+        Args: { p_folder_id: string; p_name: string };
+        Returns: undefined;
       };
       timeslot_range: {
         Args: {
@@ -1711,6 +1958,10 @@ export type Database = {
           p_slot: Database['public']['Enums']['time_slot'];
         };
         Returns: unknown;
+      };
+      toggle_event_in_talent_events_folder: {
+        Args: { p_event_id: string; p_folder_id: string };
+        Returns: boolean;
       };
       update_event_draft: {
         Args: { event_id_param: string; payload: Json };
@@ -1880,7 +2131,16 @@ export type Database = {
         | 'almond'
         | 'chestnut'
         | 'espresso';
-      TattooSpot: 'on_sleeves' | 'on_body' | 'on_neck' | 'on_hand';
+      TattooSpot:
+        | 'on_sleeves'
+        | 'on_body'
+        | 'on_neck'
+        | 'on_hand'
+        | 'on_arm'
+        | 'on_back'
+        | 'on_thigh'
+        | 'on_calf'
+        | 'on_ankle';
       time_slot:
         | 'all_day'
         | 'morning'
@@ -2140,7 +2400,17 @@ export const Constants = {
         'chestnut',
         'espresso',
       ],
-      TattooSpot: ['on_sleeves', 'on_body', 'on_neck', 'on_hand'],
+      TattooSpot: [
+        'on_sleeves',
+        'on_body',
+        'on_neck',
+        'on_hand',
+        'on_arm',
+        'on_back',
+        'on_thigh',
+        'on_calf',
+        'on_ankle',
+      ],
       time_slot: [
         'all_day',
         'morning',

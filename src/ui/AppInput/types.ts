@@ -9,4 +9,5 @@ export interface AppInputProps extends TextInputProps {
   errorMessageProps?: Partial<AppTextProps>;
   containerStyle?: ViewStyle;
   disabled?: boolean;
+  inputContainerStyle?: ViewStyle;
 }
