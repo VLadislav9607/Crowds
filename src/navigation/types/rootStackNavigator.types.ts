@@ -41,8 +41,16 @@ export type RootStackParamList = {
   [Screens.CopyInviteLink]: undefined;
   [Screens.ApplicantProfile]: { applicantId: string };
   [Screens.InviteTalents]: { eventId: string };
-  [Screens.CustomTalentsList]: { listName: string; listId: string, eventId: string };
-  [Screens.AddTalentsToList]: { eventId: string; listId: string; listName: string };
+  [Screens.CustomTalentsList]: {
+    listName: string;
+    listId: string;
+    eventId: string;
+  };
+  [Screens.AddTalentsToList]: {
+    eventId: string;
+    listId: string;
+    listName: string;
+  };
   [Screens.ManageOrgTeam]: undefined;
   // Talent screens
   [Screens.TalentSearchEvents]?: {
@@ -50,7 +58,7 @@ export type RootStackParamList = {
     showFilter?: boolean;
   };
   [Screens.TalentEventDetails]: {
-    eventId: string;
+    participationId: string;
   };
   [Screens.ManageEvent]: { eventId: string };
   [Screens.EventParticipants]: undefined;

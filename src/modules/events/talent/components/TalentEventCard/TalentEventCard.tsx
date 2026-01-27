@@ -218,7 +218,11 @@ export const TalentEventCard = ({
               />
 
               <TouchableOpacity
-                onPress={() => goToScreen(Screens.TalentEventDetails)}
+                onPress={() =>
+                  goToScreen(Screens.TalentEventDetails, {
+                    participationId: event.participation_id,
+                  })
+                }
                 style={styles.eventDetailsButton}
               >
                 <AppText typography="bold_12" color="main">
