@@ -6,6 +6,7 @@ export const useEventParticipantsCounts = (eventId: string) => {
   const { data } = useQuery({
     queryKey: [TANSTACK_QUERY_KEYS.GET_EVENT_PARTICIPANTS_COUNTS, eventId],
     queryFn: () => getEventParticipantsCountsAction(eventId),
+    staleTime: 0,
     enabled: !!eventId,
   });
 

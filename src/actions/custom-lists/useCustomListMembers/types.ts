@@ -5,9 +5,11 @@ export interface GetCustomListTalentsBodyDto {
   eventId: string;
   limit: number;
   offset: number;
+  search: string;
 }
 
 export interface CustomListTalentDto {
+  is_in_list: boolean;
   id: string;
   first_name: string;
   last_name: string;

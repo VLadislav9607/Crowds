@@ -34,7 +34,11 @@ export const AllTalentsTab = ({ eventId }: AllTalentsTabProps) => {
         }}
       />
 
-      <FilterTalentsModal bottomSheetRef={allTalentsHook.filterModalRef} />
+      <FilterTalentsModal
+        bottomSheetRef={allTalentsHook.filterModalRef}
+        onApplyFilters={allTalentsHook.handleApplyFilters}
+        initialFilters={allTalentsHook.filters}
+      />
     </>
   );
 };

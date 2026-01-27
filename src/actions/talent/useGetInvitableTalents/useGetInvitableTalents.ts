@@ -5,9 +5,10 @@ import { GetInvitableTalentsParams } from './types';
 
 export const useGetInvitableTalents = (params: GetInvitableTalentsParams) => {
   const limit = 20;
+  
 
   return useInfiniteQuery({
-    queryKey: [TANSTACK_QUERY_KEYS.GET_INVITABLE_TALENTS, params.eventId, params.search],
+    queryKey: [TANSTACK_QUERY_KEYS.GET_INVITABLE_TALENTS, params.eventId, params.search, params.filters],
     initialPageParam: 1,
     queryFn: async ({ pageParam }) => {
       const offset = ((pageParam as number) - 1) * limit;
@@ -15,6 +16,7 @@ export const useGetInvitableTalents = (params: GetInvitableTalentsParams) => {
         eventId: params.eventId,
         offset,
         search: params.search,
+        filters: params.filters,
       });
     },
     getNextPageParam: (lastPage, allPages) => {

@@ -7,6 +7,9 @@ export const styles = StyleSheet.create({
     paddingHorizontal: 16,
     paddingTop: 20,
   },
+  title: {
+    paddingRight: 36,
+  },
   buttonContainer: {
     flex: 1,
     gap: 20,

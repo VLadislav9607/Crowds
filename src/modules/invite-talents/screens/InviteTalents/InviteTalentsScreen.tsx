@@ -16,7 +16,7 @@ export const InviteTalentsScreen = () => {
   const { params } = useScreenNavigation<Screens.InviteTalents>();
   const eventId = params?.eventId ?? '';
 
-  const {invited} = useEventParticipantsCounts(eventId)
+  const { invited } = useEventParticipantsCounts(eventId);
 
   const [selectedTab, setSelectedTab] = useState('my_lists');
 
@@ -32,7 +32,9 @@ export const InviteTalentsScreen = () => {
       headerStyles={styles.headerStyles}
       contentContainerStyle={styles.contentContainer}
       title="Invite Talents"
-      customElement={<AppText style={styles.invitedText}>{invited} invited</AppText>}
+      customElement={
+        <AppText style={styles.invitedText}>{invited} invited</AppText>
+      }
     >
       <AppTabSelector
         options={tabOptions}

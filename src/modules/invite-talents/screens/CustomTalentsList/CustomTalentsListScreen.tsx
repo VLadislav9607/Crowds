@@ -6,7 +6,10 @@ import { useRemoveTalentFromCustomList } from '@actions';
 
 import { styles } from './styles';
 import { useSendInvite, useCustomTalentsList } from '../../hooks';
-import { CustomListTalentRow, CustomTalentsListEmptyState } from '../../components';
+import {
+  CustomListTalentRow,
+  CustomTalentsListEmptyState,
+} from '../../components';
 
 export const CustomTalentsListScreen = () => {
   const { params } = useScreenNavigation<Screens.CustomTalentsList>();
@@ -14,7 +17,8 @@ export const CustomTalentsListScreen = () => {
   const eventId = params?.eventId ?? '';
   const listName = params?.listName ?? '';
 
-  const { inviteTalent, invitingTalentId, setInvitingTalentId } = useSendInvite();
+  const { inviteTalent, invitingTalentId, setInvitingTalentId } =
+    useSendInvite();
   const {
     talentsList,
     isLoading,
@@ -47,6 +51,7 @@ export const CustomTalentsListScreen = () => {
     <ScreenWrapper
       headerVariant="withTitleAndImageBg"
       title={`${params?.listName} (${totalCount})`}
+      titleProps={{ style: styles.title }}
       contentContainerStyle={styles.contentContainer}
       customElement={
         <IconButton
@@ -82,10 +87,12 @@ export const CustomTalentsListScreen = () => {
       </If>
 
       <If condition={!hasTalents && !isLoading}>
-        <CustomTalentsListEmptyState eventId={eventId} listId={listId} listName={listName} />
+        <CustomTalentsListEmptyState
+          eventId={eventId}
+          listId={listId}
+          listName={listName}
+        />
       </If>
     </ScreenWrapper>
   );
 };
-
-

@@ -1,6 +1,6 @@
 import { SearchWithFilter } from '@ui';
 import { TalentsList } from '../TalentsList';
-import { FilterTalentsModal } from '../../modals';
+import { FilterMatchingTalentsModal } from '../../modals';
 import { useMatchingTalentsForInvite, useSendInvite } from '../../hooks';
 
 interface MatchingTalentsTabProps {
@@ -34,7 +34,7 @@ export const MatchingTalentsTab = ({ eventId }: MatchingTalentsTabProps) => {
         }}
       />
 
-      <FilterTalentsModal
+      <FilterMatchingTalentsModal
         bottomSheetRef={matchingTalentsHook.filterModalRef}
         onApplyFilters={matchingTalentsHook.handleApplyFilters}
         initialFilters={matchingTalentsHook.filters}

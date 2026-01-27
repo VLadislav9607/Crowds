@@ -61,7 +61,9 @@ export const EventApplicantsScreen = () => {
         <View style={styles.row}>
           <View style={styles.invitedContainer}>
             <AppText typography="bold_12">
-              {counts.invited}/ {params?.capacity} Talent Invited
+              {counts.invited}/{' '}
+              {params?.capacity ? params.capacity - counts.approved : 0} Talent
+              Invited
             </AppText>
             <AppButton
               title="Invite More"

@@ -1,4 +1,5 @@
 import { View } from 'react-native';
+import { If } from '@components';
 
 import { AppSearchInputPrimary } from '../AppSearchInputPrimary';
 import { FilterButton } from '../FilterButton';
@@ -11,6 +12,7 @@ export const SearchWithFilter = ({
   placeholder = 'Search by keyword',
   activeFiltersCount = 0,
   onFilterPress,
+  hideFilterButton = false,
   containerStyle,
 }: SearchWithFilterProps) => {
   return (
@@ -22,10 +24,12 @@ export const SearchWithFilter = ({
         onChangeText={onSearchChange}
       />
 
-      <FilterButton
-        onPress={onFilterPress}
-        activeFiltersCount={activeFiltersCount}
-      />
+      <If condition={!hideFilterButton}>
+        <FilterButton
+          onPress={onFilterPress}
+          activeFiltersCount={activeFiltersCount}
+        />
+      </If>
     </View>
   );
 };

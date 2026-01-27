@@ -11,7 +11,7 @@ export const useGetOrgEventsCounters = (
       TANSTACK_QUERY_KEYS.GET_ORG_EVENTS_COUNTERS,
       JSON.stringify(body),
     ],
-    staleTime: Infinity,
+    staleTime: 0,
     queryFn: async () => await getOrgEventsCountersAction(body),
     enabled: !!body,
   });

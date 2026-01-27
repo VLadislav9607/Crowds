@@ -1,8 +1,6 @@
 import { supabase } from '@services';
-import {
-  GetCustomListTalentsBodyDto,
-  GetCustomListTalentsRespDto,
-} from './types';
+import { GetCustomListTalentsBodyDto, GetCustomListTalentsRespDto } from '../useCustomListMembers';
+
 
 export const getCustomListTalentsAction = async (
   body: GetCustomListTalentsBodyDto,
