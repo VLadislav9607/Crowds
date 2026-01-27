@@ -8,12 +8,12 @@ export interface FilterTalentsModalProps {
 }
 
 export interface FiltersState {
-  distance?: { min: number; max: number };
+  distance: number;
   hairColour?: string;
   hairStyle?: string;
   eyeColour?: string;
-  weight?: number;
-  height?: number;
+  weight?: {min: number, max: number};
+  height?: {min: number, max: number};
   facialAttributes?: string[];
   tattooSpot?: string[];
   skinTone?: string;

@@ -6,10 +6,7 @@ import { Screens, useScreenNavigation } from '@navigation';
 
 import { AddTalentsList } from '../../components';
 import { FilterTalentsModal } from '../../modals';
-import {
-  useTalentsForCustomList,
-  useAddTalentToCustomList,
-} from '../../hooks';
+import { useTalentsForCustomList, useAddTalentToCustomList } from '../../hooks';
 
 export const AddTalentsToListScreen = () => {
   const { params } = useScreenNavigation<Screens.AddTalentsToList>();
@@ -27,6 +24,8 @@ export const AddTalentsToListScreen = () => {
     isFetchingNextPage,
     isLoading,
     handleOpenFilter,
+    handleApplyFilters,
+    filters,
     handleEndReached,
   } = useTalentsForCustomList(eventId, listId);
 
@@ -43,6 +42,7 @@ export const AddTalentsToListScreen = () => {
     >
       <View style={styles.content}>
         <SearchWithFilter
+          hideFilterButton
           searchValue={search}
           onSearchChange={setSearch}
           activeFiltersCount={activeFiltersCount}
@@ -60,7 +60,11 @@ export const AddTalentsToListScreen = () => {
         />
       </View>
 
-      <FilterTalentsModal bottomSheetRef={filterModalRef} />
+      <FilterTalentsModal
+        bottomSheetRef={filterModalRef}
+        onApplyFilters={handleApplyFilters}
+        initialFilters={filters}
+      />
     </ScreenWrapper>
   );
 };

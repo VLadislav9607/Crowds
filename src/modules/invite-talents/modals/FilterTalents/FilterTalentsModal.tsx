@@ -2,7 +2,6 @@ import { BottomSheetView } from '@gorhom/bottom-sheet';
 import { useState, useEffect } from 'react';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { ScrollView, TouchableOpacity, View } from 'react-native';
-
 import { AppBottomSheet, RangeSelector, SelectOptionField } from '@components';
 import { AppButton, AppText } from '@ui';
 import { COLORS, TYPOGRAPHY } from '@styles';
@@ -27,12 +26,7 @@ export const FilterTalentsModal = ({
 }: FilterTalentsModalProps) => {
   const insets = useSafeAreaInsets();
   const [contentHeight, setContentHeight] = useState(0);
-  const [filters, setFilters] = useState<FiltersState>(
-   {
-      weight: 60,
-      height: 5,
-    }
-  );
+  const [filters, setFilters] = useState<FiltersState>({ distance: 100});
 
   useEffect(() => {
     if (initialFilters && Object.keys(initialFilters).length > 0) {
@@ -43,7 +37,7 @@ export const FilterTalentsModal = ({
   const isScrollable = contentHeight > MAX_CONTENT_HEIGHT;
 
   const handleClearFilters = () => {
-    const clearedFilters = { weight: 60, height: 5 };
+    const clearedFilters = { distance: 100 };
     setFilters(clearedFilters);
     onApplyFilters?.(clearedFilters);
   };
@@ -95,12 +89,13 @@ export const FilterTalentsModal = ({
               labelProps={{ typography: 'h5' }}
               min={1}
               max={100}
-              defaultMinValue={filters.distance?.min ?? 1}
-              defaultMaxValue={filters.distance?.max ?? 100}
+              disableRange
+              defaultMinValue={filters.distance}
+              defaultMaxValue={100}
               bottomLabels={{ minValueLabel: '1 Km', maxValueLabel: '100 Km' }}
-              onRenderValue={values => `${values.min} Km - ${values.max} Km`}
+              onRenderValue={values => `${values.min} Km`}
               onSlidingComplete={values =>
-                updateFilter('distance', { min: values[0], max: values[1] })
+                updateFilter('distance', values[0])
               }
             />
 
@@ -110,40 +105,39 @@ export const FilterTalentsModal = ({
 
             <RangeSelector
               label="Your Weight"
-              disableRange
               min={20}
               max={150}
-              defaultMinValue={filters.weight!}
-              defaultMaxValue={150}
-              onSlidingComplete={values => updateFilter('weight', values[0])}
+              defaultMinValue={filters.weight?.min || 20}
+              defaultMaxValue={filters.weight?.max || 150}
+              onSlidingComplete={values => updateFilter('weight', { min: values[0], max: values[1] })}
               bottomLabels={{
                 minValueLabel: '20 Kg',
                 maxValueLabel: '150 Kg',
               }}
               measure="Kg"
-              onRenderValue={values => `${values.min} Kg`}
+              onRenderValue={values => `${values.min} - ${values.max} Kg`}
             />
 
             <RangeSelector
               label="Your Height"
               min={2}
               max={8}
-              defaultMinValue={filters.height!}
-              defaultMaxValue={8}
+              defaultMinValue={filters.height?.min || 2}
+              defaultMaxValue={filters.height?.max || 8}
               step={0.1}
-              onSlidingComplete={values => updateFilter('height', values[0])}
+              onSlidingComplete={values => updateFilter('height', { min: values[0], max: values[1] })}
               bottomLabels={{
                 minValueLabel: '2 Feet',
                 maxValueLabel: '8 Feet',
               }}
               measure="Ft"
               onRenderValue={values => {
-                const fractionalPart = Math.round((values.min % 1) * 10);
-                return `${Math.floor(values.min)} foot ${
-                  fractionalPart ? `${fractionalPart} Inch` : ''
-                }`;
+                const minFractional = Math.round((values.min % 1) * 10);
+                const maxFractional = Math.round((values.max % 1) * 10);
+                const minStr = `${Math.floor(values.min)} foot${minFractional ? ` ${minFractional} Inch` : ''}`;
+                const maxStr = `${Math.floor(values.max)} foot${maxFractional ? ` ${maxFractional} Inch` : ''}`;
+                return `${minStr} - ${maxStr}`;
               }}
-              disableRange
             />
 
             <SelectOptionField
