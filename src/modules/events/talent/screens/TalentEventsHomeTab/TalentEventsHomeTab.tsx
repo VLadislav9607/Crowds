@@ -80,7 +80,7 @@ export const TalentEventsHomeTab = () => {
               </TouchableOpacity>
             </View>
 
-            <View>
+            <View style={{ flexDirection: 'row' }}>
               <ScrollView
                 horizontal
                 showsHorizontalScrollIndicator={false}
@@ -122,6 +122,84 @@ export const TalentEventsHomeTab = () => {
           </>
         }
       />
+
+      {/* <TalentEventsViewList 
+      data={[]}
+      refetch={async () => {}}
+         contentContainerStyle={[
+          styles.listContentContainer,
+          { paddingBottom: bottomPadding },
+        ]}
+        ListHeaderComponent={
+          <>
+            <View style={styles.searchContainer}>
+              <TouchableOpacity
+                onPress={() =>
+                  goToScreen(Screens.TalentSearchEvents, { autofocus: true })
+                }
+                activeOpacity={0.8}
+                style={styles.searchInputButton}
+              >
+                <AppSearchInputPrimary
+                  containerStyle={styles.searchInput}
+                  placeholder="Search events"
+                />
+              </TouchableOpacity>
+
+              <TouchableOpacity
+                onPress={() =>
+                  goToScreen(Screens.TalentSearchEvents, { showFilter: true })
+                }
+                activeOpacity={0.8}
+                style={styles.filterButton}
+              >
+                <SvgXml xml={ICONS.filter('black_80')} width={20} height={20} />
+              </TouchableOpacity>
+            </View>
+
+            <View>
+              <ScrollView
+                horizontal
+                showsHorizontalScrollIndicator={false}
+                contentContainerStyle={styles.categoriesScrollView}
+              >
+                {groupedCategories.map((row, rowIndex) => (
+                  <View key={rowIndex} style={styles.categoriesRow}>
+                    {row.map(category => (
+                      <TouchableOpacity
+                        key={category.id}
+                        activeOpacity={0.8}
+                        style={styles.categoryButton}
+                      >
+                        <View style={styles.categoryOverlay}>
+                          <AppText typography="bold_14" color="white">
+                            {category.name}
+                          </AppText>
+                        </View>
+                      </TouchableOpacity>
+                    ))}
+                  </View>
+                ))}
+              </ScrollView>
+            </View>
+
+            <View style={styles.listTitle}>
+              <AppText typography="extra_bold_18" color="black">
+                Dashboard
+              </AppText>
+
+              <TouchableOpacity
+                hitSlop={{ top: 10, bottom: 10, left: 10, right: 10 }}
+              >
+                <AppText typography="regular_12" color="black">
+                  View all
+                </AppText>
+              </TouchableOpacity>
+            </View>
+          </>
+        }
+      
+      /> */}
     </ScreenWrapper>
   );
 };

@@ -132,7 +132,7 @@ export const MyCustomTalentsLists = () => {
               goToScreen(Screens.CustomTalentsList, {
                 listName: item.listName,
                 listId: item.id,
-                eventId: eventId,
+                eventId,
               })
             }
             onMenuSelect={(value) => handleMenuSelect(value, item.id, item.listName)}

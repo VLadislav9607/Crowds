@@ -13,7 +13,7 @@ interface CustomTalentsListEmptyStateProps {
 export const CustomTalentsListEmptyState = ({
   eventId,
   listId,
-  listName
+  listName,
 }: CustomTalentsListEmptyStateProps) => {
   return (
     <View style={styles.container}>

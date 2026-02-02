@@ -40,6 +40,7 @@ export const styles = StyleSheet.create({
   contentHeader: {
     flexDirection: 'row',
     justifyContent: 'space-between',
+    gap: 8,
   },
   contentHeaderLeft: {
     flex: 1,

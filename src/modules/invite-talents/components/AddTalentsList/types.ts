@@ -1,6 +1,7 @@
 import { IEventParticipant } from '@modules/common';
 
-export interface AddTalentItem extends Omit<IEventParticipant, 'participationId'> {
+export interface AddTalentItem
+  extends Omit<IEventParticipant, 'participationId'> {
   isInList: boolean;
 }
 

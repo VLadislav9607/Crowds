@@ -7,7 +7,12 @@ export const useCustomListMembers = (params: GetCustomListTalentsParams) => {
   const limit = 10;
 
   return useInfiniteQuery({
-    queryKey: [TANSTACK_QUERY_KEYS.GET_CUSTOM_LISTS, 'talents', params.eventId, params.listId],
+    queryKey: [
+      TANSTACK_QUERY_KEYS.GET_CUSTOM_LISTS,
+      'talents',
+      params.eventId,
+      params.listId,
+    ],
     initialPageParam: 1,
     staleTime: 0,
     queryFn: async ({ pageParam }) => {

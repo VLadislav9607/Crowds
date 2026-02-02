@@ -1,4 +1,4 @@
-import { IWithPaginationResponse } from "@services";
+import { IWithPaginationResponse } from '@services';
 
 export interface GetMatchingTalentsBodyDto {
   eventId: string;
@@ -19,5 +19,5 @@ export interface GetMatchingTalentDto {
   };
 }
 
-export interface GetMatchingTalentsRespDto extends IWithPaginationResponse<GetMatchingTalentDto> {
-}
+export interface GetMatchingTalentsRespDto
+  extends IWithPaginationResponse<GetMatchingTalentDto> {}

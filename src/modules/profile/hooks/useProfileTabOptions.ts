@@ -26,6 +26,11 @@ export const useProfileTabOptions = ({
       onPress: () => goToScreen(Screens.TalentFolders),
     },
     {
+      title: 'My Location',
+      icon: ICONS.locationMap('black'),
+      onPress: () => goToScreen(Screens.TalentLocationSetup),
+    },
+    {
       title: 'Notification settings',
       icon: ICONS.notification(),
       onPress: () => goToScreen(Screens.NotificationSettings),
@@ -82,7 +87,7 @@ export const useProfileTabOptions = ({
     {
       title: 'Organization details',
       icon: ICONS.user(),
-      onPress: () => {},
+      onPress: () => goToScreen(Screens.OrgProfileSetup),
     },
     {
       title: 'Manage team',

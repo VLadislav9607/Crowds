@@ -16,6 +16,23 @@ export const UpcomingEventsTabScreen = () => {
     organization_id: organizationMember?.organization_id!,
   });
 
+  const activeCount = eventsCounters?.active ? eventsCounters?.active : 0;
+  const upcomingCount = eventsCounters?.upcoming ? eventsCounters?.upcoming : 0;
+
+  const activePublicCount = eventsCounters?.active_public
+    ? eventsCounters?.active_public
+    : 0;
+  const activePrivateCount = eventsCounters?.active_private
+    ? eventsCounters?.active_private
+    : 0;
+
+  const upcomingPublicCount = eventsCounters?.upcoming_public
+    ? eventsCounters?.upcoming_public
+    : 0;
+  const upcomingPrivateCount = eventsCounters?.upcoming_private
+    ? eventsCounters?.upcoming_private
+    : 0;
+
   return (
     <ScreenWrapper
       showBackButton={false}
@@ -32,7 +49,7 @@ export const UpcomingEventsTabScreen = () => {
             {
               label: 'Active',
               value: 'active',
-              badge: eventsCounters?.upcoming,
+              badge: activeCount + upcomingCount,
             },
             { label: 'Drafts', value: 'drafts', badge: eventsCounters?.draft },
             { label: 'Past', value: 'past', badge: eventsCounters?.past },
@@ -48,12 +65,12 @@ export const UpcomingEventsTabScreen = () => {
             {
               label: 'Job Board',
               value: 'job_board',
-              badge: eventsCounters?.upcoming_public,
+              badge: activePublicCount + upcomingPublicCount,
             },
             {
               label: 'Private',
               value: 'private',
-              badge: eventsCounters?.upcoming_private,
+              badge: activePrivateCount + upcomingPrivateCount,
             },
           ]}
           selectedValue={activeSubTab}

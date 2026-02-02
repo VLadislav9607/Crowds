@@ -1,18 +1,18 @@
-import { TANSTACK_QUERY_KEYS } from "@constants";
-import { getMatchingTalentsAction } from "./action";
-import { useInfiniteQuery } from "@tanstack/react-query";
+import { TANSTACK_QUERY_KEYS } from '@constants';
+import { getMatchingTalentsAction } from './action';
+import { useInfiniteQuery } from '@tanstack/react-query';
 import {
   GetMatchingTalentDto,
   GetMatchingTalentsBodyDto,
   GetMatchingTalentsRespDto,
-} from "./types";
+} from './types';
 import {
   createQuerySelectData,
   getInfiniteQueryFn,
   getInfiniteQueryNextPageParams,
   IInfinityQueryOptions,
   IWithPaginationResponse,
-} from "@services";
+} from '@services';
 
 export const useGetMatchingTalents = (
   params: GetMatchingTalentsBodyDto,

@@ -3,7 +3,7 @@ import { StyleSheet } from 'react-native';
 import { AppTabSelector, If, ScreenWrapper } from '@components';
 import { COLORS, TYPOGRAPHY } from '@styles';
 import { AppText } from '@ui';
-import { Screens, useScreenNavigation } from '@navigation';
+import { goBack, Screens, useScreenNavigation } from '@navigation';
 
 import {
   MyCustomTalentsLists,
@@ -13,7 +13,7 @@ import {
 import { useEventParticipantsCounts } from '@actions';
 
 export const InviteTalentsScreen = () => {
-  const { params } = useScreenNavigation<Screens.InviteTalents>();
+  const { params, navigation } = useScreenNavigation<Screens.InviteTalents>();
   const eventId = params?.eventId ?? '';
 
   const { invited } = useEventParticipantsCounts(eventId);
@@ -32,6 +32,13 @@ export const InviteTalentsScreen = () => {
       headerStyles={styles.headerStyles}
       contentContainerStyle={styles.contentContainer}
       title="Invite Talents"
+      goBackCallback={() => {
+        if (params?.forwardFrom === Screens.CreateEvent) {
+          navigation.pop(2);
+        } else {
+          goBack();
+        }
+      }}
       customElement={
         <AppText style={styles.invitedText}>{invited} invited</AppText>
       }

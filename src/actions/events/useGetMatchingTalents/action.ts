@@ -12,7 +12,7 @@ export const getMatchingTalentsAction = async (
     filter_distance_km: body.distance,
   });
 
-  if (error ) {
+  if (error) {
     throw error;
   }
 
