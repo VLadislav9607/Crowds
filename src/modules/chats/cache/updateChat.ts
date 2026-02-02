@@ -15,7 +15,6 @@ export const updateChat = ({
   lastMessageAt,
   hasUnread = false,
 }: UpdateChatParams) => {
-  console.log('updateChat', chatId, lastMessage, lastMessageAt, hasUnread);
   const queryKey = [TANSTACK_QUERY_KEYS.MY_CHATS];
 
   queryClient.setQueryData<MyChatItem[]>(queryKey, existing => {

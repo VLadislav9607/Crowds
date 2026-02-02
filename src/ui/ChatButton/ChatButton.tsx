@@ -1,23 +1,56 @@
-import { TouchableOpacity, View } from "react-native";
-import { ChatButtonProps } from "./types";
-import { styles } from "./styles";
-import { ICONS } from "@assets";
-import { SvgXml } from "react-native-svg";
-import { AppText } from "@ui";
+import { ActivityIndicator, TouchableOpacity, View } from 'react-native';
+import { ChatButtonProps } from './types';
+import { styles } from './styles';
+import { ICONS } from '@assets';
+import { SvgXml } from 'react-native-svg';
+import { AppText } from '@ui';
+import { COLORS } from '@styles';
 
-export const ChatButton = ({ topText, bottomText, ...props }: ChatButtonProps) => {
-    return (
-        <TouchableOpacity activeOpacity={0.5} {...props} style={[styles.container, props.style]}>
-            <SvgXml xml={ICONS.chatSquare('main')} width={30} height={30} />
+export const ChatButton = ({
+  topText,
+  bottomText,
+  isLoading,
+  ...props
+}: ChatButtonProps) => {
+  return (
+    <TouchableOpacity
+      activeOpacity={0.5}
+      {...props}
+      disabled={isLoading}
+      style={[styles.container, props.style]}
+    >
+      {isLoading ? (
+        <ActivityIndicator
+          style={styles.loadingIndicator}
+          color={COLORS.gray}
+          size="small"
+        />
+      ) : null}
 
-            <View style={styles.textWrapper}>
-                <View>
-                    <AppText typography="regular_14" color="black">{topText}</AppText>
-                    <AppText typography="semibold_18" color="black">{bottomText}</AppText>
-                </View>
-                <SvgXml xml={ICONS.chevronRight('main')} width={28} height={28} />
-            </View>
+      <SvgXml
+        xml={ICONS.chatSquare(isLoading ? 'gray' : 'main')}
+        width={30}
+        height={30}
+      />
 
-        </TouchableOpacity>
-    );
+      <View style={styles.textWrapper}>
+        <View>
+          <AppText typography="regular_14" color={isLoading ? 'gray' : 'black'}>
+            {topText}
+          </AppText>
+          <AppText
+            typography="semibold_18"
+            color={isLoading ? 'gray' : 'black'}
+          >
+            {bottomText}
+          </AppText>
+        </View>
+        <SvgXml
+          xml={ICONS.chevronRight(isLoading ? 'gray' : 'main')}
+          width={28}
+          height={28}
+        />
+      </View>
+    </TouchableOpacity>
+  );
 };

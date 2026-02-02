@@ -3,6 +3,7 @@ import { IMAGES } from '@assets';
 import { ColorsKeys } from '@styles';
 import { SvgProps } from 'react-native-svg';
 import { AppTextProps } from '../AppText';
+import { BucketsTypes } from '@configs';
 
 export type HeaderVariant =
   | 'empty'
@@ -23,11 +24,12 @@ export interface HeaderContentProps {
   title?: string;
   showBackButton?: boolean;
   avatarUrl?: string;
+  bucket?: BucketsTypes;
   titleProps?: TextProps;
   onBackPress?: () => void;
 }
 
-export interface IAppHeaderProps {
+export interface  IAppHeaderProps {
   title?: string;
   titleProps?: Partial<AppTextProps>;
   colorHeader?: ColorsKeys;
@@ -44,4 +46,5 @@ export interface IAppHeaderProps {
     size?: number;
   }[];
   goBackCallback?: () => void;
+  bucket?: BucketsTypes;
 }

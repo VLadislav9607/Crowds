@@ -10,6 +10,7 @@ import {
   useAcceptTalentApplication,
   useRejectTalentApplication,
 } from '@actions';
+import { IEventParticipant, useCreateChatAndNavigate } from '@modules/common';
 
 import { styles } from './styles';
 import { ApplicantsList } from '../../components';
@@ -34,6 +35,17 @@ export const EventApplicantsScreen = () => {
 
   const acceptApplication = useAcceptTalentApplication();
   const rejectApplication = useRejectTalentApplication();
+
+  const { openChat, isPending: isCreatingChat } = useCreateChatAndNavigate();
+
+  const chatWithTalent = (talent: IEventParticipant) => {
+    openChat({
+      eventId: params?.eventId ?? '',
+      talentId: talent.talentId ?? '',
+      title: talent.name ?? '',
+      imageUrl: talent.avatarUrl ?? '',
+    });
+  };
 
   const handleAccept = (participationId: string) => {
     acceptApplication.mutate({ participationId });
@@ -88,6 +100,7 @@ export const EventApplicantsScreen = () => {
 
       <ApplicantsList
         variant={selectedTab}
+        isCreatingChat={isCreatingChat}
         isLoading={isLoading}
         data={data?.pages.flatMap(page => page.data) || []}
         hasNextPage={hasNextPage}
@@ -101,7 +114,7 @@ export const EventApplicantsScreen = () => {
             fetchNextPage();
           }
         }}
-        handlePressMessage={() => {}}
+        handlePressMessage={chatWithTalent}
       />
     </ScreenWrapper>
   );

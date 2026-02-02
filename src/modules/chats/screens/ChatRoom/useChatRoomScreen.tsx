@@ -2,7 +2,8 @@ import { useCallback, useEffect, useMemo } from 'react';
 import { InfiniteData } from '@tanstack/react-query';
 import { goBack, Screens, useScreenNavigation } from '@navigation';
 import {
-  GetChatMessagesResDto,
+  ChatMessage,
+  useGetMe,
   updateLastSeenChatAction,
   useChatParticipants,
   useGetChatMessages,
@@ -14,6 +15,7 @@ import { chatsCache } from '../../cache';
 
 export const useChatRoomScreen = () => {
   const { params } = useScreenNavigation<Screens.ChatRoom>();
+  const { me, isTalent } = useGetMe();
 
   const chatId = params?.chatId ?? '';
 
@@ -31,18 +33,18 @@ export const useChatRoomScreen = () => {
   const { data: participants, isLoading: isParticipantsLoading } =
     useChatParticipants(chatId);
 
+  console.log('participants', participants);
   const sections = useMemo(() => {
-    const infiniteData = data as
-      | InfiniteData<GetChatMessagesResDto>
-      | undefined;
+    const infiniteData = data as InfiniteData<ChatMessage[]> | undefined;
 
-    const messages = infiniteData?.pages.flatMap(page => page.messages) ?? [];
+    const messages = infiniteData?.pages.flatMap(page => page) ?? [];
 
     return buildMessageSections({
       messages,
+      meId: me?.id ?? '',
       participants: participants ?? [],
     });
-  }, [data, participants]);
+  }, [data, me?.id, participants]);
 
   const handleEndReached = useCallback(() => {
     if (!hasNextPage || isFetchingNextPage) return;
@@ -72,6 +74,9 @@ export const useChatRoomScreen = () => {
   return {
     sections,
     params,
+    participants,
+    isTalent,
+    me,
     hasNextPage,
     isFetchingNextPage,
     isLoadingMessages: isLoading || isParticipantsLoading,

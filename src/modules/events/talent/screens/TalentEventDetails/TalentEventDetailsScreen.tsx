@@ -4,8 +4,10 @@ import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { If, ScreenWithScrollWrapper } from '@components';
 import { ActionPurpleButton, AppButton, ChatButton } from '@ui';
 import { COLORS } from '@styles';
-import { Screens, useScreenNavigation } from '@navigation';
+import { Screens, useScreenNavigation, goToScreen } from '@navigation';
 import { ICONS } from '@assets';
+import { useGetMe, useGetGroupChatId, ChatType } from '@actions';
+import { useCreateChatAndNavigate } from '@modules/common';
 
 import {
   EventDetailsCardWithMap,
@@ -20,8 +22,36 @@ import { styles } from './styles';
 export const TalentEventDetailsScreen = () => {
   const insets = useSafeAreaInsets();
   const { params } = useScreenNavigation<Screens.TalentEventDetails>();
+  const { me } = useGetMe();
   const [isOpenModal, setIsOpenModal] = useState(false);
   const eventName = 'Fun Live Stage';
+
+  const { mutate: getGroupChatId, isPending: isGettingGroupChatId } =
+    useGetGroupChatId({
+      onSuccess: data => {
+        goToScreen(Screens.ChatRoom, {
+          chatId: data,
+          chatType: ChatType.Group,
+          title: 'Group',
+          imageUrl: '',
+        });
+      },
+    });
+
+  const { openChat, isPending: isCreatingChat } = useCreateChatAndNavigate();
+
+  const handleChatWithOrganizer = () => {
+    openChat({
+      eventId: params?.eventId ?? '',
+      talentId: me?.id ?? '',
+      title: 'Organizer',
+      imageUrl: '',
+    });
+  };
+
+  const handleChatWithGroup = () => {
+    getGroupChatId(params?.eventId ?? '');
+  };
 
   const isLoading = false;
 
@@ -76,14 +106,18 @@ export const TalentEventDetailsScreen = () => {
 
             <View style={styles.chatButtonsContainer}>
               <ChatButton
+                isLoading={isCreatingChat}
                 style={styles.chatButton}
                 topText="CHAT WITH"
                 bottomText="ORGANIZER"
+                onPress={handleChatWithOrganizer}
               />
               <ChatButton
                 style={styles.chatButton}
                 topText="CHAT IN"
+                isLoading={isGettingGroupChatId}
                 bottomText="GROUP"
+                onPress={handleChatWithGroup}
               />
             </View>
 

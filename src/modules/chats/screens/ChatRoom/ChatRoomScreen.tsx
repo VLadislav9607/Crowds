@@ -1,25 +1,57 @@
-import { ScreenWrapper } from '@components';
 import { KeyboardAvoidingView, Platform, StyleSheet } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
+import { ScreenWrapper } from '@components';
+import { ChatType } from '@actions';
 
 import { MessageList, SendMessageInput } from '../../components';
 import { useChatRoomScreen } from './useChatRoomScreen';
 
 export const ChatRoomScreen = () => {
+  const { top } = useSafeAreaInsets();
   const {
     sections,
+    participants,
+    me,
     params,
+    isTalent,
     isLoadingMessages,
     handleEndReached,
     handleGoBack,
   } = useChatRoomScreen();
-  const { top } = useSafeAreaInsets();
+
+  const directChatParticipant = participants?.find(
+    participant => participant.user_id !== me?.id,
+  );
+
+  const getHeaderTitle = () => {
+    if (params?.chatType === ChatType.Direct) {
+      return directChatParticipant?.display_name;
+    }
+    return 'Group messages';
+  };
+
+  const getImageHeader = () => {
+    if (params?.chatType === ChatType.Direct) {
+      return directChatParticipant?.avatar_url;
+    }
+
+    return '';
+  };
+
+  const getBucket = () => {
+    if (params?.chatType === ChatType.Direct) {
+      return isTalent ? 'organizations_avatars' : 'talents_avatars';
+    }
+
+    return 'organizations_avatars';
+  };
 
   return (
     <ScreenWrapper
       headerVariant="withTitleAndImageBg"
-      title={params?.chatType === 'direct' ? params?.title : 'Group messages'}
-      avatarUrl={params?.imageUrl ?? ''}
+      title={getHeaderTitle()}
+      avatarUrl={getImageHeader() ?? ''}
+      bucket={getBucket()}
       withBottomTabBar
       goBackCallback={handleGoBack}
     >
@@ -30,6 +62,8 @@ export const ChatRoomScreen = () => {
         keyboardVerticalOffset={Platform.OS === 'ios' ? top + 60 : 0}
       >
         <MessageList
+          isTalent={!!isTalent}
+          chatType={params?.chatType ?? ChatType.Direct}
           sections={sections}
           isLoading={isLoadingMessages}
           onEndReached={handleEndReached}

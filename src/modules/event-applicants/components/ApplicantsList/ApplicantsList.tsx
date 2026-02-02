@@ -1,6 +1,10 @@
 import { View } from 'react-native';
 import { AppFlashList } from '@components';
-import { TalentProfileRow, TalentsListSkeleton } from '@modules/common';
+import {
+  IEventParticipant,
+  TalentProfileRow,
+  TalentsListSkeleton,
+} from '@modules/common';
 import { AppButton, IconButton } from '@ui';
 import { ICONS } from '@assets';
 
@@ -15,12 +19,13 @@ export const ApplicantsList = ({
   isLoading,
   isAccepting = false,
   isRejecting = false,
+  isCreatingChat = false,
   onEndReached,
   handlePressMessage,
   handleAccept,
   handleDecline,
 }: ApplicantsListProps) => {
-  const renderRightAction = (talentId: string, participationId: string) => {
+  const renderRightAction = (talent: IEventParticipant) => {
     switch (variant) {
       case 'invited':
         return <></>;
@@ -31,13 +36,13 @@ export const ApplicantsList = ({
               isLoading={isAccepting}
               style={styles.acceptButton}
               icon={ICONS.checked('white')}
-              onPress={() => handleAccept(participationId)}
+              onPress={() => handleAccept(talent.participationId ?? '')}
             />
             <IconButton
               isLoading={isRejecting}
               style={styles.declineButton}
               icon={ICONS.closeIcon('white', 1)}
-              onPress={() => handleDecline(participationId)}
+              onPress={() => handleDecline(talent.participationId ?? '')}
             />
           </View>
         );
@@ -46,7 +51,8 @@ export const ApplicantsList = ({
           <AppButton
             icon={ICONS.chats('black')}
             title="Message"
-            onPress={() => handlePressMessage(talentId)}
+            isLoading={isCreatingChat}
+            onPress={() => handlePressMessage(talent)}
             size="28"
             wrapperStyles={styles.messageButton}
             titleStyles={styles.messageButtonText}
@@ -73,9 +79,7 @@ export const ApplicantsList = ({
           talent={item}
           onMenuSelect={() => {}}
           popUpItems={[{ label: 'Report', value: 'report' }]}
-          renderRightAction={() =>
-            renderRightAction(item.talentId, item.participationId ?? '')
-          }
+          renderRightAction={() => renderRightAction(item)}
         />
       )}
       onEndReached={hasNextPage ? onEndReached : undefined}

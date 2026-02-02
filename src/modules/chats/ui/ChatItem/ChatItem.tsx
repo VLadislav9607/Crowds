@@ -6,6 +6,7 @@ import { If } from '@components';
 
 import { styles } from './styles';
 import { IChatItemProps } from './types';
+import { ChatType } from '@actions';
 
 export const ChatItem = ({
   chat,
@@ -15,8 +16,15 @@ export const ChatItem = ({
   isNextUnread,
   isPrevUnread,
 }: IChatItemProps) => {
-  const { title, eventName, avatarUrl, lastMessage, lastMessageAt, hasUnread } =
-    chat;
+  const {
+    title,
+    eventName,
+    avatarUrl,
+    type,
+    lastMessage,
+    lastMessageAt,
+    hasUnread,
+  } = chat;
   const hideBottomBorder =
     variant === 'organization' && isNextUnread && !hasUnread;
   const isConsecutiveUnread =
@@ -34,25 +42,32 @@ export const ChatItem = ({
       onPress={onPress}
       activeOpacity={0.7}
     >
-      <If condition={variant === 'organization'}>
-        <View style={styles.eventRow}>
-          <View style={styles.eventLabel}>
-            <AppText typography="bold_10" color="main">
-              Event:{' '}
-              <AppText typography="medium_10" color="main">
-                {eventName}
-              </AppText>
+      <View style={styles.eventRow}>
+        <View style={styles.eventLabel}>
+          <AppText typography="bold_10" color="main">
+            Event:{' '}
+            <AppText typography="medium_10" color="main">
+              {eventName}
             </AppText>
-          </View>
-          <AppText typography="regular_10" color="gray_primary">
-            {lastMessageAt ? formatDistanceToNow(lastMessageAt) : ''}
+            <AppText
+              renderIf={type === ChatType.Group}
+              typography="medium_10"
+              color="main"
+            >
+              {' - Group chat'}
+            </AppText>
           </AppText>
         </View>
-      </If>
+        <AppText typography="regular_10" color="gray_primary">
+          {lastMessageAt ? formatDistanceToNow(lastMessageAt) : ''}
+        </AppText>
+      </View>
 
       <View style={styles.mainRow}>
         <Avatar
-          bucket={'talents_avatars'}
+          bucket={
+            variant === 'talent' ? 'organizations_avatars' : 'talents_avatars'
+          }
           size={40}
           imgPath={avatarUrl || ''}
           name={title}
@@ -74,19 +89,7 @@ export const ChatItem = ({
           </View>
         </View>
 
-        <If condition={variant === 'talent'}>
-          <View style={styles.timeTextLastMessageContainer}>
-            <AppText typography="regular_10" color="gray_primary">
-              {lastMessageAt ? formatDistanceToNow(lastMessageAt) : ''}
-            </AppText>
-
-            <If condition={!!hasUnread}>
-              <View style={styles.unreadDot} />
-            </If>
-          </View>
-        </If>
-
-        <If condition={!!hasUnread && variant === 'organization'}>
+        <If condition={!!hasUnread}>
           <View style={styles.unreadDot} />
         </If>
       </View>

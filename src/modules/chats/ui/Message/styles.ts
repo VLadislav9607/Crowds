@@ -38,10 +38,6 @@ export const styles = StyleSheet.create({
     width: AVATAR_SIZE,
     marginRight: AVATAR_GAP,
   },
-  avatarPlaceholder: {
-    width: AVATAR_SIZE,
-    marginRight: AVATAR_GAP,
-  },
   bubble: {
     flexDirection: 'row',
     alignItems: 'center',

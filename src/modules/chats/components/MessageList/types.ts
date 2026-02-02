@@ -1,3 +1,4 @@
+import { ChatType } from '@actions';
 import { IMessageData } from '../../ui';
 
 export interface IMessageSection {
@@ -8,6 +9,8 @@ export interface IMessageSection {
 export interface IMessageListProps {
   sections: IMessageSection[];
   isLoading?: boolean;
+  chatType: ChatType;
+  isTalent: boolean;
   onEndReached?: () => void;
   onEndReachedThreshold?: number;
 }

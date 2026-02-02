@@ -1,5 +1,3 @@
-import { useCallback } from 'react';
-import { useFocusEffect } from '@react-navigation/native';
 import { ScreenWrapper } from '@components';
 import { useGetMe, useMyChats } from '@actions';
 
@@ -9,15 +7,9 @@ import { useChatsRealtime } from '../../hooks';
 export const ChatsTabScreen = () => {
   const { isTalent } = useGetMe();
 
-  const { data, isLoading, refetch } = useMyChats();
+  const { data, isLoading } = useMyChats();
 
   useChatsRealtime();
-
-  useFocusEffect(
-    useCallback(() => {
-      refetch();
-    }, [refetch]),
-  );
 
   return (
     <ScreenWrapper

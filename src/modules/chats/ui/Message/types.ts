@@ -1,18 +1,19 @@
-export type MessageSender = 'me' | 'other';
+import { ChatType } from '@actions';
 
 export interface IMessageData {
   id: string;
+  isMe: boolean;
   text: string;
   time: string;
-  sender: MessageSender;
   showTime?: boolean;
-  senderName?: string;
-  senderAvatar?: string;
+  senderName: string;
+  senderAvatar: string;
 }
 
 export interface IMessageProps {
   message: IMessageData;
+  isTalent: boolean;
+  chatType: ChatType;
   isFirst?: boolean;
   isLast?: boolean;
 }
-

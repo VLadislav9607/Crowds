@@ -62,11 +62,4 @@ export const styles = StyleSheet.create({
   messageText: {
     flex: 1,
   },
-  timeTextLastMessageContainer: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: 5,
-    marginBottom: 'auto',
-    marginTop: 5,
-  },
 });

@@ -8,12 +8,15 @@ export const useChatsRealtime = () => {
   const { me } = useGetMe();
 
   useEffect(() => {
+    if (!me?.id) return;
+
     const subscribe = () => {
       realtimeService.subscribe({
         channelName: `chats-updates: ${me?.id}`,
         table: 'chats',
         event: 'UPDATE',
         onPayload: payload => {
+          console.log('payload', payload);
           const chat = payload.new as any;
 
           chatsCache.updateChat({

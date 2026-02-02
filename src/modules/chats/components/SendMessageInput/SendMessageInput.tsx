@@ -41,12 +41,12 @@ export const SendMessageInput = ({ chatId }: SendMessageInputProps) => {
 
     // Create optimistic message
     const tempId = `temp-${Date.now()}-${Math.random()}`;
+
     const optimisticMessage = {
       id: tempId,
       text: message.trim(),
       created_at: new Date().toISOString(),
-      sender_identity_id: me?.id || '',
-      is_mine: true,
+      sender_id: me?.id || '',
     };
 
     // Add message optimistically
@@ -56,14 +56,18 @@ export const SendMessageInput = ({ chatId }: SendMessageInputProps) => {
     });
 
     try {
-      await mutateAsync({ chatId, text: message.trim() });
+      await mutateAsync({
+        chatId,
+        text: message.trim(),
+      });
     } catch (error) {
+      console.log('send-message error', error);
+
       // Remove optimistic message on error
       messagesCache.removeMessage({
         chatId,
         messageId: tempId,
       });
-      console.log('send-message error', error);
     }
   }, [chatId, message, mutateAsync, me?.id]);
 

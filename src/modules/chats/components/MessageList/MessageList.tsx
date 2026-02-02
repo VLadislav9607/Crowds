@@ -16,6 +16,8 @@ import { useAutoScrollOnNewMessage } from './useAutoScrollOnNewMessage';
 export const MessageList = ({
   sections,
   isLoading,
+  chatType,
+  isTalent,
   onEndReached,
   onEndReachedThreshold = 0.2,
 }: IMessageListProps) => {
@@ -28,7 +30,15 @@ export const MessageList = ({
 
   const renderMessage = ({ item, index, section }: IMessageRenderItemProps) => {
     const { isFirst, isLast } = getMessagePosition(section.data, index);
-    return <Message message={item} isFirst={isFirst} isLast={isLast} />;
+    return (
+      <Message
+        message={item}
+        isTalent={isTalent}
+        chatType={chatType}
+        isFirst={isFirst}
+        isLast={isLast}
+      />
+    );
   };
 
   const renderSectionHeader = ({ section }: { section: IMessageSection }) => (
