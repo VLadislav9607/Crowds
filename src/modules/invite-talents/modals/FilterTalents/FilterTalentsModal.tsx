@@ -33,7 +33,7 @@ export const FilterTalentsModal = ({
       setFilters(initialFilters);
     }
   }, [initialFilters]);
-  
+
   const isScrollable = contentHeight > MAX_CONTENT_HEIGHT;
 
   const handleClearFilters = () => {

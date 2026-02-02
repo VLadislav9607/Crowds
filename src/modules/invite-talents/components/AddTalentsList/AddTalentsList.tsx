@@ -15,27 +15,24 @@ export const AddTalentsList = ({
   actionTalentId,
   isLoading,
 }: AddTalentsListProps) => {
-
   const renderRightAction = (talentId: string, isInList: boolean) => {
-    return (
-     isInList ? (
-        <IconButton
-          icon={ICONS.checked('green')}
-          iconSize={14}
-          style={styles.addedButton}
-        />
-      ) : (
-        <AppButton
-          title="Add"
-          isLoading={actionTalentId === talentId}
-          onPress={() => onPressRightAction(talentId)}
-          size="36"
-          width={71}
-        />
-      )
+    return isInList ? (
+      <IconButton
+        icon={ICONS.checked('green')}
+        iconSize={14}
+        style={styles.addedButton}
+      />
+    ) : (
+      <AppButton
+        title="Add"
+        isLoading={actionTalentId === talentId}
+        onPress={() => onPressRightAction(talentId)}
+        size="36"
+        width={71}
+      />
     );
-};
-  
+  };
+
   const skeleton = isLoading ? <TalentsListSkeleton /> : undefined;
 
   return (
@@ -49,9 +46,11 @@ export const AddTalentsList = ({
       renderItem={({ item }) => (
         <TalentProfileRow
           talent={item}
-          popUpItems={[{label: 'Report', value: 'report'}]}
+          popUpItems={[{ label: 'Report', value: 'report' }]}
           onMenuSelect={() => {}}
-          renderRightAction={() => renderRightAction(item.talentId, item.isInList)}
+          renderRightAction={() =>
+            renderRightAction(item.talentId, item.isInList)
+          }
         />
       )}
     />

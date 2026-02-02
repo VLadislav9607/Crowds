@@ -1,6 +1,10 @@
 import { useInfiniteQuery } from '@tanstack/react-query';
 import { searchPublicEventsAction } from './action';
-import { TalentPublicEventsBodyDto, TalentPublicEventsResDto } from './types';
+import {
+  TalentPublicEvent,
+  TalentPublicEventsBodyDto,
+  TalentPublicEventsResDto,
+} from './types';
 import { TANSTACK_QUERY_KEYS } from '@constants';
 import {
   IInfinityQueryOptions,
@@ -9,11 +13,10 @@ import {
   getInfiniteQueryFn,
   createQuerySelectData,
 } from '@services';
-import { ITalentEventCard } from '../useTalentEventsByStatus';
 
 export const useTalentPublicEvents = (
   params: TalentPublicEventsBodyDto,
-  options?: IInfinityQueryOptions<IWithPaginationResponse<ITalentEventCard[]>>,
+  options?: IInfinityQueryOptions<IWithPaginationResponse<TalentPublicEvent[]>>,
 ) => {
   return useInfiniteQuery({
     queryKey: [

@@ -36,10 +36,7 @@ export const useSendInvite = () => {
 
         // Invalidate custom list talents queries for this event (to update status)
         queryClient.invalidateQueries({
-          queryKey: [
-            TANSTACK_QUERY_KEYS.GET_CUSTOM_LISTS,
-            'talents',
-          ],
+          queryKey: [TANSTACK_QUERY_KEYS.GET_CUSTOM_LISTS, 'talents'],
           predicate: query => {
             // Match queries that have eventId as the third element
             return (

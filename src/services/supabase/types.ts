@@ -14,63 +14,34 @@ export type Database = {
   };
   public: {
     Tables: {
-      chat_identities: {
+      chat_messages: {
         Row: {
-          avatar_url: string | null;
           chat_id: string;
           created_at: string | null;
-          first_name: string;
           id: string;
-          last_name: string;
-          organization_id: string | null;
-          talent_id: string | null;
-          type: string;
-          user_id: string;
+          sender_id: string;
+          text: string;
         };
         Insert: {
-          avatar_url?: string | null;
           chat_id: string;
           created_at?: string | null;
-          first_name: string;
           id?: string;
-          last_name: string;
-          organization_id?: string | null;
-          talent_id?: string | null;
-          type: string;
-          user_id: string;
+          sender_id?: string;
+          text: string;
         };
         Update: {
-          avatar_url?: string | null;
           chat_id?: string;
           created_at?: string | null;
-          first_name?: string;
           id?: string;
-          last_name?: string;
-          organization_id?: string | null;
-          talent_id?: string | null;
-          type?: string;
-          user_id?: string;
+          sender_id?: string;
+          text?: string;
         };
         Relationships: [
           {
-            foreignKeyName: 'chat_identities_chat_id_fkey';
+            foreignKeyName: 'messages_chat_fkey';
             columns: ['chat_id'];
             isOneToOne: false;
             referencedRelation: 'chats';
-            referencedColumns: ['id'];
-          },
-          {
-            foreignKeyName: 'chat_identities_organization_id_fkey';
-            columns: ['organization_id'];
-            isOneToOne: false;
-            referencedRelation: 'organizations';
-            referencedColumns: ['id'];
-          },
-          {
-            foreignKeyName: 'chat_identities_talent_id_fkey';
-            columns: ['talent_id'];
-            isOneToOne: false;
-            referencedRelation: 'talents';
             referencedColumns: ['id'];
           },
         ];
@@ -78,38 +49,51 @@ export type Database = {
       chat_participants: {
         Row: {
           chat_id: string;
-          identity_id: string | null;
           joined_at: string | null;
           last_seen_at: string | null;
+          organization_id: string | null;
+          role: string;
+          talent_id: string | null;
           user_id: string;
         };
         Insert: {
           chat_id: string;
-          identity_id?: string | null;
           joined_at?: string | null;
           last_seen_at?: string | null;
+          organization_id?: string | null;
+          role: string;
+          talent_id?: string | null;
           user_id: string;
         };
         Update: {
           chat_id?: string;
-          identity_id?: string | null;
           joined_at?: string | null;
           last_seen_at?: string | null;
+          organization_id?: string | null;
+          role?: string;
+          talent_id?: string | null;
           user_id?: string;
         };
         Relationships: [
           {
-            foreignKeyName: 'chat_participants_chat_id_fkey';
+            foreignKeyName: 'chat_participants_chat_fkey';
             columns: ['chat_id'];
             isOneToOne: false;
             referencedRelation: 'chats';
             referencedColumns: ['id'];
           },
           {
-            foreignKeyName: 'chat_participants_identity_id_fkey';
-            columns: ['identity_id'];
+            foreignKeyName: 'chat_participants_org_fkey';
+            columns: ['organization_id'];
             isOneToOne: false;
-            referencedRelation: 'chat_identities';
+            referencedRelation: 'organizations';
+            referencedColumns: ['id'];
+          },
+          {
+            foreignKeyName: 'chat_participants_talent_fkey';
+            columns: ['talent_id'];
+            isOneToOne: false;
+            referencedRelation: 'talents';
             referencedColumns: ['id'];
           },
         ];
@@ -896,51 +880,6 @@ export type Database = {
           },
         ];
       };
-      messages: {
-        Row: {
-          chat_id: string;
-          created_at: string;
-          deleted_at: string | null;
-          edited_at: string | null;
-          id: string;
-          sender_identity_id: string;
-          text: string | null;
-        };
-        Insert: {
-          chat_id: string;
-          created_at?: string;
-          deleted_at?: string | null;
-          edited_at?: string | null;
-          id?: string;
-          sender_identity_id: string;
-          text?: string | null;
-        };
-        Update: {
-          chat_id?: string;
-          created_at?: string;
-          deleted_at?: string | null;
-          edited_at?: string | null;
-          id?: string;
-          sender_identity_id?: string;
-          text?: string | null;
-        };
-        Relationships: [
-          {
-            foreignKeyName: 'messages_chat_id_fkey';
-            columns: ['chat_id'];
-            isOneToOne: false;
-            referencedRelation: 'chats';
-            referencedColumns: ['id'];
-          },
-          {
-            foreignKeyName: 'messages_sender_identity_id_fkey';
-            columns: ['sender_identity_id'];
-            isOneToOne: false;
-            referencedRelation: 'chat_identities';
-            referencedColumns: ['id'];
-          },
-        ];
-      };
       organization_branches: {
         Row: {
           country_code: string;
@@ -1678,6 +1617,10 @@ export type Database = {
         Args: { p_name: string };
         Returns: string;
       };
+      delete_custom_list: {
+        Args: { p_event_id: string; p_list_id: string };
+        Returns: undefined;
+      };
       delete_draft_event: { Args: { event_id_param: string }; Returns: string };
       delete_talent_events_folder: {
         Args: { p_folder_id: string };
@@ -1695,15 +1638,29 @@ export type Database = {
         Args: { e: Database['public']['Tables']['events']['Row'] };
         Returns: Json;
       };
-      dto_event_list_talent_own: {
-        Args: { e: Database['public']['Tables']['events']['Row'] };
-        Returns: Json;
-      };
-      dto_event_list_talent_public: {
-        Args: { e: Database['public']['Tables']['events']['Row'] };
+      dto_events_list_for_talent: {
+        Args: { p_event: Database['public']['Tables']['events']['Row'] };
         Returns: Json;
       };
       earth: { Args: never; Returns: number };
+      get_chat_messages: {
+        Args: { p_chat_id: string; p_cursor?: string; p_limit?: number };
+        Returns: {
+          created_at: string;
+          id: string;
+          sender_id: string;
+          text: string;
+        }[];
+      };
+      get_chat_participants: {
+        Args: { p_chat_id: string };
+        Returns: {
+          avatar_url: string;
+          display_name: string;
+          role: string;
+          user_id: string;
+        }[];
+      };
       get_custom_list_talents: {
         Args: {
           p_event_id: string;
@@ -1773,8 +1730,9 @@ export type Database = {
       get_invitable_talents: {
         Args: {
           p_event_id: string;
+          p_filters?: Json;
           p_limit: number;
-          p_offset: number;
+          p_offset?: number;
           p_search?: string;
         };
         Returns: {
@@ -1793,7 +1751,7 @@ export type Database = {
           p_limit: number;
           p_list_id: string;
           p_offset: number;
-          p_search?: string;
+          p_search: string;
         };
         Returns: {
           avatar_path: string;
@@ -1831,7 +1789,7 @@ export type Database = {
         };
         Returns: Json;
       };
-      get_public_events_search: {
+      get_public_events_for_talent: {
         Args: {
           filter_date_from?: string;
           filter_date_to?: string;
@@ -1905,12 +1863,12 @@ export type Database = {
           proposals: number;
         }[];
       };
-      get_talent_own_events: {
+      get_talent_participation_events: {
         Args: {
-          limit_param?: number;
-          offset_param?: number;
-          search_query?: string;
-          visibility_filter?: string;
+          p_initiated_by?: string;
+          p_limit?: number;
+          p_offset?: number;
+          p_status: string;
         };
         Returns: Json;
       };
@@ -1923,6 +1881,7 @@ export type Database = {
         Returns: boolean;
       };
       hide_event: { Args: { p_event_id: string }; Returns: undefined };
+      is_chat_participant: { Args: { p_chat_id: string }; Returns: boolean };
       is_user_available: {
         Args: { p_at: string; p_user_id: string };
         Returns: boolean;
@@ -1947,6 +1906,10 @@ export type Database = {
         Args: { p_event_id: string; p_folder_id: string };
         Returns: undefined;
       };
+      remove_talent_from_custom_list: {
+        Args: { p_event_id: string; p_list_id: string; p_talent_id: string };
+        Returns: undefined;
+      };
       rename_talent_events_folder: {
         Args: { p_folder_id: string; p_name: string };
         Returns: undefined;
@@ -1962,6 +1925,10 @@ export type Database = {
       toggle_event_in_talent_events_folder: {
         Args: { p_event_id: string; p_folder_id: string };
         Returns: boolean;
+      };
+      update_custom_list_name: {
+        Args: { p_event_id: string; p_list_id: string; p_name: string };
+        Returns: undefined;
       };
       update_event_draft: {
         Args: { event_id_param: string; payload: Json };

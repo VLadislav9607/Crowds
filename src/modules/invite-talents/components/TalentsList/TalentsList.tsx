@@ -1,5 +1,5 @@
 import { AppFlashList } from '@components';
-import { TalentProfileRow,TalentsListSkeleton } from '@modules/common';
+import { TalentProfileRow, TalentsListSkeleton } from '@modules/common';
 import { AppButton } from '@ui';
 
 import { TalentsListProps } from './types';
@@ -25,7 +25,7 @@ export const TalentsList = ({
       renderItem={({ item }) => (
         <TalentProfileRow
           talent={item}
-          popUpItems={[{label: 'Report', value: 'report'}]}
+          popUpItems={[{ label: 'Report', value: 'report' }]}
           onMenuSelect={() => {}}
           renderRightAction={() => (
             <AppButton

@@ -1,10 +1,7 @@
 import { useState } from 'react';
 import { useAddTalentToCustomList as useAddTalentToCustomListAction } from '@actions';
 
-export const useAddTalentToCustomList = (
-  eventId: string,
-  listId: string,
-) => {
+export const useAddTalentToCustomList = (eventId: string, listId: string) => {
   const [addingTalentId, setAddingTalentId] = useState<string | null>(null);
 
   const { mutate: addTalent } = useAddTalentToCustomListAction(

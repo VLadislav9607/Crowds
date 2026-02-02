@@ -5,7 +5,6 @@ import { FunctionsHttpError } from '@supabase/supabase-js';
 export const getInvitableTalentsAction = async (
   body: InvitableTalentsBodyDto,
 ): Promise<InvitableTalentsRespDto> => {
-
   const { data, error } = await supabase.functions.invoke(
     'get-invitable-talents',
     {

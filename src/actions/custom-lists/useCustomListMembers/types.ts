@@ -1,4 +1,4 @@
-import { EventParticipantStatus } from "@actions";
+import { EventParticipantStatus } from '@actions';
 
 export interface GetCustomListTalentsBodyDto {
   listId: string;

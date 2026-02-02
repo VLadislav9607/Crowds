@@ -54,7 +54,10 @@ export const useAddTalentToCustomList = (
 
               // Check if talent is already in list (shouldn't happen, but just in case)
               const talentAlreadyInList = oldData.pages.some(page =>
-                page.data.some(talent => talent.id === variables.p_talent_id && talent.is_in_list),
+                page.data.some(
+                  talent =>
+                    talent.id === variables.p_talent_id && talent.is_in_list,
+                ),
               );
 
               if (talentAlreadyInList) {

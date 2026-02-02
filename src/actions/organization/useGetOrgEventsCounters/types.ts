@@ -4,6 +4,8 @@ export interface UseGetOrgEventsCountersBodyDto {
 
 export interface UseGetOrgEventsCountersRespDto {
   active: number;
+  active_public: number;
+  active_private: number;
   upcoming: number;
   past: number;
   draft: number;

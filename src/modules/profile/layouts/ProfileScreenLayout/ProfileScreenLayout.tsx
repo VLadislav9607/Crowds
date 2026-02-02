@@ -8,34 +8,39 @@ import { TalentProfileHeader } from '../../talent/components';
 
 import { styles } from './styles';
 import { calculateAge } from '@utils';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 interface ProfileScreenLayoutProps {
   children: ReactNode;
 }
 
 export const ProfileScreenLayout = ({ children }: ProfileScreenLayoutProps) => {
-  const { me, isTalent } = useGetMe();
+  const { me, isTalent, talent } = useGetMe();
+  const insets = useSafeAreaInsets();
+
+  const location = talent?.talent_location;
 
   return (
     <ScreenWithScrollWrapper
       title={isTalent ? undefined : 'Profile'}
       headerVariant={isTalent ? 'empty' : 'withTitleAndImageBg'}
       headerStyles={{ backgroundColor: COLORS.black }}
+      contentContainerStyle={{ paddingBottom: insets.bottom + 75 }}
       customElement={
         isTalent ? (
           <TalentProfileHeader
-            fullName={me?.first_name ?? '' + ' ' + me?.last_name}
+            fullName={talent?.first_name ?? '' + ' ' + talent?.last_name}
             gender={me?.gender || ''}
-            age={calculateAge(me?.birth_date)}
-            avatarUri={me?.avatar_path}
-            location={`${me?.talent_location?.country}, ${me?.talent_location?.city}`}
+            age={calculateAge(talent?.birth_date)}
+            avatarUri={talent?.avatar_path || undefined}
+            location={`${location?.country}, ${location?.city}`}
           />
         ) : undefined
       }
     >
       <View
         style={[
-          styles.contentContainer,
+          [styles.contentContainer],
           !isTalent && styles.contentContainerOrg,
         ]}
       >
