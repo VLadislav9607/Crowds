@@ -32,6 +32,7 @@ export interface UseTalentEventsByStatusBodyDto {
 }
 
 export interface TalentParticipationEvent {
+  title: string;
   brief: string;
   category_id: string;
   created_at: string;
