@@ -24,6 +24,7 @@ export const AppHeader = ({
   rightIcons,
   titleProps,
   goBackCallback,
+  bucket,
 }: IAppHeaderProps) => {
   const insets = useSafeAreaInsets();
   const handleBackPress = () => {
@@ -82,6 +83,7 @@ export const AppHeader = ({
                 onBackPress={handleBackPress}
                 titleProps={titleProps}
                 avatarUrl={avatarUrl}
+                bucket={bucket}
               />
               {rightIcons && <RightIcons rightIcons={rightIcons} />}
             </View>
@@ -115,6 +117,7 @@ const HeaderContent = ({
   showBackButton,
   titleProps,
   avatarUrl,
+  bucket,
   onBackPress,
 }: HeaderContentProps) => (
   <View style={styles.headerContentRow}>
@@ -126,7 +129,7 @@ const HeaderContent = ({
     {avatarUrl && (
       <Avatar
         size={48}
-        bucket="talents_avatars"
+        bucket={bucket || 'talents_avatars'}
         imgPath={avatarUrl}
         style={styles.avatar}
       />

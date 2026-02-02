@@ -20,11 +20,13 @@ const formatMessageTime = (date: Date) => format(date, 'hh:mm a');
 
 type BuildMessageSectionsParams = {
   messages: ChatMessage[];
+  meId: string;
   participants: IChatParticipant[];
 };
 
 export const buildMessageSections = ({
   messages,
+  meId,
   participants,
 }: BuildMessageSectionsParams): IMessageSection[] => {
   const sortedMessages = [...messages].sort((a, b) => {
@@ -51,31 +53,24 @@ export const buildMessageSections = ({
       });
     }
 
-    const participant = participants.find(
-      p => p.id === message.sender_identity_id,
-    );
-
-    const isMe = message.is_mine;
-
-    const senderName = participant
-      ? [participant.first_name, participant.last_name]
-          .filter(Boolean)
-          .join(' ')
-          .trim()
-      : '';
-
     const showTime =
       !lastMessageDate ||
       differenceInMinutes(lastMessageDate, messageDate) >= 1;
+
+    const isMe = message.sender_id === meId;
+
+    const foundParticipant = participants.find(
+      p => p.user_id === message.sender_id,
+    );
 
     const messageData: IMessageData = {
       id: message.id,
       text: message.text ?? '',
       time: formatMessageTime(messageDate),
-      sender: isMe ? 'me' : 'other',
       showTime,
-      senderName,
-      senderAvatar: participant?.avatar_url ?? undefined,
+      isMe,
+      senderName: foundParticipant?.display_name ?? '',
+      senderAvatar: foundParticipant?.avatar_url ?? '',
     };
 
     sections[sections.length - 1].data.push(messageData);

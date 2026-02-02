@@ -221,6 +221,7 @@ export const TalentEventCard = ({
                 onPress={() =>
                   goToScreen(Screens.TalentEventDetails, {
                     participationId: event.participation_id,
+                    eventId: event.event_id,
                   })
                 }
                 style={styles.eventDetailsButton}

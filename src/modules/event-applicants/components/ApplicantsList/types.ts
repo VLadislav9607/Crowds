@@ -7,9 +7,10 @@ export interface ApplicantsListProps {
   isAccepting?: boolean;
   isRejecting?: boolean;
   hasNextPage?: boolean;
+  isCreatingChat?: boolean;
   isFetchingNextPage?: boolean;
   onEndReached?: () => void;
   handleAccept: (participationId: string) => void;
   handleDecline: (participationId: string) => void;
-  handlePressMessage: (talentId: string) => void;
+  handlePressMessage: (talent: IEventParticipant) => void;
 }

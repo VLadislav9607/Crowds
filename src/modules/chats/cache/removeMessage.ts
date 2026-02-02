@@ -1,7 +1,7 @@
 import { InfiniteData } from '@tanstack/react-query';
 import { TANSTACK_QUERY_KEYS } from '@constants';
 import { queryClient } from '@services';
-import { GetChatMessagesResDto } from '@actions';
+import { ChatMessage } from '@actions';
 
 interface RemoveMessageParams {
   chatId: string;
@@ -19,21 +19,16 @@ export const removeMessage = ({
     JSON.stringify({ chatId, limit }),
   ];
 
-  queryClient.setQueryData<InfiniteData<GetChatMessagesResDto>>(
-    queryKey,
-    existing => {
-      if (!existing) return existing;
+  queryClient.setQueryData<InfiniteData<ChatMessage[]>>(queryKey, existing => {
+    if (!existing) return existing;
 
-      const updatedPages = existing.pages.map(page => ({
-        ...page,
-        messages: page.messages.filter(msg => msg.id !== messageId),
-      }));
+    const updatedPages = existing.pages.map(page =>
+      page.filter(msg => msg.id !== messageId),
+    );
 
-      return {
-        ...existing,
-        pages: updatedPages,
-      };
-    },
-  );
+    return {
+      ...existing,
+      pages: updatedPages,
+    };
+  });
 };
-

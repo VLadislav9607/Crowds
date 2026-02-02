@@ -1,17 +1,21 @@
 import { ActivityIndicator, View } from 'react-native';
-
 import { AppText, Avatar } from '@ui';
 import { If } from '@components';
+import { COLORS } from '@styles';
+import { ChatType } from '@actions';
 
 import { styles } from './styles';
 import { IMessageProps } from './types';
-import { COLORS } from '@styles';
 
-export const Message = ({ message, isFirst, isLast }: IMessageProps) => {
-  const { text, time, sender, showTime, senderName, senderAvatar, id } =
-    message;
-  const isMe = sender === 'me';
-  const showAvatar = !isMe && !!isFirst;
+export const Message = ({
+  message,
+  chatType,
+  isFirst,
+  isLast,
+  isTalent,
+}: IMessageProps) => {
+  const { text, time, isMe, showTime, senderName, senderAvatar, id } = message;
+  const showAvatar = !isMe && chatType === ChatType.Group;
 
   const getBubbleStyle = () => {
     const baseStyles = [styles.bubble, isMe && styles.bubbleMe];
@@ -38,15 +42,14 @@ export const Message = ({ message, isFirst, isLast }: IMessageProps) => {
       </If>
 
       <View style={[styles.bubbleWrapper, isMe && styles.bubbleWrapperMe]}>
-        <If condition={!isMe}>
-          <View
-            style={
-              showAvatar ? styles.avatarContainer : styles.avatarPlaceholder
-            }
-          >
-            <If condition={showAvatar}>
-              <Avatar size={20} uri={senderAvatar} name={senderName} />
-            </If>
+        <If condition={showAvatar}>
+          <View style={styles.avatarContainer}>
+            <Avatar
+              size={20}
+              imgPath={senderAvatar}
+              bucket={isTalent ? 'organizations_avatars' : 'talents_avatars'}
+              name={senderName}
+            />
           </View>
         </If>
 

@@ -2,7 +2,7 @@ import { AppFlashList } from '@components';
 import { goToScreen, Screens } from '@navigation';
 import { MyChatItem } from '@actions';
 
-import { ChatItem } from '../../ui';
+import { ChatItem, ChatListSkeleton } from '../../ui';
 import { IChatListProps } from './types';
 import { styles } from './styles';
 
@@ -46,6 +46,7 @@ export const ChatList = ({
       renderItem={renderChat}
       gap={0}
       showBottomLoader={isLoading}
+      skeleton={isLoading ? <ChatListSkeleton /> : undefined}
       emptyText={emptyText}
       withBottomTab={withBottomTab}
       extraData={chats}

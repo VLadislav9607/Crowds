@@ -1,21 +1,14 @@
-import { FunctionsHttpError } from '@supabase/supabase-js';
 import { supabase } from '@services';
-import { GetChatMessagesBodyDto, GetChatMessagesResDto } from './types';
+import { ChatMessage, GetChatMessagesBodyDto } from './types';
 
 export const getChatMessagesAction = async (
   body: GetChatMessagesBodyDto,
-): Promise<GetChatMessagesResDto> => {
-  const { data, error } = await supabase.functions.invoke(
-    'get-chat-messages',
-    {
-      body,
-    },
-  );
-
-  if (error && error instanceof FunctionsHttpError) {
-    const errorMessage = await error.context.json();
-    throw errorMessage;
-  }
+): Promise<ChatMessage[]> => {
+  const { data, error } = await supabase.rpc('get_chat_messages', {
+    p_chat_id: body.chatId,
+    p_limit: body.limit,
+    p_cursor: body.cursor,
+  });
 
   if (error) {
     throw error;

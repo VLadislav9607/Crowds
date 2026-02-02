@@ -16,9 +16,6 @@ export const getCustomListTalentsAction = async (
     },
   );
 
-  console.log('data', data);
-  console.log('error', error);
-
   if (error) {
     throw error;
   }

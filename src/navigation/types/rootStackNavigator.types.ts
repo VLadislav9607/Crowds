@@ -1,4 +1,5 @@
 import { NavigatorScreenParams } from '@react-navigation/native';
+import { ChatType } from '@actions';
 import { OrganizationType, Role } from '@modules/common';
 import { Screens } from '../constants';
 import { BottomTabsParamList } from './bottomStackNavigator.types';
@@ -59,6 +60,7 @@ export type RootStackParamList = {
   };
   [Screens.TalentEventDetails]: {
     participationId: string;
+    eventId: string;
   };
   [Screens.ManageEvent]: { eventId: string };
   [Screens.EventParticipants]: undefined;
@@ -73,8 +75,8 @@ export type RootStackParamList = {
   [Screens.ChatRoom]: {
     chatId: string;
     title: string;
+    chatType: ChatType;
     imageUrl: string;
-    chatType: 'direct' | 'group';
   };
 
   //Profile
