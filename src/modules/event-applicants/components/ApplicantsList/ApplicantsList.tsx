@@ -1,6 +1,6 @@
 import { View } from 'react-native';
 import { AppFlashList } from '@components';
-import { TalentProfileRow } from '@modules/common';
+import { TalentProfileRow, TalentsListSkeleton } from '@modules/common';
 import { AppButton, IconButton } from '@ui';
 import { ICONS } from '@assets';
 
@@ -12,6 +12,7 @@ export const ApplicantsList = ({
   variant,
   hasNextPage,
   isFetchingNextPage,
+  isLoading,
   isAccepting = false,
   isRejecting = false,
   onEndReached,
@@ -57,11 +58,14 @@ export const ApplicantsList = ({
     }
   };
 
+  const skeleton = isLoading ? <TalentsListSkeleton /> : undefined;
+
   return (
     <AppFlashList
       data={data}
       emptyText="No applicants found"
       gap={0}
+      skeleton={skeleton}
       showBottomLoader={isFetchingNextPage}
       contentContainerStyle={styles.contentContainer}
       renderItem={({ item }) => (
@@ -70,7 +74,7 @@ export const ApplicantsList = ({
           onMenuSelect={() => {}}
           popUpItems={[{ label: 'Report', value: 'report' }]}
           renderRightAction={() =>
-            renderRightAction(item.talentId, item.participationId)
+            renderRightAction(item.talentId, item.participationId ?? '')
           }
         />
       )}

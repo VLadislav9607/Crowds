@@ -41,8 +41,16 @@ export type RootStackParamList = {
   [Screens.CopyInviteLink]: undefined;
   [Screens.ApplicantProfile]: { applicantId: string };
   [Screens.InviteTalents]: { eventId: string; forwardFrom?: Screens };
-  [Screens.CustomTalentsList]: { listName: string; listId: string };
-  [Screens.AddTalentsToList]: { listId: string };
+  [Screens.CustomTalentsList]: {
+    listName: string;
+    listId: string;
+    eventId: string;
+  };
+  [Screens.AddTalentsToList]: {
+    eventId: string;
+    listId: string;
+    listName: string;
+  };
   [Screens.ManageOrgTeam]: undefined;
   [Screens.OrgProfileSetup]: undefined;
 

@@ -16,7 +16,5 @@ export const getMatchingTalentsAction = async (
     throw error;
   }
 
-  console.log('getMatchingTalentsAction data', data);
-
   return data as unknown as GetMatchingTalentsRespDto;
 };

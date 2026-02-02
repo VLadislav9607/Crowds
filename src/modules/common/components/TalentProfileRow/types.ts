@@ -1,3 +1,4 @@
+import { EventParticipantStatus } from '@actions';
 import { IPopupMenuItem } from '@components';
 import { AvatarFlag } from '@ui';
 
@@ -8,6 +9,7 @@ export interface IEventParticipant {
   location: string;
   flag: AvatarFlag;
   avatarUrl?: string;
+  status: EventParticipantStatus;
 }
 
 export interface TalentProfileRowProps {
