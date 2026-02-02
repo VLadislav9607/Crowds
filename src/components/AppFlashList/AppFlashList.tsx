@@ -1,12 +1,11 @@
 import { View, StyleSheet, ActivityIndicator } from 'react-native';
 import { FlashList } from '@shopify/flash-list';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
-
 import { TAB_BAR_TOTAL_HEIGHT } from '@navigation';
 import { AppButton, AppText } from '@ui';
+import { COLORS } from '@styles';
 
 import { AppFlashListProps } from './types';
-import { COLORS } from '@styles';
 
 export const AppFlashList = <T,>({
   gap = 16,
@@ -38,7 +37,6 @@ export const AppFlashList = <T,>({
         data={data}
         showsVerticalScrollIndicator={false}
         contentContainerStyle={[
-          isEmpty ? styles.centerContent : undefined,
           bottomPadding > 0 && { paddingBottom: bottomPadding },
           contentContainerStyle,
         ]}
@@ -59,7 +57,7 @@ export const AppFlashList = <T,>({
           showBottomLoader ? BottomLoaderComponent : undefined
         }
         {...props}
-        scrollEnabled={!isEmpty || !!skeleton || props.scrollEnabled}
+        scrollEnabled={!isEmpty || !!skeleton || !!props.scrollEnabled}
       />
 
       {!!floatingButtonProps && <AppButton {...floatingButtonProps} />}
@@ -70,12 +68,8 @@ export const AppFlashList = <T,>({
 const ItemSeparator = (gap: number) => <View style={{ height: gap }} />;
 
 const styles = StyleSheet.create({
-  centerContent: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
   emptyText: {
+    marginTop: '50%',
     textAlign: 'center',
   },
   bottomLoader: {

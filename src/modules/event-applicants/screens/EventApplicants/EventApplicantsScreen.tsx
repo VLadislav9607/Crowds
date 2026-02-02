@@ -30,8 +30,6 @@ export const EventApplicantsScreen = () => {
       initiatedBy: currentParams.initiatedBy,
     });
 
-  console.log('data', data);
-
   const counts = useEventParticipantsCounts(eventId);
 
   const acceptApplication = useAcceptTalentApplication();

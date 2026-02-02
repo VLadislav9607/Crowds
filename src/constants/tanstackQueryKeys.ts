@@ -25,5 +25,7 @@ export const TANSTACK_QUERY_KEYS = {
   GET_CHAT_PARTICIPANTS: 'get_chat_participants',
   TALENT_EVENTS_BY_STATUS: 'talent_events_by_status',
   GET_TALENT_EVENTS_COUNTS: 'get_talent_events_counts',
+  GET_CUSTOM_LISTS: 'get_custom_lists',
+  GET_CUSTOM_LIST_TALENTS: 'get_custom_list_talents',
   GET_EVENTS_FOLDERS: 'get_events_folders',
 } as const;

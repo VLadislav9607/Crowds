@@ -9,3 +9,4 @@ export * from './useDeleteDraft';
 export * from './useTalentEventsByStatus';
 export * from './useTalentEventsCounts';
 export * from './useHideEvent';
+export * from './useGetMatchingTalents';

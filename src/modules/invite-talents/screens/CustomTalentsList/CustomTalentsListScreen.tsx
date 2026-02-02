@@ -1,38 +1,87 @@
-import { ScreenWrapper } from '@components';
+import { ScreenWrapper, AppFlashList, If } from '@components';
 import { goToScreen, Screens, useScreenNavigation } from '@navigation';
-import { AppButton, AppText } from '@ui';
-import { View, StyleSheet } from 'react-native';
+import { IconButton } from '@ui';
 import { ICONS } from '@assets';
+
+import { styles } from './styles';
+import { useSendInvite, useCustomTalentsList } from '../../hooks';
+import {
+  CustomListTalentRow,
+  CustomTalentsListEmptyState,
+} from '../../components';
 
 export const CustomTalentsListScreen = () => {
   const { params } = useScreenNavigation<Screens.CustomTalentsList>();
+  const listId = params?.listId ?? '';
+  const eventId = params?.eventId ?? '';
+  const listName = params?.listName ?? '';
+
+  const { inviteTalent, invitingTalentId, setInvitingTalentId } =
+    useSendInvite();
+  const {
+    talentsList,
+    isLoading,
+    isFetchingNextPage,
+    hasNextPage,
+    handleEndReached,
+    totalCount,
+    hasTalents,
+  } = useCustomTalentsList(eventId, listId);
+
+  const handleInvite = (talentId: string) => {
+    setInvitingTalentId(talentId);
+    inviteTalent({ eventId, talentId });
+  };
+
+  const handleRemove = () => {
+    // TODO: Implement remove from list functionality
+  };
 
   return (
-    <ScreenWrapper headerVariant="withTitleAndImageBg" title={params?.listName}>
-      <View style={styles.buttonContainer}>
-        <AppText typography="regular_14" color="gray_primary">
-          No talents added to the list
-        </AppText>
-        <AppButton
-          title="Add Talents"
+    <ScreenWrapper
+      headerVariant="withTitleAndImageBg"
+      title={`${params?.listName} (${totalCount})`}
+      contentContainerStyle={styles.contentContainer}
+      customElement={
+        <IconButton
+          style={styles.addPlusButton}
           icon={ICONS.plus('white')}
+          iconSize={24}
           onPress={() =>
             goToScreen(Screens.AddTalentsToList, {
-              listId: params?.listId ?? '',
+              eventId,
+              listId,
+              listName,
             })
           }
-          width={186}
         />
-      </View>
+      }
+    >
+      <If condition={hasTalents}>
+        <AppFlashList
+          data={talentsList}
+          gap={0}
+          showBottomLoader={isLoading || isFetchingNextPage}
+          onEndReached={hasNextPage ? handleEndReached : undefined}
+          renderItem={({ item }) => (
+            <CustomListTalentRow
+              talent={item}
+              invitingTalentId={invitingTalentId}
+              onInvite={handleInvite}
+              onRemove={handleRemove}
+            />
+          )}
+          emptyText="No talents found"
+        />
+      </If>
+
+      <If condition={!hasTalents && !isLoading}>
+        <CustomTalentsListEmptyState
+          eventId={eventId}
+          listId={listId}
+          listName={listName}
+        />
+      </If>
     </ScreenWrapper>
   );
 };
-
-const styles = StyleSheet.create({
-  buttonContainer: {
-    flex: 1,
-    gap: 20,
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-});

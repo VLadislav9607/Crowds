@@ -3,20 +3,42 @@ import { useState } from 'react';
 import { ICONS } from '@assets';
 import { AppButton } from '@ui';
 import { AppFlashList } from '@components';
-import { goToScreen, Screens } from '@navigation';
+import { goToScreen, Screens, useScreenNavigation } from '@navigation';
+import { useCreateCustomList, useGetCustomLists } from '@actions';
 
 import { CreateInvitedTalentsListModal } from '../../modals';
-import { CustomTalentsListCard } from '../../ui';
+import { CustomTalentsListCard, CustomListsSkeleton } from '../../ui';
 import { styles } from './styles';
-import { MyCustomTalentsListsProps } from './types';
 
-export const MyCustomTalentsLists = ({ lists }: MyCustomTalentsListsProps) => {
+export const MyCustomTalentsLists = () => {
+  const { params } = useScreenNavigation<Screens.CustomTalentsList>();
+
   const [isCreateListModalVisible, setIsCreateListModalVisible] =
     useState(false);
 
-  const handleInviteAll = (listId: string) => {
-    console.log('Invite all from list:', listId);
+  const { data: customLists, isLoading } = useGetCustomLists();
+  const { mutate: createList, isPending: isCreating } = useCreateCustomList();
+
+  const handleCreateList = (listName: string) => {
+    if (!listName.trim()) {
+      return;
+    }
+
+    createList(
+      { listName: listName.trim() },
+      {
+        onSuccess: () => {
+          setIsCreateListModalVisible(false);
+        },
+      },
+    );
   };
+
+  const lists = (customLists || []).map(list => ({
+    id: list.id,
+    listName: list.name,
+    countTalents: list.members_count,
+  }));
 
   return (
     <>
@@ -33,16 +55,17 @@ export const MyCustomTalentsLists = ({ lists }: MyCustomTalentsListsProps) => {
       <AppFlashList
         data={lists}
         gap={8}
+        skeleton={isLoading ? <CustomListsSkeleton /> : undefined}
         renderItem={({ item }) => (
           <CustomTalentsListCard
             key={item.id}
             listName={item.listName}
             countTalents={item.countTalents}
-            onInviteAll={() => handleInviteAll(item.id)}
             onPress={() =>
               goToScreen(Screens.CustomTalentsList, {
                 listName: item.listName,
                 listId: item.id,
+                eventId: params?.eventId ?? '',
               })
             }
           />
@@ -53,7 +76,8 @@ export const MyCustomTalentsLists = ({ lists }: MyCustomTalentsListsProps) => {
       <CreateInvitedTalentsListModal
         isVisible={isCreateListModalVisible}
         onClose={() => setIsCreateListModalVisible(false)}
-        onConfirm={() => setIsCreateListModalVisible(false)}
+        onConfirm={handleCreateList}
+        isLoading={isCreating}
       />
     </>
   );
