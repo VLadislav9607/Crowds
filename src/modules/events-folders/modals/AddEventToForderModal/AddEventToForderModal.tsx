@@ -109,12 +109,12 @@ export const AddEventToForderModal = ({
   });
 
   useEffect(() => {
-    if (data?.onChangeIsInAnyFolder && eventId) {
+    if (data?.onChangeIsInAnyFolder && eventId && !isLoadingFolders) {
       data.onChangeIsInAnyFolder(
         folders?.some(folder => folder.has_event) ?? false,
       );
     }
-  }, [folders, eventId, data]);
+  }, [folders, eventId, data, isLoadingFolders]);
 
   return (
     <AppBottomSheet<AddEventToForderModalData>
@@ -168,7 +168,7 @@ export const AddEventToForderModal = ({
 
         <If condition={isLoadingFolders}>
           <Skeleton>
-            <Skeleton.Item style={{ gap: 16 }}>
+            <Skeleton.Item style={styles.skeletonWrapper}>
               <Skeleton.Item width={'100%'} height={40} borderRadius={10} />
               <Skeleton.Item width={'100%'} height={40} borderRadius={10} />
               <Skeleton.Item width={'100%'} height={40} borderRadius={10} />

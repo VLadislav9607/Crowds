@@ -5,3 +5,4 @@ export * from './types';
 export * from './talent';
 export * from './constants';
 export * from './helpers';
+export * from './organization';

@@ -17,4 +17,10 @@ export const styles = StyleSheet.create({
     paddingHorizontal: 20,
     paddingTop: 10,
   },
+  screenContainerStyle: {
+    paddingBottom: 0,
+  },
+  listContentContainer: {
+    paddingTop: 16,
+  },
 });

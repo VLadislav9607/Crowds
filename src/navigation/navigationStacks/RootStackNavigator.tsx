@@ -11,7 +11,10 @@ import {
   OnboardingUnAuthTalentScreen,
   OnboardingAuthTalentScreen,
 } from '../../modules/onboarding/talent/screens';
-import { TalentProfileSetupScreen } from '../../modules/profile/talent/screens';
+import {
+  TalentLocationSetupScreen,
+  TalentProfileSetupScreen,
+} from '../../modules/profile/talent/screens';
 import { AvailabilitySetupScreen } from '../../modules/talent-availability';
 import {
   CongratulationsScreen,
@@ -36,6 +39,7 @@ import {
 import {
   ChangePasswordScreen,
   NotificationSettingsScreen,
+  OrgProfileSetupScreen,
 } from '@modules/profile';
 import { ManageEventScreen } from '../../modules/event-management';
 import { ChatRoomScreen } from '../../modules/chats';
@@ -196,6 +200,9 @@ export const RootStackNavigator = () => {
       <RootStack.Screen
         name={Screens.InviteTalents}
         component={InviteTalentsScreen}
+        options={{
+          gestureEnabled: false,
+        }}
       />
 
       <RootStack.Screen
@@ -226,6 +233,14 @@ export const RootStackNavigator = () => {
       <RootStack.Screen
         name={Screens.RenameEventsFolder}
         component={RenameEventsFolder}
+      />
+      <RootStack.Screen
+        name={Screens.TalentLocationSetup}
+        component={TalentLocationSetupScreen}
+      />
+      <RootStack.Screen
+        name={Screens.OrgProfileSetup}
+        component={OrgProfileSetupScreen}
       />
     </RootStack.Navigator>
   );

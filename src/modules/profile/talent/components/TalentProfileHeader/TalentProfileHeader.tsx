@@ -11,7 +11,7 @@ interface TalentProfileHeaderProps {
   fullName: string;
   gender: string;
   age: number;
-  avatarUri: string;
+  avatarUri?: string;
   location: string;
 }
 

@@ -47,7 +47,7 @@ export const PlacesPredictionsInput = ({
   const { data: predictions = [] } = usePlacePrediction({
     query: debouncedInputValue,
     sessiontoken: sessionToken,
-    types: PlaceAutocompleteType.address,
+    types: types || PlaceAutocompleteType.address,
   });
 
   const { mutateAsync: getPlaceTimezoneMutateAsync } = usePlaceTimezone();
@@ -135,7 +135,8 @@ export const PlacesPredictionsInput = ({
     if (!!defaultValue && !inputValue) {
       setInputValue(defaultValue);
     }
-  }, [defaultValue, inputValue]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [defaultValue]);
 
   return (
     <View style={containerStyle}>

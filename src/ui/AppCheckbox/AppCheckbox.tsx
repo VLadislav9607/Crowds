@@ -57,11 +57,14 @@ export const AppCheckbox = ({
             height={14}
           />
         )}
-        {type === 'plusIcon' && checked ? (
-          <SvgXml xml={ICONS.checked('white')} width={12} height={12} />
-        ) : (
-          <SvgXml xml={ICONS.plus('main')} width={16} height={16} />
-        )}
+
+        <If condition={type === 'plusIcon'}>
+          {checked ? (
+            <SvgXml xml={ICONS.checked('white')} width={12} height={12} />
+          ) : (
+            <SvgXml xml={ICONS.plus('main')} width={16} height={16} />
+          )}
+        </If>
       </TouchableOpacity>
 
       <If condition={!!label}>

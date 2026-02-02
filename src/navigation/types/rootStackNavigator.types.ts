@@ -40,10 +40,12 @@ export type RootStackParamList = {
   [Screens.InviteNewMember]: undefined;
   [Screens.CopyInviteLink]: undefined;
   [Screens.ApplicantProfile]: { applicantId: string };
-  [Screens.InviteTalents]: { eventId: string };
+  [Screens.InviteTalents]: { eventId: string; forwardFrom?: Screens };
   [Screens.CustomTalentsList]: { listName: string; listId: string };
   [Screens.AddTalentsToList]: { listId: string };
   [Screens.ManageOrgTeam]: undefined;
+  [Screens.OrgProfileSetup]: undefined;
+
   // Talent screens
   [Screens.TalentSearchEvents]?: {
     autofocus?: boolean;
@@ -60,6 +62,7 @@ export type RootStackParamList = {
   // Talent screens
   [Screens.AvailabilitySetup]: undefined;
   [Screens.TalentProfileSetup]: undefined;
+  [Screens.TalentLocationSetup]: undefined;
 
   // Chat screens
   [Screens.ChatRoom]: {

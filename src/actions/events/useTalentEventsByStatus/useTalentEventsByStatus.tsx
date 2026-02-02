@@ -1,10 +1,24 @@
 import { useInfiniteQuery } from '@tanstack/react-query';
 import { getTalentEventsByStatusAction } from './action';
 import { TANSTACK_QUERY_KEYS } from '@constants';
-import { UseTalentEventsByStatusBodyDto } from './types';
+import {
+  TalentParticipationEvent,
+  UseTalentEventsByStatusBodyDto,
+  UseTalentEventsByStatusResDto,
+} from './types';
+import {
+  createQuerySelectData,
+  getInfiniteQueryFn,
+  getInfiniteQueryNextPageParams,
+  IInfinityQueryOptions,
+  IWithPaginationResponse,
+} from '@services';
 
 export const useTalentEventsByStatus = (
   params: Omit<UseTalentEventsByStatusBodyDto, 'offset'>,
+  options?: IInfinityQueryOptions<
+    IWithPaginationResponse<TalentParticipationEvent[]>
+  >,
 ) => {
   return useInfiniteQuery({
     queryKey: [
@@ -13,21 +27,9 @@ export const useTalentEventsByStatus = (
       params.initiatedBy,
     ],
     initialPageParam: 1,
-    queryFn: async ({ pageParam }) => {
-      const offset = ((pageParam as number) - 1) * 20;
-      return await getTalentEventsByStatusAction({
-        ...params,
-        offset,
-      });
-    },
-    getNextPageParam: (lastPage, allPages) => {
-      // If the last page has fewer items than the page size, there are no more pages
-      if (lastPage?.data?.length < 20) {
-        return undefined;
-      }
-
-      const currentPage = allPages.length;
-      return currentPage + 1;
-    },
+    queryFn: getInfiniteQueryFn(getTalentEventsByStatusAction, params),
+    getNextPageParam: getInfiniteQueryNextPageParams,
+    select: createQuerySelectData<UseTalentEventsByStatusResDto>(),
+    ...options,
   });
 };
