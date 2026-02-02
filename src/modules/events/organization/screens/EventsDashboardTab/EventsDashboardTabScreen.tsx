@@ -11,11 +11,25 @@ export const EventsDashboardTabScreen = () => {
     organization_id: organizationMember?.organization_id!,
   });
 
+  const activePublicCount = eventsCountersResp?.active_public
+    ? eventsCountersResp?.active_public
+    : 0;
+  const activePrivateCount = eventsCountersResp?.active_private
+    ? eventsCountersResp?.active_private
+    : 0;
+
+  const upcomingPublicCount = eventsCountersResp?.upcoming_public
+    ? eventsCountersResp?.upcoming_public
+    : 0;
+  const upcomingPrivateCount = eventsCountersResp?.upcoming_private
+    ? eventsCountersResp?.upcoming_private
+    : 0;
+
   const eventDashboardConfig = [
     {
       title: 'Active Posted Events',
       subTitle: 'For invited talents & publicly posted events',
-      count: eventsCountersResp?.upcoming_public || 0,
+      count: activePublicCount + upcomingPublicCount,
       bgColor: COLORS.light_purple,
       textColor: COLORS.main,
       // label: 'View',
@@ -24,7 +38,7 @@ export const EventsDashboardTabScreen = () => {
     {
       title: 'Active Private Events',
       subTitle: 'For invited talents only',
-      count: eventsCountersResp?.upcoming_private || 0,
+      count: activePrivateCount + upcomingPrivateCount,
       bgColor: COLORS.light_purple,
       textColor: COLORS.main,
       // label: 'View',

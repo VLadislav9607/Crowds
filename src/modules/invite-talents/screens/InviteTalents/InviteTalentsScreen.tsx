@@ -3,14 +3,14 @@ import { StyleSheet } from 'react-native';
 import { AppTabSelector, If, ScreenWrapper } from '@components';
 import { COLORS, TYPOGRAPHY } from '@styles';
 import { AppText, SearchWithFilter } from '@ui';
-import { Screens, useScreenNavigation } from '@navigation';
+import { goBack, Screens, useScreenNavigation } from '@navigation';
 
 import { TalentsList, MyCustomTalentsLists } from '../../components';
 import { useSendInvite, useTalentsForInvite } from '../../hooks';
 import { FilterTalentsModal } from '../../modals';
 
 export const InviteTalentsScreen = () => {
-  const { params } = useScreenNavigation<Screens.InviteTalents>();
+  const { params, navigation } = useScreenNavigation<Screens.InviteTalents>();
 
   const [selectedTab, setSelectedTab] = useState('my_lists');
 
@@ -38,13 +38,20 @@ export const InviteTalentsScreen = () => {
 
   const showTalentsList =
     selectedTab === 'matching_talent' || selectedTab === 'all_talent';
-    
+
   return (
     <ScreenWrapper
       headerVariant="withTitleAndImageBg"
       headerStyles={styles.headerStyles}
       contentContainerStyle={styles.contentContainer}
       title="Invite Talents"
+      goBackCallback={() => {
+        if (params?.forwardFrom === Screens.CreateEvent) {
+          navigation.pop(2);
+        } else {
+          goBack();
+        }
+      }}
       customElement={<AppText style={styles.invitedText}>0 invited</AppText>}
     >
       <AppTabSelector

@@ -1,5 +1,10 @@
 import { SvgXml } from 'react-native-svg';
-import { ImageBackground, TouchableOpacity, View } from 'react-native';
+import {
+  ActivityIndicator,
+  ImageBackground,
+  TouchableOpacity,
+  View,
+} from 'react-native';
 import { formatInTimeZone } from 'date-fns-tz';
 import { AppButton, AppText, IconText } from '@ui';
 import { ICONS, IMAGES } from '@assets';
@@ -11,24 +16,107 @@ import { styles } from './styles';
 import { getEventIcon } from '../../../helpers';
 import { TalentEventCardProps } from './types';
 import { useState } from 'react';
+import { ITalentEventCard } from './types';
+import { TalentEventsTabs } from '../../../types';
+import { getTimezoneOffsetHours } from '@helpers';
 
 export const TalentEventCard = ({
   event,
   containerStyle,
-  type = 'random',
-  isLoadingCancellation,
-  isLoadingAccept = false,
-  isLoadingDecline = false,
-  isLoadingApply = false,
-  isLoadingReject = false,
   addEventToForderModalRef,
-  onPressAccept,
-  onPressDecline,
-  onPressApply,
-  onPressReject,
+  hideRejectButton = false,
+  folderId,
+  onAccept,
+  onDecline,
+  onApply,
+  onReject,
   onCancelApplication,
+  onRemoveEventFromFolder,
 }: TalentEventCardProps) => {
-  const timezone = 'UTC';
+  const [isLoadingAccept, setIsLoadingAccept] = useState(false);
+  const [isLoadingDecline, setIsLoadingDecline] = useState(false);
+  const [isLoadingReject, setIsLoadingReject] = useState(false);
+  const [isLoadingCancellation, setIsLoadingCancellation] = useState(false);
+  const [isLoadingRemoveEventFromFolder, setIsLoadingRemoveEventFromFolder] =
+    useState(false);
+
+  const getEventStatus = (
+    event: ITalentEventCard,
+  ): TalentEventsTabs | 'random' => {
+    if (!event?.participant) {
+      return 'random';
+    } else if (event?.participant?.status === 'approved') {
+      return 'approved';
+    } else if (
+      event?.participant?.status === 'pending' &&
+      event?.participant?.initiated_by === 'organization'
+    ) {
+      return 'proposed';
+    } else if (
+      event?.participant?.status === 'pending' &&
+      event?.participant?.initiated_by === 'talent'
+    ) {
+      return 'pending';
+    } else if (event?.participant?.status === 'rejected') {
+      return 'denied';
+    }
+    return 'random';
+  };
+
+  const type = getEventStatus(event);
+
+  const handleRemoveEventFromFolder = async () => {
+    try {
+      setIsLoadingRemoveEventFromFolder(true);
+      await onRemoveEventFromFolder?.(event.event_id, folderId!);
+    } finally {
+      setIsLoadingRemoveEventFromFolder(false);
+    }
+  };
+
+  const handleAccept = async () => {
+    try {
+      setIsLoadingAccept(true);
+      await onAccept?.(event);
+    } finally {
+      setIsLoadingAccept(false);
+    }
+  };
+
+  const handleDecline = async () => {
+    try {
+      setIsLoadingDecline(true);
+      await onDecline?.(event.participant?.id!);
+    } finally {
+      setIsLoadingDecline(false);
+    }
+  };
+
+  const handleApply = () => {
+    onApply?.(event);
+  };
+
+  const handleReject = async () => {
+    try {
+      setIsLoadingReject(true);
+      await onReject?.(event.event_id);
+    } finally {
+      setIsLoadingReject(false);
+    }
+  };
+
+  const handleCancelApplication = async () => {
+    try {
+      setIsLoadingCancellation(true);
+      await onCancelApplication?.(event.participant?.id!);
+    } finally {
+      setIsLoadingCancellation(false);
+    }
+  };
+
+  const timezone = event?.location?.timezone || 'UTC';
+
+  const timezoneOffset = getTimezoneOffsetHours(timezone);
 
   const [isInAnyFolder, setIsInAnyFolder] = useState(event.is_in_any_folder);
 
@@ -42,6 +130,12 @@ export const TalentEventCard = ({
       : { formatted: '' };
 
   const eventIcon = getEventIcon(event.category_id);
+
+  const location = event?.location?.formatted_address
+    ? event?.location?.formatted_address
+    : event?.location?.city && event?.location?.country
+    ? `${event?.location?.city}, ${event?.location?.country}`
+    : '';
 
   const handleSavePress = () => {
     if (addEventToForderModalRef?.current) {
@@ -67,7 +161,7 @@ export const TalentEventCard = ({
         <View style={styles.contentHeader}>
           <View style={styles.contentHeaderLeft}>
             <AppText typography="semibold_16" margin={{ bottom: 8 }}>
-              {event.event_title}
+              {event.title}
             </AppText>
 
             <View style={styles.dateTimeContainer}>
@@ -92,33 +186,60 @@ export const TalentEventCard = ({
               />
             </View>
 
-            <If condition={!!event.formatted_address}>
+            <If condition={!!event.location}>
               <IconText
                 icon={ICONS.locationPin('main')}
                 iconSize={14}
                 style={{ marginTop: 6 }}
-                text={event.formatted_address}
+                text={location}
                 textProps={{
                   typography: 'medium_12',
                   color: 'black_50',
                 }}
               />
             </If>
+
+            <AppText
+              renderIf={!!event.location?.timezone && timezoneOffset !== 0}
+              typography="medium_12"
+              color="black_50"
+              margin={{ top: 6 }}
+            >
+              {event.location?.timezone} ({timezoneOffset} hours to yours)
+            </AppText>
           </View>
 
-          <TouchableOpacity
-            style={styles.saveButton}
-            onPress={() => handleSavePress()}
-            hitSlop={{ top: 10, bottom: 10, left: 10, right: 10 }}
-          >
-            <SvgXml
-              xml={
-                isInAnyFolder ? ICONS.savedFilled('main') : ICONS.saved('main')
-              }
-              width={18}
-              height={18}
-            />
-          </TouchableOpacity>
+          <If condition={!!folderId}>
+            <TouchableOpacity
+              style={styles.saveButton}
+              onPress={handleRemoveEventFromFolder}
+              hitSlop={{ top: 10, bottom: 10, left: 10, right: 10 }}
+            >
+              {isLoadingRemoveEventFromFolder ? (
+                <ActivityIndicator size="small" color={COLORS.red} />
+              ) : (
+                <SvgXml xml={ICONS.trash('red')} width={18} height={18} />
+              )}
+            </TouchableOpacity>
+          </If>
+
+          <If condition={!folderId}>
+            <TouchableOpacity
+              style={styles.saveButton}
+              onPress={() => handleSavePress()}
+              hitSlop={{ top: 10, bottom: 10, left: 10, right: 10 }}
+            >
+              <SvgXml
+                xml={
+                  isInAnyFolder
+                    ? ICONS.savedFilled('main')
+                    : ICONS.saved('main')
+                }
+                width={18}
+                height={18}
+              />
+            </TouchableOpacity>
+          </If>
         </View>
 
         <View style={styles.separatorDashedLine} />
@@ -147,27 +268,28 @@ export const TalentEventCard = ({
 
         <View style={styles.buttonsContainer}>
           <If condition={type === 'random'}>
-            <AppButton
-              title="Reject"
-              size="36"
-              isLoading={isLoadingReject}
-              loadingColor={COLORS.red}
-              wrapperStyles={styles.redButton}
-              titleStyles={{ color: COLORS.red }}
-              onPress={() => onPressReject?.(event.event_id)}
-            />
+            <If condition={!hideRejectButton}>
+              <AppButton
+                title="Reject"
+                size="36"
+                isLoading={isLoadingReject}
+                loadingColor={COLORS.red}
+                wrapperStyles={styles.redButton}
+                titleStyles={{ color: COLORS.red }}
+                onPress={handleReject}
+              />
+            </If>
             <AppButton
               title="Apply"
               size="36"
-              isLoading={isLoadingApply}
               loadingColor={COLORS.green}
               wrapperStyles={styles.greenButton}
               titleStyles={{ color: COLORS.green }}
-              onPress={() => onPressApply?.(event)}
+              onPress={handleApply}
             />
           </If>
 
-          <If condition={type === 'proposed'}>
+          <If condition={type === 'proposed' && !!event?.participant}>
             <AppButton
               title="Decline"
               size="36"
@@ -175,12 +297,13 @@ export const TalentEventCard = ({
               loadingColor={COLORS.red}
               wrapperStyles={styles.redButton}
               titleStyles={{ color: COLORS.red }}
-              onPress={() => onPressDecline?.(event.participation_id)}
+              onPress={handleDecline}
             />
           </If>
           <If
             condition={
-              type === 'proposed' || (type === 'denied' && event.can_reaccept)
+              type === 'proposed' ||
+              (type === 'denied' && !!event?.can_reaccept)
             }
           >
             <AppButton
@@ -190,11 +313,11 @@ export const TalentEventCard = ({
               loadingColor={COLORS.green}
               wrapperStyles={styles.greenButton}
               titleStyles={{ color: COLORS.green }}
-              onPress={() => onPressAccept?.(event)}
+              onPress={handleAccept}
             />
           </If>
 
-          <If condition={type === 'pending'}>
+          <If condition={type === 'pending' && !!event?.participant}>
             <AppButton
               variant="withBorder"
               size="36"
@@ -202,7 +325,7 @@ export const TalentEventCard = ({
               title="Cancel application"
               loadingColor="black"
               isLoading={isLoadingCancellation}
-              onPress={() => onCancelApplication?.(event.participation_id)}
+              onPress={handleCancelApplication}
             />
           </If>
 

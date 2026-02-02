@@ -111,11 +111,14 @@ export const TalentLocationSetupForm = forwardRef<
         control={control}
         name="parsed_location"
         render={({ field, fieldState }) => {
+          console.log('field', field);
           return (
             <PlacesPredictionsInput
               types={PlaceAutocompleteType.cities}
               onChangeText={onFormReset}
-              errorMessage={fieldState?.error?.message}
+              inputProps={{
+                errorMessage: fieldState?.error?.message,
+              }}
               onSelectPlace={res => field.onChange(res.parsed_details)}
               defaultValue={parsedLocation?.autocomplete_description}
             />

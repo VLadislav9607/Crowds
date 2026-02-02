@@ -1,12 +1,5 @@
-import { useRef } from 'react';
-import { TalentEventUnavailableTimeModalRef } from '../../modals';
-import { TalentEventAlreadyBookedModalRef } from '../../modals';
-import { TalentEventApplyConfirmModalRef } from '../../modals';
 import { useTalentPublicEvents } from '@actions';
 import { SearchEventsListProps } from './types';
-import { useRefetchQuery } from '@hooks';
-import { AddEventToForderModalData } from '../../../../events-folders';
-import { BottomSheetModal } from '@gorhom/bottom-sheet';
 
 export const useSearchEventsList = ({ filters }: SearchEventsListProps) => {
   const {
@@ -15,29 +8,20 @@ export const useSearchEventsList = ({ filters }: SearchEventsListProps) => {
     refetch,
     isLoading,
     hasNextPage,
+    error,
   } = useTalentPublicEvents({ ...filters }, { staleTime: 0, gcTime: 0 });
 
-  const { isRefetchingQuery, refetchQuery } = useRefetchQuery(refetch);
+  console.log('error', error);
 
   const events = eventsResponse?.data && !isLoading ? eventsResponse?.data : [];
 
-  const unavailableTimeModalRef =
-    useRef<TalentEventUnavailableTimeModalRef>(null);
-  const alreadyBookedModalRef = useRef<TalentEventAlreadyBookedModalRef>(null);
-  const applyConfirmModalRef = useRef<TalentEventApplyConfirmModalRef>(null);
-  const addEventToForderModalRef =
-    useRef<BottomSheetModal<AddEventToForderModalData> | null>(null);
+  console.log('events', events);
 
   return {
-    addEventToForderModalRef,
-    unavailableTimeModalRef,
-    alreadyBookedModalRef,
-    applyConfirmModalRef,
     isLoading,
     events,
-    isRefetchingQuery,
     hasNextPage,
-    refetchQuery,
+    refetch,
     fetchNextPage,
   };
 };

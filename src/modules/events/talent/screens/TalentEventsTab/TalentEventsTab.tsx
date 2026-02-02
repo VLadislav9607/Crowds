@@ -4,12 +4,12 @@ import { useTalentEventsByStatus, useTalentEventsCounts } from '@actions';
 
 import { TalentEventStatus, TalentEventsTabs } from '../../../types';
 import { styles } from './styles';
-import { TalentEventsList } from '../../components';
+import { TalentEventsViewList } from '../../components';
 
 const TAB_PARAMS: Record<
   TalentEventsTabs,
   {
-    status:TalentEventStatus;
+    status: TalentEventStatus;
     initiatedBy?: 'organization' | 'talent';
   }
 > = {
@@ -34,18 +34,12 @@ export const TalentEventsTab = () => {
 
   const currentParams = useMemo(() => TAB_PARAMS[selectedTab], [selectedTab]);
 
-  const {
-    data,
-    isLoading,
-    hasNextPage,
-    isFetchingNextPage,
-    fetchNextPage,
-    refetch,
-  } = useTalentEventsByStatus(currentParams);
+  const { data, isLoading, hasNextPage, fetchNextPage, refetch, error } =
+    useTalentEventsByStatus(currentParams);
+
+  console.log('error', error);
 
   const { proposals, pending, approved, denied } = useTalentEventsCounts();
-
-  const eventsData = data?.pages.flatMap(page => page.data) || [];
 
   const tabOptions: ITabOption<TalentEventsTabs>[] = useMemo(
     () => [
@@ -66,7 +60,8 @@ export const TalentEventsTab = () => {
       },
       {
         label: 'Denied',
-        value: 'denied', badge: denied || 0
+        value: 'denied',
+        badge: denied || 0,
       },
     ],
     [proposals, pending, approved, denied],
@@ -90,14 +85,12 @@ export const TalentEventsTab = () => {
         />
       }
     >
-      <TalentEventsList
-        type={selectedTab}
-        data={eventsData}
+      <TalentEventsViewList
+        data={data?.data || []}
         isLoading={isLoading}
-        isRefetching={isFetchingNextPage}
         hasMoreItems={hasNextPage}
-        onRefresh={() => refetch()}
-        onLoadMore={() => fetchNextPage()}
+        refetch={refetch}
+        onLoadMore={fetchNextPage}
         contentContainerStyle={styles.eventsListContent}
       />
     </ScreenWrapper>

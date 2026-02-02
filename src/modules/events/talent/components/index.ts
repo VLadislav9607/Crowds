@@ -1,3 +1,3 @@
 export * from './TalentEventCard';
-export * from './TalentEventsList';
 export * from './SearchEventsList';
+export * from './TalentEventsViewList';

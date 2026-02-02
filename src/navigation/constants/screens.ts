@@ -50,6 +50,7 @@ export enum Screens {
   CustomTalentsList = 'CustomTalentsList',
   AddTalentsToList = 'AddTalentsToList',
   ManageOrgTeam = 'ManageOrgTeam',
+  OrgProfileSetup = 'OrgProfileSetup',
 
   // Talent screens
   TalentSearchEvents = 'TalentSearchEvents',
@@ -57,6 +58,7 @@ export enum Screens {
 
   AvailabilitySetup = 'AvailabilitySetup',
   TalentProfileSetup = 'TalentProfileSetup',
+  TalentLocationSetup = 'TalentLocationSetup',
 
   // Chat screens
   ChatRoom = 'ChatRoom',

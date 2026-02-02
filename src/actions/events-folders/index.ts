@@ -4,3 +4,4 @@ export * from './useRenameEventsFolder';
 export * from './useToggleEventInEventsFolder';
 export * from './useGetEventsFolders';
 export * from './useGetEventsInEventsFolder';
+export * from './useRemoveEventFromEventsFolder';

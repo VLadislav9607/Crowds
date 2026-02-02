@@ -1,5 +1,4 @@
-import { IWithPaginationResponse } from '@services';
-import { ITalentEventCard } from '../useTalentEventsByStatus';
+import { Enums, IWithPaginationResponse, Tables } from '@services';
 
 export interface TalentPublicEventsBodyDto {
   search_query?: string;
@@ -14,5 +13,25 @@ export interface TalentPublicEventsBodyDto {
   filter_payment_type?: 'hourly' | 'fixed';
 }
 
+export interface TalentPublicEvent {
+  brief: string;
+  category_id: string;
+  created_at: string;
+  end_at: string;
+  event_id: string;
+  is_in_any_folder: boolean;
+  location: {
+    city?: string;
+    country?: string;
+    formatted_address?: string;
+    timezone?: string;
+  };
+  max_participations: number;
+  participant: Tables<'event_participations'> | null;
+  payment_amount: number;
+  payment_mode: Enums<'EventPaymentMode'>;
+  start_at: string;
+}
+
 export interface TalentPublicEventsResDto
-  extends IWithPaginationResponse<ITalentEventCard[]> {}
+  extends IWithPaginationResponse<TalentPublicEvent[]> {}

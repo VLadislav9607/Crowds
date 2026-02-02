@@ -47,4 +47,7 @@ export const styles = StyleSheet.create({
     alignItems: 'center',
     gap: 12,
   },
+  skeletonWrapper: {
+    gap: 16,
+  },
 });

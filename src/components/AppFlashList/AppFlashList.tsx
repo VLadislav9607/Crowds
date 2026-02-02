@@ -22,7 +22,9 @@ export const AppFlashList = <T,>({
   const { bottom } = useSafeAreaInsets();
 
   const isEmpty = !data || data.length === 0;
-  const bottomPadding = withBottomTab ? TAB_BAR_TOTAL_HEIGHT + bottom : 0;
+  const bottomPadding = withBottomTab
+    ? TAB_BAR_TOTAL_HEIGHT + (bottom || 16)
+    : bottom || 16;
 
   const BottomLoaderComponent = (
     <View style={styles.bottomLoader}>

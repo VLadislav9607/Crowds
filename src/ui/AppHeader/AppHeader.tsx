@@ -39,7 +39,7 @@ export const AppHeader = ({
   return (
     <>
       <If condition={headerVariant === 'empty'}>
-        <View style={[headerStyle]}>{customElement}</View>
+        <View style={[headerStyle, headerStyles]}>{customElement}</View>
       </If>
 
       <If condition={headerVariant === 'withLogo'}>

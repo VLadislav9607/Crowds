@@ -23,6 +23,8 @@ export const OrganizationEventsList = ({
     hasNextPage,
   } = useGetOrgEvents(filters);
 
+  console.log('eventsResponse', eventsResponse);
+
   const { isRefetchingQuery, refetchQuery } = useRefetchQuery(refetch);
 
   const renderEventCard = ({ item }: { item: OrgEventListItemDto }) => (
