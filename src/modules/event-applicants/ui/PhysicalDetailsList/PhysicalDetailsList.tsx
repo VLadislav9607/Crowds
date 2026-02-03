@@ -21,7 +21,7 @@ export const PhysicalDetailsList = ({ details }: PhysicalDetailsListProps) => {
           <AppText typography="regular_14" color="grayscale_500">
             {detail.label} -{' '}
           </AppText>
-          {detail.color && (
+          {detail.color != null && (
             <View
               style={[styles.colorBox, { backgroundColor: detail.color }]}
             />

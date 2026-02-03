@@ -5,6 +5,7 @@ import {
   TalentProfileRow,
   TalentsListSkeleton,
 } from '@modules/common';
+import { goToScreen, Screens } from '@navigation';
 import { AppButton, IconButton } from '@ui';
 import { ICONS } from '@assets';
 
@@ -14,6 +15,7 @@ import { ApplicantsListProps } from './types';
 export const ApplicantsList = ({
   data,
   variant,
+  selectedTalentId,
   hasNextPage,
   isFetchingNextPage,
   isLoading,
@@ -26,6 +28,8 @@ export const ApplicantsList = ({
   handleDecline,
 }: ApplicantsListProps) => {
   const renderRightAction = (talent: IEventParticipant) => {
+    const isSelected = talent.talentId === selectedTalentId;
+
     switch (variant) {
       case 'invited':
         return <></>;
@@ -33,16 +37,20 @@ export const ApplicantsList = ({
         return (
           <View style={styles.appliedAction}>
             <IconButton
-              isLoading={isAccepting}
+              isLoading={isSelected && isAccepting}
               style={styles.acceptButton}
               icon={ICONS.checked('white')}
-              onPress={() => handleAccept(talent.participationId ?? '')}
+              onPress={() =>
+                handleAccept(talent.participationId ?? '', talent.talentId)
+              }
             />
             <IconButton
-              isLoading={isRejecting}
+              isLoading={isSelected && isRejecting}
               style={styles.declineButton}
               icon={ICONS.closeIcon('white', 1)}
-              onPress={() => handleDecline(talent.participationId ?? '')}
+              onPress={() =>
+                handleDecline(talent.participationId ?? '', talent.talentId)
+              }
             />
           </View>
         );
@@ -51,7 +59,7 @@ export const ApplicantsList = ({
           <AppButton
             icon={ICONS.chats('black')}
             title="Message"
-            isLoading={isCreatingChat}
+            isLoading={isSelected && isCreatingChat}
             onPress={() => handlePressMessage(talent)}
             size="28"
             wrapperStyles={styles.messageButton}
@@ -77,6 +85,11 @@ export const ApplicantsList = ({
       renderItem={({ item }) => (
         <TalentProfileRow
           talent={item}
+          onPressCard={() =>
+            goToScreen(Screens.ApplicantProfile, {
+              applicantId: item.talentId,
+            })
+          }
           onMenuSelect={() => {}}
           popUpItems={[{ label: 'Report', value: 'report' }]}
           renderRightAction={() => renderRightAction(item)}

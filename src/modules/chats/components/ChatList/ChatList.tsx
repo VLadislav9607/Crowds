@@ -45,7 +45,6 @@ export const ChatList = ({
       keyExtractor={item => item.chatId}
       renderItem={renderChat}
       gap={0}
-      showBottomLoader={isLoading}
       skeleton={isLoading ? <ChatListSkeleton /> : undefined}
       emptyText={emptyText}
       withBottomTab={withBottomTab}

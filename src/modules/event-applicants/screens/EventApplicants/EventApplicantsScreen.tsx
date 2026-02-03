@@ -19,6 +19,7 @@ import { EventApplicantTab, getTabOptions, TAB_PARAMS } from './types';
 export const EventApplicantsScreen = () => {
   const { params } = useScreenNavigation<Screens.EventApplicants>();
   const [selectedTab, setSelectedTab] = useState<EventApplicantTab>('invited');
+  const [selectedTalentId, setSelectedTalentId] = useState<string | null>(null);
 
   const eventId = params?.eventId ?? '';
 
@@ -39,20 +40,29 @@ export const EventApplicantsScreen = () => {
   const { openChat, isPending: isCreatingChat } = useCreateChatAndNavigate();
 
   const chatWithTalent = (talent: IEventParticipant) => {
+    setSelectedTalentId(talent.talentId);
     openChat({
       eventId: params?.eventId ?? '',
       talentId: talent.talentId ?? '',
       title: talent.name ?? '',
-      imageUrl: talent.avatarUrl ?? '',
+      imageUrl: talent.avatar_url ?? '',
     });
   };
 
-  const handleAccept = (participationId: string) => {
-    acceptApplication.mutate({ participationId });
+  const handleAccept = (participationId: string, talentId: string) => {
+    setSelectedTalentId(talentId);
+    acceptApplication.mutate(
+      { participationId },
+      { onSettled: () => setSelectedTalentId(null) },
+    );
   };
 
-  const handleDecline = (participationId: string) => {
-    rejectApplication.mutate({ participationId });
+  const handleDecline = (participationId: string, talentId: string) => {
+    setSelectedTalentId(talentId);
+    rejectApplication.mutate(
+      { participationId },
+      { onSettled: () => setSelectedTalentId(null) },
+    );
   };
 
   return (
@@ -100,6 +110,7 @@ export const EventApplicantsScreen = () => {
 
       <ApplicantsList
         variant={selectedTab}
+        selectedTalentId={selectedTalentId ?? undefined}
         isCreatingChat={isCreatingChat}
         isLoading={isLoading}
         data={data?.pages.flatMap(page => page.data) || []}

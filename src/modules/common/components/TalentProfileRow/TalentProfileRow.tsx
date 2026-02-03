@@ -1,4 +1,4 @@
-import { View, GestureResponderEvent } from 'react-native';
+import { View, GestureResponderEvent, Pressable } from 'react-native';
 
 import { AppText, Avatar, IconButton } from '@ui';
 import { ICONS } from '@assets';
@@ -13,8 +13,9 @@ export const TalentProfileRow = ({
   popUpItems,
   onMenuSelect,
   renderRightAction,
+  onPressCard,
 }: TalentProfileRowProps) => {
-  const { name, location, avatarUrl } = talent;
+  const { name, location, avatar_url } = talent;
   const { showPopup } = usePopupMenu();
 
   const handleOpenMenu = (event: GestureResponderEvent) => {
@@ -28,12 +29,16 @@ export const TalentProfileRow = ({
   };
 
   return (
-    <View style={styles.container}>
+    <Pressable
+      style={styles.container}
+      disabled={!onPressCard}
+      onPress={onPressCard}
+    >
       <Avatar
         size={48}
         name={name}
         flag={TalentFlag.GREEN}
-        imgPath={avatarUrl}
+        imgPath={avatar_url}
         bucket="talents_avatars"
       />
 
@@ -51,6 +56,6 @@ export const TalentProfileRow = ({
         iconSize={24}
         onPress={handleOpenMenu}
       />
-    </View>
+    </Pressable>
   );
 };

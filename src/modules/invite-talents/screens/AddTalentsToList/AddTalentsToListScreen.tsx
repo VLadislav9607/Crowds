@@ -1,12 +1,10 @@
 import { StyleSheet, View } from 'react-native';
-
 import { ScreenWrapper } from '@components';
 import { SearchWithFilter } from '@ui';
 import { Screens, useScreenNavigation } from '@navigation';
 
 import { AddTalentsList } from '../../components';
-import { FilterTalentsModal } from '../../modals';
-import { useTalentsForCustomList, useAddTalentToCustomList } from '../../hooks';
+import { useAddTalentToCustomList, useTalentsForCustomList } from '../../hooks';
 
 export const AddTalentsToListScreen = () => {
   const { params } = useScreenNavigation<Screens.AddTalentsToList>();
@@ -17,15 +15,10 @@ export const AddTalentsToListScreen = () => {
   const {
     search,
     setSearch,
-    activeFiltersCount,
-    filterModalRef,
     talentsForInviteList,
     hasNextPage,
     isFetchingNextPage,
     isLoading,
-    handleOpenFilter,
-    handleApplyFilters,
-    filters,
     handleEndReached,
   } = useTalentsForCustomList(eventId, listId);
 
@@ -45,8 +38,8 @@ export const AddTalentsToListScreen = () => {
           hideFilterButton
           searchValue={search}
           onSearchChange={setSearch}
-          activeFiltersCount={activeFiltersCount}
-          onFilterPress={handleOpenFilter}
+          activeFiltersCount={0}
+          onFilterPress={() => {}}
         />
 
         <AddTalentsList
@@ -59,12 +52,6 @@ export const AddTalentsToListScreen = () => {
           onPressRightAction={handleAddTalent}
         />
       </View>
-
-      <FilterTalentsModal
-        bottomSheetRef={filterModalRef}
-        onApplyFilters={handleApplyFilters}
-        initialFilters={filters}
-      />
     </ScreenWrapper>
   );
 };
