@@ -46,7 +46,8 @@ export const mapInviteTalent = (
     talentId: talent.id,
     name: `${talent.first_name} ${talent.last_name}`.trim(),
     location,
-    avatarUrl: talent.avatar_path,
+    avatar_url: talent.avatar_path,
     flag,
+    status: 'pending',
   };
 };

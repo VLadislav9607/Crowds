@@ -1,144 +1,122 @@
-import { ScreenWithScrollWrapper } from '@components';
-import { ProfileSetupHeader } from '../../../profile/components';
-import {
-  useSharedValue,
-  useAnimatedStyle,
-  useAnimatedScrollHandler,
-} from 'react-native-reanimated';
+import { View, ActivityIndicator } from 'react-native';
 import Animated from 'react-native-reanimated';
-
 import { AppText } from '@ui';
+import { ScreenWithScrollWrapper, AppImage } from '@components';
+import { useGetTalentProfile } from '@actions';
+import { useScreenNavigation, Screens } from '@navigation';
+import { useAnimatedScrollHeader } from '@modules/common';
+import { formatPhysicalDetailsForDisplay } from '@modules/profile';
 
 import { styles } from './styles';
-import { Image, View } from 'react-native';
-import { PhysicalDetailsList, TagsList } from '../../ui';
-
-const PHYSICAL_DETAILS = [
-  { label: 'Hair', value: 'Red' },
-  { label: 'Hairstyle', value: 'Curly Hair' },
-  { label: 'Eyes', value: 'Blue' },
-  { label: 'Size', value: 'F (18)' },
-  { label: 'Size', value: 'M (L)' },
-  { label: 'Height', value: '5\'5" cm' },
-  { label: 'Weight', value: '68 kg' },
-  { label: 'Facial Attributes', value: 'Birthmark' },
-  { label: 'Body Attributes', value: 'Tattoos, Scars' },
-  { label: 'Tattoos', value: 'Sleeves, Neck' },
-  { label: 'Pregnancy', value: 'Yes, 5 Months' },
-  { label: 'Skin Colour', value: 'Warm Beige', color: '#D4A574' },
-];
-
-const TAGS = [
-  'Acting',
-  'Charismatic',
-  'Modeling',
-  'Singing',
-  'Talented',
-  'Musical',
-];
+import { HeaderTalentProfile, PhysicalDetailsList, TagsList } from '../../ui';
 
 export const ApplicantProfileScreen = () => {
-  const headerOpacity = useSharedValue(1);
-  const headerTranslateY = useSharedValue(0);
-  const headerHeight = useSharedValue(120);
+  const { params } = useScreenNavigation<Screens.ApplicantProfile>();
 
-  const scrollHandler = useAnimatedScrollHandler({
-    onScroll: event => {
-      const ANIMATION_START_LIMIT = 20;
-      const ANIMATION_END_LIMIT = 40;
-      const currentScrollY = event.contentOffset.y;
+  const {
+    data: profile,
+    isLoading,
+    error,
+  } = useGetTalentProfile(params?.applicantId);
 
-      if (currentScrollY <= ANIMATION_START_LIMIT) {
-        headerTranslateY.value = 0;
-        headerOpacity.value = 1;
-        headerHeight.value = 120;
-      } else if (currentScrollY <= ANIMATION_END_LIMIT) {
-        headerHeight.value = 120;
+  const { scrollHandler, animatedHeaderStyle } = useAnimatedScrollHeader();
 
-        const scrollProgress = currentScrollY - ANIMATION_START_LIMIT;
-        headerTranslateY.value = -scrollProgress;
-        headerOpacity.value =
-          1 - scrollProgress / (ANIMATION_END_LIMIT - ANIMATION_START_LIMIT);
-      } else {
-        headerTranslateY.value = -(ANIMATION_END_LIMIT - ANIMATION_START_LIMIT);
-        headerOpacity.value = 0;
-        headerHeight.value = 0;
-      }
-    },
-  });
+  if (isLoading) {
+    return (
+      <ScreenWithScrollWrapper
+        title="View Applicant Profile"
+        headerVariant="withTitle"
+        contentContainerStyle={[styles.contentContainer, styles.centered]}
+      >
+        <ActivityIndicator size="large" />
+      </ScreenWithScrollWrapper>
+    );
+  }
 
-  const animatedHeaderStyle = useAnimatedStyle(() => {
-    return {
-      opacity: headerOpacity.value,
-      transform: [{ translateY: headerTranslateY.value }],
-      height: headerHeight.value,
-    };
-  });
+  if (error || !profile) {
+    return (
+      <ScreenWithScrollWrapper
+        title="View Applicant Profile"
+        headerVariant="withTitle"
+        contentContainerStyle={[styles.contentContainer, styles.centered]}
+      >
+        <AppText style={styles.description}>
+          {error?.message ?? 'Failed to load profile'}
+        </AppText>
+      </ScreenWithScrollWrapper>
+    );
+  }
+
+  const fullName = [profile.first_name, profile.last_name]
+    .filter(Boolean)
+    .join(' ');
+
+  const rawPhysicalDetails =
+    profile.physical_details?.filter(it => !!it?.value) || [];
+  const physicalDetails = formatPhysicalDetailsForDisplay(rawPhysicalDetails);
+  const hasPhysicalDetails = physicalDetails.length > 0;
+  const hasTags = (profile.tags?.length ?? 0) > 0;
 
   return (
     <ScreenWithScrollWrapper
       title="View Applicant Profile"
-      headerVariant="withTitle"
+      headerVariant="withTitleAndImageBg"
       contentContainerStyle={styles.contentContainer}
       headerStyles={styles.headerStyles}
       animatedScrollHandler={scrollHandler}
       useAnimatedScrollView
       customElement={
         <Animated.View style={[styles.headerContainer, animatedHeaderStyle]}>
-          <ProfileSetupHeader showCircleBadge showCnBadge />
+          <HeaderTalentProfile
+            birthDate={profile.birth_date || ''}
+            gender={profile.gender}
+            location={profile.address || ''}
+            avatarUrl={profile.avatar_path || ''}
+            fullName={fullName}
+          />
         </Animated.View>
       }
     >
-      <View>
+      <View style={styles.section}>
         <AppText style={styles.label}>Physical Details</AppText>
-        <PhysicalDetailsList details={PHYSICAL_DETAILS} />
-      </View>
-
-      <View>
-        <AppText style={styles.label}>Biography</AppText>
-
-        <AppText style={styles.description}>
-          Duis dui eros, maximus mollis sollicitudin sed, rhoncus a diam.
-          Aliquam vel eleifend lorem. Ut luctus lacus in scelerisque cursus.
-          Vestibulum volutpat mauris a nulla hendrerit malesuada. Nam accumsan
-          enim id metus hendrerit scelerisque. Aliquam auctor augue nibh. Nam
-          rhoncus maximus dolor, quis porttitor dui dapibus et.
-        </AppText>
+        {hasPhysicalDetails ? (
+          <PhysicalDetailsList details={physicalDetails} />
+        ) : (
+          <AppText style={styles.description}>—</AppText>
+        )}
       </View>
 
       <View>
         <AppText style={styles.label}>Photo</AppText>
-
-        <Image
-          source={{
-            uri: 'https://images.pexels.com/photos/414612/pexels-photo-414612.jpeg?cs=srgb&dl=pexels-souvenirpixels-414612.jpg&fm=jpg',
-          }}
-          style={styles.photo}
-        />
+        {profile.avatar_full_path ? (
+          <View style={styles.photoContainer}>
+            <AppImage
+              bucket="talents_avatars"
+              imgPath={profile.avatar_full_path}
+              containerStyle={styles.photo}
+            />
+          </View>
+        ) : (
+          <AppText style={styles.description}>—</AppText>
+        )}
       </View>
 
       <View>
         <AppText style={styles.label}>Tags</AppText>
-        <TagsList tags={TAGS} />
-      </View>
-
-      <View>
-        <AppText style={styles.label}>Previous Experience</AppText>
-
-        <AppText style={styles.description}>
-          Duis dui eros, maximus mollis sollicitudin sed, rhoncus a diam.
-          Aliquam vel eleifend lorem. Ut luctus lacus in scelerisque cursus.
-          Vestibulum volutpat mauris a nulla hendrerit malesuada. Nam accumsan
-          enim id metus hendrerit scelerisque. Aliquam auctor augue nibh. Nam
-          rhoncus maximus dolor, quis porttitor dui dapibus et.
-        </AppText>
+        {hasTags ? (
+          <TagsList tags={profile.tags} />
+        ) : (
+          <AppText style={styles.description}>—</AppText>
+        )}
       </View>
 
       <View>
         <AppText style={styles.label}>Availability</AppText>
-
         <AppText style={styles.availability}>
-          ◉ Available for this month
+          ◉{' '}
+          {profile.availability === 'available'
+            ? 'Available for this month'
+            : profile.availability}
         </AppText>
       </View>
     </ScreenWithScrollWrapper>

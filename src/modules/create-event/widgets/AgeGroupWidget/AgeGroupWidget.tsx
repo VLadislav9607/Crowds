@@ -187,7 +187,7 @@ export const AgeGroupWidget = ({
             variant="withBorder"
             wrapperStyles={styles.removeButton}
             titleStyles={styles.removeButtonText}
-            icon={ICONS.trash()}
+            icon={ICONS.trash('red')}
             onPress={onRemove}
           />
         </View>

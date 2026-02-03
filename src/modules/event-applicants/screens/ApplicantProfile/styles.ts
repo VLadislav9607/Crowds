@@ -16,8 +16,10 @@ export const styles = StyleSheet.create({
     paddingBottom: 80,
   },
   headerStyles: {
-    backgroundColor: COLORS.black,
     paddingBottom: 55,
+  },
+  section: {
+    marginTop: 20,
   },
   label: {
     ...TYPOGRAPHY.bold_18,
@@ -28,10 +30,19 @@ export const styles = StyleSheet.create({
     ...TYPOGRAPHY.regular_14,
     lineHeight: 20,
   },
-  photo: {
+  photoContainer: {
     width: 165,
     height: 200,
+  },
+  photo: {
+    width: '100%',
+    height: '100%',
     borderRadius: 10,
+  },
+  centered: {
+    justifyContent: 'center',
+    alignItems: 'center',
+    flex: 1,
   },
   availability: {
     ...TYPOGRAPHY.bold_14,

@@ -163,15 +163,15 @@ export const useTalentEventsViewList = ({
     },
   });
 
-  const handleAccept = async (event: any) => {
+  const handleAccept = async (event: ITalentEventCard) => {
     applyConfirmModalRef.current?.open({
-      eventTitle: event.event_title,
-      formattedAddress: event.formatted_address,
+      eventTitle: event.title,
+      formattedAddress: `${event.location.city}, ${event.location.country}`,
       startAt: event.start_at,
       endAt: event.end_at,
       onConfirm: () => {
         acceptProposal.mutate({
-          participationId: event.participation_id,
+          participationId: event.participant?.id!,
         });
       },
     });

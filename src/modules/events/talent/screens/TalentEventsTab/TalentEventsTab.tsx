@@ -88,6 +88,7 @@ export const TalentEventsTab = () => {
       <TalentEventsViewList
         data={data?.data || []}
         isLoading={isLoading}
+        withBottomTab
         hasMoreItems={hasNextPage}
         refetch={refetch}
         onLoadMore={fetchNextPage}
