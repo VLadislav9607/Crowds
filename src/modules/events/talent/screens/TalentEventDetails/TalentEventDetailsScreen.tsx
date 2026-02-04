@@ -66,13 +66,22 @@ export const TalentEventDetailsScreen = () => {
       ]}
     >
       <View style={styles.container}>
-        <EventDetailsTextBlock
+        {/* <EventDetailsTextBlock
           label="Description"
           text="This event is based on Australia for an live music concert. Please make sure that you arrive at or before the time specified below. Once you have arrived, please proceed to the check in area, click check in below and follow the prompts."
           showSkeleton={isLoading}
-        />
+        /> */}
 
-        <EventDetailsCardWithMap showSkeleton={isLoading} />
+        <EventDetailsCardWithMap
+          location={{
+            latitude: -37.8136,
+            longitude: 144.9631,
+            formatted_address: '333 Bridge Road, Richmond VIC Australia',
+          }}
+          startAtFormatted="03 OCT, 2025"
+          duration="8:30 PM"
+          showSkeleton={isLoading}
+        />
 
         <EventDetailsRequirements
           requirements={[

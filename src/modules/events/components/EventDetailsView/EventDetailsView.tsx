@@ -1,4 +1,4 @@
-import { AppText, IconText } from '@ui';
+import { AppText, DashedLine, IconText } from '@ui';
 import { Image, Linking, TouchableOpacity, View } from 'react-native';
 import {
   EventDetailsCardWithMapProps,
@@ -6,11 +6,15 @@ import {
   EventDetailsTextBlockProps,
   EventDetailsRequirementsProps,
   EventDetailsTagsProps,
+  EventGroupDetailsProps,
 } from './types';
 import { If, Skeleton } from '@components';
 import { ICONS } from '@assets';
 import { styles } from './styles';
 import { GOOGLE_PLACES_API_KEY } from '@env';
+import { prepareGroupDetailsRequirements } from '../../helpers';
+import { SvgXml } from 'react-native-svg';
+import { memo, useState } from 'react';
 
 export const EventDetailsCardWithMap = ({
   showSkeleton = false,
@@ -279,18 +283,25 @@ export const EventDetailsRequirements = ({
   return (
     <View style={[styles.requirementsContainer, containerStyle]}>
       {requirements?.map(requirement => (
-        <View key={requirement.title}>
-          <AppText typography="semibold_16" margin={{ bottom: 6 }}>
-            {requirement.title}
-          </AppText>
-          <View style={styles.requirementsItems}>
-            {requirement.options.map(option => (
-              <AppText key={option} typography="regular_14">
-                • {option}
-              </AppText>
-            ))}
+        <If key={requirement.title} condition={!requirement.invisible}>
+          <View key={requirement.title}>
+            <AppText typography="semibold_16" margin={{ bottom: 6 }}>
+              {requirement.title}
+            </AppText>
+            <View
+              style={[
+                styles.requirementsItems,
+                requirement.useRowLayout && styles.requirementsItemRow,
+              ]}
+            >
+              {requirement.options.map(option => (
+                <AppText key={option} typography="regular_14">
+                  • {option}
+                </AppText>
+              ))}
+            </View>
           </View>
-        </View>
+        </If>
       ))}
     </View>
   );
@@ -341,3 +352,58 @@ export const EventDetailsTags = ({
     </View>
   );
 };
+
+export const EventGroupDetails = memo(
+  ({ showSkeleton = false, group }: EventGroupDetailsProps) => {
+    const [isOpen, setIsOpen] = useState(false);
+
+    if (!showSkeleton && !group) return null;
+
+    const { mainOptions, preferencesOptions } =
+      prepareGroupDetailsRequirements(group);
+
+    const preferencesCount = preferencesOptions.filter(
+      option => !option.invisible,
+    ).length;
+
+    return (
+      <View key={group.id} style={[styles.groupDetailsContainer]}>
+        <EventDetailsRequirements requirements={mainOptions} />
+
+        <If condition={!!preferencesCount}>
+          <DashedLine />
+
+          <TouchableOpacity
+            activeOpacity={0.5}
+            hitSlop={{ top: 16, bottom: 16 }}
+            onPress={() => setIsOpen(!isOpen)}
+            style={[styles.groupDetailsPreferencesButton]}
+          >
+            <AppText typography="bold_16" color="main" margin={{ bottom: 8 }}>
+              {preferencesCount} Preference{preferencesCount > 1 ? 's' : ''}
+            </AppText>
+
+            <SvgXml
+              width={16}
+              height={16}
+              xml={ICONS.chevronDown('main')}
+              style={[isOpen && styles.rotateIcon]}
+            />
+          </TouchableOpacity>
+        </If>
+
+        <If condition={isOpen}>
+          <EventDetailsRequirements requirements={preferencesOptions} />
+        </If>
+      </View>
+    );
+  },
+  (prevProps, nextProps) => {
+    return (
+      JSON.stringify(prevProps.group) === JSON.stringify(nextProps.group) &&
+      prevProps.showSkeleton === nextProps.showSkeleton
+    );
+  },
+);
+
+EventGroupDetails.displayName = 'EventGroupDetails';
