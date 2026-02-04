@@ -5,6 +5,7 @@ export interface ActionConfirmationModalRefProps {
   subtitle?: string;
   confirmButtonText?: string;
   cancelButtonText?: string;
+  hideToast?: boolean;
   onConfirm?: () => void | Promise<void>;
 }
 

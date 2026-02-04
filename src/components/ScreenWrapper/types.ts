@@ -7,4 +7,5 @@ export interface IScreenWrapperProps extends IAppHeaderProps {
   wrapperStyle?: StyleProp<ViewStyle>;
   containerStyle?: StyleProp<ViewStyle>;
   contentContainerStyle?: StyleProp<ViewStyle>;
+  showLoader?: boolean;
 }

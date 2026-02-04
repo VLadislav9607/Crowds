@@ -51,6 +51,10 @@ export enum Screens {
   AddTalentsToList = 'AddTalentsToList',
   ManageOrgTeam = 'ManageOrgTeam',
   OrgProfileSetup = 'OrgProfileSetup',
+  OrgEventDetails = 'OrgEventDetails',
+
+  // Event Management screens
+  EventQRCodes = 'EventQRCodes',
 
   // Talent screens
   TalentSearchEvents = 'TalentSearchEvents',

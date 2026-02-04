@@ -45,6 +45,7 @@ setup_permissions([
   # 'StoreKit',
 ])
 
+pod 'RNFS', :path => '../node_modules/react-native-fs'
 
 linkage = ENV['USE_FRAMEWORKS']
 if linkage != nil

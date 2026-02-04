@@ -26,7 +26,6 @@ export const styles = StyleSheet.create({
     ...TYPOGRAPHY.medium_13,
   },
   eventItemCount: {
-    ...TYPOGRAPHY.bold_30,
     marginTop: 'auto',
   },
   row: {
@@ -38,5 +37,14 @@ export const styles = StyleSheet.create({
   label: {
     ...TYPOGRAPHY.medium_10,
     textTransform: 'uppercase',
+  },
+  skeletonContainer: {
+    backgroundColor: 'white',
+    position: 'absolute',
+    left: 0,
+    top: 0,
+    right: 0,
+    bottom: 0,
+    zIndex: 1,
   },
 });

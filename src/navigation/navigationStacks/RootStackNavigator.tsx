@@ -64,6 +64,8 @@ import {
   TalentEventsFolder,
   RenameEventsFolder,
 } from '../../modules/events-folders';
+import { OrgEventDetails } from '../../modules/events/organization/screens';
+import { EventQRCodesScreen } from '../../modules/event-management';
 
 const RootStack = createStackNavigator<RootStackParamList>();
 
@@ -241,6 +243,14 @@ export const RootStackNavigator = () => {
       <RootStack.Screen
         name={Screens.OrgProfileSetup}
         component={OrgProfileSetupScreen}
+      />
+      <RootStack.Screen
+        name={Screens.OrgEventDetails}
+        component={OrgEventDetails}
+      />
+      <RootStack.Screen
+        name={Screens.EventQRCodes}
+        component={EventQRCodesScreen}
       />
     </RootStack.Navigator>
   );

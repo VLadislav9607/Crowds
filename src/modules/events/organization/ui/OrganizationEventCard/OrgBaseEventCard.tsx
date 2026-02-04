@@ -1,4 +1,4 @@
-import { View } from 'react-native';
+import { TouchableOpacity, View } from 'react-native';
 import { ReactNode } from 'react';
 import { IconText, AppText, DashedLine } from '@ui';
 import { ICONS } from '@assets';
@@ -8,6 +8,7 @@ import { formatInTimeZone } from 'date-fns-tz';
 import { AppImage, If } from '@components';
 import { calculateEventDuration } from '../../../helpers';
 import { ActionConfirmationModalRef } from '@modules/common';
+import { goToScreen, Screens } from '@navigation';
 
 export interface IOrgBaseEventCardProps {
   event?: OrgEventListItemDto;
@@ -21,6 +22,9 @@ export const OrgBaseEventCard = ({
   headerRight,
   footer,
 }: IOrgBaseEventCardProps) => {
+  const onPress = () => {
+    goToScreen(Screens.OrgEventDetails, { eventId: event?.id ?? '' });
+  };
   const timezone = event?.event_location?.timezone || 'UTC';
   const { organizationMember } = useGetMe();
 
@@ -49,7 +53,11 @@ export const OrgBaseEventCard = ({
   const isSomeDataPresent = isSomeDetailsPresent || isLocationPresent;
 
   return (
-    <View style={cardStyles.container}>
+    <TouchableOpacity
+      activeOpacity={0.8}
+      style={cardStyles.container}
+      onPress={onPress}
+    >
       {/* Header Row */}
       <View style={cardStyles.nameRow}>
         <AppText style={cardStyles.name} numberOfLines={1} typography="bold_14">
@@ -133,6 +141,6 @@ export const OrgBaseEventCard = ({
 
       {/* Footer */}
       {footer}
-    </View>
+    </TouchableOpacity>
   );
 };

@@ -54,6 +54,10 @@ export type RootStackParamList = {
   };
   [Screens.ManageOrgTeam]: undefined;
   [Screens.OrgProfileSetup]: undefined;
+  [Screens.OrgEventDetails]: { eventId: string };
+
+  // Event Management screens
+  [Screens.EventQRCodes]: { eventId: string; timezone?: string };
 
   // Talent screens
   [Screens.TalentSearchEvents]?: {

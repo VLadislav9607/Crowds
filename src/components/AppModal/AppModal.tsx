@@ -16,11 +16,15 @@ export const AppModal = ({
   subtitleProps,
   hideCloseButton,
   contentContainerStyle,
+  hideToast,
   ...props
 }: AppModalProps) => {
   return (
     <Modal onBackdropPress={props.onClose} backdropOpacity={0.5} {...props}>
-      <AppToast removeTopOffset />
+      <If condition={!hideToast}>
+        {' '}
+        <AppToast removeTopOffset />{' '}
+      </If>
       <View
         style={[
           styles.container,
