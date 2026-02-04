@@ -6,6 +6,7 @@ import { styles } from './styles';
 import { ICONS } from '@assets';
 import { SvgXml } from 'react-native-svg';
 import { useState } from 'react';
+import { If, Skeleton } from '@components';
 
 export const AppInput = ({
   label,
@@ -16,6 +17,7 @@ export const AppInput = ({
   containerStyle,
   errorMessageProps,
   inputContainerStyle,
+  skeleton = false,
   ...props
 }: AppInputProps) => {
   const [isHidden, setIsHidden] = useState(props.secureTextEntry);
@@ -33,33 +35,49 @@ export const AppInput = ({
         </AppText>
       )}
 
-      <View
-        style={[
-          styles.inputWrapper,
-          props.disabled && styles.disabledInputWrapper,
-          inputContainerStyle,
-        ]}
-      >
-        <TextInput
-          style={[styles.input, style]}
-          placeholderTextColor={
-            props.disabled ? COLORS.black_20 : COLORS.black_40
-          }
-          editable={!props.disabled}
-          {...props}
-          secureTextEntry={isHidden}
-        />
+      <If condition={skeleton}>
+        <Skeleton>
+          <Skeleton.Item
+            width="100%"
+            borderRadius={4}
+            height={inputContainerStyle?.height || 37}
+            marginTop={1}
+          />
+        </Skeleton>
+      </If>
 
-        {props.secureTextEntry && (
-          <TouchableOpacity hitSlop={10} onPress={() => setIsHidden(!isHidden)}>
-            <SvgXml
-              xml={isHidden ? ICONS.eyeIcon() : ICONS.eyeClosedIcon()}
-              width={24}
-              height={24}
-            />
-          </TouchableOpacity>
-        )}
-      </View>
+      <If condition={!skeleton}>
+        <View
+          style={[
+            styles.inputWrapper,
+            props.disabled && styles.disabledInputWrapper,
+            inputContainerStyle,
+          ]}
+        >
+          <TextInput
+            style={[styles.input, style]}
+            placeholderTextColor={
+              props.disabled ? COLORS.black_20 : COLORS.black_40
+            }
+            editable={!props.disabled}
+            {...props}
+            secureTextEntry={isHidden}
+          />
+
+          {props.secureTextEntry && (
+            <TouchableOpacity
+              hitSlop={10}
+              onPress={() => setIsHidden(!isHidden)}
+            >
+              <SvgXml
+                xml={isHidden ? ICONS.eyeIcon() : ICONS.eyeClosedIcon()}
+                width={24}
+                height={24}
+              />
+            </TouchableOpacity>
+          )}
+        </View>
+      </If>
 
       <AppText
         renderIf={!!description && !errorMessage}

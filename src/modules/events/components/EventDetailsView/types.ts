@@ -1,15 +1,22 @@
-import { StyleProp, ViewStyle } from "react-native";
+import { StyleProp, ViewStyle } from 'react-native';
 
 export type EventDetailsTextBlockProps = {
-  text?: string;
+  text?: string | null;
   containerStyle?: StyleProp<ViewStyle>;
   showSkeleton?: boolean;
-  label:string;
+  label: string;
 };
 
 export type EventDetailsCardWithMapProps = {
   showSkeleton?: boolean;
   containerStyle?: StyleProp<ViewStyle>;
+  location?: {
+    formatted_address: string;
+    latitude: number;
+    longitude: number;
+  };
+  startAtFormatted?: string;
+  duration?: string;
 };
 
 export type EventDetailsCardWithoutMapProps = {
@@ -29,6 +36,5 @@ export type EventDetailsRequirementsProps = {
 export type EventDetailsTagsProps = {
   showSkeleton?: boolean;
   containerStyle?: StyleProp<ViewStyle>;
-  tags?:string[];
+  tags?: string[];
 };
-

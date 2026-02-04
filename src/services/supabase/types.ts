@@ -696,6 +696,47 @@ export type Database = {
           },
         ];
       };
+      event_qr_codes: {
+        Row: {
+          created_at: string;
+          end_at: string;
+          event_id: string;
+          id: string;
+          name: string;
+          qr_path: string;
+          start_at: string;
+          token: string;
+        };
+        Insert: {
+          created_at?: string;
+          end_at: string;
+          event_id: string;
+          id?: string;
+          name: string;
+          qr_path: string;
+          start_at: string;
+          token: string;
+        };
+        Update: {
+          created_at?: string;
+          end_at?: string;
+          event_id?: string;
+          id?: string;
+          name?: string;
+          qr_path?: string;
+          start_at?: string;
+          token?: string;
+        };
+        Relationships: [
+          {
+            foreignKeyName: 'event_qr_codes_event_id_fkey';
+            columns: ['event_id'];
+            isOneToOne: false;
+            referencedRelation: 'events';
+            referencedColumns: ['id'];
+          },
+        ];
+      };
       events: {
         Row: {
           brief: string | null;
@@ -1126,6 +1167,33 @@ export type Database = {
             referencedColumns: ['id'];
           },
         ];
+      };
+      push_devices: {
+        Row: {
+          device_id: string;
+          fcm_token: string;
+          id: string;
+          platform: string;
+          updated_at: string | null;
+          user_id: string;
+        };
+        Insert: {
+          device_id: string;
+          fcm_token: string;
+          id?: string;
+          platform: string;
+          updated_at?: string | null;
+          user_id: string;
+        };
+        Update: {
+          device_id?: string;
+          fcm_token?: string;
+          id?: string;
+          platform?: string;
+          updated_at?: string | null;
+          user_id?: string;
+        };
+        Relationships: [];
       };
       talent_event_folder_items: {
         Row: {
@@ -1609,6 +1677,10 @@ export type Database = {
         };
       };
       create_draft_or_event: { Args: { payload: Json }; Returns: string };
+      create_event_group_chat: {
+        Args: { p_event_id: string; p_organization_id: string };
+        Returns: string;
+      };
       create_event_with_preferences: {
         Args: { payload: Json };
         Returns: string;
@@ -1622,6 +1694,7 @@ export type Database = {
         Returns: undefined;
       };
       delete_draft_event: { Args: { event_id_param: string }; Returns: string };
+      delete_event_qr_code: { Args: { p_qr_id: string }; Returns: undefined };
       delete_talent_events_folder: {
         Args: { p_folder_id: string };
         Returns: undefined;
@@ -1643,6 +1716,10 @@ export type Database = {
         Returns: Json;
       };
       earth: { Args: never; Returns: number };
+      ensure_event_group_chat_access: {
+        Args: { p_event_id: string };
+        Returns: string;
+      };
       get_chat_messages: {
         Args: { p_chat_id: string; p_cursor?: string; p_limit?: number };
         Returns: {
@@ -1722,6 +1799,11 @@ export type Database = {
           invited: number;
           rejected: number;
         }[];
+      };
+      get_event_qr_code: { Args: { p_qr_id: string }; Returns: Json };
+      get_event_qr_codes: {
+        Args: { p_event_id: string; p_limit?: number; p_offset?: number };
+        Returns: Json;
       };
       get_events_stats_by_organization: {
         Args: { p_organization_id: string };
@@ -1865,13 +1947,14 @@ export type Database = {
       };
       get_talent_participation_events: {
         Args: {
-          p_initiated_by?: string;
+          p_initiated_by?: Database['public']['Enums']['participation_initiator'];
           p_limit?: number;
           p_offset?: number;
-          p_status: string;
+          p_status: Database['public']['Enums']['participation_status'];
         };
         Returns: Json;
       };
+      get_talent_profile: { Args: { p_talent_id: string }; Returns: Json };
       has_org_member_permission: {
         Args: {
           p_branch_id: string;
@@ -1914,6 +1997,7 @@ export type Database = {
         Args: { p_folder_id: string; p_name: string };
         Returns: undefined;
       };
+      scan_qr_code_by_talent: { Args: { p_token: string }; Returns: Json };
       timeslot_range: {
         Args: {
           p_custom_from: string;
@@ -1933,6 +2017,15 @@ export type Database = {
       update_event_draft: {
         Args: { event_id_param: string; payload: Json };
         Returns: string;
+      };
+      update_event_qr_code: {
+        Args: {
+          p_end_at?: string;
+          p_name?: string;
+          p_qr_id: string;
+          p_start_at?: string;
+        };
+        Returns: undefined;
       };
       update_organization: {
         Args: {
@@ -1967,6 +2060,10 @@ export type Database = {
           p_travel_days: Json;
           p_trip_availability: Database['public']['Enums']['trip_availability_type'];
         };
+        Returns: undefined;
+      };
+      upsert_push_device: {
+        Args: { p_device_id: string; p_fcm_token: string; p_platform: string };
         Returns: undefined;
       };
       upsert_talent_full_body_photo: {

@@ -28,4 +28,5 @@ export interface EventForOrgMemberDto
   event_age_groups: (Omit<Tables<'event_age_groups'>, 'created_at'> & {
     preferences: EventPreferenceDto;
   })[];
+  qr_codes_count: number;
 }

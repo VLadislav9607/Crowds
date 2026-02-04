@@ -10,5 +10,6 @@ export interface AppModalProps extends Partial<ModalProps> {
   subtitleProps?: Partial<AppTextProps>;
   hideCloseButton?: boolean;
   contentContainerStyle?: StyleProp<ViewStyle>;
+  hideToast?: boolean;
   onClose?: () => void;
 }

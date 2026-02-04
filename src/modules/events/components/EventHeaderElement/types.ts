@@ -1,3 +1,5 @@
 export interface EventHeaderElementProps {
-    showSkeleton?: boolean;
+  showSkeleton?: boolean;
+  title?: string;
+  image?: string;
 }

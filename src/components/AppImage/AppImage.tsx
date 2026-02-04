@@ -23,6 +23,7 @@ export const AppImage = ({
     bucket,
     path: imgPath || undefined,
   });
+
   const [isLoaded, setIsLoaded] = useState(false);
 
   const url = response?.url || imgUri;
