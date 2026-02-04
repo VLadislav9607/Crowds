@@ -1,4 +1,7 @@
 export enum Screens {
+  // Common screens
+  PDFViewer = 'PDFViewer',
+
   // Authorization
   SplashScreen = 'SplashScreen',
   First = 'First',

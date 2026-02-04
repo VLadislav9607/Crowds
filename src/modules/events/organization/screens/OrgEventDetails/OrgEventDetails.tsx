@@ -21,10 +21,9 @@ import { useCreateChatAndNavigate } from '@modules/common';
 import {
   EventDetailsCardWithMap,
   EventDetailsTextBlock,
-  EventDetailsRequirements,
   EventHeaderElement,
+  EventGroupDetails,
 } from '../../../components';
-// import { CancelEventAttendanceModal } from '../../modals';
 import { styles } from './styles';
 import { formatInTimeZone } from 'date-fns-tz';
 import { calculateEventDuration } from '../../../helpers';
@@ -62,9 +61,43 @@ export const OrgEventDetails = () => {
     });
   };
 
+  console.log('event', event);
+
   const handleChatWithGroup = () => {
     getGroupChatId(params?.eventId ?? '');
   };
+
+  // const converGroupDetailsRequirements = (group: EventAgeGroupDto): EventDetailsRequirementItem[] => {
+  //   const genderOptions = []
+  //   if(!!group.male_count) genderOptions.push(`${group.male_count} Male`);
+  //   if(!!group.female_count) genderOptions.push(`${group.female_count} Female`);
+  //   if(!!group.other_count) genderOptions.push(`${group.other_count} Others`);
+
+  //   const isPreferencesPresent = !!group?.preferences
+
+  //   const ethnicityOptionsList = isPreferencesPresent ? ethnicityOptions.filter(item => group.preferences.ethnicities?.some(ethnicity => ethnicity.value === item.value)).map(item => item.label) ?? [] : [];
+  //   const accentOptionsList = isPreferencesPresent ? accentOptions.filter(item => group.preferences.accents?.some(accent => accent.value === item.value)).map(item => item.label) ?? [] : [];
+  //   const eyeColorOptionsList = isPreferencesPresent ? eyeColourOptions.filter(item => group.preferences.eye_colors?.some(eyeColor => eyeColor.value === item.value)).map(item => item.label) ?? [] : [];
+  //   const hairColourOptionsList = isPreferencesPresent ? hairColourOptions.filter(item => group.preferences.hair_colors?.some(hairColor => hairColor.value === item.value)).map(item => item.label) ?? [] : [];
+  //   const facialAttributesOptionsList = isPreferencesPresent ? facialAttributesOptions.filter(item => group.preferences.facial_attributes?.some(facialAttribute => facialAttribute.value === item.value)).map(item => item.label) ?? [] : [];
+  //   const bodyAttributesOptionsList = isPreferencesPresent ? bodyAttributesOptions.filter(item => group.preferences.body_attributes?.some(bodyAttribute => bodyAttribute.value === item.value)).map(item => item.label) ?? [] : [];
+  //   const tattooSpotOptionsList = isPreferencesPresent ? tattooSpotOptions.filter(item => group.preferences.tattoo_spots?.some(tattooSpot => tattooSpot.value === item.value)).map(item => item.label) ?? [] : [];
+  //   const skinToneOptionsList = isPreferencesPresent ? skinToneOptions.filter(item => group.preferences.skin_tones?.some(skinTone => skinTone.value === item.value)).map(item => item.label) ?? [] : [];
+
+  //   return [
+  //     {title: 'Gender Required', options: genderOptions , useRowLayout: true},
+  //     {title: 'Age Group', options: [`${group.min_age} - ${group.max_age} years of age`]},
+  //     {title: 'Ethnicity', options: ethnicityOptionsList, invisible: !ethnicityOptionsList.length, useRowLayout: true},
+  //     {title: 'Accent', options: accentOptionsList, invisible: !accentOptionsList.length, useRowLayout: true},
+  //     {title: 'Eye Color', options: eyeColorOptionsList, invisible: !eyeColorOptionsList.length, useRowLayout: true},
+  //     {title: 'Hair Colour', options: hairColourOptionsList, invisible: !hairColourOptionsList.length, useRowLayout: true},
+  //     {title: 'Facial Attributes', options: facialAttributesOptionsList, invisible: !facialAttributesOptionsList.length, useRowLayout: true},
+  //     {title: 'Body Attributes', options: bodyAttributesOptionsList, invisible: !bodyAttributesOptionsList.length, useRowLayout: true},
+  //     {title: 'Tattoo Spot', options: tattooSpotOptionsList, invisible: !tattooSpotOptionsList.length, useRowLayout: true},
+  //     {title: 'Skin Tone', options: skinToneOptionsList, invisible: !skinToneOptionsList.length, useRowLayout: true},
+  //     {title: 'Pregnancy', options: isPreferencesPresent ? (group.preferences.pregnancy_allowed ? [`Required: ${group.preferences.pregnancy_months} months`] : ['Not Allowed']) : [], invisible: typeof group?.preferences?.pregnancy_allowed !== 'boolean' },
+  //   ];
+  // }
 
   const startAtTimezone = event?.start_at
     ? formatInTimeZone(
@@ -197,12 +230,6 @@ export const OrgEventDetails = () => {
           </TouchableOpacity>
         </If>
 
-        <EventDetailsTextBlock
-          showSkeleton={isLoading}
-          label="Description"
-          text={event?.brief}
-        />
-
         <EventDetailsCardWithMap
           showSkeleton={isLoading}
           startAtFormatted={startAtTimezone}
@@ -214,17 +241,36 @@ export const OrgEventDetails = () => {
           duration={duration.formatted}
         />
 
-        <EventDetailsRequirements
-          requirements={[
-            { title: 'Gender Required', options: ['Male'] },
-            {
-              title: 'People Required',
-              options: ['30 Adults upto 29 years of age'],
-            },
-            { title: 'Industry', options: ['Reality Television'] },
-          ]}
+        <EventDetailsTextBlock
           showSkeleton={isLoading}
+          label="Brief"
+          text={event?.brief}
         />
+
+        <EventDetailsTextBlock
+          showSkeleton={isLoading}
+          label="Event Visibility"
+          text={event?.visibility === 'public' ? 'Public' : 'Private'}
+        />
+
+        <EventDetailsTextBlock
+          showSkeleton={isLoading}
+          label="Payment"
+          text={
+            event?.payment_mode === 'fixed'
+              ? `$${event?.payment_amount}`
+              : `$${event?.payment_amount} per hour`
+          }
+        />
+
+        <View style={{ gap: 10 }}>
+          <AppText typography="bold_16" margin={{ bottom: 8 }}>
+            Participant Requirements
+          </AppText>
+          {event?.event_age_groups?.map(group => (
+            <EventGroupDetails group={group} key={group.id} />
+          ))}
+        </View>
 
         {/* <EventDetailsTags
           tags={['Tag 1', 'Tag 2', 'Tag 3']}
@@ -242,18 +288,18 @@ export const OrgEventDetails = () => {
             <ActionPurpleButton
               icon={ICONS.upload('main')}
               titleIcon={ICONS.paperClip('main')}
-              title="VIEW ATTACHED FILE"
+              title="VIEW NDA"
+              onPress={() => {
+                goToScreen(Screens.PDFViewer, {
+                  pdfPath: event?.nda_file_path!,
+                  bucket: 'event_nda',
+                  title: 'Event NDA',
+                });
+              }}
             />
           )}
         </If>
       </View>
-
-      {/* <CancelEventAttendanceModal
-        eventName={eventName}
-        participationId={params?.participationId ?? ''}
-        isVisible={isOpenModal}
-        onClose={() => setIsOpenModal(false)}
-      /> */}
     </ScreenWithScrollWrapper>
   );
 };

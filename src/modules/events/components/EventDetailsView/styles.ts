@@ -42,6 +42,11 @@ export const styles = StyleSheet.create({
   requirementsItems: {
     gap: 6,
   },
+  requirementsItemRow: {
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+    gap: 16,
+  },
 
   // EventDetailsTags
   tagsContainer: {
@@ -75,5 +80,20 @@ export const styles = StyleSheet.create({
     flexDirection: 'row',
     flexWrap: 'wrap',
     gap: 8,
+  },
+  groupDetailsContainer: {
+    borderWidth: 1,
+    gap: 20,
+    borderRadius: 20,
+    borderColor: COLORS.light_gray3,
+    padding: 16,
+  },
+  groupDetailsPreferencesButton: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+  },
+  rotateIcon: {
+    transform: [{ rotate: '180deg' }],
   },
 });

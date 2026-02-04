@@ -22,11 +22,14 @@ export interface EventPreferenceDto {
   skin_tones: Tables<'event_preference_skin_tones'>[] | null;
 }
 
+export interface EventAgeGroupDto
+  extends Omit<Tables<'event_age_groups'>, 'created_at'> {
+  preferences?: EventPreferenceDto;
+}
+
 export interface EventForOrgMemberDto
   extends Omit<Tables<'events'>, 'created_at' | 'creator_id' | 'deleted_at'> {
   event_location: Omit<Tables<'event_locations'>, 'created_at'>;
-  event_age_groups: (Omit<Tables<'event_age_groups'>, 'created_at'> & {
-    preferences: EventPreferenceDto;
-  })[];
+  event_age_groups: EventAgeGroupDto[];
   qr_codes_count: number;
 }
