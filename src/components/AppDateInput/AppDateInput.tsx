@@ -5,7 +5,7 @@ import { ICONS } from '@assets';
 import { styles } from './styles';
 import { SvgXml } from 'react-native-svg';
 import { useState } from 'react';
-import { If } from '@components';
+import { If, Skeleton } from '@components';
 import DatePicker from 'react-native-date-picker';
 import { format } from 'date-fns';
 
@@ -29,6 +29,8 @@ export const AppDateInput = ({
   minimumDate,
   valueFormat,
   locale,
+  defaultIconColor = 'main',
+  skeleton = false,
   ...props
 }: AppDateInputProps) => {
   const [showDatePicker, setShowDatePicker] = useState(false);
@@ -62,59 +64,70 @@ export const AppDateInput = ({
           </AppText>
         </If>
 
-        <TouchableOpacity
-          activeOpacity={0.5}
-          onPress={onShowPicker}
-          disabled={props.disabled}
-          style={[
-            styles.field,
-            fieldStyle,
-            props.disabled && styles.disabledField,
-          ]}
-        >
-          <If condition={defaultIconPosition === 'left'}>
-            <SvgXml
-              xml={customIcon || ICONS.calendarIcon('main')}
-              width={20}
-              height={20}
+        <If condition={skeleton}>
+          <Skeleton>
+            <Skeleton.Item
+              width="100%"
+              borderRadius={4}
+              height={37}
+              marginTop={1}
             />
-          </If>
+          </Skeleton>
+        </If>
+        <If condition={!skeleton}>
+          <TouchableOpacity
+            activeOpacity={0.5}
+            onPress={onShowPicker}
+            disabled={props.disabled}
+            style={[
+              styles.field,
+              fieldStyle,
+              props.disabled && styles.disabledField,
+            ]}
+          >
+            <If condition={defaultIconPosition === 'left'}>
+              <SvgXml
+                xml={customIcon || ICONS.calendarIcon(defaultIconColor)}
+                width={20}
+                height={20}
+              />
+            </If>
 
-          <If condition={!value && !!placeholder}>
-            <AppText
-              color="black_40"
-              typography="regular_14"
-              {...placeholderProps}
-              style={[styles.placeholder, placeholderProps?.style]}
-            >
-              {placeholder}
-            </AppText>
-          </If>
-          <If condition={!!value}>
-            <AppText
-              color="black"
-              typography="regular_14"
-              {...valueProps}
-              style={[styles.value, valueProps?.style]}
-            >
-              {value &&
-                (mode === 'time'
-                  ? format(value, valueFormat || 'h:mm a').toLowerCase()
-                  : mode === 'datetime'
-                  ? format(value, valueFormat || 'MM/dd/yyyy h:mm a')
-                  : format(value, valueFormat || 'MM/dd/yyyy'))}
-            </AppText>
-          </If>
+            <If condition={!value && !!placeholder}>
+              <AppText
+                color="black_40"
+                typography="regular_14"
+                {...placeholderProps}
+                style={[styles.placeholder, placeholderProps?.style]}
+              >
+                {placeholder}
+              </AppText>
+            </If>
+            <If condition={!!value}>
+              <AppText
+                color="black"
+                typography="regular_14"
+                {...valueProps}
+                style={[styles.value, valueProps?.style]}
+              >
+                {value &&
+                  (mode === 'time'
+                    ? format(value, valueFormat || 'h:mm a').toLowerCase()
+                    : mode === 'datetime'
+                    ? format(value, valueFormat || 'MM/dd/yyyy h:mm a')
+                    : format(value, valueFormat || 'MM/dd/yyyy'))}
+              </AppText>
+            </If>
 
-          <If condition={defaultIconPosition === 'right'}>
-            <SvgXml
-              xml={customIcon || ICONS.calendarWithDays()}
-              width={20}
-              height={20}
-            />
-          </If>
-        </TouchableOpacity>
-
+            <If condition={defaultIconPosition === 'right'}>
+              <SvgXml
+                xml={customIcon || ICONS.calendarWithDays()}
+                width={20}
+                height={20}
+              />
+            </If>
+          </TouchableOpacity>
+        </If>
         <AppText
           renderIf={!!description && !errorMessage}
           typography="medium_12"

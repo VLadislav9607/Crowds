@@ -39,6 +39,7 @@ export const TalentEventsTab = () => {
 
   console.log('error', error);
 
+  console.log('data', data?.data);
   const { proposals, pending, approved, denied } = useTalentEventsCounts();
 
   const tabOptions: ITabOption<TalentEventsTabs>[] = useMemo(

@@ -4,11 +4,15 @@ import { AppText } from '@ui';
 
 import { IGridBoardProps } from './types';
 import { styles } from './styles';
-import { Skeleton } from '@components';
+import { If, Skeleton } from '@components';
 
-export const GridBoard = ({ items }: IGridBoardProps) => {
+export const GridBoard = ({
+  items,
+  counterProps,
+  containerStyle,
+}: IGridBoardProps) => {
   return (
-    <View style={styles.container}>
+    <View style={[styles.container, containerStyle]}>
       {/* eslint-disable react-native/no-inline-styles */}
       {items.map((event, index) => (
         <TouchableOpacity
@@ -25,17 +29,7 @@ export const GridBoard = ({ items }: IGridBoardProps) => {
           ]}
         >
           {event.showSkeleton && (
-            <View
-              style={{
-                backgroundColor: 'white',
-                position: 'absolute',
-                left: 0,
-                top: 0,
-                right: 0,
-                bottom: 0,
-                zIndex: 1,
-              }}
-            >
+            <View style={styles.skeletonContainer}>
               <Skeleton>
                 <Skeleton.Item width={'100%'} height={'100%'} />
               </Skeleton>
@@ -57,12 +51,24 @@ export const GridBoard = ({ items }: IGridBoardProps) => {
 
           <View style={styles.row}>
             <AppText
-              style={[styles.eventItemCount, { color: event.textColor }]}
+              renderIf={typeof event.count === 'number'}
+              typography="bold_30"
+              {...counterProps}
+              style={[
+                styles.eventItemCount,
+                counterProps?.style,
+                { color: event.textColor },
+              ]}
             >
               {event.count}
             </AppText>
 
-            <AppText style={styles.label}>{event.label}</AppText>
+            <If condition={!!event.countElement}>{event.countElement}</If>
+
+            <AppText renderIf={!!event.label} style={styles.label}>
+              {event.label}
+            </AppText>
+            <If condition={!!event.labelElement}>{event.labelElement}</If>
           </View>
         </TouchableOpacity>
       ))}

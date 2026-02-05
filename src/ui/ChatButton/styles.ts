@@ -8,6 +8,10 @@ export const styles = StyleSheet.create({
     borderRadius: 6,
     padding: 12,
     gap: 4,
+    overflow: 'hidden',
+  },
+  borderNone: {
+    borderWidth: 0,
   },
   textWrapper: {
     flexDirection: 'row',
@@ -20,5 +24,14 @@ export const styles = StyleSheet.create({
     top: 14,
     left: 0,
     right: 0,
+  },
+  skeletonContainer: {
+    backgroundColor: 'white',
+    position: 'absolute',
+    left: 0,
+    top: 0,
+    right: 0,
+    bottom: 0,
+    zIndex: 1,
   },
 });

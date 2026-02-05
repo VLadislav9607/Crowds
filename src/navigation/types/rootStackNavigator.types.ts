@@ -3,8 +3,17 @@ import { ChatType } from '@actions';
 import { OrganizationType, Role } from '@modules/common';
 import { Screens } from '../constants';
 import { BottomTabsParamList } from './bottomStackNavigator.types';
+import { BucketsTypes } from '@configs';
 
 export type RootStackParamList = {
+  // Common screens
+  [Screens.PDFViewer]: {
+    url?: string;
+    pdfPath?: string;
+    bucket?: BucketsTypes;
+    title?: string;
+  };
+
   // Authorization
   [Screens.SplashScreen]: undefined;
   [Screens.First]: undefined;
@@ -54,6 +63,10 @@ export type RootStackParamList = {
   };
   [Screens.ManageOrgTeam]: undefined;
   [Screens.OrgProfileSetup]: undefined;
+  [Screens.OrgEventDetails]: { eventId: string };
+
+  // Event Management screens
+  [Screens.EventQRCodes]: { eventId: string; timezone?: string };
 
   // Talent screens
   [Screens.TalentSearchEvents]?: {

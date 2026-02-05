@@ -1,5 +1,6 @@
 import { ViewStyle } from 'react-native';
 import { AppTextProps } from '../../ui/AppText/types';
+import { ColorsKeys } from '@styles';
 
 export interface AppDateInputProps {
   label?: string;
@@ -23,4 +24,6 @@ export interface AppDateInputProps {
   maximumDate?: Date;
   minimumDate?: Date;
   locale?: string;
+  defaultIconColor?: ColorsKeys;
+  skeleton?: boolean;
 }

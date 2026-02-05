@@ -1,26 +1,55 @@
-import { ScreenWrapper } from '@components';
-import { AppText } from '@ui';
+import { ScreenWithScrollWrapper } from '@components';
+import { AppButton, AppInput, AppText } from '@ui';
 import { AppImage } from '@components';
 import { View } from 'react-native';
 import { styles } from './styles';
 import { ICONS } from '@assets';
 import { SvgXml } from 'react-native-svg';
-import { useRef } from 'react';
+import { useRef, useState } from 'react';
 import { BottomSheetModal } from '@gorhom/bottom-sheet';
 import {
   ImageSourcePickerModal,
   ImageSourcePickerModalData,
 } from '@modules/common';
-import { useBucketUpload } from '@actions';
-import { showMutationErrorToast } from '@helpers';
+import { useBucketUpload, useGetMe, useUpdateOrganization } from '@actions';
+import { showMutationErrorToast, showSuccessToast } from '@helpers';
+import { goBack } from '@navigation';
 
 export const OrgProfileSetupScreen = () => {
   const imageSourcePickerModalRef =
     useRef<BottomSheetModal<ImageSourcePickerModalData>>(null);
 
+  const { organizationMember, refetch } = useGetMe();
+
+  const { mutateAsync: updateOrganizationMutateAsync } =
+    useUpdateOrganization();
+
+  const [orgName, setOrgName] = useState(
+    organizationMember?.organization?.name,
+  );
+
+  const {
+    mutate: updateOrganizationMutate,
+    isPending: isUpdatingOrganization,
+  } = useUpdateOrganization({
+    onSuccess: async () => {
+      await refetch();
+      goBack();
+      showSuccessToast('Changes saved successfully');
+    },
+  });
+
   const { mutate: upsertTalentAvatarMutate, isPending: isUpsertingAvatar } =
     useBucketUpload({
       onError: showMutationErrorToast,
+      onSuccess: async data => {
+        await updateOrganizationMutateAsync({
+          organization_id: organizationMember?.organization_id!,
+          avatar_path: data.uploadedFile.path,
+        });
+        await refetch();
+        showSuccessToast('Logo updated successfully');
+      },
     });
 
   const pickImage = () => {
@@ -28,38 +57,49 @@ export const OrgProfileSetupScreen = () => {
       onImagePicked: logo => {
         upsertTalentAvatarMutate({
           bucket: 'organizations_avatars',
-          file: logo,
+          file: { uri: logo.uri, type: logo.type, name: logo.name },
+          folderName: organizationMember?.organization_id,
         });
       },
     });
   };
 
+  const handleSaveChanges = () => {
+    updateOrganizationMutate({
+      organization_id: organizationMember?.organization_id!,
+      organization_name: orgName,
+    });
+  };
+
   return (
-    <ScreenWrapper
+    <ScreenWithScrollWrapper
       headerVariant="withTitleAndImageBg"
       title="Organisation details"
+      contentContainerStyle={{ paddingTop: 24 }}
+      footer={
+        <AppButton
+          wrapperStyles={styles.saveButtonWrapper}
+          title="Save changes"
+          onPress={handleSaveChanges}
+          isLoading={isUpdatingOrganization}
+        />
+      }
     >
       <View style={styles.logoContainer}>
         <AppText typography="semibold_20">Logo/Brand</AppText>
         <AppText
           typography="regular_14"
-          margin={{ top: 7 }}
+          margin={{ top: 7, bottom: 36 }}
           style={styles.logoDescription}
         >
           This will be added to any post you make and{'\n'}should fit into a
           square shape.
         </AppText>
 
-        {/* <AppImage 
-                bucket="organizations_avatars" 
-                style={styles.logoImage} 
-                placeholderIcon={ICONS.orgAvatarLogo('lihgt_gray4')}
-                /> */}
-
         <AppImage
           onPress={pickImage}
           showSkeleton={isUpsertingAvatar}
-          // imgUri={pickedLogo?.uri}
+          imgPath={organizationMember?.organization?.avatar_path}
           containerStyle={styles.imageContainer}
           bucket="organizations_avatars"
           placeholderIcon={ICONS.orgAvatarLogo('lihgt_gray4')}
@@ -74,7 +114,27 @@ export const OrgProfileSetupScreen = () => {
           bottomSheetRef={imageSourcePickerModalRef}
           validateForBucket="organizations_avatars"
         />
+
+        <AppText typography="semibold_16" margin={{ top: 32, bottom: 27 }}>
+          Business contact details
+        </AppText>
+
+        <View style={{ gap: 16 }}>
+          <AppInput
+            label="Company/business name"
+            labelProps={{ color: 'main', typography: 'regular_12' }}
+            value={orgName}
+            onChangeText={setOrgName}
+          />
+
+          <AppInput
+            disabled
+            label="Official email address"
+            labelProps={{ color: 'main', typography: 'regular_12' }}
+            value={organizationMember?.email}
+          />
+        </View>
       </View>
-    </ScreenWrapper>
+    </ScreenWithScrollWrapper>
   );
 };

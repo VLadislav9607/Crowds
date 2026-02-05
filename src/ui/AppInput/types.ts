@@ -10,4 +10,5 @@ export interface AppInputProps extends TextInputProps {
   containerStyle?: ViewStyle;
   disabled?: boolean;
   inputContainerStyle?: ViewStyle;
+  skeleton?: boolean;
 }

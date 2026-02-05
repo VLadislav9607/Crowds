@@ -1,5 +1,4 @@
-import { StyleSheet } from "react-native";
-import { COLORS } from "@styles";
+import { StyleSheet } from 'react-native';
 
 export const styles = StyleSheet.create({
   container: {
@@ -15,6 +14,6 @@ export const styles = StyleSheet.create({
     width: 69,
     height: 69,
     borderRadius: 5,
-    backgroundColor: COLORS.gray,
+    overflow: 'hidden',
   },
 });

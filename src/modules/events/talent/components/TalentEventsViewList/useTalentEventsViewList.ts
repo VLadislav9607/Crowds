@@ -52,7 +52,7 @@ export const useTalentEventsViewList = ({
       await refetch?.();
       showSuccessToast('Event removed from folder successfully');
     },
-    onError: (error: any) => {
+    onError: error => {
       showErrorToast(error?.message || 'Failed to remove event from folder');
     },
   });
@@ -67,7 +67,7 @@ export const useTalentEventsViewList = ({
       await refetch?.();
       showSuccessToast('Event rejected successfully');
     },
-    onError: (error: any) => {
+    onError: error => {
       showErrorToast(error?.message || 'Failed to hide event');
     },
   });
@@ -92,7 +92,7 @@ export const useTalentEventsViewList = ({
       showSuccessToast('Application submitted successfully');
       applyConfirmModalRef.current?.handleSuccess();
     },
-    onError: (error: any) => {
+    onError: error => {
       showErrorToast(error?.message || 'Failed to submit application');
       applyConfirmModalRef.current?.handleError();
     },
@@ -115,7 +115,7 @@ export const useTalentEventsViewList = ({
       showSuccessToast('Proposal accepted successfully');
       applyConfirmModalRef.current?.handleSuccess();
     },
-    onError: (error: any) => {
+    onError: error => {
       showErrorToast(error?.message || 'Failed to accept proposal');
       applyConfirmModalRef.current?.handleError();
     },
@@ -137,7 +137,7 @@ export const useTalentEventsViewList = ({
       await refetch?.();
       showSuccessToast('Proposal declined successfully');
     },
-    onError: (error: any) => {
+    onError: error => {
       showErrorToast(error?.message || 'Failed to decline proposal');
     },
   });
@@ -158,7 +158,7 @@ export const useTalentEventsViewList = ({
       await refetch?.();
       showSuccessToast('Application canceled successfully');
     },
-    onError: (error: any) => {
+    onError: error => {
       showErrorToast(error?.message || 'Failed to cancel application');
     },
   });
@@ -166,7 +166,11 @@ export const useTalentEventsViewList = ({
   const handleAccept = async (event: ITalentEventCard) => {
     applyConfirmModalRef.current?.open({
       eventTitle: event.title,
-      formattedAddress: `${event.location.city}, ${event.location.country}`,
+      formattedAddress: event?.location?.formatted_address
+        ? event?.location?.formatted_address
+        : event?.location?.city && event?.location?.country
+        ? `${event?.location?.city}, ${event?.location?.country}`
+        : '',
       startAt: event.start_at,
       endAt: event.end_at,
       onConfirm: () => {

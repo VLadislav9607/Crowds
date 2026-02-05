@@ -1,5 +1,5 @@
-import { StyleSheet } from "react-native";
-import { COLORS } from "@styles";
+import { StyleSheet } from 'react-native';
+import { COLORS } from '@styles';
 
 export const styles = StyleSheet.create({
   // EventDetailsCardWithMap
@@ -9,16 +9,15 @@ export const styles = StyleSheet.create({
     borderRadius: 10,
     padding: 16,
   },
-  cardWithMapIconsRow: { flexDirection: "row", gap: 16, marginBottom: 12 },
+  cardWithMapIconsRow: { flexDirection: 'row', gap: 16, marginBottom: 12 },
   cardWithMapLastIconsRow: {
     flex: 1,
-    flexDirection: "row",
-    justifyContent: "space-between",
+    flexDirection: 'row',
+    justifyContent: 'space-between',
   },
   mapImage: {
     height: 120,
     borderRadius: 10,
-    backgroundColor: COLORS.gray,
     marginTop: 12,
   },
 
@@ -31,8 +30,8 @@ export const styles = StyleSheet.create({
     padding: 16,
   },
   rowContainerWithMargin: {
-    flexDirection: "row",
-    justifyContent: "space-between",
+    flexDirection: 'row',
+    justifyContent: 'space-between',
     marginTop: 5,
   },
 
@@ -43,6 +42,11 @@ export const styles = StyleSheet.create({
   requirementsItems: {
     gap: 6,
   },
+  requirementsItemRow: {
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+    gap: 16,
+  },
 
   // EventDetailsTags
   tagsContainer: {
@@ -51,7 +55,7 @@ export const styles = StyleSheet.create({
     flexWrap: 'wrap',
   },
   tagItem: {
-    height:30,
+    height: 30,
     borderRadius: 100,
     paddingHorizontal: 16,
     justifyContent: 'center',
@@ -77,5 +81,19 @@ export const styles = StyleSheet.create({
     flexWrap: 'wrap',
     gap: 8,
   },
-
+  groupDetailsContainer: {
+    borderWidth: 1,
+    gap: 20,
+    borderRadius: 20,
+    borderColor: COLORS.light_gray3,
+    padding: 16,
+  },
+  groupDetailsPreferencesButton: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+  },
+  rotateIcon: {
+    transform: [{ rotate: '180deg' }],
+  },
 });
