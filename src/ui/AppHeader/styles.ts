@@ -49,7 +49,6 @@ export const styles = StyleSheet.create({
     flexDirection: 'column',
     minHeight: 120,
     gap: 14,
-    overflow: 'hidden',
   },
   backButton: {
     marginTop: -2,
@@ -62,6 +61,8 @@ export const styles = StyleSheet.create({
   overlay: {
     ...StyleSheet.absoluteFill,
     backgroundColor: 'rgba(0, 0, 0, 0.5)',
+    borderBottomRightRadius: 25,
+    borderBottomLeftRadius: 25,
   },
   contentWrapper: {
     position: 'relative',

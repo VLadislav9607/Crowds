@@ -1,4 +1,4 @@
-import { View } from 'react-native';
+import { View, Platform } from 'react-native';
 import { AppInput } from '@ui';
 import { Controller, useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
@@ -10,9 +10,10 @@ import {
   SignInFormRef,
   signInFormSchema,
 } from './types';
-import { useLogin } from '@actions';
+import { useLogin, upsertPushDeviceAction } from '@actions';
 import { onNavigateAfterAuth, showMutationErrorToast } from '@helpers';
-import { supabase } from '@services';
+import { supabase, getDeviceId } from '@services';
+import { usePermissions, EPermissionTypes } from '@hooks';
 
 export const SignInForm = forwardRef<SignInFormRef, SignInFormProps>(
   (props, ref) => {
@@ -22,6 +23,10 @@ export const SignInForm = forwardRef<SignInFormRef, SignInFormProps>(
       resolver: zodResolver(signInFormSchema),
     });
 
+    const { askNotificationPermissionAndGetTokens } = usePermissions(
+      EPermissionTypes.NOTIFICATIONS,
+    );
+
     const { mutate: loginMutate, isPending: isLoggingIn } = useLogin({
       onSuccess: async data => {
         await supabase.auth.setSession({
@@ -30,6 +35,19 @@ export const SignInForm = forwardRef<SignInFormRef, SignInFormProps>(
         });
 
         await onNavigateAfterAuth();
+
+        const tokens = await askNotificationPermissionAndGetTokens();
+        console.log('tokens', tokens);
+        if (tokens?.fcmToken) {
+          try {
+            const deviceId = await getDeviceId();
+            await upsertPushDeviceAction({
+              deviceId,
+              platform: Platform.OS,
+              fcmToken: tokens.fcmToken,
+            });
+          } catch {}
+        }
       },
       onError: showMutationErrorToast,
     });

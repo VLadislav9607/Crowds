@@ -1,11 +1,11 @@
 import { forwardRef, useState } from 'react';
-
 import { AppModal } from '@components';
 import { useImperativeModal } from '@hooks';
 import { AppButton } from '@ui';
-import { supabase, queryClient } from '@services';
+import { queryClient, supabase } from '@services';
 import { goToScreen, Screens } from '@navigation';
 import { showErrorToast } from '@helpers';
+import { removePushDevice } from '@actions';
 
 import { LogoutModalRef } from './types';
 import { styles } from './styles';
@@ -17,6 +17,7 @@ export const LogoutModal = forwardRef<LogoutModalRef>((_, ref) => {
   const handleLogout = async () => {
     try {
       setIsLoading(true);
+      await removePushDevice();
       await supabase.auth.signOut();
       queryClient.clear();
       goToScreen(Screens.First);

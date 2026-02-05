@@ -1,95 +1,105 @@
-import { isAndroid, isIOS } from "@constants";
-import { useCallback } from "react";
-import { PERMISSIONS, request, RESULTS } from "react-native-permissions";
+import { isAndroid, isIOS } from '@constants';
+import { useCallback } from 'react';
+import {
+  type Permission,
+  PERMISSIONS,
+  request,
+  RESULTS,
+} from 'react-native-permissions';
+import { requestPermissionAndGetTokens, type PushTokens } from '@services';
 
 export type TUsePermissionsReturnType = {
-    isError?: boolean;
-    type: (typeof RESULTS)[keyof typeof RESULTS];
-    errorMessage?: string;
+  isError?: boolean;
+  type: (typeof RESULTS)[keyof typeof RESULTS];
+  errorMessage?: string;
 };
 
 export enum EPermissionTypes {
-    CAMERA = "camera",
+  CAMERA = 'camera',
+  NOTIFICATIONS = 'notifications',
 }
 
 export const usePermissions = (typeOfPermission: EPermissionTypes) => {
-    const getPermission = useCallback(() => {
-        //check if typeOfPermission exist in EPermissionTypes
-        if (
-            !typeOfPermission ||
-            !Object.values(EPermissionTypes).includes(typeOfPermission)
-        ) {
-            throw new Error("Unsupported Type of permission.");
+  const getPermission = useCallback((): Permission => {
+    if (!Object.values(EPermissionTypes).includes(typeOfPermission)) {
+      throw new Error('Unsupported Type of permission.');
+    }
+
+    if (isIOS) {
+      switch (typeOfPermission) {
+        case EPermissionTypes.CAMERA:
+          return PERMISSIONS.IOS.CAMERA;
+        case EPermissionTypes.NOTIFICATIONS:
+          throw new Error(
+            'On iOS, notifications permission is handled via pushNotificationService.',
+          );
+      }
+    }
+
+    if (isAndroid) {
+      switch (typeOfPermission) {
+        case EPermissionTypes.CAMERA:
+          return PERMISSIONS.ANDROID.CAMERA;
+        case EPermissionTypes.NOTIFICATIONS:
+          return 'android.permission.POST_NOTIFICATIONS' as Permission;
+      }
+    }
+
+    throw new Error('Unsupported Operating System.');
+  }, [typeOfPermission]);
+
+  /**
+   * Generic permissions (camera, etc.)
+   * Notifications are handled separately.
+   */
+  const askPermissions =
+    useCallback(async (): Promise<TUsePermissionsReturnType> => {
+      try {
+        const result = await request(getPermission());
+
+        switch (result) {
+          case RESULTS.UNAVAILABLE:
+            return Promise.reject({ type: RESULTS.UNAVAILABLE });
+          case RESULTS.DENIED:
+            return Promise.reject({ type: RESULTS.DENIED });
+          case RESULTS.BLOCKED:
+            return Promise.reject({ type: RESULTS.BLOCKED });
+          case RESULTS.GRANTED:
+          case RESULTS.LIMITED:
+            return { type: result };
         }
-        if (isIOS) {
-            switch (typeOfPermission) {
-                case EPermissionTypes.CAMERA:
-                    return PERMISSIONS.IOS.CAMERA;
-                default:
-                    return PERMISSIONS.IOS.CAMERA;
-            }
+      } catch (e: any) {
+        return Promise.reject({
+          isError: true,
+          errorMessage:
+            e?.message ?? 'Something went wrong while asking for permissions.',
+        });
+      }
+    }, [getPermission]);
+
+  /**
+   * 🔔 Notifications (canonical entry point)
+   * - iOS: Firebase permission + FCM token
+   * - Android: POST_NOTIFICATIONS + FCM token
+   */
+  const askNotificationPermissionAndGetTokens =
+    useCallback(async (): Promise<PushTokens | null> => {
+      if (isAndroid) {
+        const result = await request(
+          'android.permission.POST_NOTIFICATIONS' as Permission,
+        );
+
+        if (result !== RESULTS.GRANTED && result !== RESULTS.LIMITED) {
+          return null;
         }
+      }
 
-        if (isAndroid) {
-            switch (typeOfPermission) {
-                case EPermissionTypes.CAMERA:
-                    return PERMISSIONS.ANDROID.CAMERA;
-                default:
-                    return PERMISSIONS.ANDROID.CAMERA;
-            }
-        }
+      const { granted, tokens } = await requestPermissionAndGetTokens();
+      return granted ? tokens : null;
+    }, []);
 
-        throw new Error("Unsupported Operating System.");
-    }, [typeOfPermission]);
-
-    const askPermissions = useCallback(
-        async (): Promise<TUsePermissionsReturnType> => {
-            return new Promise<TUsePermissionsReturnType>(
-                async (resolve, reject) => {
-                    //ask permissions from user
-                    //if error present, return error
-                    try {
-                        await request(getPermission()).then((result) => {
-                            switch (result) {
-                                case RESULTS.UNAVAILABLE:
-                                    return reject({
-                                        type: RESULTS.UNAVAILABLE,
-                                    });
-                                case RESULTS.DENIED:
-                                    return reject({
-                                        type: RESULTS.DENIED,
-                                    });
-                                case RESULTS.GRANTED:
-                                    return resolve({
-                                        type: RESULTS.GRANTED,
-                                    });
-                                case RESULTS.BLOCKED:
-                                    return reject({
-                                        type: RESULTS.BLOCKED,
-                                    });
-                                case RESULTS.LIMITED:
-                                    return resolve({
-                                        type: RESULTS.LIMITED,
-                                    });
-                            }
-                        });
-                    } catch (e:
-                        | { data: { message: string | undefined } }
-                        | any) {
-                        return reject({
-                            isError: true,
-                            errorMessage: e?.data?.message ||
-                                e.message ||
-                                "Something went wrong while asking for permissions.",
-                        });
-                    }
-                },
-            );
-        },
-        [getPermission],
-    );
-
-    return {
-        askPermissions,
-    };
+  return {
+    askPermissions,
+    askNotificationPermissionAndGetTokens,
+  };
 };

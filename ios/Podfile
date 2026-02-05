@@ -36,7 +36,7 @@ setup_permissions([
   # 'MediaLibrary',
   # 'Microphone',
   # 'Motion',
-  # 'Notifications',
+  'Notifications',
   # 'PhotoLibrary',
   # 'PhotoLibraryAddOnly',
   # 'Reminders',
@@ -54,6 +54,9 @@ end
 
 target 'CrowdsNow' do
   config = use_native_modules!
+
+  # Required for Firebase Swift pods (e.g. FirebaseCoreInternal) when using static linkage
+  pod 'GoogleUtilities', :modular_headers => true
 
   use_react_native!(
     :path => config[:reactNativePath],

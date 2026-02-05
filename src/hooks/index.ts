@@ -7,3 +7,4 @@ export * from './usePermissions';
 export * from './useFormErrorsScroll';
 export * from './useRefetchQuery';
 export * from './useBottomSheetData';
+export * from './useAppIsActive';
