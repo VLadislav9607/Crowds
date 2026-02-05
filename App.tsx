@@ -36,7 +36,6 @@ const App = () => {
 
   useEffect(() => {
     supabase.auth.getSession().then(async ({ data: { session } }) => {
-      console.log('session', !!session);
       if (!session) {
         goToScreen(Screens.First);
         return;

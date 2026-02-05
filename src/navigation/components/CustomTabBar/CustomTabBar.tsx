@@ -2,21 +2,27 @@ import { View, StyleSheet } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { BottomTabBar, BottomTabBarProps } from '@react-navigation/bottom-tabs';
 import LinearGradient from 'react-native-linear-gradient';
-
 import { TAB_BAR_MARGIN_BOTTOM } from '../../constants/tabBar';
+import { Screens } from '@navigation';
+import { If } from '@components';
 
 const GRADIENT_HEIGHT = 120;
 
 export const CustomTabBar = (props: BottomTabBarProps) => {
   const { bottom } = useSafeAreaInsets();
 
+  const currentRoute = props.state.routes[props.state.index].name;
+  const isQRCodeScanTab = currentRoute === Screens.TalerQRCode;
+
   return (
     <View style={[styles.container, { paddingBottom: bottom }]}>
-      <LinearGradient
-        colors={['rgba(251, 251, 251, 0)', '#FBFBFB']}
-        locations={[0.2849, 1]}
-        style={styles.gradient}
-      />
+      <If condition={!isQRCodeScanTab}>
+        <LinearGradient
+          colors={['rgba(251, 251, 251, 0)', '#FBFBFB']}
+          locations={[0.2849, 1]}
+          style={styles.gradient}
+        />
+      </If>
       <View style={styles.tabBarWrapper}>
         <BottomTabBar {...props} />
       </View>

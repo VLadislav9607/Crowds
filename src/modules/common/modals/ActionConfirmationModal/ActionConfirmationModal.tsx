@@ -42,6 +42,7 @@ export const ActionConfirmationModal = forwardRef<ActionConfirmationModalRef>(
 
     return (
       <AppModal
+        hideToast={refProps?.hideToast}
         isVisible={isVisible}
         onClose={handleClose}
         title={refProps?.title}

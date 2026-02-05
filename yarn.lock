@@ -3550,6 +3550,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@react-native/normalize-color@npm:*":
+  version: 2.1.0
+  resolution: "@react-native/normalize-color@npm:2.1.0"
+  checksum: 8ccbd40b3c7629f1dc97b3e9aadd95fd3507fcf2e37535a6299a70436ab891c34cbdc4240b07380553d6e85dd909e23d5773b5be1da2906b026312e0b0768838
+  languageName: node
+  linkType: hard
+
 "@react-native/normalize-colors@npm:0.82.1":
   version: 0.82.1
   resolution: "@react-native/normalize-colors@npm:0.82.1"
@@ -4279,10 +4286,12 @@ __metadata:
     react: 19.1.1
     react-hook-form: ^7.67.0
     react-native: 0.82.1
+    react-native-blob-util: ^0.24.6
     react-native-bootsplash: ^6.3.11
     react-native-date-picker: ^5.0.13
     react-native-device-info: ^15.0.1
     react-native-dotenv: ^3.4.11
+    react-native-fs: ^2.20.0
     react-native-gesture-handler: ^2.29.1
     react-native-hole-view: ^4.0.0
     react-native-image-picker: ^8.2.1
@@ -4290,10 +4299,12 @@ __metadata:
     react-native-linear-gradient: ^2.8.3
     react-native-localize: ^3.6.1
     react-native-modal: ^14.0.0-rc.1
+    react-native-pdf: ^7.0.3
     react-native-permissions: ^5.4.4
     react-native-reanimated: 4.2.0
     react-native-safe-area-context: ^5.5.2
     react-native-screens: ^4.18.0
+    react-native-share: ^12.2.5
     react-native-skeleton-placeholder: ^5.2.4
     react-native-sticky-range-slider: ^0.1.7
     react-native-svg: ^15.15.0
@@ -4922,6 +4933,13 @@ __metadata:
   dependencies:
     bare-path: ^3.0.0
   checksum: 7b2a6335a55a010ffcc863f62cc5bfaa216b383bc05a8e7fb30caccb5600e09d403ad482fc671582eba531bbca4a891dba8eefa866f2e2d222b0a72f2460c340
+  languageName: node
+  linkType: hard
+
+"base-64@npm:0.1.0, base-64@npm:^0.1.0":
+  version: 0.1.0
+  resolution: "base-64@npm:0.1.0"
+  checksum: 5a42938f82372ab5392cbacc85a5a78115cbbd9dbef9f7540fa47d78763a3a8bd7d598475f0d92341f66285afd377509851a9bb5c67bbecb89686e9255d5b3eb
   languageName: node
   linkType: hard
 
@@ -5615,7 +5633,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"crypto-js@npm:^4.2.0":
+"crypto-js@npm:4.2.0, crypto-js@npm:^4.2.0":
   version: 4.2.0
   resolution: "crypto-js@npm:4.2.0"
   checksum: f051666dbc077c8324777f44fbd3aaea2986f198fe85092535130d17026c7c2ccf2d23ee5b29b36f7a4a07312db2fae23c9094b644cc35f7858b1b4fcaf27774
@@ -5841,6 +5859,17 @@ __metadata:
   version: 2.0.0
   resolution: "depd@npm:2.0.0"
   checksum: abbe19c768c97ee2eed6282d8ce3031126662252c58d711f646921c9623f9052e3e1906443066beec1095832f534e57c523b7333f8e7e0d93051ab6baef5ab3a
+  languageName: node
+  linkType: hard
+
+"deprecated-react-native-prop-types@npm:^2.3.0":
+  version: 2.3.0
+  resolution: "deprecated-react-native-prop-types@npm:2.3.0"
+  dependencies:
+    "@react-native/normalize-color": "*"
+    invariant: "*"
+    prop-types: "*"
+  checksum: d14f4be1dfe780a7fa9197a31b4a9a2b409c8cf1bf677713fd92d06733dee1043578662d1a8858541cf06164ae91d295db6e595f29bf13e808d9fb37bc58c90b
   languageName: node
   linkType: hard
 
@@ -7145,6 +7174,17 @@ __metadata:
   languageName: node
   linkType: hard
 
+"glob@npm:13.0.0, glob@npm:^13.0.0":
+  version: 13.0.0
+  resolution: "glob@npm:13.0.0"
+  dependencies:
+    minimatch: ^10.1.1
+    minipass: ^7.1.2
+    path-scurry: ^2.0.0
+  checksum: 963730222b0acc85a0d2616c08ba3a5d5b5f33fbf69182791967b8a02245db505577a6fc19836d5d58e1cbbfb414ad4f62f605a0372ab05cd9e6998efe944369
+  languageName: node
+  linkType: hard
+
 "glob@npm:^10.4.2":
   version: 10.5.0
   resolution: "glob@npm:10.5.0"
@@ -7158,17 +7198,6 @@ __metadata:
   bin:
     glob: dist/esm/bin.mjs
   checksum: cda96c074878abca9657bd984d2396945cf0d64283f6feeb40d738fe2da642be0010ad5210a1646244a5fc3511b0cab5a374569b3de5a12b8a63d392f18c6043
-  languageName: node
-  linkType: hard
-
-"glob@npm:^13.0.0":
-  version: 13.0.0
-  resolution: "glob@npm:13.0.0"
-  dependencies:
-    minimatch: ^10.1.1
-    minipass: ^7.1.2
-    path-scurry: ^2.0.0
-  checksum: 963730222b0acc85a0d2616c08ba3a5d5b5f33fbf69182791967b8a02245db505577a6fc19836d5d58e1cbbfb414ad4f62f605a0372ab05cd9e6998efe944369
   languageName: node
   linkType: hard
 
@@ -7587,7 +7616,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"invariant@npm:2.2.4, invariant@npm:^2.2.4":
+"invariant@npm:*, invariant@npm:2.2.4, invariant@npm:^2.2.4":
   version: 2.2.4
   resolution: "invariant@npm:2.2.4"
   dependencies:
@@ -10139,7 +10168,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"prop-types@npm:^15.6.2, prop-types@npm:^15.8.1":
+"prop-types@npm:*, prop-types@npm:^15.6.2, prop-types@npm:^15.8.1":
   version: 15.8.1
   resolution: "prop-types@npm:15.8.1"
   dependencies:
@@ -10329,6 +10358,19 @@ __metadata:
   languageName: node
   linkType: hard
 
+"react-native-blob-util@npm:^0.24.6":
+  version: 0.24.6
+  resolution: "react-native-blob-util@npm:0.24.6"
+  dependencies:
+    base-64: 0.1.0
+    glob: 13.0.0
+  peerDependencies:
+    react: "*"
+    react-native: "*"
+  checksum: c4988062a6a4112cb30e46a354675ac7c015cd1776b040caa87ed47fa7ba273f3b7f235f37abc08d6ef14dca8694fa92e3812d8444eb1b97e433634af6e55504
+  languageName: node
+  linkType: hard
+
 "react-native-bootsplash@npm:^6.3.11":
   version: 6.3.12
   resolution: "react-native-bootsplash@npm:6.3.12"
@@ -10383,6 +10425,22 @@ __metadata:
   peerDependencies:
     "@babel/runtime": ^7.20.6
   checksum: 3ebac2c2ed79dd7e4920fd3fc2da9187413b7190231618e4858b46c47833677838b96d531afe7bd5c4b0a60454dba40cb8708722210df5d522e30aefbf41da05
+  languageName: node
+  linkType: hard
+
+"react-native-fs@npm:^2.20.0":
+  version: 2.20.0
+  resolution: "react-native-fs@npm:2.20.0"
+  dependencies:
+    base-64: ^0.1.0
+    utf8: ^3.0.0
+  peerDependencies:
+    react-native: "*"
+    react-native-windows: "*"
+  peerDependenciesMeta:
+    react-native-windows:
+      optional: true
+  checksum: 0be9bb9a5c13b501d0a3006efc3aa5c0b5b211456ee04718297f4e522532f3527f1daa220bd67d3b82d819ed8fdab8f64b7d6e0d7b768c1fd1d8ec9122d94316
   languageName: node
   linkType: hard
 
@@ -10490,6 +10548,20 @@ __metadata:
   languageName: node
   linkType: hard
 
+"react-native-pdf@npm:^7.0.3":
+  version: 7.0.3
+  resolution: "react-native-pdf@npm:7.0.3"
+  dependencies:
+    crypto-js: 4.2.0
+    deprecated-react-native-prop-types: ^2.3.0
+  peerDependencies:
+    react: "*"
+    react-native: "*"
+    react-native-blob-util: ">=0.13.7"
+  checksum: befa2871c6b77d3490af5ba4624499733b2917fa95dc27fa751613dcbada18d25c0d0f144c07d0a3addf81fbc9a101527e277dbbe822ff012889521fe196ef63
+  languageName: node
+  linkType: hard
+
 "react-native-permissions@npm:^5.4.4":
   version: 5.4.4
   resolution: "react-native-permissions@npm:5.4.4"
@@ -10538,6 +10610,13 @@ __metadata:
     react: "*"
     react-native: "*"
   checksum: 7fcecd7d710708476ecb431b0e33efce7fa950d2731ef8f3fa2cbb6c57cd3adeffe1b1d4b29e9449cb72e4bc8b72e57498c9c6286b49e66665ca11ff853381fd
+  languageName: node
+  linkType: hard
+
+"react-native-share@npm:^12.2.5":
+  version: 12.2.5
+  resolution: "react-native-share@npm:12.2.5"
+  checksum: 585c1ace5f224e98b95e62308c8e9b02fae93b8bbcd3c397bd1b8bbd3936c674401df458fa8c87da1d5dba98a5d94080d9b768f7c3bffe908996d2ac91156562
   languageName: node
   linkType: hard
 
@@ -12225,6 +12304,13 @@ __metadata:
   peerDependencies:
     react: ^16.8.0 || ^17.0.0 || ^18.0.0 || ^19.0.0
   checksum: 61a62e910713adfaf91bdb72ff2cd30e5ba83687accaf3b6e75a903b45bf635f5722e3694af30d83a03e92cb533c0a5c699298d2fef639a03ffc86b469f4eee2
+  languageName: node
+  linkType: hard
+
+"utf8@npm:^3.0.0":
+  version: 3.0.0
+  resolution: "utf8@npm:3.0.0"
+  checksum: cb89a69ad9ab393e3eae9b25305b3ff08bebca9adc839191a34f90777eb2942f86a96369d2839925fea58f8f722f7e27031d697f10f5f39690f8c5047303e62d
   languageName: node
   linkType: hard
 

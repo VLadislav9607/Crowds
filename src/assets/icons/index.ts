@@ -57,6 +57,8 @@ import { usersRound } from './usersRound';
 import { trash } from './trash';
 import { sendMessage } from './sendMessage';
 import { heart } from './heart';
+import { arrowLeftInCircle } from './arrowLeftInCircle';
+import { arrowRightInCircle } from './arrowRightInCircle';
 
 import { orgAvatarLogo } from './orgAvatarLogo';
 import { globe } from './globe';
@@ -126,4 +128,6 @@ export const ICONS = {
   orgAvatarLogo,
   globe,
   heart,
+  arrowLeftInCircle,
+  arrowRightInCircle,
 };

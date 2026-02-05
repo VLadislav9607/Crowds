@@ -343,7 +343,7 @@ export const TalentEventCard = ({
               <TouchableOpacity
                 onPress={() =>
                   goToScreen(Screens.TalentEventDetails, {
-                    participationId: event.participant?.id ?? '',
+                    participationId: event.participant?.id!,
                     eventId: event.event_id,
                   })
                 }

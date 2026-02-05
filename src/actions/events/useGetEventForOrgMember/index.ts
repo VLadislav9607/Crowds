@@ -1,2 +1,2 @@
 export * from './useGetEventForOrgMember';
-export type { EventForOrgMemberDto } from './types';
+export type { EventForOrgMemberDto, EventAgeGroupDto } from './types';
