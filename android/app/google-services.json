@@ -1,0 +1,47 @@
+{
+  "project_info": {
+    "project_number": "473631917516",
+    "firebase_url": "https://crowdsnowproject-default-rtdb.firebaseio.com",
+    "project_id": "crowdsnowproject",
+    "storage_bucket": "crowdsnowproject.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:473631917516:android:d1d950a0c1dc851b9c8969",
+        "android_client_info": {
+          "package_name": "com.crowdsnow"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "473631917516-ib7asimp3jt0ib8pb99m7p7hfviht615.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyATYK2aKiuHMdSQAJO7Ki70kaINeEeFRKM"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "473631917516-ib7asimp3jt0ib8pb99m7p7hfviht615.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "473631917516-0c8e9fl76tr7ls16job8levnn32euh97.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.crowds.now"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
