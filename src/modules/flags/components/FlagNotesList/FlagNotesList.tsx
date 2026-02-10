@@ -1,13 +1,18 @@
 import { View } from 'react-native';
 
 import { AppText } from '@ui';
+import { FlagsNotesSkeleton } from '../../ui';
 import { COLORS } from '@styles';
 
 import { styles } from './styles';
-import { FlagNotesListProps } from './types';
+import { FLAG_REASONS, FlagNotesListProps } from './types';
 import { IFlagNote } from '../../screens/FlagParticipant/types';
 
-export const FlagNotesList = ({ notes }: FlagNotesListProps) => {
+export const FlagNotesList = ({ notes, isLoading }: FlagNotesListProps) => {
+  if (isLoading && notes.length === 0) {
+    return <FlagsNotesSkeleton />;
+  }
+
   const renderNoteItem = (note: IFlagNote) => (
     <View key={note.id} style={styles.noteItem}>
       <View style={styles.noteHeader}>
@@ -21,7 +26,7 @@ export const FlagNotesList = ({ notes }: FlagNotesListProps) => {
       </View>
 
       <AppText typography="bold_14" style={styles.noteTitle}>
-        {note.title}
+        {FLAG_REASONS[note.title as keyof typeof FLAG_REASONS]}
       </AppText>
 
       {note.description && (
@@ -35,6 +40,11 @@ export const FlagNotesList = ({ notes }: FlagNotesListProps) => {
   return (
     <View style={styles.container}>
       <AppText typography="bold_16">Previous Notes</AppText>
+
+      <AppText renderIf={notes.length === 0} style={styles.noNotesText}>
+        No previous notes
+      </AppText>
+
       {notes.map(renderNoteItem)}
     </View>
   );

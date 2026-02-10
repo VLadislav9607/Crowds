@@ -1,16 +1,20 @@
 import { View } from 'react-native';
-
 import { ScreenWithScrollWrapper } from '@components';
 import { AppText, Avatar } from '@ui';
+import { ICONS } from '@assets';
+import { useGetTalentProfile } from '@actions';
+import { calculateAge } from '@utils';
+import { TalentFlag } from '@modules/common';
 
 import { styles } from './styles';
 import { FlagParticipantLayoutProps } from './types';
-import { ICONS } from '@assets';
 
 export const FlagParticipantScreenLayout = ({
   children,
-  participant,
+  talentId,
 }: FlagParticipantLayoutProps) => {
+  const { data: participant } = useGetTalentProfile(talentId);
+
   return (
     <ScreenWithScrollWrapper
       headerVariant="withTitle"
@@ -27,16 +31,22 @@ export const FlagParticipantScreenLayout = ({
       <View style={styles.userInfoSection}>
         <Avatar
           size={148}
-          name={participant.name}
+          flag={TalentFlag.GREEN}
+          name={participant?.first_name + ' ' + participant?.last_name}
           style={styles.avatar}
-          uri={participant.avatarUrl}
+          bucket="talents_avatars"
+          imgPath={participant?.avatar_path || undefined}
         />
         <View style={styles.userDetails}>
-          <AppText typography="extra_bold_22">{participant.name}</AppText>
-          <AppText typography="regular_18">
-            {participant.gender} {participant.age}
+          <AppText typography="extra_bold_22">
+            {participant?.first_name + ' ' + participant?.last_name}
           </AppText>
-          <AppText typography="regular_18">{participant.location}</AppText>
+          <AppText typography="regular_18">
+            {participant?.gender} {calculateAge(participant?.birth_date)}
+          </AppText>
+          <AppText typography="regular_18">
+            {participant?.address || ''}
+          </AppText>
         </View>
       </View>
 

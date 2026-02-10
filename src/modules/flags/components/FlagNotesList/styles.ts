@@ -1,6 +1,6 @@
 import { StyleSheet } from 'react-native';
 
-import { COLORS } from '@styles';
+import { COLORS, TYPOGRAPHY } from '@styles';
 
 export const styles = StyleSheet.create({
   container: {
@@ -32,5 +32,10 @@ export const styles = StyleSheet.create({
   },
   noteDescription: {
     marginTop: 4,
+  },
+  noNotesText: {
+    marginTop: 16,
+    ...TYPOGRAPHY.regular_14,
+    color: COLORS.gray_primary,
   },
 });

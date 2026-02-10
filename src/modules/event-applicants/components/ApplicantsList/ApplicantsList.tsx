@@ -22,6 +22,7 @@ export const ApplicantsList = ({
   isAccepting = false,
   isRejecting = false,
   isCreatingChat = false,
+  popUpItems,
   onEndReached,
   handlePressMessage,
   handleAccept,
@@ -91,7 +92,7 @@ export const ApplicantsList = ({
             })
           }
           onMenuSelect={() => {}}
-          popUpItems={[{ label: 'Report', value: 'report' }]}
+          popUpItems={popUpItems(item)}
           renderRightAction={() => renderRightAction(item)}
         />
       )}

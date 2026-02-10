@@ -102,10 +102,6 @@ export const EventApplicantsScreen = () => {
             style={styles.filterButton}
           />
         </View>
-
-        {/* <AppText typography="regular_10" style={styles.sortByText}>
-          Sort by: Gender, Green Flag, Availability
-        </AppText> */}
       </View>
 
       <ApplicantsList
@@ -120,6 +116,17 @@ export const EventApplicantsScreen = () => {
         isRejecting={rejectApplication.isPending}
         handleAccept={handleAccept}
         handleDecline={handleDecline}
+        popUpItems={(talent: IEventParticipant) => [
+          {
+            label: 'Add flag',
+            value: 'flag',
+            onPress: () =>
+              goToScreen(Screens.FlagParticipant, {
+                talentId: talent.talentId ?? '',
+                eventId: eventId,
+              }),
+          },
+        ]}
         onEndReached={() => {
           if (hasNextPage && !isFetchingNextPage) {
             fetchNextPage();
