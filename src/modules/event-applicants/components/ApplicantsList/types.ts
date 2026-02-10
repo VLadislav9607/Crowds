@@ -1,3 +1,4 @@
+import { IPopupMenuItem } from '@components';
 import { IEventParticipant } from '@modules/common';
 
 export interface ApplicantsListProps {
@@ -10,6 +11,7 @@ export interface ApplicantsListProps {
   hasNextPage?: boolean;
   isCreatingChat?: boolean;
   isFetchingNextPage?: boolean;
+  popUpItems: (talent: IEventParticipant) => IPopupMenuItem[];
   onEndReached?: () => void;
   handleAccept: (participationId: string, talentId: string) => void;
   handleDecline: (participationId: string, talentId: string) => void;

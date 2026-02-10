@@ -22,8 +22,7 @@ export const AppModal = ({
   return (
     <Modal onBackdropPress={props.onClose} backdropOpacity={0.5} {...props}>
       <If condition={!hideToast}>
-        {' '}
-        <AppToast removeTopOffset />{' '}
+        <AppToast removeTopOffset />
       </If>
       <View
         style={[
