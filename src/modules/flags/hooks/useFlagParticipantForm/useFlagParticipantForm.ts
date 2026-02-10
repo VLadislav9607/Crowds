@@ -5,7 +5,7 @@ import { TalentFlag } from '@modules/common';
 import { YellowReason } from '@actions';
 
 import { FlagParticipantFormValues } from '../types';
-import { useTalentFlag } from '../useTalentFlag';
+import { useSetTalentFlag } from '../useSetTalentFlag';
 
 type UseFlagParticipantFormParams = {
   talentId: string;
@@ -21,7 +21,7 @@ export const useFlagParticipantForm = ({
     useState<FlagParticipantFormValues | null>(null);
 
   const { createYellowFlag, createRedFlag, createBlackFlagReport } =
-    useTalentFlag({ resetForm, closeNoteModal });
+    useSetTalentFlag({ resetForm, closeNoteModal });
 
   const {
     control,

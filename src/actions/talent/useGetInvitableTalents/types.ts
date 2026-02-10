@@ -21,6 +21,7 @@ export interface InvitableTalentsBodyDto {
 
 export interface InvitableTalentDto {
   id: string;
+  flag: string;
   first_name: string;
   last_name: string;
   avatar_path: string;

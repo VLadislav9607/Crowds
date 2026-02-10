@@ -1,3 +1,3 @@
 export * from './useFlagParticipantForm';
-export * from './useTalentFlag';
+export * from './useSetTalentFlag';
 export * from './useTalentFlagsNotes';

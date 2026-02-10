@@ -1,6 +1,8 @@
 import { supabase } from '@services';
-import { GetCustomListTalentsBodyDto, GetCustomListTalentsRespDto } from '../useCustomListMembers';
-
+import {
+  GetCustomListTalentsBodyDto,
+  GetCustomListTalentsRespDto,
+} from '../useCustomListMembers';
 
 export const getCustomListTalentsAction = async (
   body: GetCustomListTalentsBodyDto,
@@ -12,7 +14,7 @@ export const getCustomListTalentsAction = async (
       p_list_id: body.listId,
       p_limit: body.limit,
       p_offset: body.offset,
-      p_search: body.search,
+      p_search: body.search || '',
     },
   );
 
@@ -33,7 +35,7 @@ export const getCustomListTalentsAction = async (
   const total = data[0]?.total || 0;
 
   return {
-    data: data,
+    data,
     pagination: {
       offset: body.offset,
       total,

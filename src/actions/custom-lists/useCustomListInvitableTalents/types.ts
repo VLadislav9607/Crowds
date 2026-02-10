@@ -11,11 +11,12 @@ export interface GetCustomListTalentsBodyDto {
 export interface CustomListTalentDto {
   id: string;
   first_name: string;
+  flag: string;
   last_name: string;
   avatar_path: string;
   city: string;
   country: string;
-  is_in_list: boolean;
+  is_in_list?: boolean;
   total: number;
   status: EventParticipantStatus;
 }

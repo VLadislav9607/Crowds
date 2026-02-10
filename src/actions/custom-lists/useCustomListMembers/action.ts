@@ -14,6 +14,8 @@ export const getCustomListTalentsAction = async (
     p_offset: body.offset,
   });
 
+  console.log('data', data);
+  console.log('error', error);
   if (error) {
     throw error;
   }
@@ -31,7 +33,7 @@ export const getCustomListTalentsAction = async (
   const total = data[0]?.total || 0;
 
   return {
-    data: data,
+    data,
     pagination: {
       offset: body.offset,
       total,

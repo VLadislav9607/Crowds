@@ -60,13 +60,10 @@ export const styles = StyleSheet.create({
     alignItems: 'center',
   },
   circleBadge: {
-    width: 32,
-    height: 32,
-    borderRadius: 100,
-    backgroundColor: COLORS.green,
     position: 'absolute',
     right: 5,
-    bottom: 29,
+    bottom: 5,
+    zIndex: 1,
   },
   circleBadgeUnverified: {
     bottom: 5,

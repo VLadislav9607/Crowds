@@ -1,5 +1,5 @@
 import { View } from 'react-native';
-import { AppText } from '@ui';
+import { AppText, FlagIndicator } from '@ui';
 import { calculateAge, capitalize } from '@utils';
 import { AppImage } from '@components';
 import { ICONS } from '@assets';
@@ -8,6 +8,7 @@ import { HeaderTalentProfileProps } from './types';
 import { styles } from './styles';
 
 export const HeaderTalentProfile = ({
+  flag,
   birthDate,
   gender,
   location,
@@ -22,6 +23,7 @@ export const HeaderTalentProfile = ({
           imgPath={avatarUrl}
           containerStyle={styles.image}
           placeholderIcon={ICONS.avatar('gray_20')}
+          CustomElements={<FlagIndicator style={styles.flagIndicator} flag={flag} />}
         />
       </View>
 
