@@ -15,7 +15,7 @@ export const TalentProfileRow = ({
   renderRightAction,
   onPressCard,
 }: TalentProfileRowProps) => {
-  const { name, location, avatar_url } = talent;
+  const { name, location, avatar_url, flag } = talent;
   const { showPopup } = usePopupMenu();
 
   const handleOpenMenu = (event: GestureResponderEvent) => {
@@ -37,7 +37,7 @@ export const TalentProfileRow = ({
       <Avatar
         size={48}
         name={name}
-        flag={TalentFlag.GREEN}
+        flag={(flag as TalentFlag) || TalentFlag.GREEN}
         imgPath={avatar_url}
         bucket="talents_avatars"
       />

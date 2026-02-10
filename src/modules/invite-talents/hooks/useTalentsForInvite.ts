@@ -1,7 +1,7 @@
 import { useMemo, useRef, useState } from 'react';
 import { BottomSheetModal } from '@gorhom/bottom-sheet';
 import { useGetInvitableTalents } from '@actions';
-import { IEventParticipant } from '@modules/common';
+import { IEventParticipant, TalentFlag } from '@modules/common';
 import { useDebounce } from '@hooks';
 
 import { mapInviteTalent } from '../helpers';
@@ -29,7 +29,9 @@ export const useTalentsForInvite = (eventId: string) => {
   const talentsForInviteList = useMemo<IEventParticipant[]>(() => {
     if (!talentsForInviteResponse) return [];
     return talentsForInviteResponse.pages.flatMap(page =>
-      page.data.map(talent => mapInviteTalent(talent)),
+      page.data.map(talent =>
+        mapInviteTalent(talent, talent.flag as TalentFlag),
+      ),
     );
   }, [talentsForInviteResponse]);
 

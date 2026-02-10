@@ -1,7 +1,7 @@
 import { useMemo, useRef, useState } from 'react';
 import { BottomSheetModal } from '@gorhom/bottom-sheet';
 import { useGetMatchingTalents } from '@actions';
-import { IEventParticipant } from '@modules/common';
+import { IEventParticipant, TalentFlag } from '@modules/common';
 import { useDebounce } from '@hooks';
 
 import { mapInviteTalent } from '../helpers';
@@ -30,7 +30,9 @@ export const useMatchingTalentsForInvite = (eventId: string) => {
 
   const talentsForInviteList = useMemo<IEventParticipant[]>(() => {
     if (!matchingTalentsResponse?.data) return [];
-    return matchingTalentsResponse.data.map(talent => mapInviteTalent(talent));
+    return matchingTalentsResponse.data.map(talent =>
+      mapInviteTalent(talent, talent.flag as TalentFlag),
+    );
   }, [matchingTalentsResponse]);
 
   const handleOpenFilter = () => {

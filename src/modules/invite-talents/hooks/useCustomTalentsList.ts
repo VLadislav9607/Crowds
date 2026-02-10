@@ -1,6 +1,6 @@
 import { useMemo } from 'react';
 import { useCustomListMembers } from '@actions';
-import { IEventParticipant } from '@modules/common';
+import { IEventParticipant, TalentFlag } from '@modules/common';
 import { mapInviteTalent } from '../helpers';
 
 export const useCustomTalentsList = (eventId: string, listId: string) => {
@@ -18,6 +18,7 @@ export const useCustomTalentsList = (eventId: string, listId: string) => {
       page.data.map(talent => ({
         ...mapInviteTalent(talent),
         status: talent.status,
+        flag: talent.flag as TalentFlag,
       })),
     );
   }, [talentsResponse]);

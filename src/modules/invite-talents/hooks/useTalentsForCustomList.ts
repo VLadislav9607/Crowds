@@ -4,6 +4,7 @@ import { useDebounce } from '@hooks';
 
 import { AddTalentItem } from '../components/AddTalentsList/types';
 import { mapInviteTalent } from '../helpers';
+import { TalentFlag } from '@modules/common';
 
 export const useTalentsForCustomList = (eventId: string, listId: string) => {
   const [search, setSearch] = useState('');
@@ -25,7 +26,7 @@ export const useTalentsForCustomList = (eventId: string, listId: string) => {
     if (!talentsResponse) return [];
     return talentsResponse.pages.flatMap(page =>
       page.data.map((talent: CustomListTalentDto) => ({
-        ...mapInviteTalent(talent),
+        ...mapInviteTalent(talent, talent.flag as TalentFlag),
         isInList: talent.is_in_list,
       })),
     );

@@ -16,3 +16,4 @@ export * from './DashedLine';
 export * from './OtpInput';
 export * from './FilterButton';
 export * from './SearchWithFilter';
+export * from './FlagIndicator';

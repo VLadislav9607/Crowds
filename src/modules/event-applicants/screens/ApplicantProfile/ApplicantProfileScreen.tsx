@@ -2,9 +2,9 @@ import { View, ActivityIndicator } from 'react-native';
 import Animated from 'react-native-reanimated';
 import { AppText } from '@ui';
 import { ScreenWithScrollWrapper, AppImage } from '@components';
-import { useGetTalentProfile } from '@actions';
+import { useGetTalentFullProfile } from '@actions';
 import { useScreenNavigation, Screens } from '@navigation';
-import { useAnimatedScrollHeader } from '@modules/common';
+import { TalentFlag, useAnimatedScrollHeader } from '@modules/common';
 import { formatPhysicalDetailsForDisplay } from '@modules/profile';
 
 import { styles } from './styles';
@@ -17,7 +17,7 @@ export const ApplicantProfileScreen = () => {
     data: profile,
     isLoading,
     error,
-  } = useGetTalentProfile(params?.applicantId);
+  } = useGetTalentFullProfile(params?.applicantId);
 
   const { scrollHandler, animatedHeaderStyle } = useAnimatedScrollHeader();
 
@@ -68,6 +68,7 @@ export const ApplicantProfileScreen = () => {
       customElement={
         <Animated.View style={[styles.headerContainer, animatedHeaderStyle]}>
           <HeaderTalentProfile
+            flag={profile.flag as TalentFlag}
             birthDate={profile.birth_date || ''}
             gender={profile.gender}
             location={profile.address || ''}

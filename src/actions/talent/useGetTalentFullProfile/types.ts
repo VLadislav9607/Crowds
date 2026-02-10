@@ -6,11 +6,11 @@ export interface TalentProfilePhysicalDetail {
   color?: string;
 }
 
-export interface GetTalentProfileBodyDto {
+export interface GetTalentFullProfileBodyDto {
   talentId: string;
 }
 
-export interface GetTalentProfileRespDto {
+export interface GetTalentFullProfileRespDto {
   id: string;
   first_name: string;
   last_name: string;
@@ -18,6 +18,7 @@ export interface GetTalentProfileRespDto {
   avatar_full_path: string | null;
   physical_details: TalentProfilePhysicalDetail[];
   tags: string[];
+  flag: string;
   bio: string | null;
   experience: string | null;
   availability: string;

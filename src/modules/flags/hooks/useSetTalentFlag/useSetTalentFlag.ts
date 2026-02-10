@@ -7,16 +7,16 @@ import { TANSTACK_QUERY_KEYS } from '@constants';
 import { showMutationErrorToast, showSuccessToast } from '@helpers';
 import { queryClient } from '@services';
 
-interface UseTalentFlagProps {
+interface UseSetTalentFlagProps {
   resetForm: () => void;
   closeNoteModal: () => void;
 }
 
-export const useTalentFlag = ({
+export const useSetTalentFlag = ({
   resetForm,
   closeNoteModal,
-}: UseTalentFlagProps) => {
-  const onSuccess = () => {
+}: UseSetTalentFlagProps) => {
+  const onSuccess = (response: any) => {
     resetForm();
     closeNoteModal();
 
@@ -24,9 +24,23 @@ export const useTalentFlag = ({
       showSuccessToast('Flag submitted successfully');
     }, 500);
 
-    queryClient.invalidateQueries({
-      queryKey: [TANSTACK_QUERY_KEYS.GET_TALENT_FLAGS],
-    });
+    Promise.allSettled([
+      queryClient.invalidateQueries({
+        queryKey: [TANSTACK_QUERY_KEYS.GET_TALENT_FLAGS, response.talentId],
+      }),
+      queryClient.invalidateQueries({
+        queryKey: [TANSTACK_QUERY_KEYS.GET_TALENT_FULL_PROFILE, response.talentId],
+      }),
+      queryClient.invalidateQueries({
+        queryKey: [TANSTACK_QUERY_KEYS.GET_MATCHING_TALENTS],
+      }),
+      queryClient.invalidateQueries({
+        queryKey: [TANSTACK_QUERY_KEYS.GET_INVITABLE_TALENTS],
+      }),
+      queryClient.invalidateQueries({
+        queryKey: [TANSTACK_QUERY_KEYS.GET_CUSTOM_LIST_TALENTS, response.eventId],
+      }),
+    ]);
   };
 
   const onError = (error: Error) => {

@@ -2,7 +2,7 @@ import { View } from 'react-native';
 import { ScreenWithScrollWrapper } from '@components';
 import { AppText, Avatar } from '@ui';
 import { ICONS } from '@assets';
-import { useGetTalentProfile } from '@actions';
+import { useGetTalentFullProfile } from '@actions';
 import { calculateAge } from '@utils';
 import { TalentFlag } from '@modules/common';
 
@@ -13,7 +13,7 @@ export const FlagParticipantScreenLayout = ({
   children,
   talentId,
 }: FlagParticipantLayoutProps) => {
-  const { data: participant } = useGetTalentProfile(talentId);
+  const { data: participant } = useGetTalentFullProfile(talentId);
 
   return (
     <ScreenWithScrollWrapper
@@ -31,7 +31,7 @@ export const FlagParticipantScreenLayout = ({
       <View style={styles.userInfoSection}>
         <Avatar
           size={148}
-          flag={TalentFlag.GREEN}
+          flag={participant?.flag as TalentFlag}
           name={participant?.first_name + ' ' + participant?.last_name}
           style={styles.avatar}
           bucket="talents_avatars"
