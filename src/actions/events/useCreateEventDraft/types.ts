@@ -56,6 +56,7 @@ export interface CreateEventDraftBodyDto {
   ndaDocumentPath?: string;
   location?: EventLocationDto;
   ageGroups?: AgeGroupDto[];
+  officeId: string;
 }
 
 export interface CreateEventDraftResDto {

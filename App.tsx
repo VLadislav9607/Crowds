@@ -11,9 +11,14 @@ import {
   subscribeToTokenRefresh,
   queryClient,
 } from './src/services';
-import { AppNavigation, goToScreen, Screens } from './src/navigation';
+import {
+  AppNavigation,
+  goToScreen,
+  Screens,
+  navigationRef,
+} from './src/navigation';
 import { AppToast, PopupMenuProvider } from './src/components';
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { onNavigateAfterAuth } from '@helpers';
 import { upsertPushDeviceAction } from './src/actions';
 
@@ -34,14 +39,30 @@ const App = () => {
     allowFontScaling: false,
   };
 
+  const [shouldNavigateToFirst, setShouldNavigateToFirst] = useState(false);
+
+  const handleNavigationReady = () => {
+    if (shouldNavigateToFirst) {
+      goToScreen(Screens.First);
+    }
+  };
+
   useEffect(() => {
-    supabase.auth.getSession().then(async ({ data: { session } }) => {
-      if (!session) {
-        goToScreen(Screens.First);
-        return;
-      }
-      onNavigateAfterAuth();
-    });
+    supabase.auth
+      .getSession()
+      .then(async ({ data: { session } }) => {
+        if (!session) {
+          setShouldNavigateToFirst(true);
+          if (navigationRef.isReady()) {
+            goToScreen(Screens.First);
+          }
+        } else {
+          onNavigateAfterAuth();
+        }
+      })
+      .catch(() => {
+        onNavigateAfterAuth();
+      });
   }, []);
 
   useEffect(() => {
@@ -68,7 +89,7 @@ const App = () => {
         <GestureHandlerRootView style={styles.container}>
           <BottomSheetModalProvider>
             <PopupMenuProvider>
-              <AppNavigation />
+              <AppNavigation onNavigationReady={handleNavigationReady} />
               <AppToast />
             </PopupMenuProvider>
           </BottomSheetModalProvider>

@@ -1,6 +1,8 @@
 import { CountryPickerModalProps } from './types';
 import { styles } from './styles';
 import { TouchableOpacity, View } from 'react-native';
+
+const ListSeparator = () => <View style={styles.separator} />;
 import { AppBottomSheet, If } from '@components';
 import { AppButton, AppSearchInputSecondary, AppText } from '@ui';
 import { countriesWithFlag, ICountryWithFlag } from '@constants';
@@ -127,7 +129,7 @@ export const CountryPickerModal = ({
               paddingBottom: (insets.bottom || 24) + (showDoneButton ? 70 : 0),
             },
           ]}
-          ItemSeparatorComponent={() => <View style={styles.separator} />}
+          ItemSeparatorComponent={ListSeparator}
           renderItem={({ item }) => {
             const isSelected =
               selectedCountriesCodes.includes(item.code) ||
@@ -149,7 +151,7 @@ export const CountryPickerModal = ({
               >
                 <View style={styles.countryInfoRow}>
                   <AppText style={styles.flagText}>{item.flag}</AppText>
-                  <AppText typography="regular_14" style={{ flex: 1 }}>
+                  <AppText typography="regular_14" style={styles.countryName}>
                     {item.name}
                   </AppText>
                 </View>

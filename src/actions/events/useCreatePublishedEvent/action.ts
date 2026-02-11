@@ -9,7 +9,7 @@ export const createPublishedEventAction = async (
 ): Promise<CreatePublishedEventResDto> => {
   const eventStatus: Enums<'EventStatus'> = 'published';
 
-  const { data, error } = await supabase.rpc('create_draft_or_event', {
+  const { data, error } = await supabase.rpc('create_new_draft_or_event', {
     payload: { ...body, status: eventStatus } as any,
   });
   if (error) {

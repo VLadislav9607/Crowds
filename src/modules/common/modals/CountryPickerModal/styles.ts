@@ -47,6 +47,9 @@ export const styles = StyleSheet.create({
     gap: 10,
     flex: 1,
   },
+  countryName: {
+    flex: 1,
+  },
   flagText: {
     fontSize: 24,
   },

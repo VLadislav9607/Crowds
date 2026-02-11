@@ -66,7 +66,7 @@ export const OnboardingScreenLayout = ({
       }
       {...headerProps}
     >
-      <View style={styles.header}>
+      <View style={[styles.header, !title && !label && styles.headerNoMargin]}>
         <AppText
           renderIf={!!title}
           typography="semibold_20"
@@ -96,6 +96,9 @@ const styles = StyleSheet.create({
     gap: 10,
     marginTop: 24,
     marginBottom: 32,
+  },
+  headerNoMargin: {
+    marginBottom: 0,
   },
   titleText: {
     textAlign: 'center',

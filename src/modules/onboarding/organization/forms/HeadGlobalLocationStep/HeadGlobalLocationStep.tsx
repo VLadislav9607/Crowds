@@ -5,7 +5,7 @@ import { forwardRef, useEffect, useImperativeHandle, useRef } from 'react';
 
 import { AppText } from '@ui';
 import { COLORS, TYPOGRAPHY } from '@styles';
-import { AppImage, CheckboxList, PlacesPredictionsInput } from '@components';
+import { AppImage, PlacesPredictionsInput } from '@components';
 import { PlaceAutocompleteType } from '@googlemaps/google-maps-services-js';
 
 import {
@@ -22,7 +22,7 @@ import {
 } from '@modules/common';
 import { BottomSheetModal } from '@gorhom/bottom-sheet';
 
-export const HeadOfficeGlobalStep = forwardRef<
+export const HeadGlobalLocationStep = forwardRef<
   HeadGlobalLocationFormRef,
   HeadGlobalLocationFormProps
 >(
@@ -75,7 +75,7 @@ export const HeadOfficeGlobalStep = forwardRef<
     return (
       <View style={containerStyle}>
         <AppText style={styles.organizationDetails}>
-          Organization Details
+          Organization Location
         </AppText>
 
         <Controller
@@ -95,39 +95,6 @@ export const HeadOfficeGlobalStep = forwardRef<
               onSelectPlace={res => field.onChange(res.parsed_details)}
               defaultValue={parsedLocation?.autocomplete_description}
             />
-          )}
-        />
-
-        <Controller
-          control={control}
-          name="isHeadquartered"
-          render={({ field, fieldState }) => (
-            <View>
-              <CheckboxList
-                label="Is this location a headquarter?"
-                containerStyle={styles.checkboxListContainer}
-                items={[
-                  { label: 'Yes', value: 'yes' },
-                  { label: 'No', value: 'no' },
-                ]}
-                checkedValues={
-                  field.value
-                    ? 'yes'
-                    : typeof field.value === 'boolean'
-                    ? 'no'
-                    : undefined
-                }
-                onCheckboxPress={item => field.onChange(item.value === 'yes')}
-              />
-              <AppText
-                renderIf={!!fieldState.error?.message}
-                typography="medium_10"
-                color="red"
-                margin={{ top: 8 }}
-              >
-                {fieldState.error?.message}
-              </AppText>
-            </View>
           )}
         />
 
