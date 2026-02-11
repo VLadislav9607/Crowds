@@ -6,6 +6,7 @@ export interface CountryPickerModalData {
   onCountryPicked?: (country: ICountryWithFlag) => void;
   onCountriesPicked?: (countries: ICountryWithFlag[]) => void;
   multiple?: boolean;
+  // selectedCodesDefault: {code: string, marker?: React.ReactNode}[],
   selectedCodesDefault?: string[];
   selectedCodesForever?: string[];
   disabledCodes?: string[];

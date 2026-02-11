@@ -34,10 +34,15 @@ export const TalentLocationSetupForm = forwardRef<
     onSuccess?.();
   };
 
-  const { mutate: upsertTalentLocationMutate, isPending: isUpsertingLocation } =
-    useUpsertTalentLocation({
-      onSuccess: onUpsertLocationSuccess,
-    });
+  const {
+    mutate: upsertTalentLocationMutate,
+    isPending: isUpsertingLocation,
+    error: upsertTalentLocationError,
+  } = useUpsertTalentLocation({
+    onSuccess: onUpsertLocationSuccess,
+  });
+
+  console.log('upsertTalentLocationError', upsertTalentLocationError);
 
   const talentLocation = me?.talent?.talent_location;
 
@@ -111,7 +116,7 @@ export const TalentLocationSetupForm = forwardRef<
         control={control}
         name="parsed_location"
         render={({ field, fieldState }) => {
-          console.log('field', field);
+          console.log('fieldState', fieldState.error);
           return (
             <PlacesPredictionsInput
               types={PlaceAutocompleteType.cities}
