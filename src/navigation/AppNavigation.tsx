@@ -13,7 +13,11 @@ import { RootStackParamList } from './types';
 
 export const navigationRef = createNavigationContainerRef<RootStackParamList>();
 
-export const AppNavigation = () => {
+interface AppNavigationProps {
+  onNavigationReady?: () => void;
+}
+
+export const AppNavigation = ({ onNavigationReady }: AppNavigationProps) => {
   const MyTheme = {
     ...DefaultTheme,
     colors: {
@@ -22,11 +26,16 @@ export const AppNavigation = () => {
     },
   };
 
+  const handleReady = () => {
+    ReactBootSplash.hide();
+    onNavigationReady?.();
+  };
+
   return (
     <NavigationContainer
       ref={navigationRef}
       theme={MyTheme}
-      onReady={() => ReactBootSplash.hide()}
+      onReady={handleReady}
     >
       <StatusBar />
       <RootStackNavigator />

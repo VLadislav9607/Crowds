@@ -47,6 +47,9 @@ export const OrganizationNameStep = forwardRef<
 
   return (
     <View style={containerStyle}>
+      <AppText typography="bold_18" margin={{ bottom: 16 }}>
+        Organization Details
+      </AppText>
       <Controller
         control={control}
         name="organizationName"

@@ -6,7 +6,7 @@ export const createEventDraftAction = async (
 ): Promise<CreateEventDraftResDto> => {
   const eventStatus: Enums<'EventStatus'> = 'draft';
 
-  const { data, error } = await supabase.rpc('create_draft_or_event', {
+  const { data, error } = await supabase.rpc('create_new_draft_or_event', {
     payload: { ...body, status: eventStatus } as any,
   });
 

@@ -14,6 +14,143 @@ export type Database = {
   };
   public: {
     Tables: {
+      black_flag_reports: {
+        Row: {
+          created_at: string;
+          description: string;
+          event_id: string | null;
+          id: string;
+          reporter_org_id: string | null;
+          reporter_talent_id: string | null;
+          reporter_type: string;
+          reporter_user_id: string;
+          status: string;
+          target_org_id: string | null;
+          target_talent_id: string | null;
+          target_type: string;
+        };
+        Insert: {
+          created_at?: string;
+          description: string;
+          event_id?: string | null;
+          id?: string;
+          reporter_org_id?: string | null;
+          reporter_talent_id?: string | null;
+          reporter_type: string;
+          reporter_user_id: string;
+          status?: string;
+          target_org_id?: string | null;
+          target_talent_id?: string | null;
+          target_type: string;
+        };
+        Update: {
+          created_at?: string;
+          description?: string;
+          event_id?: string | null;
+          id?: string;
+          reporter_org_id?: string | null;
+          reporter_talent_id?: string | null;
+          reporter_type?: string;
+          reporter_user_id?: string;
+          status?: string;
+          target_org_id?: string | null;
+          target_talent_id?: string | null;
+          target_type?: string;
+        };
+        Relationships: [
+          {
+            foreignKeyName: 'black_flag_reports_event_id_fkey';
+            columns: ['event_id'];
+            isOneToOne: false;
+            referencedRelation: 'events';
+            referencedColumns: ['id'];
+          },
+          {
+            foreignKeyName: 'black_flag_reports_reporter_org_id_fkey';
+            columns: ['reporter_org_id'];
+            isOneToOne: false;
+            referencedRelation: 'organizations';
+            referencedColumns: ['id'];
+          },
+          {
+            foreignKeyName: 'black_flag_reports_reporter_talent_id_fkey';
+            columns: ['reporter_talent_id'];
+            isOneToOne: false;
+            referencedRelation: 'talents';
+            referencedColumns: ['id'];
+          },
+          {
+            foreignKeyName: 'black_flag_reports_target_org_id_fkey';
+            columns: ['target_org_id'];
+            isOneToOne: false;
+            referencedRelation: 'organizations';
+            referencedColumns: ['id'];
+          },
+          {
+            foreignKeyName: 'black_flag_reports_target_talent_id_fkey';
+            columns: ['target_talent_id'];
+            isOneToOne: false;
+            referencedRelation: 'talents';
+            referencedColumns: ['id'];
+          },
+        ];
+      };
+      brands: {
+        Row: {
+          created_at: string;
+          id: string;
+          logo_path: string | null;
+          name: string;
+          organization_network_id: string;
+        };
+        Insert: {
+          created_at?: string;
+          id?: string;
+          logo_path?: string | null;
+          name: string;
+          organization_network_id: string;
+        };
+        Update: {
+          created_at?: string;
+          id?: string;
+          logo_path?: string | null;
+          name?: string;
+          organization_network_id?: string;
+        };
+        Relationships: [
+          {
+            foreignKeyName: 'brands_organization_network_id_fkey';
+            columns: ['organization_network_id'];
+            isOneToOne: false;
+            referencedRelation: 'organizations_network';
+            referencedColumns: ['id'];
+          },
+        ];
+      };
+      capabilities: {
+        Row: {
+          capability_category: Database['public']['Enums']['СapabilityСategory'];
+          code: string;
+          id: string;
+          name: string;
+          sort_order: number;
+        };
+        Insert: {
+          capability_category: Database['public']['Enums']['СapabilityСategory'];
+          code: string;
+          id?: string;
+          name: string;
+          sort_order: number;
+        };
+        Update: {
+          capability_category?: Database['public']['Enums']['СapabilityСategory'];
+          code?: string;
+          id?: string;
+          name?: string;
+          sort_order?: number;
+        };
+        Relationships: [];
+      };
       chat_messages: {
         Row: {
           chat_id: string;
@@ -149,6 +286,38 @@ export type Database = {
             columns: ['talent_id'];
             isOneToOne: false;
             referencedRelation: 'talents';
+            referencedColumns: ['id'];
+          },
+        ];
+      };
+      current_flags: {
+        Row: {
+          active_flag_id: string | null;
+          expires_on: string | null;
+          status: string;
+          target_id: string;
+          target_type: string;
+        };
+        Insert: {
+          active_flag_id?: string | null;
+          expires_on?: string | null;
+          status: string;
+          target_id: string;
+          target_type: string;
+        };
+        Update: {
+          active_flag_id?: string | null;
+          expires_on?: string | null;
+          status?: string;
+          target_id?: string;
+          target_type?: string;
+        };
+        Relationships: [
+          {
+            foreignKeyName: 'current_flags_active_flag_id_fkey';
+            columns: ['active_flag_id'];
+            isOneToOne: false;
+            referencedRelation: 'flags';
             referencedColumns: ['id'];
           },
         ];
@@ -353,6 +522,58 @@ export type Database = {
             columns: ['event_id'];
             isOneToOne: true;
             referencedRelation: 'events';
+            referencedColumns: ['id'];
+          },
+        ];
+      };
+      event_participant_qr_sessions: {
+        Row: {
+          checked_in_at: string | null;
+          checked_out_at: string | null;
+          created_at: string;
+          event_id: string;
+          id: string;
+          participant_id: string;
+          qr_code_id: string;
+        };
+        Insert: {
+          checked_in_at?: string | null;
+          checked_out_at?: string | null;
+          created_at?: string;
+          event_id: string;
+          id?: string;
+          participant_id: string;
+          qr_code_id: string;
+        };
+        Update: {
+          checked_in_at?: string | null;
+          checked_out_at?: string | null;
+          created_at?: string;
+          event_id?: string;
+          id?: string;
+          participant_id?: string;
+          qr_code_id?: string;
+        };
+        Relationships: [
+          {
+            foreignKeyName: 'event_participant_qr_sessions_event_id_fkey';
+            columns: ['event_id'];
+            isOneToOne: false;
+            referencedRelation: 'events';
+            referencedColumns: ['id'];
+          },
+          {
+            foreignKeyName: 'event_participant_qr_sessions_participant_id_fkey';
+            columns: ['participant_id'];
+            isOneToOne: false;
+            referencedRelation: 'event_participations';
+            referencedColumns: ['id'];
+          },
+          {
+            foreignKeyName: 'event_participant_qr_sessions_qr_code_id_fkey';
+            columns: ['qr_code_id'];
+            isOneToOne: false;
+            referencedRelation: 'event_qr_codes';
             referencedColumns: ['id'];
           },
         ];
@@ -749,6 +970,7 @@ export type Database = {
           nda_file_name: string | null;
           nda_file_path: string | null;
           nda_required: boolean | null;
+          office_id: string;
           payment_amount: number | null;
           payment_mode: Database['public']['Enums']['EventPaymentMode'] | null;
           registration_closes_at: string | null;
@@ -768,6 +990,7 @@ export type Database = {
           nda_file_name?: string | null;
           nda_file_path?: string | null;
           nda_required?: boolean | null;
+          office_id: string;
           payment_amount?: number | null;
           payment_mode?: Database['public']['Enums']['EventPaymentMode'] | null;
           registration_closes_at?: string | null;
@@ -787,6 +1010,7 @@ export type Database = {
           nda_file_name?: string | null;
           nda_file_path?: string | null;
           nda_required?: boolean | null;
+          office_id?: string;
           payment_amount?: number | null;
           payment_mode?: Database['public']['Enums']['EventPaymentMode'] | null;
           registration_closes_at?: string | null;
@@ -808,6 +1032,13 @@ export type Database = {
             columns: ['creator_id'];
             isOneToOne: false;
             referencedRelation: 'organizations_members';
+            referencedColumns: ['id'];
+          },
+          {
+            foreignKeyName: 'events_office_id_fkey';
+            columns: ['office_id'];
+            isOneToOne: false;
+            referencedRelation: 'offices';
             referencedColumns: ['id'];
           },
         ];
@@ -895,6 +1126,76 @@ export type Database = {
           },
         ];
       };
+      flags: {
+        Row: {
+          created_at: string;
+          created_by_org_id: string | null;
+          created_by_user_id: string | null;
+          description: string | null;
+          duration_days: number | null;
+          escalated_from_flag_id: string | null;
+          event_id: string | null;
+          expires_on: string | null;
+          flag_type: string;
+          id: string;
+          reason: string;
+          target_id: string;
+          target_type: string;
+        };
+        Insert: {
+          created_at?: string;
+          created_by_org_id?: string | null;
+          created_by_user_id?: string | null;
+          description?: string | null;
+          duration_days?: number | null;
+          escalated_from_flag_id?: string | null;
+          event_id?: string | null;
+          expires_on?: string | null;
+          flag_type: string;
+          id?: string;
+          reason: string;
+          target_id: string;
+          target_type: string;
+        };
+        Update: {
+          created_at?: string;
+          created_by_org_id?: string | null;
+          created_by_user_id?: string | null;
+          description?: string | null;
+          duration_days?: number | null;
+          escalated_from_flag_id?: string | null;
+          event_id?: string | null;
+          expires_on?: string | null;
+          flag_type?: string;
+          id?: string;
+          reason?: string;
+          target_id?: string;
+          target_type?: string;
+        };
+        Relationships: [
+          {
+            foreignKeyName: 'flags_created_by_org_fkey';
+            columns: ['created_by_org_id'];
+            isOneToOne: false;
+            referencedRelation: 'organizations';
+            referencedColumns: ['id'];
+          },
+          {
+            foreignKeyName: 'flags_escalated_from_flag_id_fkey';
+            columns: ['escalated_from_flag_id'];
+            isOneToOne: false;
+            referencedRelation: 'flags';
+            referencedColumns: ['id'];
+          },
+          {
+            foreignKeyName: 'flags_event_id_fkey';
+            columns: ['event_id'];
+            isOneToOne: false;
+            referencedRelation: 'events';
+            referencedColumns: ['id'];
+          },
+        ];
+      };
       hidden_events: {
         Row: {
           created_at: string;
@@ -920,6 +1221,284 @@ export type Database = {
             referencedColumns: ['id'];
           },
         ];
+      };
+      notifications: {
+        Row: {
+          body: string;
+          created_at: string;
+          id: string;
+          title: string;
+          user_id: string;
+        };
+        Insert: {
+          body: string;
+          created_at?: string;
+          id?: string;
+          title: string;
+          user_id: string;
+        };
+        Update: {
+          body?: string;
+          created_at?: string;
+          id?: string;
+          title?: string;
+          user_id?: string;
+        };
+        Relationships: [];
+      };
+      office_control: {
+        Row: {
+          controlled_office_id: string;
+          controller_office_id: string;
+        };
+        Insert: {
+          controlled_office_id: string;
+          controller_office_id: string;
+        };
+        Update: {
+          controlled_office_id?: string;
+          controller_office_id?: string;
+        };
+        Relationships: [
+          {
+            foreignKeyName: 'office_control_controlled_office_id_fkey';
+            columns: ['controlled_office_id'];
+            isOneToOne: true;
+            referencedRelation: 'offices';
+            referencedColumns: ['id'];
+          },
+          {
+            foreignKeyName: 'office_control_controller_office_id_fkey';
+            columns: ['controller_office_id'];
+            isOneToOne: false;
+            referencedRelation: 'offices';
+            referencedColumns: ['id'];
+          },
+        ];
+      };
+      office_location: {
+        Row: {
+          autocomplete_description: string;
+          city: string;
+          coords: unknown;
+          country: string;
+          country_code: string;
+          created_at: string;
+          formatted_address: string;
+          id: string;
+          is_head_office: boolean | null;
+          latitude: number;
+          longitude: number;
+          office_id: string | null;
+          place_id: string;
+          postal_code: string;
+          region: string;
+          street_name: string;
+          street_number: string;
+        };
+        Insert: {
+          autocomplete_description: string;
+          city: string;
+          coords: unknown;
+          country: string;
+          country_code: string;
+          created_at?: string;
+          formatted_address: string;
+          id?: string;
+          is_head_office?: boolean | null;
+          latitude: number;
+          longitude: number;
+          office_id?: string | null;
+          place_id: string;
+          postal_code: string;
+          region: string;
+          street_name: string;
+          street_number: string;
+        };
+        Update: {
+          autocomplete_description?: string;
+          city?: string;
+          coords?: unknown;
+          country?: string;
+          country_code?: string;
+          created_at?: string;
+          formatted_address?: string;
+          id?: string;
+          is_head_office?: boolean | null;
+          latitude?: number;
+          longitude?: number;
+          office_id?: string | null;
+          place_id?: string;
+          postal_code?: string;
+          region?: string;
+          street_name?: string;
+          street_number?: string;
+        };
+        Relationships: [
+          {
+            foreignKeyName: 'office_location_office_id_fkey';
+            columns: ['office_id'];
+            isOneToOne: false;
+            referencedRelation: 'offices';
+            referencedColumns: ['id'];
+          },
+        ];
+      };
+      office_member_capabilities: {
+        Row: {
+          capability_id: string;
+          created_at: string;
+          office_member_id: string;
+        };
+        Insert: {
+          capability_id: string;
+          created_at?: string;
+          office_member_id: string;
+        };
+        Update: {
+          capability_id?: string;
+          created_at?: string;
+          office_member_id?: string;
+        };
+        Relationships: [
+          {
+            foreignKeyName: 'office_member_capabilities_capability_id_fkey';
+            columns: ['capability_id'];
+            isOneToOne: false;
+            referencedRelation: 'capabilities';
+            referencedColumns: ['id'];
+          },
+          {
+            foreignKeyName: 'office_member_capabilities_office_member_id_fkey';
+            columns: ['office_member_id'];
+            isOneToOne: false;
+            referencedRelation: 'office_members';
+            referencedColumns: ['id'];
+          },
+        ];
+      };
+      office_members: {
+        Row: {
+          created_at: string;
+          id: string;
+          is_super_admin: boolean | null;
+          office_id: string;
+          organization_network_id: string;
+          user_id: string;
+        };
+        Insert: {
+          created_at?: string;
+          id?: string;
+          is_super_admin?: boolean | null;
+          office_id: string;
+          organization_network_id: string;
+          user_id: string;
+        };
+        Update: {
+          created_at?: string;
+          id?: string;
+          is_super_admin?: boolean | null;
+          office_id?: string;
+          organization_network_id?: string;
+          user_id?: string;
+        };
+        Relationships: [
+          {
+            foreignKeyName: 'office_members_office_id_fkey';
+            columns: ['office_id'];
+            isOneToOne: false;
+            referencedRelation: 'offices';
+            referencedColumns: ['id'];
+          },
+          {
+            foreignKeyName: 'office_members_organization_network_id_fkey';
+            columns: ['organization_network_id'];
+            isOneToOne: false;
+            referencedRelation: 'organizations_network';
+            referencedColumns: ['id'];
+          },
+        ];
+      };
+      offices: {
+        Row: {
+          brand_id: string;
+          country_code: string;
+          created_at: string;
+          id: string;
+          office_role: Database['public']['Enums']['OfficeRole'];
+          organization_network_id: string;
+        };
+        Insert: {
+          brand_id: string;
+          country_code: string;
+          created_at?: string;
+          id?: string;
+          office_role: Database['public']['Enums']['OfficeRole'];
+          organization_network_id: string;
+        };
+        Update: {
+          brand_id?: string;
+          country_code?: string;
+          created_at?: string;
+          id?: string;
+          office_role?: Database['public']['Enums']['OfficeRole'];
+          organization_network_id?: string;
+        };
+        Relationships: [
+          {
+            foreignKeyName: 'offices_brand_id_fkey';
+            columns: ['brand_id'];
+            isOneToOne: false;
+            referencedRelation: 'brands';
+            referencedColumns: ['id'];
+          },
+          {
+            foreignKeyName: 'offices_organization_network_id_fkey';
+            columns: ['organization_network_id'];
+            isOneToOne: false;
+            referencedRelation: 'organizations_network';
+            referencedColumns: ['id'];
+          },
+        ];
+      };
+      org_users: {
+        Row: {
+          created_at: string;
+          deleted_at: string | null;
+          email: string;
+          first_name: string;
+          gender: Database['public']['Enums']['Gender'];
+          id: string;
+          last_name: string;
+          onboarding_copleted_step: number;
+          position: string;
+          username: string;
+        };
+        Insert: {
+          created_at?: string;
+          deleted_at?: string | null;
+          email: string;
+          first_name: string;
+          gender: Database['public']['Enums']['Gender'];
+          id?: string;
+          last_name: string;
+          onboarding_copleted_step: number;
+          position: string;
+          username: string;
+        };
+        Update: {
+          created_at?: string;
+          deleted_at?: string | null;
+          email?: string;
+          first_name?: string;
+          gender?: Database['public']['Enums']['Gender'];
+          id?: string;
+          last_name?: string;
+          onboarding_copleted_step?: number;
+          position?: string;
+          username?: string;
+        };
+        Relationships: [];
       };
       organization_branches: {
         Row: {
@@ -958,19 +1537,19 @@ export type Database = {
       };
       organization_permissions: {
         Row: {
-          category: Database['public']['Enums']['OrgPermissionsCategories'];
+          category: Database['public']['Enums']['СapabilityСategory'];
           id: Database['public']['Enums']['OrgMemberPermissions'];
           label: string;
           sort_order: number;
         };
         Insert: {
-          category: Database['public']['Enums']['OrgPermissionsCategories'];
+          category: Database['public']['Enums']['СapabilityСategory'];
           id: Database['public']['Enums']['OrgMemberPermissions'];
           label: string;
           sort_order: number;
         };
         Update: {
-          category?: Database['public']['Enums']['OrgPermissionsCategories'];
+          category?: Database['public']['Enums']['СapabilityСategory'];
           id?: Database['public']['Enums']['OrgMemberPermissions'];
           label?: string;
           sort_order?: number;
@@ -1168,6 +1747,21 @@ export type Database = {
           },
         ];
       };
+      organizations_network: {
+        Row: {
+          created_at: string;
+          id: string;
+        };
+        Insert: {
+          created_at?: string;
+          id?: string;
+        };
+        Update: {
+          created_at?: string;
+          id?: string;
+        };
+        Relationships: [];
+      };
       push_devices: {
         Row: {
           device_id: string;
@@ -1275,7 +1869,7 @@ export type Database = {
           latitude: number;
           longitude: number;
           place_id: string;
-          postal_code: string;
+          postal_code: string | null;
           region: string;
           talent_id: string;
         };
@@ -1290,7 +1884,7 @@ export type Database = {
           latitude: number;
           longitude: number;
           place_id: string;
-          postal_code: string;
+          postal_code?: string | null;
           region: string;
           talent_id: string;
         };
@@ -1305,7 +1899,7 @@ export type Database = {
           latitude?: number;
           longitude?: number;
           place_id?: string;
-          postal_code?: string;
+          postal_code?: string | null;
           region?: string;
           talent_id?: string;
         };
@@ -1646,6 +2240,7 @@ export type Database = {
           nda_file_name: string | null;
           nda_file_path: string | null;
           nda_required: boolean | null;
+          office_id: string;
           payment_amount: number | null;
           payment_mode: Database['public']['Enums']['EventPaymentMode'] | null;
           registration_closes_at: string | null;
@@ -1685,6 +2280,7 @@ export type Database = {
         Args: { payload: Json };
         Returns: string;
       };
+      create_new_draft_or_event: { Args: { payload: Json }; Returns: string };
       create_talent_events_folder: {
         Args: { p_name: string };
         Returns: string;
@@ -1750,9 +2346,10 @@ export type Database = {
           city: string;
           country: string;
           first_name: string;
+          flag: string;
           id: string;
           last_name: string;
-          status: Database['public']['Enums']['participation_status'];
+          participation_status: string;
           total: number;
         }[];
       };
@@ -1814,14 +2411,15 @@ export type Database = {
           p_event_id: string;
           p_filters?: Json;
           p_limit: number;
-          p_offset?: number;
-          p_search?: string;
+          p_offset: number;
+          p_search: string;
         };
         Returns: {
           avatar_path: string;
           city: string;
           country: string;
           first_name: string;
+          flag: string;
           id: string;
           last_name: string;
           total: number;
@@ -1830,6 +2428,7 @@ export type Database = {
       get_invitable_talents_for_custom_list: {
         Args: {
           p_event_id: string;
+          p_filters?: Json;
           p_limit: number;
           p_list_id: string;
           p_offset: number;
@@ -1840,6 +2439,7 @@ export type Database = {
           city: string;
           country: string;
           first_name: string;
+          flag: string;
           id: string;
           is_in_list: boolean;
           last_name: string;
@@ -1857,6 +2457,7 @@ export type Database = {
         Returns: Json;
       };
       get_me_org_member: { Args: never; Returns: Json };
+      get_my_org_user: { Args: never; Returns: Json };
       get_organization_events: {
         Args: {
           end_after?: string;
@@ -1955,6 +2556,10 @@ export type Database = {
         Returns: Json;
       };
       get_talent_profile: { Args: { p_talent_id: string }; Returns: Json };
+      guard_office_capability: {
+        Args: { p_capability_code: string; p_office_id: string };
+        Returns: undefined;
+      };
       has_org_member_permission: {
         Args: {
           p_branch_id: string;
@@ -1989,6 +2594,7 @@ export type Database = {
         Args: { p_event_id: string; p_folder_id: string };
         Returns: undefined;
       };
+      remove_push_device: { Args: { p_device_id: string }; Returns: undefined };
       remove_talent_from_custom_list: {
         Args: { p_event_id: string; p_list_id: string; p_talent_id: string };
         Returns: undefined;
@@ -2152,6 +2758,7 @@ export type Database = {
         | 'amber'
         | 'bald_shaved'
         | 'other_not_sure';
+      OfficeRole: 'HQ' | 'MAIN_OPERATIONAL' | 'BRANCH';
       OrganizationMemberRole: 'owner' | 'admin';
       OrgMemberPermissions:
         | 'master'
@@ -2173,13 +2780,6 @@ export type Database = {
         | 'authorize_talent_one_on_one_payments'
         | 'authorize_talent_payments'
         | 'edit_bank_info';
-      OrgPermissionsCategories:
-        | 'talent'
-        | 'events'
-        | 'checkins'
-        | 'settings'
-        | 'financial'
-        | 'master';
       participation_initiator: 'organization' | 'talent';
       participation_status: 'pending' | 'approved' | 'rejected';
       SkinTone:
@@ -2213,6 +2813,13 @@ export type Database = {
         | 'custom'
         | 'not_available';
       trip_availability_type: 'regular' | 'custom' | 'not_available';
+      СapabilityСategory:
+        | 'talent'
+        | 'events'
+        | 'checkins'
+        | 'settings'
+        | 'financial'
+        | 'master';
     };
     CompositeTypes: {
       [_ in never]: never;
@@ -2418,6 +3025,7 @@ export const Constants = {
         'bald_shaved',
         'other_not_sure',
       ],
+      OfficeRole: ['HQ', 'MAIN_OPERATIONAL', 'BRANCH'],
       OrganizationMemberRole: ['owner', 'admin'],
       OrgMemberPermissions: [
         'master',
@@ -2439,14 +3047,6 @@ export const Constants = {
         'authorize_talent_one_on_one_payments',
         'authorize_talent_payments',
         'edit_bank_info',
-      ],
-      OrgPermissionsCategories: [
-        'talent',
-        'events',
-        'checkins',
-        'settings',
-        'financial',
-        'master',
       ],
       participation_initiator: ['organization', 'talent'],
       participation_status: ['pending', 'approved', 'rejected'],
@@ -2484,6 +3084,14 @@ export const Constants = {
         'not_available',
       ],
       trip_availability_type: ['regular', 'custom', 'not_available'],
+      СapabilityСategory: [
+        'talent',
+        'events',
+        'checkins',
+        'settings',
+        'financial',
+        'master',
+      ],
     },
   },
 } as const;

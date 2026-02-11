@@ -5,6 +5,7 @@ import {
   useBucketUpload,
   useCreateEventDraft,
   useGetEventForOrgMember,
+  useGetMe,
   useUpdateEventDraft,
 } from '@actions';
 import { Screens, useScreenNavigation } from '@navigation';
@@ -27,6 +28,14 @@ export const useDraftControll = ({
   onScrollToErrorSection,
   setShowFullScreenLoader,
 }: UseDraftControllProps) => {
+  const { organizationMember } = useGetMe();
+  const officeId =
+    organizationMember?.organization_networks[0]?.office_memberships[0]
+      ?.office_id!;
+
+  console.log('organizationMember', organizationMember);
+
+  console.log('officeId', officeId);
   const { params } = useScreenNavigation<Screens.CreateEvent>();
   const savedToDraftModalRef = useRef<SavedToDraftModalRef>(null);
 
@@ -263,6 +272,7 @@ export const useDraftControll = ({
       ageGroups,
       ndaDocumentName,
       ndaDocumentPath,
+      officeId: officeId,
     };
   };
 

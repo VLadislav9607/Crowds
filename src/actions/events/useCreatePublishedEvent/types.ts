@@ -43,6 +43,7 @@ export interface AgeGroupDto {
 }
 
 export interface CreatePublishedEventBodyDto {
+  officeId: string;
   title: string;
   category: string;
   visibility: Enums<'EventVisibility'>;
