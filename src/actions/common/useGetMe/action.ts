@@ -36,8 +36,10 @@ export const getMeAction = async (): Promise<UseGetMeResDto> => {
   } else {
     const { data: orgMemberData, error: orgMemberError } = await (
       supabase.rpc as any
-    )('get_me_org_member');
+    )('get_my_org_user');
     if (orgMemberError) throw orgMemberError;
+
+    console.log('orgMemberData', orgMemberData);
     return {
       isTalent: false,
       isOrganizationMember: true,

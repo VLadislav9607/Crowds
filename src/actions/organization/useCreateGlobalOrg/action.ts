@@ -1,13 +1,12 @@
 import { FunctionsHttpError } from '@supabase/supabase-js';
-import { CreateOrganizationBodyDto, CreateOrganizationResDto } from './types';
+import { CreateGlobalOrgResDto, CreateGlobalOrgBodyDto } from './types';
 import { supabase } from '@services';
 
-export const createOrganizationAndCreatorAction = async (
-  body: CreateOrganizationBodyDto,
-): Promise<CreateOrganizationResDto> => {
-  console.log('body', body);
+export const createGlobalOrgAction = async (
+  body: CreateGlobalOrgBodyDto,
+): Promise<CreateGlobalOrgResDto> => {
   const { data, error } = await supabase.functions.invoke(
-    'create-organization',
+    'create-global-organization',
     { body },
   );
 
@@ -16,5 +15,5 @@ export const createOrganizationAndCreatorAction = async (
     throw errorMessage;
   }
 
-  return data as CreateOrganizationResDto;
+  return data as CreateGlobalOrgResDto;
 };

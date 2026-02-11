@@ -40,9 +40,6 @@ export const headGlobalLocationFormSchema = z.object({
     },
     { message: 'Head office location is required' },
   ),
-  isHeadquartered: z.boolean(
-    'Please select if this is where your organization is headquartered',
-  ),
 });
 
 export interface HeadGlobalLocationFormData

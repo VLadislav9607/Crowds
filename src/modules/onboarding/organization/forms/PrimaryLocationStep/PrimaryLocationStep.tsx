@@ -99,7 +99,7 @@ export const PrimaryLocationStep = forwardRef<
     return (
       <View style={containerStyle}>
         <AppText style={styles.organizationDetails}>
-          Organization Details
+          Search your primary location
         </AppText>
 
         <Controller

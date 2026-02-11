@@ -5,6 +5,7 @@ import {
   prefetchEventForOrgMember,
   useBucketUpload,
   useCreatePublishedEvent,
+  useGetMe,
   usePublishEventDraft,
   useUpdateEventDraft,
 } from '@actions';
@@ -20,6 +21,11 @@ export const useEventControll = ({
   setShowFullScreenLoader,
   onScrollToErrorSection,
 }: UseEventControllProps) => {
+  const { organizationMember } = useGetMe();
+  const officeId =
+    organizationMember?.organization_networks[0]?.office_memberships[0]
+      ?.office_id!;
+
   const { params } = useScreenNavigation<Screens.CreateEvent>();
   const eventCreatedModalRef = useRef<EventCreatedModalRef>(null);
 
@@ -91,6 +97,7 @@ export const useEventControll = ({
     delete values.ndaDocument;
 
     return {
+      officeId: officeId,
       location,
       title: values.title,
       category: values.category,
