@@ -2,23 +2,10 @@ import { View } from 'react-native';
 import { AppModal } from '@components';
 import { AppText, AppButton } from '@ui';
 import { formatDate } from '@utils';
-import { FLAG_REASONS } from '../../../flags/components/FlagNotesList/types';
+import { getReasonLabel } from '../../helpers';
 
 import { styles } from './styles';
 import type { YellowFlagInviteWarningModalProps } from './types';
-
-const getReasonLabel = (
-  reason: string | null,
-  description: string | null,
-): string => {
-  if (!reason && !description) return 'No reason provided';
-  const mapped =
-    reason && reason in FLAG_REASONS
-      ? (FLAG_REASONS as Record<string, string>)[reason]
-      : reason;
-  if (mapped && description) return `${mapped}. ${description}`;
-  return mapped || description || 'No reason provided';
-};
 
 const DEFAULT_QUESTION = 'Would you like to continue booking them anyway?';
 const DEFAULT_CONFIRM_LABEL = 'Invite';

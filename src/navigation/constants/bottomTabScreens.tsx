@@ -1,5 +1,6 @@
 import { ICONS } from '@assets';
 import { Role } from '@modules/common';
+import { withRedFlagGuard } from '../../modules/flags';
 
 import {
   EventsDashboardTabScreen,
@@ -41,22 +42,22 @@ export const BottomTabsConfig: BottomTabsConfigType = {
   [Role.TALENT]: [
     {
       name: Screens.HomeTalent,
-      component: TalentEventsHomeTab,
+      component: withRedFlagGuard(TalentEventsHomeTab),
       icon: (opacity: number) => ICONS.BOTTOM_TABS.home(opacity),
     },
     {
       name: Screens.EventsTalent,
-      component: TalentEventsTab,
+      component: withRedFlagGuard(TalentEventsTab),
       icon: (opacity: number) => ICONS.BOTTOM_TABS.events(opacity),
     },
     {
       name: Screens.TalerQRCode,
-      component: QRCodeScanTab,
+      component: withRedFlagGuard(QRCodeScanTab),
       icon: (opacity: number) => ICONS.BOTTOM_TABS.qrCode(opacity),
     },
     {
       name: Screens.Chats,
-      component: ChatsTabScreen,
+      component: withRedFlagGuard(ChatsTabScreen),
       icon: (opacity: number) => ICONS.BOTTOM_TABS.chats(opacity),
     },
     {

@@ -10,7 +10,7 @@ import {
   CustomListTalentRow,
   CustomTalentsListEmptyState,
 } from '../../components';
-import { YellowFlagInviteWarningModal } from '../../modals';
+import { YellowFlagInviteWarningModal } from '../../../flags/modals';
 
 export const CustomTalentsListScreen = () => {
   const { params } = useScreenNavigation<Screens.CustomTalentsList>();

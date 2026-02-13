@@ -10,7 +10,7 @@ import {
   useRejectTalentApplication,
 } from '@actions';
 import { IEventParticipant, useCreateChatAndNavigate } from '@modules/common';
-import { YellowFlagInviteWarningModal } from '../../../invite-talents/modals';
+import { YellowFlagInviteWarningModal } from '../../../flags/modals';
 
 import { styles } from './styles';
 import { ApplicantsList } from '../../components';

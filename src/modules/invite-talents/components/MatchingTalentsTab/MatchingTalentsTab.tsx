@@ -1,9 +1,7 @@
 import { SearchWithFilter } from '@ui';
 import { TalentsList } from '../TalentsList';
-import {
-  FilterMatchingTalentsModal,
-  YellowFlagInviteWarningModal,
-} from '../../modals';
+import { FilterMatchingTalentsModal } from '../../modals';
+import { YellowFlagInviteWarningModal } from '../../../flags/modals';
 import { useMatchingTalentsForInvite, useSendInvite } from '../../hooks';
 
 interface MatchingTalentsTabProps {
