@@ -1,11 +1,25 @@
-import { useState } from 'react';
-import { useInviteTalent } from '@actions';
+import { useState, useCallback } from 'react';
+import { useInviteTalent, useGetActiveFlagForTarget } from '@actions';
 import { showErrorToast, showSuccessToast } from '@helpers';
 import { TANSTACK_QUERY_KEYS } from '@constants';
 import { queryClient } from '@services';
+import type { ActiveFlagRow } from '@actions';
+
+const TARGET_TYPE_TALENT = 'talent';
+
+type YellowFlagModalState = {
+  visible: true;
+  flag: ActiveFlagRow;
+  pendingInvite: { eventId: string; talentId: string };
+} | null;
 
 export const useSendInvite = () => {
   const [invitingTalentId, setInvitingTalentId] = useState<string | null>(null);
+  const [yellowFlagModal, setYellowFlagModal] =
+    useState<YellowFlagModalState>(null);
+
+  const { mutateAsync: getActiveFlagForTarget, isPending: isCheckingFlag } =
+    useGetActiveFlagForTarget();
 
   const { mutate: inviteTalent } = useInviteTalent({
     onSuccess: async (_, variables: any) => {
@@ -15,10 +29,7 @@ export const useSendInvite = () => {
       await Promise.allSettled([
         // Invalidate all invitable talents queries for this event (with all search variations)
         queryClient.invalidateQueries({
-          queryKey: [
-            TANSTACK_QUERY_KEYS.GET_INVITABLE_TALENTS,
-            variables.eventId,
-          ],
+          queryKey: [TANSTACK_QUERY_KEYS.GET_ALL_TALENTS, variables.eventId],
         }),
 
         // Invalidate matching talents queries for this event (with all search variations)
@@ -34,17 +45,11 @@ export const useSendInvite = () => {
           },
         }),
 
-        // Invalidate custom list talents queries for this event (to update status)
+        // Invalidate custom list talents queries for this event (all lists)
         queryClient.invalidateQueries({
-          queryKey: [TANSTACK_QUERY_KEYS.GET_CUSTOM_LISTS, 'talents'],
-          predicate: query => {
-            // Match queries that have eventId as the third element
-            return (
-              query.queryKey[0] === TANSTACK_QUERY_KEYS.GET_CUSTOM_LISTS &&
-              query.queryKey[1] === 'talents' &&
-              query.queryKey[2] === variables.eventId
-            );
-          },
+          predicate: query =>
+            query.queryKey[0] === TANSTACK_QUERY_KEYS.GET_CUSTOM_LIST_TALENTS &&
+            query.queryKey[1] === variables.eventId,
         }),
 
         // Invalidate event participants counts to update invited count
@@ -69,9 +74,53 @@ export const useSendInvite = () => {
     },
   });
 
+  const handleInvite = useCallback(
+    async (eventId: string, talentId: string) => {
+      if (isCheckingFlag) return;
+
+      try {
+        const flag = await getActiveFlagForTarget({
+          targetType: TARGET_TYPE_TALENT,
+          targetId: talentId,
+        });
+        if (flag?.status === 'yellow') {
+          setYellowFlagModal({
+            visible: true,
+            flag,
+            pendingInvite: { eventId, talentId },
+          });
+          return;
+        }
+        setInvitingTalentId(talentId);
+        inviteTalent({ eventId, talentId });
+      } catch {
+        setInvitingTalentId(talentId);
+        inviteTalent({ eventId, talentId });
+      }
+    },
+    [getActiveFlagForTarget, inviteTalent, isCheckingFlag],
+  );
+
+  const closeYellowFlagModal = useCallback(() => {
+    setYellowFlagModal(null);
+  }, []);
+
+  const confirmYellowFlagModal = useCallback(() => {
+    if (yellowFlagModal?.visible && yellowFlagModal.pendingInvite) {
+      const { eventId, talentId } = yellowFlagModal.pendingInvite;
+      setInvitingTalentId(talentId);
+      inviteTalent({ eventId, talentId });
+      setYellowFlagModal(null);
+    }
+  }, [yellowFlagModal, inviteTalent]);
+
   return {
     invitingTalentId,
     setInvitingTalentId,
     inviteTalent,
+    handleInvite,
+    yellowFlagModal,
+    closeYellowFlagModal,
+    confirmYellowFlagModal,
   };
 };

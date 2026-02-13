@@ -22,7 +22,9 @@ export const useEventControll = ({
   onScrollToErrorSection,
 }: UseEventControllProps) => {
   const { organizationMember } = useGetMe();
-  const officeId = organizationMember?.current_context?.offices[0]?.office_id!;
+  const officeId =
+    organizationMember?.organization_networks?.[0]?.brands?.[0]
+      ?.office_memberships?.[0]?.office_id!;
 
   const { params } = useScreenNavigation<Screens.CreateEvent>();
   const eventCreatedModalRef = useRef<EventCreatedModalRef>(null);

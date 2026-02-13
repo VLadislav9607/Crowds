@@ -1,20 +1,18 @@
 import { supabase } from '@services';
-import { GetCustomListTalentsBodyDto, GetCustomListTalentsRespDto } from '../useCustomListMembers';
-
+import {
+  GetCustomListTalentsBodyDto,
+  GetCustomListTalentsRespDto,
+} from '../useCustomListMembers';
 
 export const getCustomListTalentsAction = async (
   body: GetCustomListTalentsBodyDto,
 ): Promise<GetCustomListTalentsRespDto> => {
-  const { data, error } = await supabase.rpc(
-    'get_invitable_talents_for_custom_list',
-    {
-      p_event_id: body.eventId,
-      p_list_id: body.listId,
-      p_limit: body.limit,
-      p_offset: body.offset,
-      p_search: body.search,
-    },
-  );
+  const { data, error } = await supabase.rpc('get_talents_for_custom_list', {
+    p_list_id: body.listId,
+    p_limit: body.limit,
+    p_offset: body.offset,
+    p_search: body.search || '',
+  });
 
   if (error) {
     throw error;
@@ -33,7 +31,7 @@ export const getCustomListTalentsAction = async (
   const total = data[0]?.total || 0;
 
   return {
-    data: data,
+    data,
     pagination: {
       offset: body.offset,
       total,

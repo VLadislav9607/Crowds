@@ -1,5 +1,6 @@
-import { useAnimatedScrollHandler } from "react-native-reanimated";
+import { useAnimatedScrollHandler } from 'react-native-reanimated';
 
 export interface AnimatedProfileSetupHeaderRef {
-    scrollHandler: ReturnType<typeof useAnimatedScrollHandler>;
+  scrollHandler: ReturnType<typeof useAnimatedScrollHandler>;
+  showCamera?: boolean;
 }

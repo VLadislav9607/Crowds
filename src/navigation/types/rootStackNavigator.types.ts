@@ -57,7 +57,6 @@ export type RootStackParamList = {
     eventId: string;
   };
   [Screens.AddTalentsToList]: {
-    eventId: string;
     listId: string;
     listName: string;
   };
@@ -79,7 +78,7 @@ export type RootStackParamList = {
   };
   [Screens.ManageEvent]: { eventId: string };
   [Screens.EventParticipants]: undefined;
-  [Screens.FlagParticipant]: { participantId: string };
+  [Screens.FlagParticipant]: { talentId: string; eventId: string };
   [Screens.EventApplicants]: { eventId: string; capacity: number };
 
   // Talent screens

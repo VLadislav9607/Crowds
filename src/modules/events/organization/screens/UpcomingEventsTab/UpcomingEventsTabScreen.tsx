@@ -13,7 +13,7 @@ export const UpcomingEventsTabScreen = () => {
   const now = useMemo(() => new Date().toISOString(), []);
 
   const { data: eventsCounters } = useGetOrgEventsCounters({
-    brand_id: organizationMember?.current_context?.brand.id!,
+    brand_id: organizationMember?.current_context?.brand?.id!,
   });
 
   const activeCount = eventsCounters?.active ? eventsCounters?.active : 0;
@@ -80,7 +80,7 @@ export const UpcomingEventsTabScreen = () => {
 
       <OrganizationEventsList
         filters={{
-          brand_id: organizationMember?.current_context?.brand.id!,
+          brand_id: organizationMember?.current_context?.brand?.id!,
           status_filter: mainTab === 'drafts' ? 'draft' : 'published',
           ...(mainTab === 'past' && { end_before: now }),
           ...(mainTab === 'active' && { end_after: now }),

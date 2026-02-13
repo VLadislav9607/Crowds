@@ -28,6 +28,7 @@ export const ScreenWithScrollWrapper = ({
   keyboardAvoidingEnabled = true,
   withBottomTabBar = false,
   scrollViewRef,
+  autoAdjustKeyboardInsets = true,
   ...headerProps
 }: IScreenWithScrollWrapperProps) => {
   const { bottom } = useSafeAreaInsets();
@@ -76,6 +77,7 @@ export const ScreenWithScrollWrapper = ({
           contentContainerStyle,
         ]}
         showsVerticalScrollIndicator={showsVerticalScrollIndicator}
+        automaticallyAdjustKeyboardInsets={autoAdjustKeyboardInsets}
         {...scrollProps}
         keyboardShouldPersistTaps="handled"
       >

@@ -1,4 +1,5 @@
 import { CurrentOrganizationContext, UseGetMeResDto } from './types';
+import { TalentFlag } from '@modules/common';
 import { supabase } from '@services';
 
 function buildCurrentContext(
@@ -56,10 +57,24 @@ export const getMeAction = async (): Promise<UseGetMeResDto> => {
 
     if (talentError) throw talentError;
 
+    // ---- load flag ----
+    const { data: flagRow } = await supabase
+      .from('current_flags')
+      .select('status')
+      .eq('target_type', 'talent')
+      .eq('target_id', data.user.id)
+      .maybeSingle();
+
+    const flag: TalentFlag =
+      (flagRow?.status as TalentFlag) ?? TalentFlag.GREEN;
+
     return {
       isTalent: true,
       isOrganizationMember: false,
-      talent: talent,
+      talent: {
+        ...talent,
+        flag,
+      },
     };
   } else {
     const { data: orgMemberData, error: orgMemberError } = await (

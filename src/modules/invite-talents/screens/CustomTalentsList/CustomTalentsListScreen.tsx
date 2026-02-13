@@ -10,6 +10,7 @@ import {
   CustomListTalentRow,
   CustomTalentsListEmptyState,
 } from '../../components';
+import { YellowFlagInviteWarningModal } from '../../modals';
 
 export const CustomTalentsListScreen = () => {
   const { params } = useScreenNavigation<Screens.CustomTalentsList>();
@@ -17,8 +18,14 @@ export const CustomTalentsListScreen = () => {
   const eventId = params?.eventId ?? '';
   const listName = params?.listName ?? '';
 
-  const { inviteTalent, invitingTalentId, setInvitingTalentId } =
-    useSendInvite();
+  const {
+    invitingTalentId,
+    handleInvite,
+    yellowFlagModal,
+    closeYellowFlagModal,
+    confirmYellowFlagModal,
+  } = useSendInvite();
+
   const {
     talentsList,
     isLoading,
@@ -29,14 +36,10 @@ export const CustomTalentsListScreen = () => {
     hasTalents,
   } = useCustomTalentsList(eventId, listId);
 
-  const { mutate: removeTalent } = useRemoveTalentFromCustomList(
-    eventId,
-    listId,
-  );
+  const { mutate: removeTalent } = useRemoveTalentFromCustomList(listId);
 
-  const handleInvite = (talentId: string) => {
-    setInvitingTalentId(talentId);
-    inviteTalent({ eventId, talentId });
+  const handleInvitePress = (talentId: string) => {
+    handleInvite(eventId, talentId);
   };
 
   const handleRemove = (talentId: string) => {
@@ -60,7 +63,6 @@ export const CustomTalentsListScreen = () => {
           iconSize={24}
           onPress={() =>
             goToScreen(Screens.AddTalentsToList, {
-              eventId,
               listId,
               listName,
             })
@@ -78,7 +80,7 @@ export const CustomTalentsListScreen = () => {
             <CustomListTalentRow
               talent={item}
               invitingTalentId={invitingTalentId}
-              onInvite={handleInvite}
+              onInvite={handleInvitePress}
               onRemove={handleRemove}
             />
           )}
@@ -93,6 +95,14 @@ export const CustomTalentsListScreen = () => {
           listName={listName}
         />
       </If>
+
+      <YellowFlagInviteWarningModal
+        isVisible={yellowFlagModal?.visible ?? false}
+        flag={yellowFlagModal?.flag ?? null}
+        onClose={closeYellowFlagModal}
+        onConfirm={confirmYellowFlagModal}
+        isInviting={!!invitingTalentId}
+      />
     </ScreenWrapper>
   );
 };

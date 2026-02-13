@@ -4,7 +4,7 @@ export const TANSTACK_QUERY_KEYS = {
   GET_EVENTS_IN_EVENTS_FOLDER: 'get_events_in_events_folder',
   EVENT_PARTICIPANTS_BY_STATUS: 'event_participants_by_status',
   GET_EVENT_PARTICIPANTS_COUNTS: 'get_event_participants_counts',
-  GET_INVITABLE_TALENTS: 'get_invitable_talents',
+  GET_ALL_TALENTS: 'get_all_talents',
   GET_MATCHING_TALENTS: 'get_matching_talents',
   GET_ORG_PERMISSIONS: 'get_org_permissions',
   GET_EVENT: 'get_event',
@@ -15,7 +15,7 @@ export const TANSTACK_QUERY_KEYS = {
   GET_EVENTS_CATEGORIES: 'get_events_categories',
   GET_ORG_EVENTS_COUNTERS: 'get_org_events_counters',
   GET_TALENT_LOCATION: 'get_talent_location',
-  GET_TALENT_PROFILE: 'get_talent_profile',
+  GET_TALENT_FULL_PROFILE: 'get_talent_full_profile',
   GET_ME: 'get_me',
   GET_EVENTS_SUB_CATEGORIES: 'get_events_sub_categories',
   GET_EVENTS_TAGS: 'get_events_tags',
@@ -32,4 +32,5 @@ export const TANSTACK_QUERY_KEYS = {
   GET_CUSTOM_LIST_TALENTS: 'get_custom_list_talents',
   GET_EVENTS_FOLDERS: 'get_events_folders',
   SCAN_QR_CODE_BY_TALENT: 'scan_qr_code_by_talent',
+  GET_TALENT_FLAGS: 'get_talent_flags',
 } as const;

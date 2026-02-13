@@ -3,8 +3,8 @@ import { RefObject } from 'react';
 
 export interface FilterTalentsModalProps {
   bottomSheetRef: RefObject<BottomSheetModal<null> | null>;
-  onApplyFilters?: (filters: FiltersState) => void;
-  initialFilters?: FiltersState;
+  onApplyFilters?: (filters: FiltersState | null) => void;
+  initialFilters?: FiltersState | null;
 }
 
 export interface FiltersState {
@@ -12,8 +12,8 @@ export interface FiltersState {
   hairColour?: string;
   hairStyle?: string;
   eyeColour?: string;
-  weight?: {min: number, max: number};
-  height?: {min: number, max: number};
+  weight?: { min: number; max: number };
+  height?: { min: number; max: number };
   facialAttributes?: string[];
   tattooSpot?: string[];
   skinTone?: string;

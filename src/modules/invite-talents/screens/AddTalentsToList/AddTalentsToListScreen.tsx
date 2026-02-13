@@ -8,7 +8,6 @@ import { useAddTalentToCustomList, useTalentsForCustomList } from '../../hooks';
 
 export const AddTalentsToListScreen = () => {
   const { params } = useScreenNavigation<Screens.AddTalentsToList>();
-  const eventId = params?.eventId ?? '';
   const listId = params?.listId ?? '';
   const listName = params?.listName ?? '';
 
@@ -20,12 +19,9 @@ export const AddTalentsToListScreen = () => {
     isFetchingNextPage,
     isLoading,
     handleEndReached,
-  } = useTalentsForCustomList(eventId, listId);
+  } = useTalentsForCustomList(listId);
 
-  const { addingTalentId, handleAddTalent } = useAddTalentToCustomList(
-    eventId,
-    listId,
-  );
+  const { addingTalentId, handleAddTalent } = useAddTalentToCustomList(listId);
 
   return (
     <ScreenWrapper
