@@ -76,6 +76,8 @@ export const useSendInvite = () => {
 
   const handleInvite = useCallback(
     async (eventId: string, talentId: string) => {
+      if (isCheckingFlag) return;
+
       try {
         const flag = await getActiveFlagForTarget({
           targetType: TARGET_TYPE_TALENT,
@@ -96,7 +98,7 @@ export const useSendInvite = () => {
         inviteTalent({ eventId, talentId });
       }
     },
-    [getActiveFlagForTarget, inviteTalent],
+    [getActiveFlagForTarget, inviteTalent, isCheckingFlag],
   );
 
   const closeYellowFlagModal = useCallback(() => {
@@ -114,7 +116,6 @@ export const useSendInvite = () => {
 
   return {
     invitingTalentId,
-    isCheckingFlag,
     setInvitingTalentId,
     inviteTalent,
     handleInvite,

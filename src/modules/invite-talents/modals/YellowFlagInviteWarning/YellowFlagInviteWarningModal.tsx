@@ -17,12 +17,17 @@ const getReasonLabel = (reason: string | null, description: string | null): stri
   return mapped || description || 'No reason provided';
 };
 
+const DEFAULT_QUESTION = 'Would you like to continue booking them anyway?';
+const DEFAULT_CONFIRM_LABEL = 'Invite';
+
 export const YellowFlagInviteWarningModal = ({
   isVisible,
   flag,
   onClose,
   onConfirm,
   isInviting = false,
+  confirmLabel = DEFAULT_CONFIRM_LABEL,
+  questionText = DEFAULT_QUESTION,
 }: YellowFlagInviteWarningModalProps) => {
   if (!flag) return null;
 
@@ -70,7 +75,7 @@ export const YellowFlagInviteWarningModal = ({
         </View>
 
         <AppText typography="regular_14" color="black_60" style={styles.question}>
-          Would you like to continue booking them anyway?
+          {questionText}
         </AppText>
 
         <View style={styles.actions}>
@@ -79,7 +84,7 @@ export const YellowFlagInviteWarningModal = ({
           </View>
           <View style={styles.actionItem}>
             <AppButton
-              title="Invite"
+              title={confirmLabel}
               onPress={onConfirm}
               isLoading={isInviting}
             />

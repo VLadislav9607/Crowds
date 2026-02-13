@@ -13,7 +13,6 @@ export const AllTalentsTab = ({ eventId }: AllTalentsTabProps) => {
     invitingTalentId,
     handleInvite,
     yellowFlagModal,
-    isCheckingFlag,
     closeYellowFlagModal,
     confirmYellowFlagModal,
   } = useSendInvite();
@@ -34,7 +33,6 @@ export const AllTalentsTab = ({ eventId }: AllTalentsTabProps) => {
         hasNextPage={allTalentsHook.hasNextPage}
         isFetchingNextPage={allTalentsHook.isFetchingNextPage}
         actionTalentId={invitingTalentId}
-        isCheckingFlag={isCheckingFlag}
         onPressRightAction={talentId => handleInvite(eventId, talentId)}
       />
 

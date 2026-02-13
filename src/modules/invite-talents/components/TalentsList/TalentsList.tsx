@@ -12,7 +12,6 @@ export const TalentsList = ({
   isFetchingNextPage,
   onPressRightAction,
   actionTalentId,
-  isCheckingFlag,
   isLoading,
 }: TalentsListProps) => {
   const skeleton = isLoading ? <TalentsListSkeleton /> : undefined;
@@ -24,7 +23,6 @@ export const TalentsList = ({
     return (
       <AppButton
         title="Invite"
-        isDisabled={isCheckingFlag}
         isLoading={actionTalentId === item.talentId}
         onPress={() => onPressRightAction(item.talentId)}
         size="36"
