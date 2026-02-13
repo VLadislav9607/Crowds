@@ -3,7 +3,6 @@ export interface TalentsListProps {
   data: IEventParticipant[];
   isLoading?: boolean;
   hasNextPage?: boolean;
-  isCheckingFlag?: boolean;
   isFetchingNextPage?: boolean;
   actionTalentId?: string | null;
   onEndReached?: () => void;

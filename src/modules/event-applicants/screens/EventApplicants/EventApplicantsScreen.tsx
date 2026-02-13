@@ -7,14 +7,15 @@ import { goToScreen, Screens, useScreenNavigation } from '@navigation';
 import {
   useEventParticipantsByStatus,
   useEventParticipantsCounts,
-  useAcceptTalentApplication,
   useRejectTalentApplication,
 } from '@actions';
 import { IEventParticipant, useCreateChatAndNavigate } from '@modules/common';
+import { YellowFlagInviteWarningModal } from '../../../invite-talents/modals';
 
 import { styles } from './styles';
 import { ApplicantsList } from '../../components';
 import { EventApplicantTab, getTabOptions, TAB_PARAMS } from './types';
+import { useAcceptApplication } from '../../hooks';
 
 export const EventApplicantsScreen = () => {
   const { params } = useScreenNavigation<Screens.EventApplicants>();
@@ -34,7 +35,13 @@ export const EventApplicantsScreen = () => {
 
   const counts = useEventParticipantsCounts(eventId);
 
-  const acceptApplication = useAcceptTalentApplication();
+  const {
+    handleAccept,
+    yellowFlagModal,
+    closeYellowFlagModal,
+    confirmYellowFlagModal,
+    isPending: isAccepting,
+  } = useAcceptApplication(setSelectedTalentId);
   const rejectApplication = useRejectTalentApplication();
 
   const { openChat, isPending: isCreatingChat } = useCreateChatAndNavigate();
@@ -47,14 +54,6 @@ export const EventApplicantsScreen = () => {
       title: talent.name ?? '',
       imageUrl: talent.avatar_url ?? '',
     });
-  };
-
-  const handleAccept = (participationId: string, talentId: string) => {
-    setSelectedTalentId(talentId);
-    acceptApplication.mutate(
-      { participationId },
-      { onSettled: () => setSelectedTalentId(null) },
-    );
   };
 
   const handleDecline = (participationId: string, talentId: string) => {
@@ -112,7 +111,7 @@ export const EventApplicantsScreen = () => {
         data={data?.pages.flatMap(page => page.data) || []}
         hasNextPage={hasNextPage}
         isFetchingNextPage={isFetchingNextPage}
-        isAccepting={acceptApplication.isPending}
+        isAccepting={isAccepting}
         isRejecting={rejectApplication.isPending}
         handleAccept={handleAccept}
         handleDecline={handleDecline}
@@ -133,6 +132,16 @@ export const EventApplicantsScreen = () => {
           }
         }}
         handlePressMessage={chatWithTalent}
+      />
+
+      <YellowFlagInviteWarningModal
+        isVisible={yellowFlagModal?.visible ?? false}
+        flag={yellowFlagModal?.flag ?? null}
+        onClose={closeYellowFlagModal}
+        onConfirm={confirmYellowFlagModal}
+        isInviting={isAccepting}
+        confirmLabel="Accept"
+        questionText="Would you like to accept their application anyway?"
       />
     </ScreenWrapper>
   );

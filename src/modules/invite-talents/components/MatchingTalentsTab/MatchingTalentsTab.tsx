@@ -18,7 +18,6 @@ export const MatchingTalentsTab = ({ eventId }: MatchingTalentsTabProps) => {
     yellowFlagModal,
     closeYellowFlagModal,
     confirmYellowFlagModal,
-    isCheckingFlag,
   } = useSendInvite();
 
   return (
@@ -37,7 +36,6 @@ export const MatchingTalentsTab = ({ eventId }: MatchingTalentsTabProps) => {
         hasNextPage={matchingTalentsHook.hasNextPage}
         isFetchingNextPage={matchingTalentsHook.isFetchingNextPage}
         actionTalentId={invitingTalentId}
-        isCheckingFlag={isCheckingFlag}
         onPressRightAction={talentId => handleInvite(eventId, talentId)}
       />
 

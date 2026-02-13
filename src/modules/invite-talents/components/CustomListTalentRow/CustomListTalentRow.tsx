@@ -6,7 +6,6 @@ import { InviteStatusBadge } from '../../ui';
 interface CustomListTalentRowProps {
   talent: IEventParticipant;
   invitingTalentId: string | null;
-  isCheckingFlag?: boolean;
   onInvite: (talentId: string) => void;
   onRemove: (talentId: string) => void;
 }
@@ -14,7 +13,6 @@ interface CustomListTalentRowProps {
 export const CustomListTalentRow = ({
   talent,
   invitingTalentId,
-  isCheckingFlag,
   onInvite,
   onRemove,
 }: CustomListTalentRowProps) => {
@@ -26,7 +24,6 @@ export const CustomListTalentRow = ({
     return (
       <AppButton
         title="Invite"
-        isDisabled={isCheckingFlag}
         isLoading={invitingTalentId === talent.talentId}
         onPress={() => onInvite(talent.talentId)}
         size="36"

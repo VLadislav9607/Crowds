@@ -24,7 +24,6 @@ export const CustomTalentsListScreen = () => {
     yellowFlagModal,
     closeYellowFlagModal,
     confirmYellowFlagModal,
-    isCheckingFlag,
   } = useSendInvite();
 
   const {
@@ -81,7 +80,6 @@ export const CustomTalentsListScreen = () => {
             <CustomListTalentRow
               talent={item}
               invitingTalentId={invitingTalentId}
-              isCheckingFlag={isCheckingFlag}
               onInvite={handleInvitePress}
               onRemove={handleRemove}
             />
