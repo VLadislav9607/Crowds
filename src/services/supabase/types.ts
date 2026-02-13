@@ -2312,7 +2312,7 @@ export type Database = {
         Returns: Json;
       };
       earth: { Args: never; Returns: number };
-      ensure_event_group_chat_access: {
+      join_event_group_chat: {
         Args: { p_event_id: string };
         Returns: string;
       };

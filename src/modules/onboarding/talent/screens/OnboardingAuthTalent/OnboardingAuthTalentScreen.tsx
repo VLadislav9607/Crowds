@@ -91,6 +91,7 @@ export const OnboardingAuthTalentScreen = () => {
     title: 'Setup my profile',
     customElement: (
       <AnimatedProfileSetupHeader
+        showCamera
         ref={ref => setScrollHandler(ref?.scrollHandler)}
       />
     ),

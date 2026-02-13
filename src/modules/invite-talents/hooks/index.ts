@@ -1,4 +1,4 @@
-export * from './useTalentsForInvite';
+export * from './useAllTalents';
 export * from './useSendInvite';
 export * from './useTalentsForCustomList';
 export * from './useAddTalentToCustomList';

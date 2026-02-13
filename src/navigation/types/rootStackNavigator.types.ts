@@ -57,7 +57,6 @@ export type RootStackParamList = {
     eventId: string;
   };
   [Screens.AddTalentsToList]: {
-    eventId: string;
     listId: string;
     listName: string;
   };

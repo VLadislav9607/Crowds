@@ -1,14 +1,14 @@
 import { SearchWithFilter } from '@ui';
 import { TalentsList } from '../TalentsList';
 import { FilterTalentsModal } from '../../modals';
-import { useTalentsForInvite, useSendInvite } from '../../hooks';
+import { useAllTalents, useSendInvite } from '../../hooks';
 
 interface AllTalentsTabProps {
   eventId: string;
 }
 
 export const AllTalentsTab = ({ eventId }: AllTalentsTabProps) => {
-  const allTalentsHook = useTalentsForInvite(eventId);
+  const allTalentsHook = useAllTalents(eventId);
   const { invitingTalentId, setInvitingTalentId, inviteTalent } =
     useSendInvite();
 

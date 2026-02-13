@@ -18,7 +18,7 @@ export interface CustomListTalentDto {
   city: string;
   country: string;
   total: number;
-  status: EventParticipantStatus;
+  participation_status: EventParticipantStatus;
 }
 
 export interface GetCustomListTalentsRespDto {

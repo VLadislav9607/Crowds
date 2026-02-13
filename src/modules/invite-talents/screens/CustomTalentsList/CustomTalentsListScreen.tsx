@@ -29,10 +29,7 @@ export const CustomTalentsListScreen = () => {
     hasTalents,
   } = useCustomTalentsList(eventId, listId);
 
-  const { mutate: removeTalent } = useRemoveTalentFromCustomList(
-    eventId,
-    listId,
-  );
+  const { mutate: removeTalent } = useRemoveTalentFromCustomList(listId);
 
   const handleInvite = (talentId: string) => {
     setInvitingTalentId(talentId);
@@ -60,7 +57,6 @@ export const CustomTalentsListScreen = () => {
           iconSize={24}
           onPress={() =>
             goToScreen(Screens.AddTalentsToList, {
-              eventId,
               listId,
               listName,
             })

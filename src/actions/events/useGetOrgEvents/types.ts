@@ -35,6 +35,7 @@ export type OrgEventListItemDto =
   | OrgEventListDraftItemDto;
 
 export interface UseGetOrgEventsBodyDto {
+  brand_id: string;
   search_query?: string;
   status_filter?: Database['public']['Enums']['EventStatus'];
   visibility_filter?: Database['public']['Enums']['EventVisibility'];

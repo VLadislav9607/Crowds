@@ -14,7 +14,7 @@ export const useTalentFlagsNotes = (talentId: string) => {
     return items.map(note => ({
       id: note.id,
       date: formatDate(note.created_at, 'MMM dd, yyyy'),
-      eventName: note.organizations?.organization_name ?? '',
+      eventName: note.brand_name ?? '',
       title: note.reason ?? note.flag_type,
       description: note.description ?? undefined,
       flag: (note.flag_type as TalentFlag) ?? TalentFlag.YELLOW,
