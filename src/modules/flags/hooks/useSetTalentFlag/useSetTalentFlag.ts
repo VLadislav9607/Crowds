@@ -44,7 +44,8 @@ export const useSetTalentFlag = ({
         queryKey: [TANSTACK_QUERY_KEYS.GET_ALL_TALENTS],
       }),
       queryClient.invalidateQueries({
-        queryKey: [TANSTACK_QUERY_KEYS.GET_CUSTOM_LIST_TALENTS],
+        predicate: query =>
+          query.queryKey[0] === TANSTACK_QUERY_KEYS.GET_CUSTOM_LIST_TALENTS,
       }),
     ]);
   };

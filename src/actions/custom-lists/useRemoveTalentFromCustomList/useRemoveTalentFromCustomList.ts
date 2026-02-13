@@ -13,23 +13,28 @@ export const useRemoveTalentFromCustomList = (
   return useMutation({
     mutationFn: removeTalentFromCustomListAction,
     ...options,
-    onSuccess: async (data, variables, context) => {
+    onSuccess: async (...args) => {
+      const [, variables] = args;
       // Invalidate custom lists to update members count
       await queryClient.invalidateQueries({
         queryKey: [TANSTACK_QUERY_KEYS.GET_CUSTOM_LISTS],
       });
 
-      // Invalidate custom list talents query
-      if (listId) {
+      // Invalidate custom list talents query for this event and list
+      if (listId && variables.eventId) {
         await queryClient.invalidateQueries({
-          queryKey: [TANSTACK_QUERY_KEYS.GET_CUSTOM_LIST_TALENTS, listId],
+          queryKey: [
+            TANSTACK_QUERY_KEYS.GET_CUSTOM_LIST_TALENTS,
+            variables.eventId,
+            listId,
+          ],
         });
       }
 
       setTimeout(() => {
         showSuccessToast('Talent removed from list');
       }, 1000);
-      await options?.onSuccess?.(data, variables, context);
+      await options?.onSuccess?.(...args);
     },
     onError: showMutationErrorToast,
   });

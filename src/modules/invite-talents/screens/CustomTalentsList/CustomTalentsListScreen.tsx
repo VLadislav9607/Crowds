@@ -10,6 +10,7 @@ import {
   CustomListTalentRow,
   CustomTalentsListEmptyState,
 } from '../../components';
+import { YellowFlagInviteWarningModal } from '../../modals';
 
 export const CustomTalentsListScreen = () => {
   const { params } = useScreenNavigation<Screens.CustomTalentsList>();
@@ -17,8 +18,15 @@ export const CustomTalentsListScreen = () => {
   const eventId = params?.eventId ?? '';
   const listName = params?.listName ?? '';
 
-  const { inviteTalent, invitingTalentId, setInvitingTalentId } =
-    useSendInvite();
+  const {
+    invitingTalentId,
+    handleInvite,
+    yellowFlagModal,
+    closeYellowFlagModal,
+    confirmYellowFlagModal,
+    isCheckingFlag,
+  } = useSendInvite();
+
   const {
     talentsList,
     isLoading,
@@ -31,9 +39,8 @@ export const CustomTalentsListScreen = () => {
 
   const { mutate: removeTalent } = useRemoveTalentFromCustomList(listId);
 
-  const handleInvite = (talentId: string) => {
-    setInvitingTalentId(talentId);
-    inviteTalent({ eventId, talentId });
+  const handleInvitePress = (talentId: string) => {
+    handleInvite(eventId, talentId);
   };
 
   const handleRemove = (talentId: string) => {
@@ -74,7 +81,8 @@ export const CustomTalentsListScreen = () => {
             <CustomListTalentRow
               talent={item}
               invitingTalentId={invitingTalentId}
-              onInvite={handleInvite}
+              isCheckingFlag={isCheckingFlag}
+              onInvite={handleInvitePress}
               onRemove={handleRemove}
             />
           )}
@@ -89,6 +97,14 @@ export const CustomTalentsListScreen = () => {
           listName={listName}
         />
       </If>
+
+      <YellowFlagInviteWarningModal
+        isVisible={yellowFlagModal?.visible ?? false}
+        flag={yellowFlagModal?.flag ?? null}
+        onClose={closeYellowFlagModal}
+        onConfirm={confirmYellowFlagModal}
+        isInviting={!!invitingTalentId}
+      />
     </ScreenWrapper>
   );
 };

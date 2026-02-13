@@ -13,25 +13,29 @@ export const useAddTalentToCustomList = (
   return useMutation<void, unknown, AddTalentToCustomListBodyDto>({
     mutationFn: addTalentToCustomListAction,
     ...options,
-    onSuccess: async (data, variables, context) => {
+    onSuccess: async (...args) => {
+      const [, variables] = args;
       // Invalidate custom lists to update members count
       await queryClient.invalidateQueries({
         queryKey: [TANSTACK_QUERY_KEYS.GET_CUSTOM_LISTS],
       });
 
-      // Invalidate custom list talents query (with all search variations)
+      // Invalidate custom list talents query for this list (all eventIds and search variations)
       if (listId) {
         await queryClient.invalidateQueries({
-          queryKey: [TANSTACK_QUERY_KEYS.GET_CUSTOM_LIST_TALENTS, listId],
+          predicate: query =>
+            query.queryKey[0] === TANSTACK_QUERY_KEYS.GET_CUSTOM_LIST_TALENTS &&
+            query.queryKey[2] === listId,
         });
       }
 
       // Optimistically update invitable talents cache for all search variations
       if (listId && variables.p_talent_id) {
-        // Get all queries that match the prefix (eventId, 'custom-list', listId)
         const queryCache = queryClient.getQueryCache();
         const matchingQueries = queryCache.findAll({
-          queryKey: [TANSTACK_QUERY_KEYS.GET_CUSTOM_LIST_TALENTS, listId],
+          predicate: query =>
+            query.queryKey[0] === TANSTACK_QUERY_KEYS.GET_CUSTOM_LIST_TALENTS &&
+            query.queryKey[2] === listId,
         });
 
         // Update each matching query
@@ -79,11 +83,11 @@ export const useAddTalentToCustomList = (
       }
 
       showSuccessToast('Talent added to list successfully');
-      await options?.onSuccess?.(data, variables, context);
+      await options?.onSuccess?.(...args);
     },
-    onError: (error, variables, context) => {
-      showMutationErrorToast(error as Error);
-      options?.onError?.(error, variables, context);
+    onError: (...args) => {
+      showMutationErrorToast(args[0] as Error);
+      options?.onError?.(...args);
     },
   });
 };
