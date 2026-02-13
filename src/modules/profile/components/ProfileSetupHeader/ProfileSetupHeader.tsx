@@ -1,4 +1,4 @@
-import { AppText } from '@ui';
+import { AppText, FlagIndicator } from '@ui';
 import { View } from 'react-native';
 import { styles } from './styles';
 import { ProfileSetupHeaderProps } from './types';
@@ -12,6 +12,7 @@ import {
   ImageSourcePickerModal,
   ImageSourcePickerModalData,
   PickedImage,
+  TalentFlag,
 } from '@modules/common';
 import { calculateAge, capitalize } from '@utils';
 import { useBucketUpload, useGetMe, useUpdateTalent } from '@actions';
@@ -19,7 +20,6 @@ import { showMutationErrorToast } from '@helpers';
 
 export const ProfileSetupHeader = ({
   containerStyle,
-  showCircleBadge = false,
   showUnverifiedBadge = false,
   showCnBadge,
   cnBadgeColor,
@@ -58,6 +58,15 @@ export const ProfileSetupHeader = ({
   return (
     <View style={[styles.container, containerStyle]}>
       <View style={styles.imageWrapper}>
+        <FlagIndicator
+          flag={me?.talent?.flag || TalentFlag.GREEN}
+          style={[
+            styles.circleBadge,
+            !showUnverifiedBadge && styles.circleBadgeUnverified,
+            circleBadgeStyle,
+          ]}
+        />
+
         <AppImage
           bucket="talents_avatars"
           imgPath={me?.talent?.avatar_path}
@@ -71,16 +80,6 @@ export const ProfileSetupHeader = ({
                 <View style={styles.cameraContainer}>
                   <SvgXml xml={ICONS.camera('black')} width={16} height={13} />
                 </View>
-              </If>
-
-              <If condition={showCircleBadge}>
-                <View
-                  style={[
-                    styles.circleBadge,
-                    !showUnverifiedBadge && styles.circleBadgeUnverified,
-                    circleBadgeStyle,
-                  ]}
-                />
               </If>
 
               <If condition={showUnverifiedBadge}>

@@ -1,11 +1,10 @@
 import { AppButton } from '@ui';
 import { TalentProfileRow } from '@modules/common';
 import { IEventParticipant } from '@modules/common';
-import { EventParticipantStatus } from '@actions';
 import { InviteStatusBadge } from '../../ui';
 
 interface CustomListTalentRowProps {
-  talent: IEventParticipant & { status?: EventParticipantStatus };
+  talent: IEventParticipant;
   invitingTalentId: string | null;
   onInvite: (talentId: string) => void;
   onRemove: (talentId: string) => void;

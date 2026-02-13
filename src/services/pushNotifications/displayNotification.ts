@@ -6,7 +6,6 @@ import {
   onMessage,
   setBackgroundMessageHandler as setFCMBackgroundHandler,
 } from '@react-native-firebase/messaging';
-import { COLORS } from '@styles';
 
 const ANDROID_CHANNEL_ID = 'default';
 

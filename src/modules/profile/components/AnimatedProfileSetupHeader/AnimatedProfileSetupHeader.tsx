@@ -5,17 +5,19 @@ import { ProfileSetupHeader } from '../ProfileSetupHeader';
 import { AnimatedProfileSetupHeaderRef } from './types';
 import { styles } from './styles';
 
-export const AnimatedProfileSetupHeader =
-  forwardRef<AnimatedProfileSetupHeaderRef>((_, ref) => {
-    const { scrollHandler, animatedHeaderStyle } = useAnimatedScrollHeader();
+export const AnimatedProfileSetupHeader = forwardRef<
+  AnimatedProfileSetupHeaderRef,
+  { showCamera?: boolean }
+>(({ showCamera }, ref) => {
+  const { scrollHandler, animatedHeaderStyle } = useAnimatedScrollHeader();
 
-    useImperativeHandle(ref, () => ({
-      scrollHandler,
-    }));
+  useImperativeHandle(ref, () => ({
+    scrollHandler,
+  }));
 
-    return (
-      <Animated.View style={[styles.headerContainer, animatedHeaderStyle]}>
-        <ProfileSetupHeader />
-      </Animated.View>
-    );
-  });
+  return (
+    <Animated.View style={[styles.headerContainer, animatedHeaderStyle]}>
+      <ProfileSetupHeader showCamera={showCamera} />
+    </Animated.View>
+  );
+});

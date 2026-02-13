@@ -26,7 +26,7 @@ export const FilterTalentsModal = ({
 }: FilterTalentsModalProps) => {
   const insets = useSafeAreaInsets();
   const [contentHeight, setContentHeight] = useState(0);
-  const [filters, setFilters] = useState<FiltersState>({ distance: 100});
+  const [filters, setFilters] = useState<FiltersState | null>(null);
 
   useEffect(() => {
     if (initialFilters && Object.keys(initialFilters).length > 0) {
@@ -37,9 +37,8 @@ export const FilterTalentsModal = ({
   const isScrollable = contentHeight > MAX_CONTENT_HEIGHT;
 
   const handleClearFilters = () => {
-    const clearedFilters = { distance: 100 };
-    setFilters(clearedFilters);
-    onApplyFilters?.(clearedFilters);
+    setFilters(null);
+    onApplyFilters?.(null);
   };
 
   const handleApplyFilters = () => {
@@ -51,7 +50,11 @@ export const FilterTalentsModal = ({
     key: K,
     value: FiltersState[K],
   ) => {
-    setFilters(prev => ({ ...prev, [key]: value }));
+    setFilters(prev =>
+      prev
+        ? { ...prev, [key]: value }
+        : ({ [key]: value } as unknown as FiltersState),
+    );
   };
 
   return (
@@ -90,13 +93,11 @@ export const FilterTalentsModal = ({
               min={1}
               max={100}
               disableRange
-              defaultMinValue={filters.distance}
+              defaultMinValue={filters?.distance || 1}
               defaultMaxValue={100}
               bottomLabels={{ minValueLabel: '1 Km', maxValueLabel: '100 Km' }}
               onRenderValue={values => `${values.min} Km`}
-              onSlidingComplete={values =>
-                updateFilter('distance', values[0])
-              }
+              onSlidingComplete={values => updateFilter('distance', values[0])}
             />
 
             <AppText typography="semibold_18" margin={{ bottom: 16, top: 16 }}>
@@ -107,9 +108,11 @@ export const FilterTalentsModal = ({
               label="Your Weight"
               min={20}
               max={150}
-              defaultMinValue={filters.weight?.min || 20}
-              defaultMaxValue={filters.weight?.max || 150}
-              onSlidingComplete={values => updateFilter('weight', { min: values[0], max: values[1] })}
+              defaultMinValue={filters?.weight?.min || 20}
+              defaultMaxValue={filters?.weight?.max || 150}
+              onSlidingComplete={values =>
+                updateFilter('weight', { min: values[0], max: values[1] })
+              }
               bottomLabels={{
                 minValueLabel: '20 Kg',
                 maxValueLabel: '150 Kg',
@@ -122,10 +125,12 @@ export const FilterTalentsModal = ({
               label="Your Height"
               min={2}
               max={8}
-              defaultMinValue={filters.height?.min || 2}
-              defaultMaxValue={filters.height?.max || 8}
+              defaultMinValue={filters?.height?.min || 2}
+              defaultMaxValue={filters?.height?.max || 8}
               step={0.1}
-              onSlidingComplete={values => updateFilter('height', { min: values[0], max: values[1] })}
+              onSlidingComplete={values =>
+                updateFilter('height', { min: values[0], max: values[1] })
+              }
               bottomLabels={{
                 minValueLabel: '2 Feet',
                 maxValueLabel: '8 Feet',
@@ -134,8 +139,12 @@ export const FilterTalentsModal = ({
               onRenderValue={values => {
                 const minFractional = Math.round((values.min % 1) * 10);
                 const maxFractional = Math.round((values.max % 1) * 10);
-                const minStr = `${Math.floor(values.min)} foot${minFractional ? ` ${minFractional} Inch` : ''}`;
-                const maxStr = `${Math.floor(values.max)} foot${maxFractional ? ` ${maxFractional} Inch` : ''}`;
+                const minStr = `${Math.floor(values.min)} foot${
+                  minFractional ? ` ${minFractional} Inch` : ''
+                }`;
+                const maxStr = `${Math.floor(values.max)} foot${
+                  maxFractional ? ` ${maxFractional} Inch` : ''
+                }`;
                 return `${minStr} - ${maxStr}`;
               }}
             />
@@ -145,11 +154,11 @@ export const FilterTalentsModal = ({
                 label: 'Hair Colour',
                 placeholderText: 'Pick hair colour',
                 value: hairColourOptions.find(
-                  o => o.value === filters.hairColour,
+                  o => o.value === filters?.hairColour,
                 )?.label,
               }}
               options={hairColourOptions}
-              selectedValues={filters.hairColour}
+              selectedValues={filters?.hairColour}
               onOptionSelect={item => updateFilter('hairColour', item.value)}
             />
 
@@ -157,11 +166,12 @@ export const FilterTalentsModal = ({
               fieldProps={{
                 label: 'Hair Style',
                 placeholderText: 'Pick hair style',
-                value: hairStyleOptions.find(o => o.value === filters.hairStyle)
-                  ?.label,
+                value: hairStyleOptions.find(
+                  o => o.value === filters?.hairStyle,
+                )?.label,
               }}
               options={hairStyleOptions}
-              selectedValues={filters.hairStyle}
+              selectedValues={filters?.hairStyle}
               onOptionSelect={item => updateFilter('hairStyle', item.value)}
             />
 
@@ -169,11 +179,12 @@ export const FilterTalentsModal = ({
               fieldProps={{
                 label: 'Eye Colour',
                 placeholderText: 'Pick eye colour',
-                value: eyeColourOptions.find(o => o.value === filters.eyeColour)
-                  ?.label,
+                value: eyeColourOptions.find(
+                  o => o.value === filters?.eyeColour,
+                )?.label,
               }}
               options={eyeColourOptions}
-              selectedValues={filters.eyeColour}
+              selectedValues={filters?.eyeColour}
               onOptionSelect={item => updateFilter('eyeColour', item.value)}
             />
 
@@ -181,7 +192,7 @@ export const FilterTalentsModal = ({
               fieldProps={{
                 label: 'Facial Attributes',
                 placeholderText: 'Select facial attributes',
-                value: filters.facialAttributes
+                value: filters?.facialAttributes
                   ?.map(
                     o =>
                       facialAttributesOptions.find(f => f.value === o)?.label,
@@ -190,7 +201,7 @@ export const FilterTalentsModal = ({
               }}
               options={facialAttributesOptions}
               enableAutoClose={false}
-              selectedValues={filters.facialAttributes}
+              selectedValues={filters?.facialAttributes}
               onSelectedOptionsChange={items =>
                 updateFilter(
                   'facialAttributes',
@@ -203,13 +214,13 @@ export const FilterTalentsModal = ({
               fieldProps={{
                 label: 'Tattoo Spot',
                 placeholderText: 'Pick tattoo spots',
-                value: filters.tattooSpot
+                value: filters?.tattooSpot
                   ?.map(o => tattooSpotOptions.find(t => t.value === o)?.label)
                   .join(', '),
               }}
               options={tattooSpotOptions}
               enableAutoClose={false}
-              selectedValues={filters.tattooSpot}
+              selectedValues={filters?.tattooSpot}
               onSelectedOptionsChange={items =>
                 updateFilter(
                   'tattooSpot',
@@ -219,18 +230,18 @@ export const FilterTalentsModal = ({
             />
 
             <PregnancyField
-              isPregnant={filters.isPregnant}
+              isPregnant={filters?.isPregnant}
               setIsPregnant={value => updateFilter('isPregnant', value)}
-              months={filters.months}
+              months={filters?.months}
               setMonths={value => updateFilter('months', value)}
             />
 
             <SelectSkinToneField
               fieldProps={{
-                value: skinToneOptions.find(o => o.value === filters.skinTone)
+                value: skinToneOptions.find(o => o.value === filters?.skinTone)
                   ?.label,
               }}
-              selectedValues={filters.skinTone}
+              selectedValues={filters?.skinTone}
               onOptionSelect={item => updateFilter('skinTone', item.value)}
             />
 

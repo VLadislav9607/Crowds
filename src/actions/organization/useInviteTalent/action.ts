@@ -11,6 +11,7 @@ export const inviteTalentAction = async (
 
   if (error && error instanceof FunctionsHttpError) {
     const errorMessage = await error.context.json();
+    console.log('errorMessage', errorMessage);
     throw errorMessage;
   }
 

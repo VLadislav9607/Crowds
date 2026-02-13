@@ -1,4 +1,5 @@
 import { Tables } from '@services';
+import { TalentFlag } from '@modules/common';
 
 export interface OrganizationBranchDto
   extends Omit<
@@ -12,6 +13,7 @@ export interface UseGetMeResDto {
   isOrganizationMember: boolean;
   talent?: Tables<'talents'> & {
     talent_location: Tables<'talent_location'> | null;
+    flag: TalentFlag;
   };
 
   organizationMember?: {

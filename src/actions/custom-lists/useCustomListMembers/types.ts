@@ -5,19 +5,20 @@ export interface GetCustomListTalentsBodyDto {
   eventId: string;
   limit: number;
   offset: number;
-  search: string;
+  search?: string;
 }
 
 export interface CustomListTalentDto {
-  is_in_list: boolean;
+  is_in_list?: boolean;
   id: string;
+  flag: string;
   first_name: string;
   last_name: string;
   avatar_path: string;
   city: string;
   country: string;
   total: number;
-  status: EventParticipantStatus;
+  participation_status: EventParticipantStatus;
 }
 
 export interface GetCustomListTalentsRespDto {

@@ -43,10 +43,7 @@ import {
 } from '@modules/profile';
 import { ManageEventScreen } from '../../modules/event-management';
 import { ChatRoomScreen } from '../../modules/chats';
-import {
-  EventParticipantsScreen,
-  FlagParticipantScreen,
-} from '../../modules/event-participants';
+import { EventParticipantsScreen } from '../../modules/event-participants';
 import {
   ApplicantProfileScreen,
   EventApplicantsScreen,
@@ -67,6 +64,7 @@ import {
 import { OrgEventDetails } from '../../modules/events/organization/screens';
 import { EventQRCodesScreen } from '../../modules/event-management';
 import { PDFViewerScreen } from '../../modules/common';
+import { FlagParticipantScreen } from '../../modules/flags';
 
 const RootStack = createStackNavigator<RootStackParamList>();
 

@@ -11,3 +11,4 @@ export * from './organizations-permissions';
 export * from './custom-lists';
 export * from './events-folders';
 export * from './events-qr';
+export * from './flags';

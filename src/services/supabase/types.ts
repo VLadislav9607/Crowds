@@ -2686,9 +2686,9 @@ export type Database = {
       };
       update_brand: {
         Args: {
-          p_avatar_path?: string;
           p_brand_id: string;
           p_brand_name?: string;
+          p_logo_path?: string;
         };
         Returns: Json;
       };
