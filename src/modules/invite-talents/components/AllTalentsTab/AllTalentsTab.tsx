@@ -1,6 +1,6 @@
 import { SearchWithFilter } from '@ui';
 import { TalentsList } from '../TalentsList';
-import { FilterTalentsModal } from '../../modals';
+import { FilterTalentsModal, YellowFlagInviteWarningModal } from '../../modals';
 import { useAllTalents, useSendInvite } from '../../hooks';
 
 interface AllTalentsTabProps {
@@ -9,8 +9,14 @@ interface AllTalentsTabProps {
 
 export const AllTalentsTab = ({ eventId }: AllTalentsTabProps) => {
   const allTalentsHook = useAllTalents(eventId);
-  const { invitingTalentId, setInvitingTalentId, inviteTalent } =
-    useSendInvite();
+  const {
+    invitingTalentId,
+    handleInvite,
+    yellowFlagModal,
+    isCheckingFlag,
+    closeYellowFlagModal,
+    confirmYellowFlagModal,
+  } = useSendInvite();
 
   return (
     <>
@@ -28,16 +34,22 @@ export const AllTalentsTab = ({ eventId }: AllTalentsTabProps) => {
         hasNextPage={allTalentsHook.hasNextPage}
         isFetchingNextPage={allTalentsHook.isFetchingNextPage}
         actionTalentId={invitingTalentId}
-        onPressRightAction={talentId => {
-          setInvitingTalentId(talentId);
-          inviteTalent({ eventId, talentId });
-        }}
+        isCheckingFlag={isCheckingFlag}
+        onPressRightAction={talentId => handleInvite(eventId, talentId)}
       />
 
       <FilterTalentsModal
         bottomSheetRef={allTalentsHook.filterModalRef}
         onApplyFilters={allTalentsHook.handleApplyFilters}
         initialFilters={allTalentsHook.filters}
+      />
+
+      <YellowFlagInviteWarningModal
+        isVisible={yellowFlagModal?.visible ?? false}
+        flag={yellowFlagModal?.flag ?? null}
+        onClose={closeYellowFlagModal}
+        onConfirm={confirmYellowFlagModal}
+        isInviting={!!invitingTalentId}
       />
     </>
   );

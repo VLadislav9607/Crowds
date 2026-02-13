@@ -11,6 +11,7 @@ export const useCustomListInvitableTalents = (
   return useInfiniteQuery({
     queryKey: [
       TANSTACK_QUERY_KEYS.GET_CUSTOM_LIST_TALENTS,
+      params.eventId ?? '',
       params.listId,
       params.search,
     ],
@@ -19,6 +20,7 @@ export const useCustomListInvitableTalents = (
       const offset = ((pageParam as number) - 1) * limit;
       return await getCustomListTalentsAction({
         listId: params.listId,
+        eventId: params.eventId ?? '',
         limit: limit,
         offset,
         search: params.search,
