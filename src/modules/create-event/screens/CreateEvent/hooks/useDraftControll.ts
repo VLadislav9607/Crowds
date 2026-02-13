@@ -30,12 +30,9 @@ export const useDraftControll = ({
 }: UseDraftControllProps) => {
   const { organizationMember } = useGetMe();
   const officeId =
-    organizationMember?.organization_networks[0]?.office_memberships[0]
-      ?.office_id!;
+    organizationMember?.organization_networks?.[0]?.brands?.[0]
+      ?.office_memberships?.[0].office_id!;
 
-  console.log('organizationMember', organizationMember);
-
-  console.log('officeId', officeId);
   const { params } = useScreenNavigation<Screens.CreateEvent>();
   const savedToDraftModalRef = useRef<SavedToDraftModalRef>(null);
 

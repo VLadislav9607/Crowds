@@ -23,8 +23,8 @@ export const useEventControll = ({
 }: UseEventControllProps) => {
   const { organizationMember } = useGetMe();
   const officeId =
-    organizationMember?.organization_networks[0]?.office_memberships[0]
-      ?.office_id!;
+    organizationMember?.organization_networks?.[0]?.brands?.[0]
+      ?.office_memberships?.[0]?.office_id!;
 
   const { params } = useScreenNavigation<Screens.CreateEvent>();
   const eventCreatedModalRef = useRef<EventCreatedModalRef>(null);

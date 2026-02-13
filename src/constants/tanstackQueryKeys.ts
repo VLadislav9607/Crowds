@@ -4,7 +4,7 @@ export const TANSTACK_QUERY_KEYS = {
   GET_EVENTS_IN_EVENTS_FOLDER: 'get_events_in_events_folder',
   EVENT_PARTICIPANTS_BY_STATUS: 'event_participants_by_status',
   GET_EVENT_PARTICIPANTS_COUNTS: 'get_event_participants_counts',
-  GET_INVITABLE_TALENTS: 'get_invitable_talents',
+  GET_ALL_TALENTS: 'get_all_talents',
   GET_MATCHING_TALENTS: 'get_matching_talents',
   GET_ORG_PERMISSIONS: 'get_org_permissions',
   GET_EVENT: 'get_event',

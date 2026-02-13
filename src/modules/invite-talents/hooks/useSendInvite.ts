@@ -15,10 +15,7 @@ export const useSendInvite = () => {
       await Promise.allSettled([
         // Invalidate all invitable talents queries for this event (with all search variations)
         queryClient.invalidateQueries({
-          queryKey: [
-            TANSTACK_QUERY_KEYS.GET_INVITABLE_TALENTS,
-            variables.eventId,
-          ],
+          queryKey: [TANSTACK_QUERY_KEYS.GET_ALL_TALENTS, variables.eventId],
         }),
 
         // Invalidate matching talents queries for this event (with all search variations)

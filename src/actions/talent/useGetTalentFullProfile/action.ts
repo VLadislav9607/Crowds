@@ -1,5 +1,8 @@
 import { supabase } from '@services';
-import { GetTalentFullProfileBodyDto, GetTalentFullProfileRespDto } from './types';
+import {
+  GetTalentFullProfileBodyDto,
+  GetTalentFullProfileRespDto,
+} from './types';
 
 export const getTalentFullProfileAction = async (
   params: GetTalentFullProfileBodyDto,

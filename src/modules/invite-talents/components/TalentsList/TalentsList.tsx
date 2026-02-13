@@ -3,6 +3,7 @@ import { TalentProfileRow, TalentsListSkeleton } from '@modules/common';
 import { AppButton } from '@ui';
 
 import { TalentsListProps } from './types';
+import { InviteStatusBadge } from '../../ui';
 
 export const TalentsList = ({
   data,
@@ -14,6 +15,21 @@ export const TalentsList = ({
   isLoading,
 }: TalentsListProps) => {
   const skeleton = isLoading ? <TalentsListSkeleton /> : undefined;
+
+  const renderRightAction = (item: TalentsListProps['data'][number]) => {
+    if (item.status) {
+      return <InviteStatusBadge status={item.status} />;
+    }
+    return (
+      <AppButton
+        title="Invite"
+        isLoading={actionTalentId === item.talentId}
+        onPress={() => onPressRightAction(item.talentId)}
+        size="36"
+        width={71}
+      />
+    );
+  };
 
   return (
     <AppFlashList
@@ -27,15 +43,7 @@ export const TalentsList = ({
           talent={item}
           popUpItems={[{ label: 'Report', value: 'report' }]}
           onMenuSelect={() => {}}
-          renderRightAction={() => (
-            <AppButton
-              title="Invite"
-              isLoading={actionTalentId === item.talentId}
-              onPress={() => onPressRightAction(item.talentId)}
-              size="36"
-              width={71}
-            />
-          )}
+          renderRightAction={() => renderRightAction(item)}
         />
       )}
       onEndReached={hasNextPage ? onEndReached : undefined}

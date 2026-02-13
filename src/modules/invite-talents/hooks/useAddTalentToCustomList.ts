@@ -1,21 +1,17 @@
 import { useState } from 'react';
 import { useAddTalentToCustomList as useAddTalentToCustomListAction } from '@actions';
 
-export const useAddTalentToCustomList = (eventId: string, listId: string) => {
+export const useAddTalentToCustomList = (listId: string) => {
   const [addingTalentId, setAddingTalentId] = useState<string | null>(null);
 
-  const { mutate: addTalent } = useAddTalentToCustomListAction(
-    eventId,
-    listId,
-    {
-      onSuccess: () => {
-        setAddingTalentId(null);
-      },
-      onError: () => {
-        setAddingTalentId(null);
-      },
+  const { mutate: addTalent } = useAddTalentToCustomListAction(listId, {
+    onSuccess: () => {
+      setAddingTalentId(null);
     },
-  );
+    onError: () => {
+      setAddingTalentId(null);
+    },
+  });
 
   const handleAddTalent = (talentId: string) => {
     setAddingTalentId(talentId);

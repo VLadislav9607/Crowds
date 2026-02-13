@@ -7,7 +7,6 @@ import { removeTalentFromCustomListAction } from './action';
 import { RemoveTalentFromCustomListBodyDto } from './types';
 
 export const useRemoveTalentFromCustomList = (
-  eventId?: string,
   listId?: string,
   options?: IMutationOptions<void, unknown, RemoveTalentFromCustomListBodyDto>,
 ) => {
@@ -21,14 +20,9 @@ export const useRemoveTalentFromCustomList = (
       });
 
       // Invalidate custom list talents query
-      if (listId && eventId) {
+      if (listId) {
         await queryClient.invalidateQueries({
-          queryKey: [
-            TANSTACK_QUERY_KEYS.GET_CUSTOM_LIST_TALENTS,
-            eventId,
-            'custom-list',
-            listId,
-          ],
+          queryKey: [TANSTACK_QUERY_KEYS.GET_CUSTOM_LIST_TALENTS, listId],
         });
       }
 

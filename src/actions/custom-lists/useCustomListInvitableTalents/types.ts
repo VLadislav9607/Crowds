@@ -18,7 +18,7 @@ export interface CustomListTalentDto {
   country: string;
   is_in_list?: boolean;
   total: number;
-  status: EventParticipantStatus;
+  participation_status: EventParticipantStatus;
 }
 
 export interface GetCustomListTalentsRespDto {
@@ -30,7 +30,6 @@ export interface GetCustomListTalentsRespDto {
 }
 
 export interface GetCustomListTalentsParams {
-  eventId: string;
   listId: string;
   search: string;
 }

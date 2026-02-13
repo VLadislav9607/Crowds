@@ -17,7 +17,7 @@ export const useCustomTalentsList = (eventId: string, listId: string) => {
     return talentsResponse.pages.flatMap(page =>
       page.data.map(talent => ({
         ...mapInviteTalent(talent),
-        status: talent.status,
+        status: talent.participation_status,
         flag: talent.flag as TalentFlag,
       })),
     );

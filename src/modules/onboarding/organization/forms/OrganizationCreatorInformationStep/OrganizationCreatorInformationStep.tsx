@@ -58,7 +58,7 @@ export const OrganizationCreatorInformationStep = forwardRef<
             <AppInput
               placeholder="Username"
               value={value}
-              onChangeText={onChange}
+              onChangeText={text => onChange(text.toLowerCase())}
               containerStyle={styles.nameInput}
               errorMessage={fieldState.error?.message}
             />

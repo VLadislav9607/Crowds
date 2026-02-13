@@ -29,16 +29,22 @@ export const useSetTalentFlag = ({
         queryKey: [TANSTACK_QUERY_KEYS.GET_TALENT_FLAGS, response.talentId],
       }),
       queryClient.invalidateQueries({
-        queryKey: [TANSTACK_QUERY_KEYS.GET_TALENT_FULL_PROFILE, response.talentId],
+        queryKey: [
+          TANSTACK_QUERY_KEYS.GET_TALENT_FULL_PROFILE,
+          response.talentId,
+        ],
+      }),
+      queryClient.invalidateQueries({
+        queryKey: [TANSTACK_QUERY_KEYS.EVENT_PARTICIPANTS_BY_STATUS],
       }),
       queryClient.invalidateQueries({
         queryKey: [TANSTACK_QUERY_KEYS.GET_MATCHING_TALENTS],
       }),
       queryClient.invalidateQueries({
-        queryKey: [TANSTACK_QUERY_KEYS.GET_INVITABLE_TALENTS],
+        queryKey: [TANSTACK_QUERY_KEYS.GET_ALL_TALENTS],
       }),
       queryClient.invalidateQueries({
-        queryKey: [TANSTACK_QUERY_KEYS.GET_CUSTOM_LIST_TALENTS, response.eventId],
+        queryKey: [TANSTACK_QUERY_KEYS.GET_CUSTOM_LIST_TALENTS],
       }),
     ]);
   };

@@ -20,7 +20,6 @@ import { showMutationErrorToast } from '@helpers';
 
 export const ProfileSetupHeader = ({
   containerStyle,
-  showCircleBadge = false,
   showUnverifiedBadge = false,
   showCnBadge,
   cnBadgeColor,
@@ -60,7 +59,7 @@ export const ProfileSetupHeader = ({
     <View style={[styles.container, containerStyle]}>
       <View style={styles.imageWrapper}>
         <FlagIndicator
-          flag={(me?.talent?.flag as TalentFlag) || TalentFlag.GREEN}
+          flag={me?.talent?.flag || TalentFlag.GREEN}
           style={[
             styles.circleBadge,
             !showUnverifiedBadge && styles.circleBadgeUnverified,

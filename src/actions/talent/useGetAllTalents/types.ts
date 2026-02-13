@@ -1,4 +1,6 @@
-export interface InvitableTalentsFiltersDto {
+import { EventParticipantStatus } from '@actions';
+
+export interface GetAllTalentsFiltersDto {
   distance?: number;
   hairColour?: string;
   hairStyle?: string;
@@ -12,14 +14,15 @@ export interface InvitableTalentsFiltersDto {
   months?: string;
 }
 
-export interface InvitableTalentsBodyDto {
+export interface GetAllTalentsBodyDto {
   eventId: string;
   offset: number;
   search: string;
-  filters?: InvitableTalentsFiltersDto;
+  filters?: GetAllTalentsFiltersDto | null;
 }
 
-export interface InvitableTalentDto {
+
+export interface GetAllTalentDto {
   id: string;
   flag: string;
   first_name: string;
@@ -29,18 +32,19 @@ export interface InvitableTalentDto {
     city: string;
     country: string;
   };
+  participation_status?: EventParticipantStatus | null;
 }
 
-export interface InvitableTalentsRespDto {
-  data: InvitableTalentDto[];
+export interface GetAllTalentsRespDto {
+  data: GetAllTalentDto[];
   pagination: {
     offset: number;
     total: number;
   };
 }
 
-export interface GetInvitableTalentsParams {
+export interface GetAllTalentsParams {
   eventId: string;
   search: string;
-  filters?: InvitableTalentsFiltersDto;
+  filters?: GetAllTalentsFiltersDto | null;
 }

@@ -7,7 +7,6 @@ import { GetCustomListTalentsRespDto } from '../useCustomListInvitableTalents/ty
 import { AddTalentToCustomListBodyDto } from './types';
 
 export const useAddTalentToCustomList = (
-  eventId?: string,
   listId?: string,
   options?: IMutationOptions<void, unknown, AddTalentToCustomListBodyDto>,
 ) => {
@@ -21,28 +20,18 @@ export const useAddTalentToCustomList = (
       });
 
       // Invalidate custom list talents query (with all search variations)
-      if (listId && eventId) {
+      if (listId) {
         await queryClient.invalidateQueries({
-          queryKey: [
-            TANSTACK_QUERY_KEYS.GET_CUSTOM_LIST_TALENTS,
-            eventId,
-            'custom-list',
-            listId,
-          ],
+          queryKey: [TANSTACK_QUERY_KEYS.GET_CUSTOM_LIST_TALENTS, listId],
         });
       }
 
       // Optimistically update invitable talents cache for all search variations
-      if (eventId && listId && variables.p_talent_id) {
+      if (listId && variables.p_talent_id) {
         // Get all queries that match the prefix (eventId, 'custom-list', listId)
         const queryCache = queryClient.getQueryCache();
         const matchingQueries = queryCache.findAll({
-          queryKey: [
-            TANSTACK_QUERY_KEYS.GET_CUSTOM_LIST_TALENTS,
-            eventId,
-            'custom-list',
-            listId,
-          ],
+          queryKey: [TANSTACK_QUERY_KEYS.GET_CUSTOM_LIST_TALENTS, listId],
         });
 
         // Update each matching query
@@ -93,7 +82,7 @@ export const useAddTalentToCustomList = (
       await options?.onSuccess?.(data, variables, context);
     },
     onError: (error, variables, context) => {
-      showMutationErrorToast(error);
+      showMutationErrorToast(error as Error);
       options?.onError?.(error, variables, context);
     },
   });

@@ -1,15 +1,15 @@
 import { useMemo, useRef, useState } from 'react';
 import { BottomSheetModal } from '@gorhom/bottom-sheet';
-import { useGetInvitableTalents } from '@actions';
+import { useGetAllTalents } from '@actions';
 import { IEventParticipant, TalentFlag } from '@modules/common';
 import { useDebounce } from '@hooks';
 
 import { mapInviteTalent } from '../helpers';
 import { FiltersState } from '../modals';
 
-export const useTalentsForInvite = (eventId: string) => {
+export const useAllTalents = (eventId: string) => {
   const [search, setSearch] = useState('');
-  const [filters, setFilters] = useState<FiltersState>({ distance: 100 });
+  const [filters, setFilters] = useState<FiltersState | null>(null);
   const [activeFiltersCount, setActiveFiltersCount] = useState(1);
   const filterModalRef = useRef<BottomSheetModal<null>>(null);
   const debouncedSearch = useDebounce(search, 400);
@@ -20,7 +20,7 @@ export const useTalentsForInvite = (eventId: string) => {
     hasNextPage,
     isFetchingNextPage,
     isLoading,
-  } = useGetInvitableTalents({
+  } = useGetAllTalents({
     eventId,
     search: debouncedSearch,
     filters,
@@ -29,9 +29,10 @@ export const useTalentsForInvite = (eventId: string) => {
   const talentsForInviteList = useMemo<IEventParticipant[]>(() => {
     if (!talentsForInviteResponse) return [];
     return talentsForInviteResponse.pages.flatMap(page =>
-      page.data.map(talent =>
-        mapInviteTalent(talent, talent.flag as TalentFlag),
-      ),
+      page.data.map(talent => ({
+        ...mapInviteTalent(talent, talent.flag as TalentFlag),
+        status: talent.participation_status ?? undefined,
+      })),
     );
   }, [talentsForInviteResponse]);
 
@@ -39,11 +40,15 @@ export const useTalentsForInvite = (eventId: string) => {
     filterModalRef.current?.present();
   };
 
-  const handleApplyFilters = (appliedFilters: FiltersState) => {
+  const handleApplyFilters = (appliedFilters: FiltersState | null) => {
     setFilters(appliedFilters);
-    const activeCount = Object.keys(appliedFilters).filter(
-      key => appliedFilters[key as keyof FiltersState] !== undefined,
-    ).length;
+
+    const activeCount = appliedFilters
+      ? Object.keys(appliedFilters).filter(
+          key => appliedFilters[key as keyof FiltersState] !== undefined,
+        ).length
+      : 0;
+
     setActiveFiltersCount(activeCount);
   };
 

@@ -6,7 +6,7 @@ import { AddTalentItem } from '../components/AddTalentsList/types';
 import { mapInviteTalent } from '../helpers';
 import { TalentFlag } from '@modules/common';
 
-export const useTalentsForCustomList = (eventId: string, listId: string) => {
+export const useTalentsForCustomList = (listId: string) => {
   const [search, setSearch] = useState('');
   const debouncedSearch = useDebounce(search, 400);
 
@@ -17,7 +17,6 @@ export const useTalentsForCustomList = (eventId: string, listId: string) => {
     isFetchingNextPage,
     isLoading,
   } = useCustomListInvitableTalents({
-    eventId,
     listId,
     search: debouncedSearch,
   });

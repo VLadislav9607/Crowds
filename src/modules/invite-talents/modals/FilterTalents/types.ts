@@ -3,8 +3,8 @@ import { RefObject } from 'react';
 
 export interface FilterTalentsModalProps {
   bottomSheetRef: RefObject<BottomSheetModal<null> | null>;
-  onApplyFilters?: (filters: FiltersState) => void;
-  initialFilters?: FiltersState;
+  onApplyFilters?: (filters: FiltersState | null) => void;
+  initialFilters?: FiltersState | null;
 }
 
 export interface FiltersState {
