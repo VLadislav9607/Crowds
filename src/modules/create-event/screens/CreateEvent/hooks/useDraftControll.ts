@@ -29,13 +29,8 @@ export const useDraftControll = ({
   setShowFullScreenLoader,
 }: UseDraftControllProps) => {
   const { organizationMember } = useGetMe();
-  const officeId =
-    organizationMember?.organization_networks[0]?.office_memberships[0]
-      ?.office_id!;
+  const officeId = organizationMember?.current_context?.offices[0]?.office_id!;
 
-  console.log('organizationMember', organizationMember);
-
-  console.log('officeId', officeId);
   const { params } = useScreenNavigation<Screens.CreateEvent>();
   const savedToDraftModalRef = useRef<SavedToDraftModalRef>(null);
 
@@ -342,6 +337,7 @@ export const useDraftControll = ({
 
   useEffect(() => {
     if (draftData && !isLoadingDraft) {
+      console.log('draftData', draftData);
       const mappedData = mapDraftDataToFormData(draftData);
       formData.reset(mappedData as CreateEventFormData);
     }

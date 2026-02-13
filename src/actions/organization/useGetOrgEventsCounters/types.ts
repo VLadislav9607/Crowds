@@ -1,5 +1,5 @@
 export interface UseGetOrgEventsCountersBodyDto {
-  organization_id: string;
+  brand_id: string;
 }
 
 export interface UseGetOrgEventsCountersRespDto {

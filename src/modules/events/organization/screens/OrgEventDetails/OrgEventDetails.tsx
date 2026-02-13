@@ -168,7 +168,7 @@ export const OrgEventDetails = () => {
         <EventHeaderElement
           showSkeleton={isLoading}
           title={event?.title}
-          image={organizationMember?.organization?.avatar_path}
+          image={organizationMember?.current_context?.brand?.logo_path}
         />
       }
       rightIcons={[

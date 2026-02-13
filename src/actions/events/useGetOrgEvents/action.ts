@@ -2,9 +2,10 @@ import { supabase } from '@services';
 import { UseGetOrgEventsBodyDto, UseGetOrgEventsResDto } from './types';
 
 export const getOrgEventsAction = async (
-  params: UseGetOrgEventsBodyDto = {},
+  params: UseGetOrgEventsBodyDto,
 ): Promise<UseGetOrgEventsResDto> => {
-  const { data, error } = await supabase.rpc('get_organization_events', {
+  const { data, error } = await supabase.rpc('get_brand_events', {
+    p_brand_id: params.brand_id,
     search_query: params.search_query,
     status_filter: params.status_filter,
     visibility_filter: params.visibility_filter,

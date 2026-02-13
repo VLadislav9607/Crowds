@@ -7,7 +7,7 @@ export const getEventForOrgMember = async (
   const { event_id } = params;
 
   const { data, error } = await supabase
-    .rpc('get_event_details_org_member', {
+    .rpc('get_event_details_for_brand_member', {
       p_event_id: event_id,
     })
     .single();

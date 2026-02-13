@@ -223,7 +223,7 @@ export type Database = {
             foreignKeyName: 'chat_participants_org_fkey';
             columns: ['organization_id'];
             isOneToOne: false;
-            referencedRelation: 'organizations';
+            referencedRelation: 'brands';
             referencedColumns: ['id'];
           },
           {
@@ -278,7 +278,7 @@ export type Database = {
             foreignKeyName: 'chats_organization_id_fkey';
             columns: ['organization_id'];
             isOneToOne: false;
-            referencedRelation: 'organizations';
+            referencedRelation: 'brands';
             referencedColumns: ['id'];
           },
           {
@@ -382,7 +382,7 @@ export type Database = {
             foreignKeyName: 'custom_lists_owner_id_fkey';
             columns: ['owner_id'];
             isOneToOne: false;
-            referencedRelation: 'organizations_members';
+            referencedRelation: 'org_users';
             referencedColumns: ['id'];
           },
         ];
@@ -623,7 +623,7 @@ export type Database = {
           event_id: string;
           id: string;
           initiated_by: Database['public']['Enums']['participation_initiator'];
-          organization_member_id: string;
+          org_user_id: string;
           rejected_by:
             | Database['public']['Enums']['participation_initiator']
             | null;
@@ -636,7 +636,7 @@ export type Database = {
           event_id: string;
           id?: string;
           initiated_by: Database['public']['Enums']['participation_initiator'];
-          organization_member_id: string;
+          org_user_id: string;
           rejected_by?:
             | Database['public']['Enums']['participation_initiator']
             | null;
@@ -649,7 +649,7 @@ export type Database = {
           event_id?: string;
           id?: string;
           initiated_by?: Database['public']['Enums']['participation_initiator'];
-          organization_member_id?: string;
+          org_user_id?: string;
           rejected_by?:
             | Database['public']['Enums']['participation_initiator']
             | null;
@@ -663,6 +663,13 @@ export type Database = {
             columns: ['event_id'];
             isOneToOne: false;
             referencedRelation: 'events';
+            referencedColumns: ['id'];
+          },
+          {
+            foreignKeyName: 'event_participations_org_user_id_fkey';
+            columns: ['org_user_id'];
+            isOneToOne: false;
+            referencedRelation: 'org_users';
             referencedColumns: ['id'];
           },
           {
@@ -1031,7 +1038,7 @@ export type Database = {
             foreignKeyName: 'events_creator_id_fkey';
             columns: ['creator_id'];
             isOneToOne: false;
-            referencedRelation: 'organizations_members';
+            referencedRelation: 'org_users';
             referencedColumns: ['id'];
           },
           {
@@ -1174,10 +1181,10 @@ export type Database = {
         };
         Relationships: [
           {
-            foreignKeyName: 'flags_created_by_org_fkey';
+            foreignKeyName: 'flags_created_by_org_id_fkey';
             columns: ['created_by_org_id'];
             isOneToOne: false;
-            referencedRelation: 'organizations';
+            referencedRelation: 'brands';
             referencedColumns: ['id'];
           },
           {
@@ -2273,7 +2280,7 @@ export type Database = {
       };
       create_draft_or_event: { Args: { payload: Json }; Returns: string };
       create_event_group_chat: {
-        Args: { p_event_id: string; p_organization_id: string };
+        Args: { p_brand_id: string; p_event_id: string };
         Returns: string;
       };
       create_event_with_preferences: {
@@ -2312,10 +2319,53 @@ export type Database = {
         Returns: Json;
       };
       earth: { Args: never; Returns: number };
-      ensure_event_group_chat_access: {
-        Args: { p_event_id: string };
-        Returns: string;
+      get_active_flag_for_target: {
+        Args: { target_id_input: string; target_type_input: string };
+        Returns: {
+          description: string;
+          duration_days: number;
+          expires_on: string;
+          flag_type: string;
+          reason: string;
+          status: string;
+        }[];
       };
+      get_all_talents: {
+        Args: {
+          p_event_id?: string;
+          p_filters?: Json;
+          p_limit: number;
+          p_offset: number;
+          p_search?: string;
+        };
+        Returns: {
+          avatar_path: string;
+          city: string;
+          country: string;
+          first_name: string;
+          flag: string;
+          id: string;
+          last_name: string;
+          participation_status: Database['public']['Enums']['participation_status'];
+          total: number;
+        }[];
+      };
+      get_brand_events: {
+        Args: {
+          end_after?: string;
+          end_before?: string;
+          limit_param?: number;
+          offset_param?: number;
+          p_brand_id: string;
+          search_query?: string;
+          start_after?: string;
+          start_before?: string;
+          status_filter?: string;
+          visibility_filter?: string;
+        };
+        Returns: Json;
+      };
+      get_brand_events_counts: { Args: { p_brand_id: string }; Returns: Json };
       get_chat_messages: {
         Args: { p_chat_id: string; p_cursor?: string; p_limit?: number };
         Returns: {
@@ -2362,6 +2412,10 @@ export type Database = {
           name: string;
           owner_id: string;
         }[];
+      };
+      get_event_details_for_brand_member: {
+        Args: { p_event_id: string };
+        Returns: Json;
       };
       get_event_details_for_talent: {
         Args: { p_event_id: string };
@@ -2421,27 +2475,6 @@ export type Database = {
           first_name: string;
           flag: string;
           id: string;
-          last_name: string;
-          total: number;
-        }[];
-      };
-      get_invitable_talents_for_custom_list: {
-        Args: {
-          p_event_id: string;
-          p_filters?: Json;
-          p_limit: number;
-          p_list_id: string;
-          p_offset: number;
-          p_search: string;
-        };
-        Returns: {
-          avatar_path: string;
-          city: string;
-          country: string;
-          first_name: string;
-          flag: string;
-          id: string;
-          is_in_list: boolean;
           last_name: string;
           total: number;
         }[];
@@ -2546,6 +2579,17 @@ export type Database = {
           proposals: number;
         }[];
       };
+      get_talent_flags: {
+        Args: { p_talent_id: string };
+        Returns: {
+          brand_name: string;
+          created_at: string;
+          description: string;
+          flag_type: string;
+          id: string;
+          reason: string;
+        }[];
+      };
       get_talent_participation_events: {
         Args: {
           p_initiated_by?: Database['public']['Enums']['participation_initiator'];
@@ -2556,6 +2600,29 @@ export type Database = {
         Returns: Json;
       };
       get_talent_profile: { Args: { p_talent_id: string }; Returns: Json };
+      get_talents_for_custom_list: {
+        Args: {
+          p_limit: number;
+          p_list_id: string;
+          p_offset: number;
+          p_search: string;
+        };
+        Returns: {
+          avatar_path: string;
+          city: string;
+          country: string;
+          first_name: string;
+          flag: string;
+          id: string;
+          is_in_list: boolean;
+          last_name: string;
+          total: number;
+        }[];
+      };
+      guard_office_any_capability: {
+        Args: { p_capability_codes: string[]; p_office_id: string };
+        Returns: undefined;
+      };
       guard_office_capability: {
         Args: { p_capability_code: string; p_office_id: string };
         Returns: undefined;
@@ -2574,6 +2641,7 @@ export type Database = {
         Args: { p_at: string; p_user_id: string };
         Returns: boolean;
       };
+      join_event_group_chat: { Args: { p_event_id: string }; Returns: string };
       list_events_in_talent_events_folder: {
         Args: {
           limit_param?: number;
@@ -2615,6 +2683,14 @@ export type Database = {
       toggle_event_in_talent_events_folder: {
         Args: { p_event_id: string; p_folder_id: string };
         Returns: boolean;
+      };
+      update_brand: {
+        Args: {
+          p_avatar_path?: string;
+          p_brand_id: string;
+          p_brand_name?: string;
+        };
+        Returns: Json;
       };
       update_custom_list_name: {
         Args: { p_event_id: string; p_list_id: string; p_name: string };

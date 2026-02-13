@@ -1,5 +1,5 @@
 export * from './useGetOrgEventsCounters';
-export * from './useUpdateOrganization';
+export * from './useUpdateBrand';
 export * from './useInviteTalent';
 export * from './useEventParticipantsByStatus';
 export * from './useEventParticipantsCounts';

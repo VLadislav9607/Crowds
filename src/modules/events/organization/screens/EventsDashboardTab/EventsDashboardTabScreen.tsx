@@ -8,9 +8,7 @@ export const EventsDashboardTabScreen = () => {
   const { organizationMember } = useGetMe();
 
   const { data: eventsCountersResp, isLoading } = useGetOrgEventsCounters({
-    organization_id:
-      organizationMember?.organization_networks[0]?.office_memberships[0]
-        ?.office_id!,
+    brand_id: organizationMember?.current_context?.brand.id!,
   });
 
   const activePublicCount = eventsCountersResp?.active_public

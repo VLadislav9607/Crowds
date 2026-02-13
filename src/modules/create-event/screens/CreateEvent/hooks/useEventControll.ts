@@ -22,9 +22,7 @@ export const useEventControll = ({
   onScrollToErrorSection,
 }: UseEventControllProps) => {
   const { organizationMember } = useGetMe();
-  const officeId =
-    organizationMember?.organization_networks[0]?.office_memberships[0]
-      ?.office_id!;
+  const officeId = organizationMember?.current_context?.offices[0]?.office_id!;
 
   const { params } = useScreenNavigation<Screens.CreateEvent>();
   const eventCreatedModalRef = useRef<EventCreatedModalRef>(null);
@@ -97,7 +95,7 @@ export const useEventControll = ({
     delete values.ndaDocument;
 
     return {
-      officeId: officeId,
+      office_id: officeId,
       location,
       title: values.title,
       category: values.category,
@@ -124,19 +122,24 @@ export const useEventControll = ({
 
         const dto = await prepareDataToSave(data as CreateEventFormData);
 
+        console.log('dto', dto);
         if (params?.draftId) {
+          console.log('0000');
           await updateDraftMutateAsync({
             eventId: params.draftId,
             body: dto,
           });
+          console.log('111');
           await publishEventDraftMutateAsync(params.draftId);
         } else {
+          console.log('222');
           await createEventMutateAsync(dto as CreatePublishedEventBodyDto);
         }
 
         setShowFullScreenLoader(false);
       },
       errors => {
+        console.log('errors', errors);
         onScrollToErrorSection(errors);
         setShowFullScreenLoader(false);
       },

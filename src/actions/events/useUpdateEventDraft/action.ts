@@ -5,7 +5,7 @@ export const updateDraftEventAction = async (
   eventId: string,
   body: UpdateDraftEventBodyDto,
 ): Promise<UpdateDraftEventResDto> => {
-  console.log(body);
+  console.log('body', JSON.stringify(body));
   const { data, error } = await supabase.rpc('update_event_draft', {
     event_id_param: eventId,
     payload: body as any,
