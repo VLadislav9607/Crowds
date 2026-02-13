@@ -37,7 +37,6 @@ export const SignInForm = forwardRef<SignInFormRef, SignInFormProps>(
         await onNavigateAfterAuth();
 
         const tokens = await askNotificationPermissionAndGetTokens();
-        console.log('tokens', tokens);
         if (tokens?.fcmToken) {
           try {
             const deviceId = await getDeviceId();

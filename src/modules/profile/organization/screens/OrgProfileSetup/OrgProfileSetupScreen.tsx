@@ -11,7 +11,7 @@ import {
   ImageSourcePickerModal,
   ImageSourcePickerModalData,
 } from '@modules/common';
-import { useBucketUpload, useGetMe, useUpdateOrganization } from '@actions';
+import { useBucketUpload, useGetMe, useUpdateBrand } from '@actions';
 import { showMutationErrorToast, showSuccessToast } from '@helpers';
 import { goBack } from '@navigation';
 
@@ -21,31 +21,29 @@ export const OrgProfileSetupScreen = () => {
 
   const { organizationMember, refetch } = useGetMe();
 
-  const { mutateAsync: updateOrganizationMutateAsync } =
-    useUpdateOrganization();
+  const { mutateAsync: updateBrandMutateAsync } = useUpdateBrand();
 
   const [orgName, setOrgName] = useState(
-    organizationMember?.organization?.name,
+    organizationMember?.current_context?.brand?.name,
   );
 
-  const {
-    mutate: updateOrganizationMutate,
-    isPending: isUpdatingOrganization,
-  } = useUpdateOrganization({
-    onSuccess: async () => {
-      await refetch();
-      goBack();
-      showSuccessToast('Changes saved successfully');
-    },
-  });
+  const { mutate: updateBrandMutate, isPending: isUpdatingBrand } =
+    useUpdateBrand({
+      onSuccess: async () => {
+        await refetch();
+        goBack();
+        showSuccessToast('Changes saved successfully');
+      },
+      onError: showMutationErrorToast,
+    });
 
   const { mutate: upsertTalentAvatarMutate, isPending: isUpsertingAvatar } =
     useBucketUpload({
       onError: showMutationErrorToast,
       onSuccess: async data => {
-        await updateOrganizationMutateAsync({
-          organization_id: organizationMember?.organization_id!,
-          avatar_path: data.uploadedFile.path,
+        await updateBrandMutateAsync({
+          brand_id: organizationMember?.current_context?.brand?.id!,
+          logo_path: data.uploadedFile.path,
         });
         await refetch();
         showSuccessToast('Logo updated successfully');
@@ -58,16 +56,16 @@ export const OrgProfileSetupScreen = () => {
         upsertTalentAvatarMutate({
           bucket: 'organizations_avatars',
           file: { uri: logo.uri, type: logo.type, name: logo.name },
-          folderName: organizationMember?.organization_id,
+          folderName: organizationMember?.current_context?.brand?.id,
         });
       },
     });
   };
 
   const handleSaveChanges = () => {
-    updateOrganizationMutate({
-      organization_id: organizationMember?.organization_id!,
-      organization_name: orgName,
+    updateBrandMutate({
+      brand_id: organizationMember?.current_context?.brand?.id!,
+      brand_name: orgName,
     });
   };
 
@@ -81,7 +79,7 @@ export const OrgProfileSetupScreen = () => {
           wrapperStyles={styles.saveButtonWrapper}
           title="Save changes"
           onPress={handleSaveChanges}
-          isLoading={isUpdatingOrganization}
+          isLoading={isUpdatingBrand}
         />
       }
     >
@@ -99,7 +97,7 @@ export const OrgProfileSetupScreen = () => {
         <AppImage
           onPress={pickImage}
           showSkeleton={isUpsertingAvatar}
-          imgPath={organizationMember?.organization?.avatar_path}
+          imgPath={organizationMember?.current_context?.brand?.logo_path}
           containerStyle={styles.imageContainer}
           bucket="organizations_avatars"
           placeholderIcon={ICONS.orgAvatarLogo('lihgt_gray4')}

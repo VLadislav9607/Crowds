@@ -1,2 +1,6 @@
 export * from './useGetMe';
-export type { UseGetMeResDto } from './types';
+export type {
+  CurrentOrganizationContext,
+  OfficeMembershipDto,
+  UseGetMeResDto,
+} from './types';
