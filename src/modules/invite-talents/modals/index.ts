@@ -1,4 +1,4 @@
 export * from './CreateEditCustomList';
 export * from './FilterTalents';
 export * from './FilterMatchingTalents';
-export * from './YellowFlagInviteWarning';
+export * from './FilterMatchingTalents';
