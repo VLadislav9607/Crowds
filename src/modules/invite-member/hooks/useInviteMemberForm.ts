@@ -7,7 +7,11 @@ const inviteMemberFormSchema = z.object({
   firstName: z.string().min(1, 'First name is required'),
   lastName: z.string().min(1, 'Last name is required'),
   positionInCompany: z.string().min(1, 'Position in company is required'),
-  roleAccess: z.record(z.string(), z.array(z.string())),
+  roleAccess: z
+    .record(z.string(), z.array(z.string()))
+    .refine(val => Object.values(val).some(caps => caps.length > 0), {
+      message: 'At least one permission must be selected',
+    }),
   email: z.email({ message: 'Invalid email address' }),
 });
 
