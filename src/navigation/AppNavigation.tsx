@@ -19,7 +19,7 @@ const linking: LinkingOptions<RootStackParamList> = {
   prefixes: ['crowdsnow://'],
   config: {
     screens: {
-      [Screens.AcceptInvitation]: 'invite/:token',
+      [Screens.OnboardingUnAuthTeamMember]: 'invite/:token',
     },
   },
 };

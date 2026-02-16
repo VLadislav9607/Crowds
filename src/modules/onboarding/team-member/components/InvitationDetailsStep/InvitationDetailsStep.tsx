@@ -1,12 +1,17 @@
+import { useRef } from 'react';
 import { View } from 'react-native';
 import { AppButton, AppText } from '@ui';
 import { GetTeamInvitationResDto } from '@actions';
+import {
+  ActionConfirmationModal,
+  ActionConfirmationModalRef,
+} from '@modules/common';
 import { styles } from './styles';
 
 interface InvitationDetailsStepProps {
   invitation: GetTeamInvitationResDto;
   onAccept: () => void;
-  onDecline: () => void;
+  onDecline: () => Promise<void>;
 }
 
 export const InvitationDetailsStep = ({
@@ -14,6 +19,19 @@ export const InvitationDetailsStep = ({
   onAccept,
   onDecline,
 }: InvitationDetailsStepProps) => {
+  const confirmationModalRef = useRef<ActionConfirmationModalRef>(null);
+
+  const handleDeclinePress = () => {
+    confirmationModalRef.current?.open({
+      title: 'Decline Invitation',
+      subtitle: `Are you sure you want to decline the invitation from ${invitation.brandName}?`,
+      confirmButtonText: 'Decline',
+      onConfirm: async () => {
+        await onDecline();
+      },
+    });
+  };
+
   return (
     <View style={styles.container}>
       <AppText typography="semibold_16" style={styles.title}>
@@ -59,9 +77,11 @@ export const InvitationDetailsStep = ({
           variant="withBorder"
           title="Decline"
           titleStyles={styles.declineButtonTitle}
-          onPress={onDecline}
+          onPress={handleDeclinePress}
         />
       </View>
+
+      <ActionConfirmationModal ref={confirmationModalRef} />
     </View>
   );
 };

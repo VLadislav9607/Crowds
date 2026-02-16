@@ -1,9 +1,35 @@
 import { supabase } from '@services';
-import { TeamMemberItem, GetTeamMembersParams } from './types';
+import {
+  TeamMemberItem,
+  GetTeamMembersParams,
+  GetTeamMembersResDto,
+} from './types';
 
 export const getTeamMembersAction = async ({
+  brandId,
   organizationNetworkId,
-}: GetTeamMembersParams): Promise<TeamMemberItem[]> => {
+  offset = 0,
+  limit = 20,
+}: GetTeamMembersParams): Promise<GetTeamMembersResDto> => {
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
+  const currentUserId = user?.id;
+
+  // Get office IDs belonging to this brand
+  const { data: offices, error: officesError } = await supabase
+    .from('offices')
+    .select('id')
+    .eq('brand_id', brandId);
+
+  if (officesError) throw officesError;
+
+  const officeIds = (offices ?? []).map(o => o.id);
+
+  if (officeIds.length === 0) {
+    return { data: [], meta: { offset, limit, total_count: 0 } };
+  }
+
   const [membersRes, invitationsRes] = await Promise.all([
     supabase
       .from('office_members')
@@ -12,20 +38,13 @@ export const getTeamMembersAction = async ({
         id,
         user_id,
         office_id,
-        org_users!inner (
-          id,
-          first_name,
-          last_name,
-          email,
-          position,
-          deleted_at
-        ),
         office_member_capabilities (
           capability_id
         )
       `,
       )
-      .eq('organization_network_id', organizationNetworkId),
+      .in('office_id', officeIds)
+      .neq('user_id', currentUserId ?? ''),
 
     supabase
       .from('team_invitations')
@@ -38,19 +57,37 @@ export const getTeamMembersAction = async ({
   if (membersRes.error) throw membersRes.error;
   if (invitationsRes.error) throw invitationsRes.error;
 
-  const membersByUserId = new Map<string, TeamMemberItem>();
+  const userIds = [...new Set((membersRes.data ?? []).map(m => m.user_id))];
 
-  for (const member of membersRes.data ?? []) {
-    const orgUser = member.org_users as unknown as {
+  let orgUsersMap = new Map<
+    string,
+    {
       id: string;
       first_name: string;
       last_name: string;
       email: string;
       position: string;
       deleted_at: string | null;
-    };
+    }
+  >();
 
-    if (orgUser.deleted_at) continue;
+  if (userIds.length > 0) {
+    const { data: orgUsers, error: orgUsersError } = await supabase
+      .from('org_users')
+      .select('id, first_name, last_name, email, position, deleted_at')
+      .in('id', userIds);
+
+    if (orgUsersError) throw orgUsersError;
+
+    orgUsersMap = new Map((orgUsers ?? []).map(u => [u.id, u]));
+  }
+
+  const membersByUserId = new Map<string, TeamMemberItem>();
+
+  for (const member of membersRes.data ?? []) {
+    const orgUser = orgUsersMap.get(member.user_id);
+
+    if (!orgUser) continue;
 
     const existing = membersByUserId.get(member.user_id);
     const capabilities = (member.office_member_capabilities ?? []).map(
@@ -77,8 +114,17 @@ export const getTeamMembersAction = async ({
 
   const acceptedMembers = Array.from(membersByUserId.values());
 
-  const pendingInvitations: TeamMemberItem[] = (invitationsRes.data ?? []).map(
-    inv => ({
+  // Filter invitations: only include those with role_access referencing brand offices
+  const officeIdSet = new Set(officeIds);
+  const pendingInvitations: TeamMemberItem[] = (invitationsRes.data ?? [])
+    .filter(inv => {
+      const roleAccess = inv.role_access as Record<string, string[]> | null;
+      if (!roleAccess) return false;
+      return Object.keys(roleAccess).some(officeId =>
+        officeIdSet.has(officeId),
+      );
+    })
+    .map(inv => ({
       id: inv.id,
       type: 'invitation' as const,
       firstName: inv.first_name,
@@ -88,8 +134,15 @@ export const getTeamMembersAction = async ({
       status: 'pending' as const,
       roleAccess: (inv.role_access as Record<string, string[]>) ?? {},
       invitationId: inv.id,
-    }),
-  );
+      invitationToken: inv.token,
+    }));
 
-  return [...acceptedMembers, ...pendingInvitations];
+  const allItems = [...acceptedMembers, ...pendingInvitations];
+  const total_count = allItems.length;
+  const paginatedItems = allItems.slice(offset, offset + limit);
+
+  return {
+    data: paginatedItems,
+    meta: { offset, limit, total_count },
+  };
 };

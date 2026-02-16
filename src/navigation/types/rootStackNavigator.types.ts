@@ -1,5 +1,5 @@
 import { NavigatorScreenParams } from '@react-navigation/native';
-import { ChatType, GetTeamInvitationResDto, TeamMemberItem } from '@actions';
+import { ChatType, TeamMemberItem } from '@actions';
 import { OrganizationType, Role } from '@modules/common';
 import { Screens } from '../constants';
 import { BottomTabsParamList } from './bottomStackNavigator.types';
@@ -44,7 +44,7 @@ export type RootStackParamList = {
   [Screens.VerificationPerson]: { url: string; userId: string };
 
   // Organization screens
-  [Screens.CopyInviteLink]: { deepLink: string };
+  [Screens.CopyInviteLink]: { deepLink: string; memberName: string };
   [Screens.CreateEvent]: { draftId?: string };
   [Screens.EventsDashboard]: undefined;
   [Screens.InviteNewMember]?: {
@@ -54,7 +54,6 @@ export type RootStackParamList = {
   [Screens.AcceptInvitation]: { token: string };
   [Screens.OnboardingUnAuthTeamMember]: {
     token: string;
-    invitation: GetTeamInvitationResDto;
   };
   [Screens.ApplicantProfile]: { applicantId: string };
   [Screens.InviteTalents]: { eventId: string; forwardFrom?: Screens };
