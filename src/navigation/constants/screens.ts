@@ -44,6 +44,8 @@ export enum Screens {
   CreateEvent = 'CreateEvent',
   InviteNewMember = 'InviteNewMember',
   CopyInviteLink = 'CopyInviteLink',
+  AcceptInvitation = 'AcceptInvitation',
+  OnboardingUnAuthTeamMember = 'OnboardingUnAuthTeamMember',
   ApplicantProfile = 'ApplicantProfile',
   ManageEvent = 'ManageEvent',
   EventParticipants = 'EventParticipants',

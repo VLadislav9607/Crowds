@@ -22,12 +22,14 @@ import {
   OnboardingUnAuthOrganizationScreen,
   TermsAndPrivacyScreen,
 } from '../../modules/onboarding';
+import { OnboardingUnAuthTeamMemberScreen } from '../../modules/onboarding/team-member/screens';
 
 import { RootStackParamList } from '../types';
 import { Screens } from '../constants';
 import { BottomTabsNavigator } from './BottomTabsNavigator';
 
 import {
+  AcceptInvitationScreen,
   CopyInviteLinkScreen,
   InviteNewMemberScreen,
 } from '../../modules/invite-member';
@@ -145,6 +147,17 @@ export const RootStackNavigator = () => {
       <RootStack.Screen
         name={Screens.CopyInviteLink}
         component={CopyInviteLinkScreen}
+      />
+
+      <RootStack.Screen
+        name={Screens.AcceptInvitation}
+        component={AcceptInvitationScreen}
+      />
+
+      <RootStack.Screen
+        name={Screens.OnboardingUnAuthTeamMember}
+        component={OnboardingUnAuthTeamMemberScreen}
+        options={{ gestureEnabled: false }}
       />
 
       <RootStack.Screen
