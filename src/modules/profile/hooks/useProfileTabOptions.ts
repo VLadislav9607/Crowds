@@ -26,6 +26,11 @@ export const useProfileTabOptions = ({
       onPress: () => goToScreen(Screens.TalentFolders),
     },
     {
+      title: 'Event History',
+      icon: ICONS.calendarIcon(),
+      onPress: () => goToScreen(Screens.TalentEventHistory),
+    },
+    {
       title: 'My Location',
       icon: ICONS.locationMap('black'),
       onPress: () => goToScreen(Screens.TalentLocationSetup),

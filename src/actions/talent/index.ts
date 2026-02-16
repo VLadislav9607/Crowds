@@ -12,3 +12,4 @@ export * from './useDeclineProposal';
 export * from './useApplyEvent';
 export * from './useCancelApplication';
 export * from './useCancelAttendance';
+export * from './useGetTalentEventHistory';
