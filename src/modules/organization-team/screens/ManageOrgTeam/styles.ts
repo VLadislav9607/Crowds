@@ -1,5 +1,6 @@
 import { StyleSheet } from 'react-native';
 import { COLORS } from '@styles';
+
 export const styles = StyleSheet.create({
   noTeamMembersFound: {
     textAlign: 'center',
@@ -18,5 +19,11 @@ export const styles = StyleSheet.create({
   button: {
     width: 350,
     alignSelf: 'center',
+  },
+  loader: {
+    marginVertical: 40,
+  },
+  list: {
+    marginBottom: 24,
   },
 });

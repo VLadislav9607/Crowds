@@ -6,11 +6,13 @@ import { InviteMemberFormData } from '../../hooks';
 interface TheirDetailsFormProps {
   control: Control<InviteMemberFormData>;
   errors: FieldErrors<InviteMemberFormData>;
+  disabled?: boolean;
 }
 
 export const TheirDetailsForm = ({
   control,
   errors,
+  disabled,
 }: TheirDetailsFormProps) => {
   return (
     <>
@@ -28,6 +30,7 @@ export const TheirDetailsForm = ({
               value={value}
               onChangeText={onChange}
               errorMessage={errors.firstName?.message}
+              disabled={disabled}
             />
           )}
         />
@@ -41,6 +44,7 @@ export const TheirDetailsForm = ({
               value={value}
               onChangeText={onChange}
               errorMessage={errors.lastName?.message}
+              disabled={disabled}
             />
           )}
         />
@@ -54,6 +58,7 @@ export const TheirDetailsForm = ({
               value={value}
               onChangeText={onChange}
               errorMessage={errors.email?.message}
+              disabled={disabled}
             />
           )}
         />
@@ -67,6 +72,7 @@ export const TheirDetailsForm = ({
               value={value}
               onChangeText={onChange}
               errorMessage={errors.positionInCompany?.message}
+              disabled={disabled}
             />
           )}
         />

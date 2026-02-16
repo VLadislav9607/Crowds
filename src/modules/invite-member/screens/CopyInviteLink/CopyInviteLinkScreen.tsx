@@ -1,16 +1,27 @@
 import { SvgXml } from 'react-native-svg';
 import { StyleSheet, View } from 'react-native';
+import { useRoute, RouteProp, useNavigation } from '@react-navigation/native';
 
 import { ScreenWrapper } from '@components';
 import { ICONS } from '@assets';
 import { AppButton, AppText } from '@ui';
 import { COLORS, TYPOGRAPHY } from '@styles';
 import { copyToClipboard } from '@helpers';
+import { Screens, RootStackParamList } from '@navigation';
+import { StackNavigationProp } from '@react-navigation/stack';
+
+type CopyInviteLinkRouteProp = RouteProp<
+  RootStackParamList,
+  Screens.CopyInviteLink
+>;
 
 export const CopyInviteLinkScreen = () => {
+  const route = useRoute<CopyInviteLinkRouteProp>();
+  const { deepLink, memberName } = route.params;
+  const navigation = useNavigation<StackNavigationProp<RootStackParamList>>();
   const handleCopyLink = () => {
     copyToClipboard({
-      text: 'Test text',
+      text: deepLink,
       successMessage: 'Invite link copied to clipboard!',
     });
   };
@@ -20,6 +31,7 @@ export const CopyInviteLinkScreen = () => {
       headerVariant="withTitleAndImageBg"
       title="Invite New Team Member"
       headerImageBg="purple"
+      goBackCallback={() => navigation.pop(2)}
       contentContainerStyle={styles.wrapper}
     >
       <View style={styles.contentContainer}>
@@ -29,15 +41,17 @@ export const CopyInviteLinkScreen = () => {
           style={styles.copyInvitationIcon}
         />
 
-        <AppText style={styles.descriptionText}>
-          You can use this link to invite someone who can proceed and take
-          further actions on behalf of your company.
+        <AppText typography="regular_14" style={styles.descriptionText}>
+          This is personal link for {memberName}. Share via email or messaging
+          app.
         </AppText>
 
-        <AppText style={styles.noteText}>
-          <AppText style={styles.noteTextBold}>Note:</AppText> Make sure that
-          the team member must have downloaded the crowds now application before
-          clicking on this link.
+        <AppText typography="regular_14" color="main" style={styles.noteText}>
+          <AppText typography="bold_14" color="main">
+            Note:
+          </AppText>{' '}
+          Make sure that the team member must have downloaded the crowds now
+          application before clicking on this link.
         </AppText>
       </View>
 
@@ -52,7 +66,7 @@ export const CopyInviteLinkScreen = () => {
           variant="withBorder"
           title="Close"
           titleStyles={styles.closeButtonTitle}
-          onPress={() => {}}
+          onPress={() => navigation.pop(2)}
         />
       </View>
     </ScreenWrapper>
@@ -74,13 +88,11 @@ const styles = StyleSheet.create({
     textAlign: 'center',
   },
   descriptionText: {
-    ...TYPOGRAPHY.medium_12,
     textAlign: 'center',
     opacity: 0.5,
     marginBottom: 14,
   },
   noteText: {
-    ...TYPOGRAPHY.regular_10,
     textAlign: 'center',
     borderRadius: 10,
     padding: 10,
@@ -88,7 +100,6 @@ const styles = StyleSheet.create({
     color: COLORS.main,
   },
   noteTextBold: {
-    ...TYPOGRAPHY.bold_10,
     color: COLORS.main,
   },
   copyInvitationIcon: {
@@ -99,7 +110,7 @@ const styles = StyleSheet.create({
     marginTop: 24,
     justifyContent: 'flex-end',
     marginBottom: 24,
-    gap: 16,
+    gap: 10,
   },
   closeButtonTitle: {
     color: COLORS.black,
