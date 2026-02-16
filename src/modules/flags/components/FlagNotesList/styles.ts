@@ -27,6 +27,9 @@ export const styles = StyleSheet.create({
     height: 10,
     borderRadius: 5,
   },
+  noteEventTitle: {
+    marginTop: 4,
+  },
   noteTitle: {
     marginTop: 4,
   },

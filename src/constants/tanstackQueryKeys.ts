@@ -34,4 +34,7 @@ export const TANSTACK_QUERY_KEYS = {
   SCAN_QR_CODE_BY_TALENT: 'scan_qr_code_by_talent',
   GET_TALENT_FLAGS: 'get_talent_flags',
   GET_MY_ACTIVE_FLAG: 'get_my_active_flag',
+  GET_TALENT_EVENT_HISTORY: 'get_talent_event_history',
+  FLAG_ORGANIZATION: 'flag_organization',
+  GET_ORG_FLAGS: 'get_org_flags',
 } as const;
