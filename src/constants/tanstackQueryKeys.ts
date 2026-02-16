@@ -6,7 +6,7 @@ export const TANSTACK_QUERY_KEYS = {
   GET_EVENT_PARTICIPANTS_COUNTS: 'get_event_participants_counts',
   GET_ALL_TALENTS: 'get_all_talents',
   GET_MATCHING_TALENTS: 'get_matching_talents',
-  GET_ORG_PERMISSIONS: 'get_org_permissions',
+  GET_BRAND_CAPABILITIES: 'get_brand_capabilities',
   GET_EVENT: 'get_event',
   GET_EVENTS: 'get_events',
   GET_EVENT_FOR_ORG_MEMBER: 'get_event_for_org_member',
@@ -33,4 +33,5 @@ export const TANSTACK_QUERY_KEYS = {
   GET_EVENTS_FOLDERS: 'get_events_folders',
   SCAN_QR_CODE_BY_TALENT: 'scan_qr_code_by_talent',
   GET_TALENT_FLAGS: 'get_talent_flags',
+  GET_TEAM_MEMBERS: 'get_team_members',
 } as const;

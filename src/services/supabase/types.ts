@@ -2022,6 +2022,69 @@ export type Database = {
         };
         Relationships: [];
       };
+      team_invitations: {
+        Row: {
+          accepted_at: string | null;
+          created_at: string;
+          email: string;
+          expires_at: string;
+          first_name: string;
+          id: string;
+          invited_by: string;
+          last_name: string;
+          organization_network_id: string;
+          position: string;
+          role_access: Json;
+          status: string;
+          token: string;
+        };
+        Insert: {
+          accepted_at?: string | null;
+          created_at?: string;
+          email: string;
+          expires_at?: string;
+          first_name: string;
+          id?: string;
+          invited_by: string;
+          last_name: string;
+          organization_network_id: string;
+          position: string;
+          role_access?: Json;
+          status?: string;
+          token?: string;
+        };
+        Update: {
+          accepted_at?: string | null;
+          created_at?: string;
+          email?: string;
+          expires_at?: string;
+          first_name?: string;
+          id?: string;
+          invited_by?: string;
+          last_name?: string;
+          organization_network_id?: string;
+          position?: string;
+          role_access?: Json;
+          status?: string;
+          token?: string;
+        };
+        Relationships: [
+          {
+            foreignKeyName: 'team_invitations_invited_by_fkey';
+            columns: ['invited_by'];
+            isOneToOne: false;
+            referencedRelation: 'org_users';
+            referencedColumns: ['id'];
+          },
+          {
+            foreignKeyName: 'team_invitations_organization_network_id_fkey';
+            columns: ['organization_network_id'];
+            isOneToOne: false;
+            referencedRelation: 'organizations_network';
+            referencedColumns: ['id'];
+          },
+        ];
+      };
       uins: {
         Row: {
           created_at: string;
@@ -2544,6 +2607,10 @@ export type Database = {
           pending: number;
           proposals: number;
         }[];
+      };
+      get_talent_event_history: {
+        Args: { p_limit?: number; p_offset?: number };
+        Returns: Json;
       };
       get_talent_events_by_status: {
         Args: {

@@ -1,14 +1,15 @@
+import { useState, useMemo } from 'react';
 import { StyleSheet, View } from 'react-native';
-import { Controller, Control, FieldErrors } from 'react-hook-form';
+import { Controller, Control, FieldErrors, useWatch } from 'react-hook-form';
 
 import { AppText } from '@ui';
 import { COLORS, TYPOGRAPHY } from '@styles';
 
-import { RoleAccess } from '../../types';
 import { InviteMemberFormData } from '../../hooks';
 import { CheckboxRowList } from '../../ui';
-import { useGetMe, useGetOrgPremissions } from '@actions';
-import { If } from '@components';
+import { useGetMe, useGetBrandCapabilities } from '@actions';
+import { If, AppTabSelector, ITabOption } from '@components';
+import { countriesWithFlag } from '@constants';
 
 interface RoleAccessFormProps {
   control: Control<InviteMemberFormData>;
@@ -17,15 +18,48 @@ interface RoleAccessFormProps {
 
 export const RoleAccessForm = ({ control }: RoleAccessFormProps) => {
   const { organizationMember } = useGetMe();
+  const { data: brandCapabilities } = useGetBrandCapabilities();
+  const roleAccess = useWatch({ control, name: 'roleAccess' });
 
-  console.log('organizationMember', organizationMember);
+  const invitableOffices = useMemo(() => {
+    const offices = organizationMember?.current_context?.offices ?? [];
+    return offices.filter(
+      office =>
+        office.is_super_admin ||
+        office.capabilities.includes('invite_team_members'),
+    );
+  }, [organizationMember?.current_context?.offices]);
 
-  const { data: orgPermissions } = useGetOrgPremissions();
+  const [selectedOfficeId, setSelectedOfficeId] = useState<string>(
+    invitableOffices[0]?.office_id ?? '',
+  );
 
-  const talentPermissions = orgPermissions?.groupedPermissions?.talent;
-  const eventsPermissions = orgPermissions?.groupedPermissions?.events;
-  const checkinsPermissions = orgPermissions?.groupedPermissions?.checkins;
-  const settingsPermissions = orgPermissions?.groupedPermissions?.settings;
+  const talentCapabilities = brandCapabilities?.groupedCapabilities?.talent;
+  const eventsCapabilities = brandCapabilities?.groupedCapabilities?.events;
+  const checkinsCapabilities = brandCapabilities?.groupedCapabilities?.checkins;
+  const settingsCapabilities = brandCapabilities?.groupedCapabilities?.settings;
+
+  const tabOptions: ITabOption[] = useMemo(
+    () =>
+      invitableOffices.map(office => {
+        const country = countriesWithFlag.find(
+          c => c.code === office.country_code,
+        );
+        const badgeCount = roleAccess?.[office.office_id]?.length ?? 0;
+        return {
+          label: country?.name ?? office.country_code,
+          value: office.office_id,
+          badge: badgeCount > 0 ? badgeCount : undefined,
+        };
+      }),
+    [invitableOffices, roleAccess],
+  );
+
+  const activeOfficeId = invitableOffices.find(
+    o => o.office_id === selectedOfficeId,
+  )
+    ? selectedOfficeId
+    : invitableOffices[0]?.office_id ?? '';
 
   return (
     <>
@@ -36,7 +70,15 @@ export const RoleAccessForm = ({ control }: RoleAccessFormProps) => {
       </AppText>
 
       <View style={styles.container}>
-        <If condition={!!talentPermissions}>
+        <If condition={invitableOffices.length > 1}>
+          <AppTabSelector
+            options={tabOptions}
+            selectedValue={activeOfficeId}
+            onSelect={setSelectedOfficeId}
+          />
+        </If>
+
+        <If condition={!!talentCapabilities}>
           <Controller
             control={control}
             name="roleAccess"
@@ -44,21 +86,21 @@ export const RoleAccessForm = ({ control }: RoleAccessFormProps) => {
               <CheckboxRowList
                 label="Talent"
                 items={
-                  talentPermissions?.map(permission => ({
-                    label: permission.label!,
-                    value: permission.id!,
+                  talentCapabilities?.map(capability => ({
+                    label: capability.name,
+                    value: capability.id,
                   })) || []
                 }
-                checkedValues={value?.map(v => v) || []}
+                checkedValues={value?.[activeOfficeId] || []}
                 onCheckedValuesChange={values =>
-                  onChange(values as RoleAccess[])
+                  onChange({ ...value, [activeOfficeId]: values })
                 }
               />
             )}
           />
         </If>
 
-        <If condition={!!eventsPermissions}>
+        <If condition={!!eventsCapabilities}>
           <Controller
             control={control}
             name="roleAccess"
@@ -66,21 +108,21 @@ export const RoleAccessForm = ({ control }: RoleAccessFormProps) => {
               <CheckboxRowList
                 label="Events"
                 items={
-                  eventsPermissions?.map(permission => ({
-                    label: permission.label!,
-                    value: permission.id!,
+                  eventsCapabilities?.map(capability => ({
+                    label: capability.name,
+                    value: capability.id,
                   })) || []
                 }
-                checkedValues={value?.map(v => v) || []}
+                checkedValues={value?.[activeOfficeId] || []}
                 onCheckedValuesChange={values =>
-                  onChange(values as RoleAccess[])
+                  onChange({ ...value, [activeOfficeId]: values })
                 }
               />
             )}
           />
         </If>
 
-        <If condition={!!checkinsPermissions}>
+        <If condition={!!checkinsCapabilities}>
           <Controller
             control={control}
             name="roleAccess"
@@ -88,21 +130,21 @@ export const RoleAccessForm = ({ control }: RoleAccessFormProps) => {
               <CheckboxRowList
                 label="Check-ins"
                 items={
-                  checkinsPermissions?.map(permission => ({
-                    label: permission.label!,
-                    value: permission.id!,
+                  checkinsCapabilities?.map(capability => ({
+                    label: capability.name,
+                    value: capability.id,
                   })) || []
                 }
-                checkedValues={value?.map(v => v) || []}
+                checkedValues={value?.[activeOfficeId] || []}
                 onCheckedValuesChange={values =>
-                  onChange(values as RoleAccess[])
+                  onChange({ ...value, [activeOfficeId]: values })
                 }
               />
             )}
           />
         </If>
 
-        <If condition={!!settingsPermissions}>
+        <If condition={!!settingsCapabilities}>
           <Controller
             control={control}
             name="roleAccess"
@@ -110,14 +152,14 @@ export const RoleAccessForm = ({ control }: RoleAccessFormProps) => {
               <CheckboxRowList
                 label="Settings"
                 items={
-                  settingsPermissions?.map(permission => ({
-                    label: permission.label!,
-                    value: permission.id!,
+                  settingsCapabilities?.map(capability => ({
+                    label: capability.name,
+                    value: capability.id,
                   })) || []
                 }
-                checkedValues={value?.map(v => v) || []}
+                checkedValues={value?.[activeOfficeId] || []}
                 onCheckedValuesChange={values =>
-                  onChange(values as RoleAccess[])
+                  onChange({ ...value, [activeOfficeId]: values })
                 }
               />
             )}
