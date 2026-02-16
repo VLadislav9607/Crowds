@@ -4,6 +4,7 @@ export interface IFlagNote {
   id: string;
   date: string;
   eventName: string;
+  eventTitle?: string;
   title: string;
   description?: string;
   flag: AvatarFlag;

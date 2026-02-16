@@ -35,6 +35,7 @@ import { CreateEventScreen } from '../../modules/create-event';
 import {
   TalentEventDetailsScreen,
   TalentSearchEventsScreen,
+  TalentEventHistoryScreen,
 } from '../../modules/events/talent/screens';
 import {
   ChangePasswordScreen,
@@ -64,7 +65,10 @@ import {
 import { OrgEventDetails } from '../../modules/events/organization/screens';
 import { EventQRCodesScreen } from '../../modules/event-management';
 import { PDFViewerScreen } from '../../modules/common';
-import { FlagParticipantScreen } from '../../modules/flags';
+import {
+  FlagParticipantScreen,
+  FlagOrganizationScreen,
+} from '../../modules/flags';
 
 const RootStack = createStackNavigator<RootStackParamList>();
 
@@ -257,6 +261,14 @@ export const RootStackNavigator = () => {
         options={{
           presentation: 'modal',
         }}
+      />
+      <RootStack.Screen
+        name={Screens.TalentEventHistory}
+        component={TalentEventHistoryScreen}
+      />
+      <RootStack.Screen
+        name={Screens.FlagOrganization}
+        component={FlagOrganizationScreen}
       />
     </RootStack.Navigator>
   );

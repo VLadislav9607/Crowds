@@ -85,6 +85,13 @@ export type RootStackParamList = {
   [Screens.AvailabilitySetup]: undefined;
   [Screens.TalentProfileSetup]: undefined;
   [Screens.TalentLocationSetup]: undefined;
+  [Screens.TalentEventHistory]: undefined;
+  [Screens.FlagOrganization]: {
+    eventId: string;
+    officeId: string | null;
+    brandName: string | null;
+    brandLogoPath: string | null;
+  };
 
   // Chat screens
   [Screens.ChatRoom]: {

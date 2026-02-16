@@ -1,5 +1,5 @@
 export interface CreateBlackFlagReportBodyDto {
-  targetType: 'talent';
+  targetType: 'talent' | 'organization';
   targetId: string;
   eventId: string;
   description: string;

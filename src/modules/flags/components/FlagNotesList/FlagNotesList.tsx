@@ -25,7 +25,18 @@ export const FlagNotesList = ({ notes, isLoading }: FlagNotesListProps) => {
         <AppText typography="regular_12">{note.eventName}</AppText>
       </View>
 
-      <AppText typography="bold_14" style={styles.noteTitle}>
+      {note.eventTitle && (
+        <AppText typography="regular_12" color="gray_primary" style={styles.noteEventTitle}>
+          {note.eventTitle}
+        </AppText>
+      )}
+
+      <AppText
+        renderIf={!!FLAG_REASONS[note.title as keyof typeof FLAG_REASONS]}
+        color="red"
+        typography="bold_14"
+        style={styles.noteTitle}
+      >
         {FLAG_REASONS[note.title as keyof typeof FLAG_REASONS]}
       </AppText>
 

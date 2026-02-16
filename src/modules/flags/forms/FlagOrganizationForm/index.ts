@@ -1,2 +1,1 @@
-export * from './FlagParticipantForm';
 export * from './FlagOrganizationForm';
