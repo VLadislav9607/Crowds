@@ -65,6 +65,8 @@ const styles = StyleSheet.create({
   gridContainer: {
     flexWrap: 'wrap',
     justifyContent: 'flex-start',
+    columnGap: 8,
+    rowGap: 14,
   },
   checkboxItem: {
     flexDirection: 'column',
@@ -72,7 +74,9 @@ const styles = StyleSheet.create({
     gap: 6,
   },
   gridItem: {
-    maxWidth: '22%',
+    flex: 0,
+    width: '23%',
+    maxWidth: '23%',
     flexDirection: 'column',
     gap: 6,
   },

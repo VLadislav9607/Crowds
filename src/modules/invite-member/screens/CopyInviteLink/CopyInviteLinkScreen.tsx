@@ -1,16 +1,26 @@
 import { SvgXml } from 'react-native-svg';
 import { StyleSheet, View } from 'react-native';
+import { useRoute, RouteProp } from '@react-navigation/native';
 
 import { ScreenWrapper } from '@components';
 import { ICONS } from '@assets';
 import { AppButton, AppText } from '@ui';
 import { COLORS, TYPOGRAPHY } from '@styles';
 import { copyToClipboard } from '@helpers';
+import { goBack, Screens, RootStackParamList } from '@navigation';
+
+type CopyInviteLinkRouteProp = RouteProp<
+  RootStackParamList,
+  Screens.CopyInviteLink
+>;
 
 export const CopyInviteLinkScreen = () => {
+  const route = useRoute<CopyInviteLinkRouteProp>();
+  const { deepLink } = route.params;
+
   const handleCopyLink = () => {
     copyToClipboard({
-      text: 'Test text',
+      text: deepLink,
       successMessage: 'Invite link copied to clipboard!',
     });
   };
@@ -52,7 +62,7 @@ export const CopyInviteLinkScreen = () => {
           variant="withBorder"
           title="Close"
           titleStyles={styles.closeButtonTitle}
-          onPress={() => {}}
+          onPress={goBack}
         />
       </View>
     </ScreenWrapper>
