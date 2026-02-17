@@ -1,6 +1,7 @@
 import { AppFlashList } from '@components';
 import { TalentProfileRow, TalentsListSkeleton } from '@modules/common';
 import { AppButton } from '@ui';
+import { goToScreen, Screens } from '@navigation';
 
 import { TalentsListProps } from './types';
 import { InviteStatusBadge } from '../../ui';
@@ -43,6 +44,11 @@ export const TalentsList = ({
           talent={item}
           popUpItems={[{ label: 'Report', value: 'report' }]}
           onMenuSelect={() => {}}
+          onPressCard={() =>
+            goToScreen(Screens.TalentProfile, {
+              talentId: item.talentId,
+            })
+          }
           renderRightAction={() => renderRightAction(item)}
         />
       )}

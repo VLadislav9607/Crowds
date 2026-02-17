@@ -51,6 +51,7 @@ import {
   ApplicantProfileScreen,
   EventApplicantsScreen,
 } from '../../modules/event-applicants';
+import { TalentProfileScreen } from '../../modules/talent-profile';
 import {
   AddTalentsToListScreen,
   CustomTalentsListScreen,
@@ -213,6 +214,10 @@ export const RootStackNavigator = () => {
       <RootStack.Screen
         name={Screens.ApplicantProfile}
         component={ApplicantProfileScreen}
+      />
+      <RootStack.Screen
+        name={Screens.TalentProfile}
+        component={TalentProfileScreen}
       />
 
       <RootStack.Screen

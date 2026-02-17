@@ -1,6 +1,7 @@
 import { AppButton } from '@ui';
 import { TalentProfileRow } from '@modules/common';
 import { IEventParticipant } from '@modules/common';
+import { goToScreen, Screens } from '@navigation';
 import { InviteStatusBadge } from '../../ui';
 
 interface CustomListTalentRowProps {
@@ -37,6 +38,11 @@ export const CustomListTalentRow = ({
       talent={talent}
       popUpItems={[{ label: 'Remove from list', value: 'remove' }]}
       onMenuSelect={() => onRemove(talent.talentId)}
+      onPressCard={() =>
+        goToScreen(Screens.TalentProfile, {
+          talentId: talent.talentId,
+        })
+      }
       renderRightAction={renderRightAction}
     />
   );
