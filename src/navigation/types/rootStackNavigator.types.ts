@@ -56,6 +56,7 @@ export type RootStackParamList = {
     token: string;
   };
   [Screens.ApplicantProfile]: { applicantId: string };
+  [Screens.TalentProfile]: { talentId: string };
   [Screens.InviteTalents]: { eventId: string; forwardFrom?: Screens };
   [Screens.CustomTalentsList]: {
     listName: string;

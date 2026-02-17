@@ -47,6 +47,7 @@ export enum Screens {
   AcceptInvitation = 'AcceptInvitation',
   OnboardingUnAuthTeamMember = 'OnboardingUnAuthTeamMember',
   ApplicantProfile = 'ApplicantProfile',
+  TalentProfile = 'TalentProfile',
   ManageEvent = 'ManageEvent',
   EventParticipants = 'EventParticipants',
   EventApplicants = 'EventApplicants',
