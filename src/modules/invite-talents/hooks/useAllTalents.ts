@@ -10,7 +10,7 @@ import { FiltersState } from '../modals';
 export const useAllTalents = (eventId: string) => {
   const [search, setSearch] = useState('');
   const [filters, setFilters] = useState<FiltersState | null>(null);
-  const [activeFiltersCount, setActiveFiltersCount] = useState(1);
+  const [activeFiltersCount, setActiveFiltersCount] = useState(0);
   const filterModalRef = useRef<BottomSheetModal<null>>(null);
   const debouncedSearch = useDebounce(search, 400);
 

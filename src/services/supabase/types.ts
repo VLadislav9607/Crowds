@@ -1229,6 +1229,24 @@ export type Database = {
           },
         ];
       };
+      notification_settings: {
+        Row: {
+          user_id: string;
+          settings: Json;
+          updated_at: string;
+        };
+        Insert: {
+          user_id: string;
+          settings?: Json;
+          updated_at?: string;
+        };
+        Update: {
+          user_id?: string;
+          settings?: Json;
+          updated_at?: string;
+        };
+        Relationships: [];
+      };
       notifications: {
         Row: {
           body: string;
