@@ -31,6 +31,7 @@ export interface TalentPublicEvent {
   payment_amount: number;
   payment_mode: Enums<'EventPaymentMode'>;
   start_at: string;
+  office_country_code: string | null;
 }
 
 export interface TalentPublicEventsResDto

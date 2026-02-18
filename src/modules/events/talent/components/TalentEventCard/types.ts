@@ -26,6 +26,7 @@ export interface ITalentEventCard {
   created_at: string;
   can_reaccept?: boolean;
   is_in_any_folder?: boolean;
+  office_country_code?: string | null;
 }
 
 export interface TalentEventCardProps {
