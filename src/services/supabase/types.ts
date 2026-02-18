@@ -66,24 +66,10 @@ export type Database = {
             referencedColumns: ['id'];
           },
           {
-            foreignKeyName: 'black_flag_reports_reporter_org_id_fkey';
-            columns: ['reporter_org_id'];
-            isOneToOne: false;
-            referencedRelation: 'organizations';
-            referencedColumns: ['id'];
-          },
-          {
             foreignKeyName: 'black_flag_reports_reporter_talent_id_fkey';
             columns: ['reporter_talent_id'];
             isOneToOne: false;
             referencedRelation: 'talents';
-            referencedColumns: ['id'];
-          },
-          {
-            foreignKeyName: 'black_flag_reports_target_org_id_fkey';
-            columns: ['target_org_id'];
-            isOneToOne: false;
-            referencedRelation: 'organizations';
             referencedColumns: ['id'];
           },
           {
@@ -457,6 +443,48 @@ export type Database = {
             columns: ['event_id'];
             isOneToOne: false;
             referencedRelation: 'events';
+            referencedColumns: ['id'];
+          },
+        ];
+      };
+      event_cancellations: {
+        Row: {
+          cancelled_at: string;
+          cancelled_by_user_id: string;
+          event_id: string;
+          id: string;
+          office_id: string;
+          reason: string | null;
+        };
+        Insert: {
+          cancelled_at?: string;
+          cancelled_by_user_id: string;
+          event_id: string;
+          id?: string;
+          office_id: string;
+          reason?: string | null;
+        };
+        Update: {
+          cancelled_at?: string;
+          cancelled_by_user_id?: string;
+          event_id?: string;
+          id?: string;
+          office_id?: string;
+          reason?: string | null;
+        };
+        Relationships: [
+          {
+            foreignKeyName: 'event_cancellations_event_id_fkey';
+            columns: ['event_id'];
+            isOneToOne: false;
+            referencedRelation: 'events';
+            referencedColumns: ['id'];
+          },
+          {
+            foreignKeyName: 'event_cancellations_office_id_fkey';
+            columns: ['office_id'];
+            isOneToOne: false;
+            referencedRelation: 'offices';
             referencedColumns: ['id'];
           },
         ];
@@ -968,11 +996,15 @@ export type Database = {
       events: {
         Row: {
           brief: string | null;
+          campaign_end_at: string | null;
+          campaign_start_at: string | null;
           category_id: string | null;
           created_at: string;
           creator_id: string;
           deleted_at: string | null;
+          description: string | null;
           end_at: string | null;
+          event_type: string | null;
           id: string;
           nda_file_name: string | null;
           nda_file_path: string | null;
@@ -988,11 +1020,15 @@ export type Database = {
         };
         Insert: {
           brief?: string | null;
+          campaign_end_at?: string | null;
+          campaign_start_at?: string | null;
           category_id?: string | null;
           created_at?: string;
           creator_id: string;
           deleted_at?: string | null;
+          description?: string | null;
           end_at?: string | null;
+          event_type?: string | null;
           id?: string;
           nda_file_name?: string | null;
           nda_file_path?: string | null;
@@ -1008,11 +1044,15 @@ export type Database = {
         };
         Update: {
           brief?: string | null;
+          campaign_end_at?: string | null;
+          campaign_start_at?: string | null;
           category_id?: string | null;
           created_at?: string;
           creator_id?: string;
           deleted_at?: string | null;
+          description?: string | null;
           end_at?: string | null;
+          event_type?: string | null;
           id?: string;
           nda_file_name?: string | null;
           nda_file_path?: string | null;
@@ -1228,6 +1268,24 @@ export type Database = {
             referencedColumns: ['id'];
           },
         ];
+      };
+      notification_settings: {
+        Row: {
+          settings: Json;
+          updated_at: string;
+          user_id: string;
+        };
+        Insert: {
+          settings?: Json;
+          updated_at?: string;
+          user_id: string;
+        };
+        Update: {
+          settings?: Json;
+          updated_at?: string;
+          user_id?: string;
+        };
+        Relationships: [];
       };
       notifications: {
         Row: {
@@ -1478,6 +1536,7 @@ export type Database = {
           id: string;
           last_name: string;
           onboarding_copleted_step: number;
+          personal_email: string;
           position: string;
           username: string;
         };
@@ -1490,6 +1549,7 @@ export type Database = {
           id?: string;
           last_name: string;
           onboarding_copleted_step: number;
+          personal_email?: string;
           position: string;
           username: string;
         };
@@ -1502,257 +1562,11 @@ export type Database = {
           id?: string;
           last_name?: string;
           onboarding_copleted_step?: number;
+          personal_email?: string;
           position?: string;
           username?: string;
         };
         Relationships: [];
-      };
-      organization_branches: {
-        Row: {
-          country_code: string;
-          country_name: string;
-          created_at: string;
-          id: string;
-          is_headquarter: boolean;
-          organization_id: string;
-        };
-        Insert: {
-          country_code: string;
-          country_name: string;
-          created_at?: string;
-          id?: string;
-          is_headquarter: boolean;
-          organization_id: string;
-        };
-        Update: {
-          country_code?: string;
-          country_name?: string;
-          created_at?: string;
-          id?: string;
-          is_headquarter?: boolean;
-          organization_id?: string;
-        };
-        Relationships: [
-          {
-            foreignKeyName: 'organization_branches_organization_id_fkey';
-            columns: ['organization_id'];
-            isOneToOne: false;
-            referencedRelation: 'organizations';
-            referencedColumns: ['id'];
-          },
-        ];
-      };
-      organization_permissions: {
-        Row: {
-          category: Database['public']['Enums']['СapabilityСategory'];
-          id: Database['public']['Enums']['OrgMemberPermissions'];
-          label: string;
-          sort_order: number;
-        };
-        Insert: {
-          category: Database['public']['Enums']['СapabilityСategory'];
-          id: Database['public']['Enums']['OrgMemberPermissions'];
-          label: string;
-          sort_order: number;
-        };
-        Update: {
-          category?: Database['public']['Enums']['СapabilityСategory'];
-          id?: Database['public']['Enums']['OrgMemberPermissions'];
-          label?: string;
-          sort_order?: number;
-        };
-        Relationships: [];
-      };
-      organizations: {
-        Row: {
-          avatar_path: string | null;
-          created_at: string;
-          deleted_at: string | null;
-          id: string;
-          organization_name: string;
-        };
-        Insert: {
-          avatar_path?: string | null;
-          created_at?: string;
-          deleted_at?: string | null;
-          id?: string;
-          organization_name: string;
-        };
-        Update: {
-          avatar_path?: string | null;
-          created_at?: string;
-          deleted_at?: string | null;
-          id?: string;
-          organization_name?: string;
-        };
-        Relationships: [];
-      };
-      organizations_locations: {
-        Row: {
-          autocomplete_description: string;
-          branch_id: string;
-          city: string;
-          coords: unknown;
-          country: string;
-          country_code: string;
-          created_at: string;
-          formatted_address: string;
-          id: string;
-          is_head_office: boolean | null;
-          latitude: number;
-          longitude: number;
-          place_id: string;
-          postal_code: string;
-          region: string;
-          street_name: string;
-          street_number: string;
-        };
-        Insert: {
-          autocomplete_description: string;
-          branch_id: string;
-          city: string;
-          coords: unknown;
-          country: string;
-          country_code: string;
-          created_at?: string;
-          formatted_address: string;
-          id?: string;
-          is_head_office?: boolean | null;
-          latitude: number;
-          longitude: number;
-          place_id: string;
-          postal_code: string;
-          region: string;
-          street_name: string;
-          street_number: string;
-        };
-        Update: {
-          autocomplete_description?: string;
-          branch_id?: string;
-          city?: string;
-          coords?: unknown;
-          country?: string;
-          country_code?: string;
-          created_at?: string;
-          formatted_address?: string;
-          id?: string;
-          is_head_office?: boolean | null;
-          latitude?: number;
-          longitude?: number;
-          place_id?: string;
-          postal_code?: string;
-          region?: string;
-          street_name?: string;
-          street_number?: string;
-        };
-        Relationships: [
-          {
-            foreignKeyName: 'organizations_locations_branch_id_fkey';
-            columns: ['branch_id'];
-            isOneToOne: false;
-            referencedRelation: 'organization_branches';
-            referencedColumns: ['id'];
-          },
-        ];
-      };
-      organizations_members: {
-        Row: {
-          created_at: string;
-          deleted_at: string | null;
-          email: string;
-          first_name: string;
-          gender: Database['public']['Enums']['Gender'];
-          id: string;
-          last_name: string;
-          onboarding_copleted_step: number;
-          organization_id: string;
-          position: string;
-          role: Database['public']['Enums']['OrganizationMemberRole'];
-          username: string;
-        };
-        Insert: {
-          created_at?: string;
-          deleted_at?: string | null;
-          email: string;
-          first_name: string;
-          gender: Database['public']['Enums']['Gender'];
-          id: string;
-          last_name: string;
-          onboarding_copleted_step?: number;
-          organization_id: string;
-          position: string;
-          role: Database['public']['Enums']['OrganizationMemberRole'];
-          username: string;
-        };
-        Update: {
-          created_at?: string;
-          deleted_at?: string | null;
-          email?: string;
-          first_name?: string;
-          gender?: Database['public']['Enums']['Gender'];
-          id?: string;
-          last_name?: string;
-          onboarding_copleted_step?: number;
-          organization_id?: string;
-          position?: string;
-          role?: Database['public']['Enums']['OrganizationMemberRole'];
-          username?: string;
-        };
-        Relationships: [
-          {
-            foreignKeyName: 'organizations_members_organization_id_fkey';
-            columns: ['organization_id'];
-            isOneToOne: false;
-            referencedRelation: 'organizations';
-            referencedColumns: ['id'];
-          },
-        ];
-      };
-      organizations_members_access: {
-        Row: {
-          branch_id: string | null;
-          created_at: string;
-          id: string;
-          member_id: string;
-          permission_id: Database['public']['Enums']['OrgMemberPermissions'];
-        };
-        Insert: {
-          branch_id?: string | null;
-          created_at?: string;
-          id?: string;
-          member_id: string;
-          permission_id: Database['public']['Enums']['OrgMemberPermissions'];
-        };
-        Update: {
-          branch_id?: string | null;
-          created_at?: string;
-          id?: string;
-          member_id?: string;
-          permission_id?: Database['public']['Enums']['OrgMemberPermissions'];
-        };
-        Relationships: [
-          {
-            foreignKeyName: 'organizations_members_access_branch_id_fkey';
-            columns: ['branch_id'];
-            isOneToOne: false;
-            referencedRelation: 'organization_branches';
-            referencedColumns: ['id'];
-          },
-          {
-            foreignKeyName: 'organizations_members_access_member_id_fkey';
-            columns: ['member_id'];
-            isOneToOne: false;
-            referencedRelation: 'organizations_members';
-            referencedColumns: ['id'];
-          },
-          {
-            foreignKeyName: 'organizations_members_access_permission_id_fkey';
-            columns: ['permission_id'];
-            isOneToOne: false;
-            referencedRelation: 'organization_permissions';
-            referencedColumns: ['id'];
-          },
-        ];
       };
       organizations_network: {
         Row: {
@@ -2301,11 +2115,15 @@ export type Database = {
         Args: { p_context: string; p_user_id: string };
         Returns: {
           brief: string | null;
+          campaign_end_at: string | null;
+          campaign_start_at: string | null;
           category_id: string | null;
           created_at: string;
           creator_id: string;
           deleted_at: string | null;
+          description: string | null;
           end_at: string | null;
+          event_type: string | null;
           id: string;
           nda_file_name: string | null;
           nda_file_path: string | null;
@@ -2341,7 +2159,6 @@ export type Database = {
           isSetofReturn: false;
         };
       };
-      create_draft_or_event: { Args: { payload: Json }; Returns: string };
       create_event_group_chat: {
         Args: { p_brand_id: string; p_event_id: string };
         Returns: string;
@@ -2429,6 +2246,7 @@ export type Database = {
         Returns: Json;
       };
       get_brand_events_counts: { Args: { p_brand_id: string }; Returns: Json };
+      get_cancellation_info: { Args: { p_event_id: string }; Returns: Json };
       get_chat_messages: {
         Args: { p_chat_id: string; p_cursor?: string; p_limit?: number };
         Returns: {
@@ -2554,6 +2372,19 @@ export type Database = {
       };
       get_me_org_member: { Args: never; Returns: Json };
       get_my_org_user: { Args: never; Returns: Json };
+      get_org_flags: {
+        Args: { p_office_id: string };
+        Returns: {
+          brand_id: string;
+          created_at: string;
+          created_by_name: string;
+          description: string;
+          event_name: string;
+          flag_type: string;
+          id: string;
+          reason: string;
+        }[];
+      };
       get_organization_events: {
         Args: {
           end_after?: string;
@@ -2686,9 +2517,14 @@ export type Database = {
           total: number;
         }[];
       };
+      get_user_network_ids: { Args: never; Returns: string[] };
       guard_office_any_capability: {
         Args: { p_capability_codes: string[]; p_office_id: string };
         Returns: undefined;
+      };
+      guard_office_any_capability_bool: {
+        Args: { p_capability_codes: string[]; p_office_id: string };
+        Returns: boolean;
       };
       guard_office_capability: {
         Args: { p_capability_code: string; p_office_id: string };
@@ -2871,7 +2707,7 @@ export type Database = {
         | 'mixed'
         | 'other_not_sure';
       EventPaymentMode: 'per_hour' | 'fixed';
-      EventStatus: 'draft' | 'published';
+      EventStatus: 'draft' | 'published' | 'cancelled';
       EventVisibility: 'private' | 'public';
       EyeColour:
         | 'blue'
@@ -3135,7 +2971,7 @@ export const Constants = {
         'other_not_sure',
       ],
       EventPaymentMode: ['per_hour', 'fixed'],
-      EventStatus: ['draft', 'published'],
+      EventStatus: ['draft', 'published', 'cancelled'],
       EventVisibility: ['private', 'public'],
       EyeColour: [
         'blue',

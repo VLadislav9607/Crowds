@@ -62,6 +62,26 @@ export interface OfficeMembershipDto {
   capabilities: string[];
 }
 
+export type CapabilityCode =
+  | 'invite_team_members'
+  | 'give_feedback'
+  | 'rate_applicants'
+  | 'one_on_one_message'
+  | 'create_event_draft'
+  | 'recruit_applicants'
+  | 'view_earnings'
+  | 'create_events'
+  | 'view_events'
+  | 'message_applicants'
+  | 'authorize_talent_payments'
+  | 'edit_team_members'
+  | 'edit_business_info'
+  | 'edit_bank_info'
+  | 'manage_checkins'
+  | 'approve_applicants'
+  | 'group_message'
+  | 'authorize_talent_one_on_one_payments';
+
 /** MVP convenience: single network + single brand + multiple offices */
 export interface CurrentOrganizationContext {
   organization_network_id: string;
@@ -71,4 +91,6 @@ export interface CurrentOrganizationContext {
     logo_path: string;
   };
   offices: OfficeMembershipDto[];
+  isSuperAdmin: boolean;
+  capabilitiesAccess: Record<CapabilityCode, boolean>;
 }

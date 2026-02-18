@@ -122,7 +122,7 @@ export const HeadGlobalLocationStep = forwardRef<
             }
             imgUri={pickedLogo?.uri}
             containerStyle={styles.imageContainer}
-            bucket="organizations_avatars"
+            bucket="brand_avatars"
             placeholderIcon={ICONS.orgAvatarLogo('lihgt_gray4')}
             CustomElements={
               <View style={styles.cameraWrapper}>
@@ -134,7 +134,7 @@ export const HeadGlobalLocationStep = forwardRef<
 
         <ImageSourcePickerModal
           bottomSheetRef={imageSourcePickerModalRef}
-          validateForBucket="organizations_avatars"
+          validateForBucket="brand_avatars"
         />
       </View>
     );

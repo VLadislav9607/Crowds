@@ -1,14 +1,22 @@
-import { useRef } from 'react';
+import { useEffect, useRef } from 'react';
 import { useCreateEventForm } from '../../../hooks';
 import { useBoolean } from '@hooks';
 import { ActionConfirmationModalRef } from '@modules/common';
-import { goBack } from '@navigation';
+import { goBack, Screens, useScreenNavigation } from '@navigation';
 import { useErrorsScroll } from './useErrorsScroll';
 import { useDraftControll } from './useDraftControll';
 import { useEventControll } from './useEventControll';
 
 export const useCreateEventScreen = () => {
   const { formData } = useCreateEventForm();
+  const { params } = useScreenNavigation<Screens.CreateEvent>();
+
+  useEffect(() => {
+    if (params?.eventType) {
+      formData.setValue('eventType', params.eventType);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [params?.eventType]);
 
   const actionConfirmationModalRef = useRef<ActionConfirmationModalRef>(null);
 
@@ -20,6 +28,8 @@ export const useCreateEventScreen = () => {
     scrollViewRef,
     ageGroupWidgetRefs,
     basicInfoSectionRef,
+    descriptionSectionRef,
+    campaignTimeSectionRef,
     dateTimeSectionRef,
     eventBriefSectionRef,
     visibilitySectionRef,
@@ -62,6 +72,8 @@ export const useCreateEventScreen = () => {
     savedToDraftModalRef,
     scrollViewRef,
     basicInfoSectionRef,
+    descriptionSectionRef,
+    campaignTimeSectionRef,
     dateTimeSectionRef,
     eventBriefSectionRef,
     visibilitySectionRef,

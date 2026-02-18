@@ -5,10 +5,20 @@ export const styles = StyleSheet.create({
   container: {
     flexDirection: 'row',
     alignItems: 'center',
-    paddingVertical: 12,
-    paddingHorizontal: 16,
-    borderBottomWidth: 1,
-    borderBottomColor: COLORS.gray,
+    paddingVertical: 16,
+    borderTopWidth: 1,
+    borderTopColor: COLORS.gray_50,
+  },
+  positionContainer: {
+    marginTop: 4,
+    borderWidth: 1,
+    borderColor: COLORS.main,
+    borderRadius: 100,
+    height: 25,
+    paddingHorizontal: 10,
+    alignSelf: 'flex-start',
+    justifyContent: 'center',
+    alignItems: 'center',
   },
   avatar: {
     width: 40,
@@ -24,7 +34,7 @@ export const styles = StyleSheet.create({
   },
   info: {
     flex: 1,
-    gap: 2,
+    gap: 3,
   },
   secondaryText: {
     color: COLORS.dark_gray,

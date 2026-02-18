@@ -122,9 +122,16 @@ const ageGroupSchema = z
 
 export const createPublishedEventSchema = z
   .object({
+    eventType: z.enum(['media_production', 'brand_activation']),
     title: z.string().min(1, 'Title of the event is required'),
-    location: parsedLocationSchema,
+    description: z.string().min(1, 'Description is required'),
+    locationType: z.enum(['entire_country', 'specific_location']),
+    officeId: z.string().optional(),
+    locationCountryCode: z.string().optional(),
+    location: parsedLocationSchema.optional().nullable(),
     visibility: z.enum(['public', 'private']),
+    campaignStartAt: z.date().optional().nullable(),
+    campaignEndAt: z.date().optional().nullable(),
     startAt: z
       .date({ message: 'Start date is required' })
       .refine(validateEndDateNotInPast, {
@@ -165,6 +172,61 @@ export const createPublishedEventSchema = z
   .refine(validateRegistrationClosingDate, {
     message: 'Registration closing date cannot be after start date',
     path: ['registrationClosingAt'],
+  })
+  .superRefine((data, ctx) => {
+    if (data.locationType === 'specific_location' && !data.location) {
+      ctx.addIssue({
+        code: z.ZodIssueCode.custom,
+        message: 'Please select a location',
+        path: ['location'],
+      });
+    }
+    if (data.locationType === 'entire_country' && !data.locationCountryCode) {
+      ctx.addIssue({
+        code: z.ZodIssueCode.custom,
+        message: 'Please select a country',
+        path: ['locationCountryCode'],
+      });
+    }
+    if (
+      data.eventType === 'media_production' &&
+      data.locationType === 'entire_country'
+    ) {
+      ctx.addIssue({
+        code: z.ZodIssueCode.custom,
+        message: 'Film/TV events require a specific location',
+        path: ['locationType'],
+      });
+    }
+    if (
+      data.campaignStartAt &&
+      data.campaignEndAt &&
+      data.campaignStartAt >= data.campaignEndAt
+    ) {
+      ctx.addIssue({
+        code: z.ZodIssueCode.custom,
+        message: 'Campaign start must be before campaign end',
+        path: ['campaignStartAt'],
+      });
+    }
+    if (
+      data.campaignStartAt &&
+      data.startAt &&
+      data.startAt < data.campaignStartAt
+    ) {
+      ctx.addIssue({
+        code: z.ZodIssueCode.custom,
+        message: 'Event start date must be within the campaign period',
+        path: ['startAt'],
+      });
+    }
+    if (data.campaignEndAt && data.endAt && data.endAt > data.campaignEndAt) {
+      ctx.addIssue({
+        code: z.ZodIssueCode.custom,
+        message: 'Event end date must be within the campaign period',
+        path: ['endAt'],
+      });
+    }
   });
 
 export type CreateEventFormData = z.infer<typeof createPublishedEventSchema>;
