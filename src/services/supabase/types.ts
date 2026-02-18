@@ -449,42 +449,42 @@ export type Database = {
       };
       event_cancellations: {
         Row: {
+          brand_id: string;
           cancelled_at: string;
           cancelled_by_user_id: string;
           event_id: string;
           id: string;
-          office_id: string;
           reason: string | null;
         };
         Insert: {
+          brand_id: string;
           cancelled_at?: string;
           cancelled_by_user_id: string;
           event_id: string;
           id?: string;
-          office_id: string;
           reason?: string | null;
         };
         Update: {
+          brand_id?: string;
           cancelled_at?: string;
           cancelled_by_user_id?: string;
           event_id?: string;
           id?: string;
-          office_id?: string;
           reason?: string | null;
         };
         Relationships: [
+          {
+            foreignKeyName: 'event_cancellations_brand_id_fkey';
+            columns: ['brand_id'];
+            isOneToOne: false;
+            referencedRelation: 'brands';
+            referencedColumns: ['id'];
+          },
           {
             foreignKeyName: 'event_cancellations_event_id_fkey';
             columns: ['event_id'];
             isOneToOne: false;
             referencedRelation: 'events';
-            referencedColumns: ['id'];
-          },
-          {
-            foreignKeyName: 'event_cancellations_office_id_fkey';
-            columns: ['office_id'];
-            isOneToOne: false;
-            referencedRelation: 'offices';
             referencedColumns: ['id'];
           },
         ];
@@ -1684,6 +1684,7 @@ export type Database = {
           city: string;
           coords: unknown;
           country: string;
+          country_code: string | null;
           created_at: string;
           formatted_address: string;
           id: string;
@@ -1699,6 +1700,7 @@ export type Database = {
           city: string;
           coords: unknown;
           country: string;
+          country_code?: string | null;
           created_at?: string;
           formatted_address: string;
           id?: string;
@@ -1714,6 +1716,7 @@ export type Database = {
           city?: string;
           coords?: unknown;
           country?: string;
+          country_code?: string | null;
           created_at?: string;
           formatted_address?: string;
           id?: string;
@@ -2163,10 +2166,6 @@ export type Database = {
         Args: { p_brand_id: string; p_event_id: string };
         Returns: string;
       };
-      create_event_with_preferences: {
-        Args: { payload: Json };
-        Returns: string;
-      };
       create_new_draft_or_event: { Args: { payload: Json }; Returns: string };
       create_talent_events_folder: {
         Args: { p_name: string };
@@ -2302,10 +2301,6 @@ export type Database = {
         Args: { p_event_id: string };
         Returns: Json;
       };
-      get_event_details_org_member: {
-        Args: { p_event_id: string };
-        Returns: Json;
-      };
       get_event_participants_by_status: {
         Args: {
           p_event_id: string;
@@ -2337,10 +2332,6 @@ export type Database = {
         Args: { p_event_id: string; p_limit?: number; p_offset?: number };
         Returns: Json;
       };
-      get_events_stats_by_organization: {
-        Args: { p_organization_id: string };
-        Returns: Json;
-      };
       get_invitable_talents: {
         Args: {
           p_event_id: string;
@@ -2370,7 +2361,6 @@ export type Database = {
         };
         Returns: Json;
       };
-      get_me_org_member: { Args: never; Returns: Json };
       get_my_org_user: { Args: never; Returns: Json };
       get_org_flags: {
         Args: { p_office_id: string };
@@ -2530,14 +2520,6 @@ export type Database = {
         Args: { p_capability_code: string; p_office_id: string };
         Returns: undefined;
       };
-      has_org_member_permission: {
-        Args: {
-          p_branch_id: string;
-          p_member_id: string;
-          p_permission: string;
-        };
-        Returns: boolean;
-      };
       hide_event: { Args: { p_event_id: string }; Returns: undefined };
       is_chat_participant: { Args: { p_chat_id: string }; Returns: boolean };
       is_user_available: {
@@ -2611,14 +2593,6 @@ export type Database = {
           p_start_at?: string;
         };
         Returns: undefined;
-      };
-      update_organization: {
-        Args: {
-          p_avatar_path?: string;
-          p_organization_id: string;
-          p_organization_name?: string;
-        };
-        Returns: Json;
       };
       update_talent_availability: {
         Args: {

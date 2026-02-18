@@ -32,4 +32,5 @@ export interface EventForOrgMemberDto
   event_location: Omit<Tables<'event_locations'>, 'created_at'>;
   event_age_groups: EventAgeGroupDto[];
   qr_codes_count: number;
+  office_country_code: string | null;
 }

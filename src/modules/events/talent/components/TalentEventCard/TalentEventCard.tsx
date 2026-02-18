@@ -18,7 +18,7 @@ import { TalentEventCardProps } from './types';
 import { useState } from 'react';
 import { ITalentEventCard } from './types';
 import { TalentEventsTabs } from '../../../types';
-import { getTimezoneOffsetHours } from '@helpers';
+import { getTimezoneOffsetHours, getCountryNameByCode } from '@helpers';
 
 export const TalentEventCard = ({
   event,
@@ -135,6 +135,8 @@ export const TalentEventCard = ({
     ? event?.location?.formatted_address
     : event?.location?.city && event?.location?.country
     ? `${event?.location?.city}, ${event?.location?.country}`
+    : event?.office_country_code
+    ? getCountryNameByCode(event.office_country_code)
     : '';
 
   const handleSavePress = () => {
@@ -186,7 +188,7 @@ export const TalentEventCard = ({
               />
             </View>
 
-            <If condition={!!event.location}>
+            <If condition={!!location}>
               <IconText
                 icon={ICONS.locationPin('main')}
                 iconSize={14}

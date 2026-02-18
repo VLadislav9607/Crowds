@@ -8,6 +8,7 @@ import { formatInTimeZone } from 'date-fns-tz';
 import { AppImage, If } from '@components';
 import { calculateEventDuration } from '../../../helpers';
 import { ActionConfirmationModalRef } from '@modules/common';
+import { getCountryNameByCode } from '@helpers';
 import { goToScreen, Screens } from '@navigation';
 
 export interface IOrgBaseEventCardProps {
@@ -45,18 +46,23 @@ export const OrgBaseEventCard = ({
     0,
   );
 
-  // const peoplesCount =23
+  const officeCountryName = event?.office_country_code
+    ? getCountryNameByCode(event.office_country_code)
+    : undefined;
+
   const isSomeDetailsPresent =
     !!startAt || !!eventDuration.formatted || !!peoplesCount;
-  const isLocationPresent = !!event?.event_location?.formatted_address;
+  const isLocationPresent =
+    !!event?.event_location?.formatted_address || !!officeCountryName;
 
   const isSomeDataPresent = isSomeDetailsPresent || isLocationPresent;
 
+  const isDraft = event?.status === 'draft';
   return (
     <TouchableOpacity
-      activeOpacity={0.8}
+      activeOpacity={isDraft ? 1 : 0.8}
       style={cardStyles.container}
-      onPress={onPress}
+      onPress={isDraft ? undefined : onPress}
     >
       {/* Header Row */}
       <View style={cardStyles.nameRow}>
@@ -71,7 +77,7 @@ export const OrgBaseEventCard = ({
       </If>
 
       {/* Info Section */}
-      <If condition={isSomeDetailsPresent}>
+      <If condition={isSomeDataPresent}>
         <View style={cardStyles.infoContainer}>
           <If
             condition={!!organizationMember?.current_context?.brand?.logo_path}
@@ -125,7 +131,11 @@ export const OrgBaseEventCard = ({
             <If condition={isLocationPresent}>
               <IconText
                 icon={ICONS.locationPin('main')}
-                text={event?.event_location?.formatted_address || 'No location'}
+                text={
+                  event?.event_location?.formatted_address ||
+                  officeCountryName ||
+                  ''
+                }
                 textProps={{
                   numberOfLines: 1,
                   color: 'gray_primary',
