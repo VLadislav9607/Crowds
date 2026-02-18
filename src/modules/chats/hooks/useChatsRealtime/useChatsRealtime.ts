@@ -4,11 +4,11 @@ import { realtimeService } from '@services';
 import { useGetMe } from '@actions';
 import { chatsCache } from '../../cache';
 
-export const useChatsRealtime = () => {
+export const useChatsRealtime = (enabled = true) => {
   const { me } = useGetMe();
 
   useEffect(() => {
-    if (!me?.id) return;
+    if (!me?.id || !enabled) return;
 
     const subscribe = () => {
       realtimeService.subscribe({
@@ -32,5 +32,5 @@ export const useChatsRealtime = () => {
     subscribe();
 
     return () => realtimeService.unsubscribe(`chats-updates: ${me?.id}`);
-  }, [me?.id]);
+  }, [me?.id, enabled]);
 };

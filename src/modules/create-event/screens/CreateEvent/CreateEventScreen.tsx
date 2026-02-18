@@ -4,7 +4,9 @@ import { ScreenWithScrollWrapper } from '@components';
 import {
   AgePeopleSection,
   BasicInfoSection,
+  CampaignTimeSection,
   DateTimeSection,
+  DescriptionSection,
   EventBriefSection,
   OtherInfoSection,
   PaymentSection,
@@ -24,6 +26,8 @@ export const CreateEventScreen = () => {
     savedToDraftModalRef,
     scrollViewRef,
     basicInfoSectionRef,
+    descriptionSectionRef,
+    campaignTimeSectionRef,
     dateTimeSectionRef,
     eventBriefSectionRef,
     visibilitySectionRef,
@@ -56,6 +60,8 @@ export const CreateEventScreen = () => {
       >
         <View style={styles.container}>
           <BasicInfoSection ref={basicInfoSectionRef} />
+          <DescriptionSection ref={descriptionSectionRef} />
+          <CampaignTimeSection ref={campaignTimeSectionRef} />
           <DateTimeSection ref={dateTimeSectionRef} />
           <EventBriefSection ref={eventBriefSectionRef} />
           <VisibilitySection ref={visibilitySectionRef} />

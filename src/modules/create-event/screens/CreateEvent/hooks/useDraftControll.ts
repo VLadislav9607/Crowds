@@ -22,6 +22,7 @@ import { showMutationErrorToast } from '@helpers';
 import { SavedToDraftModalRef } from '../../../modals';
 import { Enums } from '@services';
 import { UseDraftControllProps } from '../types';
+import { findOfficeByCountryCode } from '../../../helpers/officeLocationHelpers';
 
 export const useDraftControll = ({
   formData,
@@ -29,7 +30,7 @@ export const useDraftControll = ({
   setShowFullScreenLoader,
 }: UseDraftControllProps) => {
   const { organizationMember } = useGetMe();
-  const officeId = organizationMember?.current_context?.offices[0]?.office_id!;
+  const offices = organizationMember?.current_context?.offices ?? [];
 
   const { params } = useScreenNavigation<Screens.CreateEvent>();
   const savedToDraftModalRef = useRef<SavedToDraftModalRef>(null);
@@ -148,21 +149,38 @@ export const useDraftControll = ({
         }
       : undefined;
 
+    const hasLocation = !!eventData.event_location;
+    const isEntireCountry = !hasLocation && !!eventData.office_id;
+
+    // For entire country, infer country code from office
+    const inferredCountryCode = isEntireCountry
+      ? offices.find(o => o.office_id === eventData.office_id)?.country_code
+      : undefined;
+
     return {
+      eventType:
+        ((eventData as any).event_type as
+          | 'media_production'
+          | 'brand_activation') || 'brand_activation',
       title: eventData.title || '',
+      description: (eventData as any).description || '',
+      locationType: isEntireCountry ? 'entire_country' : 'specific_location',
+      officeId: eventData.office_id || '',
+      locationCountryCode: inferredCountryCode,
       location: location,
       visibility: (eventData.visibility as 'public' | 'private') || 'public',
+      campaignStartAt: parseDate((eventData as any).campaign_start_at),
+      campaignEndAt: parseDate((eventData as any).campaign_end_at),
       startAt: parseDate(eventData.start_at),
       endAt: parseDate(eventData.end_at),
       ageGroups: ageGroups,
       category: eventData.category_id || '',
-      tags: undefined, // Tags might be in a separate table, skip for now
+      tags: undefined,
       paymentMode: (eventData.payment_mode === 'per_hour'
         ? 'perHour'
         : eventData.payment_mode === 'fixed'
         ? 'fixed'
         : 'perHour') as 'perHour' | 'fixed',
-      // Якщо payment_amount є 0 або null - передаємо undefined
       paymentAmount:
         eventData.payment_amount && eventData.payment_amount > 0
           ? eventData.payment_amount
@@ -170,7 +188,6 @@ export const useDraftControll = ({
       eventBrief: eventData.brief || '',
       ndaDocumentName: eventData.nda_file_name || '',
       ndaDocumentPath: eventData.nda_file_path || '',
-      // ndaDocument: eventData.nda_file_name || "",
       registrationClosingAt: parseDate(eventData.registration_closes_at),
     };
   };
@@ -201,7 +218,7 @@ export const useDraftControll = ({
 
   const prepareDraftDataToSave = async (
     values: CreateEventDraftFormData,
-  ): Promise<CreateEventDraftBodyDto> => {
+  ): Promise<CreateEventDraftBodyDto | null> => {
     const timezone = values.location?.timezone || 'UTC';
     const startAt = values.startAt
       ? fromZonedTime(values.startAt, timezone).toISOString()
@@ -212,23 +229,44 @@ export const useDraftControll = ({
     const registrationClosingAt = values.registrationClosingAt
       ? fromZonedTime(values.registrationClosingAt, timezone).toISOString()
       : undefined;
-    // Якщо paymentAmount є 0 або не встановлено - передаємо undefined
     const payment_amount =
       values.paymentAmount && values.paymentAmount > 0
         ? values.paymentAmount
         : undefined;
-    // Якщо location є null або не має обов'язкового поля country - передаємо undefined
-    // Для оновлення undefined буде конвертовано в null для видалення локації
-    const location =
+
+    let location;
+    if (values.locationType === 'entire_country') {
+      // No location for entire country — only office_id matters
+      location = undefined;
+    } else if (
       values.location &&
       values.location.country &&
       values.location.country.trim() !== ''
-        ? {
-            ...values.location,
-            coords: `POINT(${values.location.longitude} ${values.location.latitude})`,
-            timezone: values.location.timezone,
-          }
-        : undefined;
+    ) {
+      location = {
+        ...values.location,
+        coords: `POINT(${values.location.longitude} ${values.location.latitude})`,
+        timezone: values.location.timezone,
+      };
+    } else {
+      location = undefined;
+    }
+
+    // Resolve officeId: use form value, or fall back to first office
+    let resolvedOfficeId = values.officeId;
+    if (!resolvedOfficeId && values.locationCountryCode) {
+      const matchedOffice = findOfficeByCountryCode(
+        offices,
+        values.locationCountryCode,
+      );
+      if (matchedOffice) {
+        resolvedOfficeId = matchedOffice.office_id;
+      }
+    }
+    if (!resolvedOfficeId && offices.length > 0) {
+      resolvedOfficeId = offices[0].office_id;
+    }
+
     const ageGroups = values?.ageGroups?.length ? values.ageGroups : undefined;
     const category = values.category || undefined;
     const eventBrief = values.eventBrief || undefined;
@@ -253,10 +291,23 @@ export const useDraftControll = ({
     const visibility =
       values.visibility === null ? undefined : values.visibility;
 
+    const eventType = values.eventType || undefined;
+    const description = values.description || undefined;
+    const campaignStartAt = values.campaignStartAt
+      ? fromZonedTime(values.campaignStartAt, timezone).toISOString()
+      : undefined;
+    const campaignEndAt = values.campaignEndAt
+      ? fromZonedTime(values.campaignEndAt, timezone).toISOString()
+      : undefined;
+
     return {
       title: values.title,
+      eventType,
+      description,
       category,
       visibility: visibility as Enums<'EventVisibility'> | undefined,
+      campaignStartAt,
+      campaignEndAt,
       startAt,
       endAt,
       registrationClosingAt,
@@ -267,7 +318,7 @@ export const useDraftControll = ({
       ageGroups,
       ndaDocumentName,
       ndaDocumentPath,
-      officeId: officeId,
+      officeId: resolvedOfficeId,
     };
   };
 
@@ -287,6 +338,10 @@ export const useDraftControll = ({
 
     try {
       const dto = await prepareDraftDataToSave(values);
+      if (!dto) {
+        setShowFullScreenLoader(false);
+        return;
+      }
 
       // Convert undefined values to null so database can delete these fields
       const body: UpdateDraftEventBodyDto = Object.fromEntries(
@@ -301,7 +356,6 @@ export const useDraftControll = ({
         body,
       });
     } catch (error) {
-      // Помилка вже оброблена в prepareDraftDataToSave або в мутаціях
       console.error('Error updating draft:', error);
     } finally {
       setShowFullScreenLoader(false);
@@ -325,10 +379,13 @@ export const useDraftControll = ({
 
     try {
       const dto = await prepareDraftDataToSave(values);
+      if (!dto) {
+        setShowFullScreenLoader(false);
+        return;
+      }
 
       await createEventDraftMutateAsync(dto as CreateEventDraftBodyDto);
     } catch (error) {
-      // Помилка вже оброблена в prepareDraftDataToSave або в мутаціях
       console.error('Error creating draft:', error);
     } finally {
       setShowFullScreenLoader(false);
@@ -341,6 +398,7 @@ export const useDraftControll = ({
       const mappedData = mapDraftDataToFormData(draftData);
       formData.reset(mappedData as CreateEventFormData);
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [draftData, isLoadingDraft, formData]);
 
   return {
@@ -348,5 +406,6 @@ export const useDraftControll = ({
     savedToDraftModalRef,
     isDraftEditing: !!params?.draftId,
     handleCreateDraft,
+    organizationMember,
   };
 };

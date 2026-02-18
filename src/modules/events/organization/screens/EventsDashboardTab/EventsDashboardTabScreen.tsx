@@ -3,9 +3,15 @@ import { AppText, GridBoard } from '@ui';
 import { EventsDashboardScreenLayout } from '../../layouts';
 import { useGetMe, useGetOrgEventsCounters } from '@actions';
 import { COLORS } from '@styles';
+import { If, NoAccess } from '@components';
+import { styles } from './styles';
+// import { OrganizationEventsList } from '../../components';
 
 export const EventsDashboardTabScreen = () => {
   const { organizationMember } = useGetMe();
+
+  const hasViewEventsAccess =
+    !!organizationMember?.current_context?.capabilitiesAccess.view_events;
 
   const { data: eventsCountersResp, isLoading } = useGetOrgEventsCounters({
     brand_id: organizationMember?.current_context?.brand?.id!,
@@ -64,13 +70,23 @@ export const EventsDashboardTabScreen = () => {
 
   return (
     <EventsDashboardScreenLayout>
-      <GridBoard items={eventDashboardConfig} />
+      <If condition={hasViewEventsAccess}>
+        <GridBoard items={eventDashboardConfig} />
 
-      <AppText typography="extra_bold_18" margin={{ bottom: 16 }}>
-        Today’s Events
-      </AppText>
+        <AppText typography="extra_bold_18" margin={{ bottom: 16 }}>
+          Today’s Events
+        </AppText>
 
-      {/* <OrganizationEventsList events={events} cardType="active" /> */}
+        {/* <OrganizationEventsList filters={{
+        brand_id: organizationMember?.current_context?.brand?.id!,
+        status_filter: 'published',
+        start_after: new Date().toISOString(),
+      }} /> */}
+      </If>
+
+      <If condition={!hasViewEventsAccess}>
+        <NoAccess containerStyle={styles.noAccessContainer} />
+      </If>
     </EventsDashboardScreenLayout>
   );
 };

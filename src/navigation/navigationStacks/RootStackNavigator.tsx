@@ -143,6 +143,9 @@ export const RootStackNavigator = () => {
       <RootStack.Screen
         name={Screens.CopyInviteLink}
         component={CopyInviteLinkScreen}
+        options={{
+          gestureEnabled: false,
+        }}
       />
 
       <RootStack.Screen

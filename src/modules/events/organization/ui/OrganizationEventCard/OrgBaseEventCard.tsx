@@ -73,10 +73,12 @@ export const OrgBaseEventCard = ({
       {/* Info Section */}
       <If condition={isSomeDetailsPresent}>
         <View style={cardStyles.infoContainer}>
-          <If condition={!!organizationMember?.organization?.avatar_path}>
+          <If
+            condition={!!organizationMember?.current_context?.brand?.logo_path}
+          >
             <AppImage
-              imgPath={organizationMember?.organization?.avatar_path}
-              bucket="organizations_avatars"
+              imgPath={organizationMember?.current_context?.brand?.logo_path}
+              bucket="brand_avatars"
               containerStyle={cardStyles.image}
             />
           </If>

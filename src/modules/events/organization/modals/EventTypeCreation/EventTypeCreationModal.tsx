@@ -1,3 +1,4 @@
+import { useState } from 'react';
 import { AppModal, CardSelector } from '@components';
 import { goToScreen, Screens } from '@navigation';
 import { StyleSheet } from 'react-native';
@@ -11,11 +12,17 @@ export const EventTypeCreationModal = ({
   isVisible,
   onClose,
 }: EventTypeCreationModal) => {
-  const handleSelect = () => {
+  const [selectedType, setSelectedType] = useState<
+    'media_production' | 'brand_activation'
+  >('brand_activation');
+
+  const handleSelect = (value: string) => {
+    const eventType = value as 'media_production' | 'brand_activation';
+    setSelectedType(eventType);
     onClose();
 
     setTimeout(() => {
-      goToScreen(Screens.CreateEvent);
+      goToScreen(Screens.CreateEvent, { eventType });
     }, 300);
   };
 
@@ -38,7 +45,7 @@ export const EventTypeCreationModal = ({
             value: 'brand_activation',
           },
         ]}
-        selectedValue="brand_activation"
+        selectedValue={selectedType}
         onSelect={handleSelect}
       />
     </AppModal>

@@ -1,15 +1,24 @@
-import { ScreenWrapper } from '@components';
+import { If, NoAccess, ScreenWrapper } from '@components';
 import { useGetMe, useMyChats } from '@actions';
 
 import { ChatList } from '../../components';
 import { useChatsRealtime } from '../../hooks';
+import { styles } from './styles';
 
 export const ChatsTabScreen = () => {
-  const { isTalent } = useGetMe();
+  const { isTalent, organizationMember } = useGetMe();
 
-  const { data, isLoading } = useMyChats();
+  const currentContext = organizationMember?.current_context;
 
-  useChatsRealtime();
+  const hasAccessToChats = !!(
+    isTalent ||
+    currentContext?.capabilitiesAccess.group_message ||
+    currentContext?.capabilitiesAccess.one_on_one_message
+  );
+
+  const { data, isLoading } = useMyChats({ enabled: hasAccessToChats });
+
+  useChatsRealtime(hasAccessToChats);
 
   return (
     <ScreenWrapper
@@ -18,12 +27,17 @@ export const ChatsTabScreen = () => {
       showBackButton={false}
       withBottomTabBar
     >
-      <ChatList
-        chats={data || []}
-        isLoading={isLoading}
-        variant={isTalent ? 'talent' : 'organization'}
-        withBottomTab
-      />
+      <If condition={hasAccessToChats}>
+        <ChatList
+          chats={data || []}
+          isLoading={isLoading}
+          variant={isTalent ? 'talent' : 'organization'}
+          withBottomTab
+        />
+      </If>
+      <If condition={!hasAccessToChats}>
+        <NoAccess containerStyle={styles.noAccessContainer} />
+      </If>
     </ScreenWrapper>
   );
 };
