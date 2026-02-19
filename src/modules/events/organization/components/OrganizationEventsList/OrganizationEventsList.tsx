@@ -65,6 +65,7 @@ export const OrganizationEventsList = ({
     <>
       <AppFlashList
         data={events}
+        extraData={events.length}
         keyExtractor={item => item.id}
         renderItem={renderEventCard}
         gap={4}

@@ -48,7 +48,7 @@ export const ChatList = ({
       skeleton={isLoading ? <ChatListSkeleton /> : undefined}
       emptyText={emptyText}
       withBottomTab={withBottomTab}
-      extraData={chats}
+      extraData={chats.length}
       contentContainerStyle={styles.container}
     />
   );

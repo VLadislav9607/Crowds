@@ -1,7 +1,7 @@
 import { OrgEventListItemDto } from '@actions';
 import { ActionConfirmationModalRef } from '@modules/common';
 
-export type EventCardType = 'draft' | 'active' | 'upcoming' | 'past';
+export type EventCardType = 'draft' | 'active' | 'upcoming' | 'past' | 'cancelled';
 
 export interface IEventData {
   id: string;
