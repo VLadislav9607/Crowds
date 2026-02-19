@@ -9,6 +9,7 @@ import { EVENTS_CATEGORIES } from '../../../constants';
 import { SearchEventsList } from '../../components';
 import { goToScreen, Screens, TAB_BAR_TOTAL_HEIGHT } from '@navigation';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
+import { NotificationBellBadge } from '../../../../notifications';
 
 export const TalentEventsHomeTab = () => {
   const { bottom } = useSafeAreaInsets();
@@ -42,8 +43,8 @@ export const TalentEventsHomeTab = () => {
       withBottomTabBar={true}
       rightIcons={[
         {
-          icon: () => ICONS.bell('white'),
-          onPress: () => {},
+          element: <NotificationBellBadge color="white" size={20} />,
+          onPress: () => goToScreen(Screens.Notifications),
           size: 20,
         },
       ]}

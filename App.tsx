@@ -10,6 +10,7 @@ import {
   getDeviceId,
   subscribeToTokenRefresh,
   queryClient,
+  setNotifeeForegroundEventHandler,
 } from './src/services';
 import {
   AppNavigation,
@@ -63,6 +64,11 @@ const App = () => {
       .catch(() => {
         onNavigateAfterAuth();
       });
+  }, []);
+
+  useEffect(() => {
+    const unsubscribe = setNotifeeForegroundEventHandler();
+    return unsubscribe;
   }, []);
 
   useEffect(() => {

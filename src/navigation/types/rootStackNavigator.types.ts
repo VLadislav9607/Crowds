@@ -113,4 +113,5 @@ export type RootStackParamList = {
 
   //Profile
   [Screens.NotificationSettings]: { role: Role };
+  [Screens.Notifications]: undefined;
 };

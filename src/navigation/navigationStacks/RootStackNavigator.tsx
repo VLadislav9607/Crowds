@@ -43,7 +43,10 @@ import {
   ChangePasswordScreen,
   OrgProfileSetupScreen,
 } from '@modules/profile';
-import { NotificationSettingsScreen } from '../../modules/notifications';
+import {
+  NotificationSettingsScreen,
+  NotificationsListScreen,
+} from '../../modules/notifications';
 import { ManageEventScreen } from '../../modules/event-management';
 import { ChatRoomScreen } from '../../modules/chats';
 import { EventParticipantsScreen } from '../../modules/event-participants';
@@ -290,6 +293,10 @@ export const RootStackNavigator = () => {
       <RootStack.Screen
         name={Screens.FlagOrganization}
         component={FlagOrganizationScreen}
+      />
+      <RootStack.Screen
+        name={Screens.Notifications}
+        component={NotificationsListScreen}
       />
     </RootStack.Navigator>
   );

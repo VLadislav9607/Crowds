@@ -8,6 +8,8 @@ import { TYPOGRAPHY } from '@styles';
 
 import { EventTypeCreationModal } from '../../modals';
 import { useGetMe } from '@actions';
+import { goToScreen, Screens } from '@navigation';
+import { NotificationBellBadge } from '../../../../notifications';
 
 interface IProps {
   children: React.ReactNode;
@@ -29,6 +31,13 @@ export const EventsDashboardScreenLayout = ({ children }: IProps) => {
       headerVariant="withLogoAndImageBg"
       withBottomTabBar={true}
       contentContainerStyle={styles.contentContainer}
+      rightIcons={[
+        {
+          element: <NotificationBellBadge color="white" size={20} />,
+          onPress: () => goToScreen(Screens.Notifications),
+          size: 20,
+        },
+      ]}
     >
       <If condition={hasCreateEventsAccess || hasCreateEventDraftAccess}>
         <View style={styles.row}>

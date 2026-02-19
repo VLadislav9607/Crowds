@@ -154,9 +154,11 @@ const RightIcons = ({
   if (!rightIcons) return null;
   return (
     <View style={styles.rightIconsWrapper}>
-      {rightIcons.map(({ icon, onPress, size }) => (
-        <Pressable key={icon()} hitSlop={10} onPress={onPress}>
-          <SvgXml xml={icon()} width={size || 24} height={size || 24} />
+      {rightIcons.map(({ icon, element, onPress, size }, index) => (
+        <Pressable key={icon ? icon() : `right-icon-${index}`} hitSlop={10} onPress={onPress}>
+          {element ?? (
+            icon && <SvgXml xml={icon()} width={size || 24} height={size || 24} />
+          )}
         </Pressable>
       ))}
     </View>

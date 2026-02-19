@@ -39,4 +39,6 @@ export const TANSTACK_QUERY_KEYS = {
   GET_ORG_FLAGS: 'get_org_flags',
   GET_TEAM_MEMBERS: 'get_team_members',
   GET_NOTIFICATION_SETTINGS: 'get_notification_settings',
+  GET_NOTIFICATIONS: 'get_notifications',
+  GET_UNREAD_NOTIFICATIONS_COUNT: 'get_unread_notifications_count',
 } as const;

@@ -79,4 +79,5 @@ export enum Screens {
 
   //Profile
   NotificationSettings = 'NotificationSettings',
+  Notifications = 'Notifications',
 }
