@@ -12,6 +12,9 @@ export const createPublishedEventAction = async (
   const { data, error } = await supabase.rpc('create_new_draft_or_event', {
     payload: { ...body, status: eventStatus } as any,
   });
+
+  console.log('data', data);
+  console.log('error', error);
   if (error) {
     throw error;
   }

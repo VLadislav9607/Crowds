@@ -43,10 +43,14 @@ export interface AgeGroupDto {
 }
 
 export interface CreatePublishedEventBodyDto {
-  office_id: string;
+  officeId: string;
+  eventType: string;
   title: string;
+  description: string;
   category: string;
   visibility: Enums<'EventVisibility'>;
+  campaignStartAt?: string;
+  campaignEndAt?: string;
   startAt: string;
   startTime?: string;
   endAt: string;

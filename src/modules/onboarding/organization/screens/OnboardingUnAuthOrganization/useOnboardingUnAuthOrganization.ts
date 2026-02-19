@@ -15,12 +15,13 @@ import {
 } from '../../forms';
 
 import {
-  useCheckUsernameExist,
-  useSendOtp,
-  useVerifyOtp,
   CreateGlobalOrgResDto,
   CreateLocalOrgResDto,
   prefetchUseGetMe,
+  useBucketUpload,
+  useCheckUsernameExist,
+  useSendOtp,
+  useVerifyOtp,
 } from '@actions';
 import { showErrorToast, showMutationErrorToast } from '@helpers';
 import { CreatePasswordFormRef } from '../../../forms';
@@ -48,6 +49,8 @@ export const useOnboardingUnAuthOrganization = () => {
   const organizationCreatorInformationFormRef =
     useRef<OrganizationCreatorInformationFormRef>(null);
 
+  const { mutateAsync: bucketUploadMutateAsync } = useBucketUpload();
+
   const {
     mutateAsync: checkUsernameExistMutateAsync,
     isPending: isCheckingUsernameExist,
@@ -60,7 +63,14 @@ export const useOnboardingUnAuthOrganization = () => {
       access_token: responseData.session.access_token,
       refresh_token: responseData.session.refresh_token,
     });
-    await prefetchUseGetMe();
+    const userData = await prefetchUseGetMe();
+    if (data.image) {
+      await bucketUploadMutateAsync({
+        bucket: 'brand_avatars',
+        file: data.image,
+        folderName: userData.organizationMember?.current_context?.brand?.id,
+      });
+    }
 
     uinSaveConfirmationModalRef.current?.open({
       uin: responseData.uin,

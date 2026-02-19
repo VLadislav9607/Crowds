@@ -7,9 +7,16 @@ export const useCreateEventForm = () => {
   const formData = useForm<CreateEventFormData>({
     resolver: zodResolver(createPublishedEventSchema),
     defaultValues: {
+      eventType: 'brand_activation',
       title: '',
+      description: '',
+      locationType: 'specific_location',
+      officeId: '',
+      locationCountryCode: undefined,
       location: undefined,
       visibility: 'public',
+      campaignStartAt: undefined,
+      campaignEndAt: undefined,
       startAt: undefined,
       endAt: undefined,
       ageGroups: [],

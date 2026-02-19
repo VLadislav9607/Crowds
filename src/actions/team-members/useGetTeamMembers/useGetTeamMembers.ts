@@ -1,20 +1,25 @@
 import { TANSTACK_QUERY_KEYS } from '@constants';
 import { getTeamMembersAction } from './action';
-import { useQuery } from '@tanstack/react-query';
-import { IQueryOptions } from '@services';
-import { TeamMemberItem, GetTeamMembersParams } from './types';
+import { useInfiniteQuery } from '@tanstack/react-query';
+import {
+  createQuerySelectData,
+  getInfiniteQueryFn,
+  getInfiniteQueryNextPageParams,
+  IInfinityQueryOptions,
+} from '@services';
+import { GetTeamMembersParams, GetTeamMembersResDto } from './types';
 
 export const useGetTeamMembers = (
   params: GetTeamMembersParams,
-  options?: IQueryOptions<TeamMemberItem[]>,
+  options?: IInfinityQueryOptions<GetTeamMembersResDto>,
 ) => {
-  return useQuery({
-    queryKey: [
-      TANSTACK_QUERY_KEYS.GET_TEAM_MEMBERS,
-      params.organizationNetworkId,
-    ],
-    queryFn: () => getTeamMembersAction(params),
-    enabled: !!params.organizationNetworkId,
+  return useInfiniteQuery({
+    queryKey: [TANSTACK_QUERY_KEYS.GET_TEAM_MEMBERS, params.brandId],
+    initialPageParam: 1,
+    queryFn: getInfiniteQueryFn(getTeamMembersAction, params),
+    getNextPageParam: getInfiniteQueryNextPageParams,
+    select: createQuerySelectData<GetTeamMembersResDto>(),
+    enabled: !!params.brandId && !!params.organizationNetworkId,
     ...options,
   });
 };

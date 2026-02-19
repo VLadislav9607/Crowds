@@ -1,27 +1,49 @@
-import { ActivityIndicator, FlatList } from 'react-native';
 import { AppButton, AppText } from '@ui';
-import { ScreenWithScrollWrapper } from '@components';
+import { AppFlashList, If, ScreenWrapper, Skeleton } from '@components';
 import { goToScreen, Screens } from '@navigation';
 import { useGetMe, useGetTeamMembers, TeamMemberItem } from '@actions';
-import { COLORS } from '@styles';
 import { TeamMemberCard } from '../../components/TeamMemberCard';
 import { styles } from './styles';
+import { useRefetchQuery } from '@hooks';
 
 export const ManageOrgTeamScreen = () => {
   const { organizationMember } = useGetMe();
+  const brandId = organizationMember?.current_context?.brand?.id ?? '';
   const organizationNetworkId =
     organizationMember?.current_context?.organization_network_id ?? '';
 
-  const { data: teamMembers, isLoading } = useGetTeamMembers({
+  const {
+    data: teamMembersData,
+    hasNextPage,
+    fetchNextPage,
+    isFetchingNextPage,
+    isLoading,
+    refetch,
+  } = useGetTeamMembers({
+    brandId,
     organizationNetworkId,
   });
+
+  const { isRefetchingQuery, refetchQuery } = useRefetchQuery(refetch);
+
+  const teamMembers = teamMembersData?.data;
 
   const handleMemberPress = (member: TeamMemberItem) => {
     goToScreen(Screens.InviteNewMember, { mode: 'edit', member });
   };
 
+  const TeamMemberCardSkeleton = () => (
+    <Skeleton>
+      <Skeleton.Item gap={6}>
+        <Skeleton.Item width={'100%'} borderRadius={10} height={140} />
+        <Skeleton.Item width={'100%'} borderRadius={10} height={140} />
+        <Skeleton.Item width={'100%'} borderRadius={10} height={140} />
+      </Skeleton.Item>
+    </Skeleton>
+  );
+
   return (
-    <ScreenWithScrollWrapper
+    <ScreenWrapper
       headerVariant="withTitleAndImageBg"
       title="Manage Team Access"
       headerImageBg="purple"
@@ -30,33 +52,30 @@ export const ManageOrgTeamScreen = () => {
         Your team
       </AppText>
 
-      {isLoading ? (
-        <ActivityIndicator
-          size="large"
-          color={COLORS.main}
-          style={styles.loader}
-        />
-      ) : teamMembers && teamMembers.length > 0 ? (
-        <FlatList
-          data={teamMembers}
-          keyExtractor={item => item.id}
-          renderItem={({ item }) => (
-            <TeamMemberCard member={item} onPress={handleMemberPress} />
-          )}
-          scrollEnabled={false}
-          style={styles.list}
-        />
-      ) : (
-        <AppText typography="regular_14" style={styles.noTeamMembersFound}>
-          No team members found
-        </AppText>
-      )}
-
-      <AppButton
-        onPress={() => goToScreen(Screens.InviteNewMember)}
-        title="Invite new team member"
-        wrapperStyles={styles.button}
+      <AppFlashList
+        data={teamMembers}
+        refreshing={isRefetchingQuery}
+        onRefresh={refetchQuery}
+        keyExtractor={item => item.id}
+        renderItem={({ item }) => (
+          <TeamMemberCard member={item} onPress={handleMemberPress} />
+        )}
+        gap={0}
+        style={styles.list}
+        contentContainerStyle={styles.listContentContainer}
+        skeleton={isLoading ? <TeamMemberCardSkeleton /> : undefined}
+        showBottomLoader={isFetchingNextPage}
+        onEndReached={hasNextPage ? fetchNextPage : undefined}
+        onEndReachedThreshold={0.5}
       />
-    </ScreenWithScrollWrapper>
+
+      <If condition={true}>
+        <AppButton
+          onPress={() => goToScreen(Screens.InviteNewMember)}
+          title="Invite new team member"
+          wrapperStyles={styles.button}
+        />
+      </If>
+    </ScreenWrapper>
   );
 };

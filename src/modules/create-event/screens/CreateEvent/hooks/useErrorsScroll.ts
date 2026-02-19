@@ -11,6 +11,8 @@ export const useErrorsScroll = () => {
 
   const scrollViewRef = useRef<ScrollView | null>(null);
   const basicInfoSectionRef = useRef<View | null>(null);
+  const descriptionSectionRef = useRef<View | null>(null);
+  const campaignTimeSectionRef = useRef<View | null>(null);
   const dateTimeSectionRef = useRef<View | null>(null);
   const eventBriefSectionRef = useRef<View | null>(null);
   const visibilitySectionRef = useRef<View | null>(null);
@@ -57,9 +59,15 @@ export const useErrorsScroll = () => {
 
   const { onScrollToErrorSection } = useFormErrorsScroll<CreateEventFormData>({
     options: {
+      eventType: basicInfoSectionRef,
       title: basicInfoSectionRef,
+      description: descriptionSectionRef,
       category: basicInfoSectionRef,
       location: basicInfoSectionRef,
+      locationCountryCode: basicInfoSectionRef,
+      locationType: basicInfoSectionRef,
+      campaignStartAt: campaignTimeSectionRef,
+      campaignEndAt: campaignTimeSectionRef,
       startAt: dateTimeSectionRef,
       endAt: dateTimeSectionRef,
       eventBrief: eventBriefSectionRef,
@@ -78,6 +86,8 @@ export const useErrorsScroll = () => {
     scrollViewRef,
     ageGroupWidgetRefs,
     basicInfoSectionRef,
+    descriptionSectionRef,
+    campaignTimeSectionRef,
     dateTimeSectionRef,
     eventBriefSectionRef,
     visibilitySectionRef,

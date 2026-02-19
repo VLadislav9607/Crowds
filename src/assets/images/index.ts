@@ -6,7 +6,7 @@ import blackCrowdBg from './blackCrowdBg.png';
 import userWithGrayBg from './userWithGrayBg.png';
 import stripeConnect from './stripeConnect.png';
 import cardCrowdBg from './cardCrowdBg.png';
-
+import noAccess from './noAccess.png';
 export const IMAGES = {
   logo,
   splash,
@@ -16,4 +16,5 @@ export const IMAGES = {
   userWithGrayBg,
   stripeConnect,
   cardCrowdBg,
+  noAccess,
 };
