@@ -19,7 +19,9 @@ import { useAcceptApplication } from '../../hooks';
 
 export const EventApplicantsScreen = () => {
   const { params } = useScreenNavigation<Screens.EventApplicants>();
-  const [selectedTab, setSelectedTab] = useState<EventApplicantTab>('invited');
+  const [selectedTab, setSelectedTab] = useState<EventApplicantTab>(
+    params?.initialTab ?? 'invited',
+  );
   const [selectedTalentId, setSelectedTalentId] = useState<string | null>(null);
 
   const eventId = params?.eventId ?? '';

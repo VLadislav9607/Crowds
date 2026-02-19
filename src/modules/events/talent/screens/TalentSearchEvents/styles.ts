@@ -46,6 +46,10 @@ export const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
   },
+  categoryTitle: {
+    paddingHorizontal: 20,
+    marginTop: 16,
+  },
   container: {
     paddingBottom: 0,
   },

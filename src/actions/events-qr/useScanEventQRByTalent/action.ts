@@ -1,4 +1,4 @@
-import { supabase, Tables } from '@services';
+import { supabase } from '@services';
 import { ScanEventQRByTalentBodyDto, ScanEventQRByTalentResDto } from './types';
 
 export const scanEventQRByTalentAction = async (
@@ -9,5 +9,5 @@ export const scanEventQRByTalentAction = async (
   });
 
   if (error) throw error;
-  return { qr_code: data as Omit<Tables<'event_qr_codes'>, 'token'> };
+  return data as ScanEventQRByTalentResDto;
 };

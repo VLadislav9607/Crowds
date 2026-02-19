@@ -3,17 +3,20 @@ import { AppButton } from '@ui';
 import { COLORS } from '@styles';
 import { useGetMe } from '@actions';
 import { If } from '@components';
+import { ICONS } from '@assets';
 
 interface CreateEventFooterProps {
   onCancel: () => void;
   onSaveDraft: () => void;
   onNext: () => void;
+  onCopyToDraft?: () => void;
 }
 
 export const CreateEventFooter = ({
   onCancel,
   onSaveDraft,
   onNext,
+  onCopyToDraft,
 }: CreateEventFooterProps) => {
   const { organizationMember } = useGetMe();
   const currentContext = organizationMember?.current_context;
@@ -41,6 +44,15 @@ export const CreateEventFooter = ({
       </If>
       <If condition={!!hasAccessToPublishEvent}>
         <AppButton title="Publish event" onPress={onNext} />
+      </If>
+      <If condition={!!onCopyToDraft}>
+        <AppButton
+          icon={ICONS.copyIcon('black')}
+          title="Copy to draft"
+          variant="withBorder"
+          onPress={onCopyToDraft!}
+          titleStyles={styles.buttonTitle}
+        />
       </If>
     </View>
   );

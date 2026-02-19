@@ -5,21 +5,24 @@ import { COLORS } from '@styles';
 import { AppSearchInputPrimary, AppText } from '@ui';
 import { SvgXml } from 'react-native-svg';
 import { styles } from './styles';
-import { EVENTS_CATEGORIES } from '../../../constants';
 import { SearchEventsList } from '../../components';
 import { goToScreen, Screens, TAB_BAR_TOTAL_HEIGHT } from '@navigation';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
+import { useGetEventsCategories } from '@actions';
 
 export const TalentEventsHomeTab = () => {
   const { bottom } = useSafeAreaInsets();
+  const { data: categoriesData } = useGetEventsCategories();
 
   const bottomPadding = TAB_BAR_TOTAL_HEIGHT + bottom;
 
+  const categories = categoriesData?.categories ?? [];
+
   // Групуємо категорії по 4 елементи в рядок
-  const groupedCategories = EVENTS_CATEGORIES.reduce(
+  const groupedCategories = categories.reduce(
     (
-      acc: (typeof EVENTS_CATEGORIES)[],
-      category: (typeof EVENTS_CATEGORIES)[0],
+      acc: (typeof categories)[],
+      category: (typeof categories)[0],
       index: number,
     ) => {
       const rowIndex = Math.floor(index / 4);
@@ -29,7 +32,7 @@ export const TalentEventsHomeTab = () => {
       acc[rowIndex].push(category);
       return acc;
     },
-    [] as (typeof EVENTS_CATEGORIES)[],
+    [] as (typeof categories)[],
   );
 
   return (
@@ -93,10 +96,16 @@ export const TalentEventsHomeTab = () => {
                         key={category.id}
                         activeOpacity={0.8}
                         style={styles.categoryButton}
+                        onPress={() =>
+                          goToScreen(Screens.TalentSearchEvents, {
+                            categoryId: category.id,
+                            categoryName: category.title,
+                          })
+                        }
                       >
                         <View style={styles.categoryOverlay}>
                           <AppText typography="bold_14" color="white">
-                            {category.name}
+                            {category.title}
                           </AppText>
                         </View>
                       </TouchableOpacity>

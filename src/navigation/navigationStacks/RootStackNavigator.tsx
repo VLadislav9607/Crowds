@@ -38,6 +38,7 @@ import {
   TalentEventDetailsScreen,
   TalentSearchEventsScreen,
   TalentEventHistoryScreen,
+  AcceptEventNdaScreen,
 } from '../../modules/events/talent/screens';
 import {
   ChangePasswordScreen,
@@ -176,6 +177,10 @@ export const RootStackNavigator = () => {
       <RootStack.Screen
         name={Screens.TalentEventDetails}
         component={TalentEventDetailsScreen}
+      />
+      <RootStack.Screen
+        name={Screens.AcceptEventNda}
+        component={AcceptEventNdaScreen}
       />
 
       <RootStack.Screen

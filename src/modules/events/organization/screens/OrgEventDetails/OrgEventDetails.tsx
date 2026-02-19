@@ -17,6 +17,8 @@ import {
   useGetGroupChatId,
   ChatType,
   useGetEventForOrgMember,
+  useCopyEventToDraft,
+  useEventParticipantsCounts,
 } from '@actions';
 import { useCreateChatAndNavigate } from '@modules/common';
 
@@ -32,6 +34,11 @@ import { formatInTimeZone } from 'date-fns-tz';
 import { calculateEventDuration } from '../../../helpers';
 import { COLORS } from '@styles';
 import { SvgXml } from 'react-native-svg';
+import {
+  getCountryNameByCode,
+  showSuccessToast,
+  showMutationErrorToast,
+} from '@helpers';
 
 export const OrgEventDetails = () => {
   const insets = useSafeAreaInsets();
@@ -56,6 +63,35 @@ export const OrgEventDetails = () => {
   const [isCancelModalVisible, setIsCancelModalVisible] = useState(false);
 
   const { openChat, isPending: isCreatingChat } = useCreateChatAndNavigate();
+
+  const counts = useEventParticipantsCounts(params?.eventId ?? '');
+
+  const totalCapacity =
+    event?.event_age_groups?.reduce(
+      (sum, g) =>
+        sum +
+        (g.male_count ?? 0) +
+        (g.female_count ?? 0) +
+        (g.other_count ?? 0),
+      0,
+    ) ?? 0;
+
+  const navigateToApplicants = (
+    initialTab: 'invited' | 'applied' | 'approved' | 'rejected',
+  ) => {
+    goToScreen(Screens.EventApplicants, {
+      eventId: params?.eventId!,
+      capacity: totalCapacity,
+      initialTab,
+    });
+  };
+
+  const { mutate: copyToDraft, isPending: isCopying } = useCopyEventToDraft({
+    onSuccess: () => {
+      showSuccessToast('Event copied to draft');
+    },
+    onError: (e: Error) => showMutationErrorToast(e),
+  });
 
   const handleChatWithOrganizer = () => {
     openChat({
@@ -104,18 +140,20 @@ export const OrgEventDetails = () => {
   //   ];
   // }
 
+  const timezone = event?.event_location?.timezone || 'UTC';
+
   const startAtTimezone = event?.start_at
-    ? formatInTimeZone(
-        event.start_at,
-        event?.event_location?.timezone!,
-        'd MMM, yyyy',
-      )
+    ? formatInTimeZone(event.start_at, timezone, 'd MMM, yyyy')
     : '';
 
   const duration =
     event?.start_at && event?.end_at
       ? calculateEventDuration(event.start_at, event.end_at)
       : { formatted: '' };
+
+  const officeCountryName = event?.office_country_code
+    ? getCountryNameByCode(event.office_country_code)
+    : undefined;
 
   const chevronRightIcon = (
     <SvgXml width={22} height={22} xml={ICONS.chevronRight('main')} />
@@ -124,19 +162,21 @@ export const OrgEventDetails = () => {
   const participationBoard: IGridBoardItem[] = [
     {
       title: 'Invited',
-      count: 0,
+      count: counts.invited,
       bgColor: COLORS.light_purple,
       textColor: COLORS.main,
       labelElement: chevronRightIcon,
       showSkeleton: isLoading,
+      onPress: () => navigateToApplicants('invited'),
     },
     {
       title: 'Applied',
-      count: 0,
+      count: counts.applied,
       bgColor: COLORS.light_purple,
       textColor: COLORS.main,
       labelElement: chevronRightIcon,
       showSkeleton: isLoading,
+      onPress: () => navigateToApplicants('applied'),
     },
     {
       title: 'Approved',
@@ -144,23 +184,25 @@ export const OrgEventDetails = () => {
       textColor: COLORS.main,
       countElement: (
         <AppText typography="bold_24" color="main">
-          0
+          {counts.approved}
           <AppText typography="bold_14" color="main_60">
             {' '}
-            / 70
+            / {totalCapacity}
           </AppText>
         </AppText>
       ),
       labelElement: chevronRightIcon,
       showSkeleton: isLoading,
+      onPress: () => navigateToApplicants('approved'),
     },
     {
       title: 'Rejected',
       bgColor: COLORS.red_light,
       textColor: COLORS.red,
-      count: 5,
+      count: counts.rejected,
       labelElement: chevronRightIcon,
       showSkeleton: isLoading,
+      onPress: () => navigateToApplicants('rejected'),
     },
   ];
 
@@ -238,11 +280,16 @@ export const OrgEventDetails = () => {
         <EventDetailsCardWithMap
           showSkeleton={isLoading}
           startAtFormatted={startAtTimezone}
-          location={{
-            formatted_address: event?.event_location?.formatted_address!,
-            latitude: event?.event_location?.latitude!,
-            longitude: event?.event_location?.longitude!,
-          }}
+          location={
+            event?.event_location
+              ? {
+                  formatted_address: event.event_location.formatted_address,
+                  latitude: event.event_location.latitude,
+                  longitude: event.event_location.longitude,
+                }
+              : null
+          }
+          officeCountryName={officeCountryName}
           duration={duration.formatted}
         />
 
@@ -250,6 +297,12 @@ export const OrgEventDetails = () => {
           showSkeleton={isLoading}
           label="Brief"
           text={event?.brief}
+        />
+
+        <EventDetailsTextBlock
+          showSkeleton={isLoading}
+          label="Description"
+          text={event?.description}
         />
 
         <EventDetailsTextBlock
@@ -303,6 +356,18 @@ export const OrgEventDetails = () => {
               }}
             />
           )}
+        </If>
+
+        <If condition={!isLoading}>
+          <AppButton
+            icon={ICONS.copyIcon('black')}
+            title="Copy to draft"
+            variant="withBorder"
+            isLoading={isCopying}
+            onPress={() => {
+              copyToDraft({ eventId: params?.eventId! });
+            }}
+          />
         </If>
 
         <If condition={!isLoading && event?.status === 'published'}>
