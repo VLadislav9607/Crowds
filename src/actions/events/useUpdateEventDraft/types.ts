@@ -44,9 +44,13 @@ export interface AgeGroupDto {
 
 export interface UpdateDraftEventBodyDto {
   officeId?: string;
+  eventType?: string;
   title?: string;
+  description?: string;
   category?: string;
   visibility?: Enums<'EventVisibility'>;
+  campaignStartAt?: string;
+  campaignEndAt?: string;
   startAt?: string;
   endAt?: string;
   registrationClosingAt?: string;

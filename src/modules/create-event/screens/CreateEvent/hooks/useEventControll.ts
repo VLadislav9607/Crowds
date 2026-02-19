@@ -9,12 +9,14 @@ import {
   usePublishEventDraft,
   useUpdateEventDraft,
 } from '@actions';
-import { showMutationErrorToast } from '@helpers';
+import { showErrorToast, showMutationErrorToast } from '@helpers';
 import { CreateEventFormData } from '../../../validation';
+import { FieldErrors } from 'react-hook-form';
 import { Enums } from '@services';
 import { fromZonedTime } from 'date-fns-tz';
 import { UseEventControllProps } from '../types';
 import { Screens, useScreenNavigation } from '@navigation';
+import { findOfficeByCountryCode } from '../../../helpers/officeLocationHelpers';
 
 export const useEventControll = ({
   formData,
@@ -22,9 +24,7 @@ export const useEventControll = ({
   onScrollToErrorSection,
 }: UseEventControllProps) => {
   const { organizationMember } = useGetMe();
-  const officeId =
-    organizationMember?.organization_networks?.[0]?.brands?.[0]
-      ?.office_memberships?.[0]?.office_id!;
+  const offices = organizationMember?.current_context?.offices ?? [];
 
   const { params } = useScreenNavigation<Screens.CreateEvent>();
   const eventCreatedModalRef = useRef<EventCreatedModalRef>(null);
@@ -70,14 +70,40 @@ export const useEventControll = ({
 
   const prepareDataToSave = async (
     values: CreateEventFormData,
-  ): Promise<CreatePublishedEventBodyDto> => {
-    const timezone = values.location?.timezone || 'UTC';
+  ): Promise<CreatePublishedEventBodyDto | null> => {
+    let location;
+    let timezone = 'UTC';
 
-    const location = {
-      ...values.location,
-      coords: `POINT(${values.location.longitude} ${values.location.latitude})`,
-      timezone: values.location.timezone,
-    };
+    if (values.locationType === 'entire_country') {
+      location = undefined;
+    } else {
+      if (!values.location) {
+        return null;
+      }
+      timezone = values.location.timezone || 'UTC';
+      location = {
+        ...values.location,
+        coords: `POINT(${values.location.longitude} ${values.location.latitude})`,
+        timezone: values.location.timezone,
+      };
+    }
+
+    // Resolve officeId from country code
+    let resolvedOfficeId = values.officeId;
+    if (!resolvedOfficeId && values.locationCountryCode) {
+      const matchedOffice = findOfficeByCountryCode(
+        offices,
+        values.locationCountryCode,
+      );
+      resolvedOfficeId = matchedOffice?.office_id;
+    }
+    if (!resolvedOfficeId && offices.length === 1) {
+      resolvedOfficeId = offices[0].office_id;
+    }
+    if (!resolvedOfficeId) {
+      showErrorToast('Location country does not match any of your offices');
+      return null;
+    }
 
     let ndaDocumentName: string | undefined;
     let ndaDocumentPath: string | undefined;
@@ -96,12 +122,23 @@ export const useEventControll = ({
 
     delete values.ndaDocument;
 
+    const campaignStartAt = values.campaignStartAt
+      ? fromZonedTime(values.campaignStartAt, timezone).toISOString()
+      : undefined;
+    const campaignEndAt = values.campaignEndAt
+      ? fromZonedTime(values.campaignEndAt, timezone).toISOString()
+      : undefined;
+
     return {
-      office_id: officeId,
+      officeId: resolvedOfficeId,
+      eventType: values.eventType,
+      description: values.description,
       location,
       title: values.title,
       category: values.category,
       visibility: values.visibility as Enums<'EventVisibility'>,
+      campaignStartAt,
+      campaignEndAt,
       startAt: fromZonedTime(values.startAt, timezone).toISOString(),
       endAt: fromZonedTime(values.endAt, timezone).toISOString(),
       registrationClosingAt: fromZonedTime(
@@ -117,31 +154,61 @@ export const useEventControll = ({
     };
   };
 
+  const addLocationErrors = (errors: FieldErrors<CreateEventFormData>) => {
+    const values = formData.getValues();
+
+    if (
+      values.locationType === 'specific_location' &&
+      !values.location &&
+      !errors.location
+    ) {
+      const err = {
+        type: 'custom',
+        message: 'Please select a location',
+      } as const;
+      formData.setError('location', err);
+      (errors as Record<string, unknown>).location = err;
+    }
+    if (
+      values.locationType === 'entire_country' &&
+      !values.locationCountryCode &&
+      !errors.locationCountryCode
+    ) {
+      const err = {
+        type: 'custom',
+        message: 'Please select a country',
+      } as const;
+      formData.setError('locationCountryCode', err);
+      (errors as Record<string, unknown>).locationCountryCode = err;
+    }
+  };
+
   const handleCreatePublishedEvent = () => {
     formData.handleSubmit(
       async data => {
         setShowFullScreenLoader(true);
 
         const dto = await prepareDataToSave(data as CreateEventFormData);
+        if (!dto) {
+          setShowFullScreenLoader(false);
+          return;
+        }
 
-        console.log('dto', dto);
         if (params?.draftId) {
-          console.log('0000');
           await updateDraftMutateAsync({
             eventId: params.draftId,
             body: dto,
           });
-          console.log('111');
           await publishEventDraftMutateAsync(params.draftId);
         } else {
-          console.log('222');
+          console.log('dto', dto);
           await createEventMutateAsync(dto as CreatePublishedEventBodyDto);
         }
 
         setShowFullScreenLoader(false);
       },
       errors => {
-        console.log('errors', errors);
+        addLocationErrors(errors);
         onScrollToErrorSection(errors);
         setShowFullScreenLoader(false);
       },
@@ -151,5 +218,6 @@ export const useEventControll = ({
   return {
     eventCreatedModalRef,
     handleCreatePublishedEvent,
+    organizationMember,
   };
 };

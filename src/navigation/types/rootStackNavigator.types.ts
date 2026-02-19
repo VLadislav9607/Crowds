@@ -45,7 +45,10 @@ export type RootStackParamList = {
 
   // Organization screens
   [Screens.CopyInviteLink]: { deepLink: string; memberName: string };
-  [Screens.CreateEvent]: { draftId?: string };
+  [Screens.CreateEvent]: {
+    draftId?: string;
+    eventType?: 'media_production' | 'brand_activation';
+  };
   [Screens.EventsDashboard]: undefined;
   [Screens.InviteNewMember]?: {
     mode?: 'edit';

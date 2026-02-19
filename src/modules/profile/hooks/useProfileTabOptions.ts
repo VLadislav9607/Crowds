@@ -7,6 +7,7 @@ interface ProfileOption {
   title: string;
   icon: string;
   textColor?: ColorsKeys;
+  isInvisible?: boolean;
   onPress: () => void;
 }
 
@@ -17,7 +18,7 @@ interface UseProfileTabOptionsProps {
 export const useProfileTabOptions = ({
   onLogout,
 }: UseProfileTabOptionsProps) => {
-  const { isTalent } = useGetMe();
+  const { isTalent, organizationMember } = useGetMe();
 
   const talentOptions: ProfileOption[] = [
     {
@@ -93,15 +94,23 @@ export const useProfileTabOptions = ({
       title: 'Organization details',
       icon: ICONS.user(),
       onPress: () => goToScreen(Screens.OrgProfileSetup),
+      isInvisible:
+        !organizationMember?.current_context?.capabilitiesAccess
+          .edit_business_info,
     },
     {
       title: 'Manage team',
       icon: ICONS.user(),
+      isInvisible:
+        !organizationMember?.current_context?.capabilitiesAccess
+          .edit_team_members,
       onPress: () => goToScreen(Screens.ManageOrgTeam),
     },
     {
       title: 'Wallet / Payment details',
       icon: ICONS.wallet(),
+      isInvisible:
+        !organizationMember?.current_context?.capabilitiesAccess.edit_bank_info,
       onPress: () => {},
     },
     {

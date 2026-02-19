@@ -40,10 +40,10 @@ export const ChatRoomScreen = () => {
 
   const getBucket = () => {
     if (params?.chatType === ChatType.Direct) {
-      return isTalent ? 'organizations_avatars' : 'talents_avatars';
+      return isTalent ? 'brand_avatars' : 'talents_avatars';
     }
 
-    return 'organizations_avatars';
+    return 'brand_avatars';
   };
 
   return (

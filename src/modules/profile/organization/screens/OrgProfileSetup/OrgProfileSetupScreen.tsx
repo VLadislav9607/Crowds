@@ -54,7 +54,7 @@ export const OrgProfileSetupScreen = () => {
     imageSourcePickerModalRef.current?.present({
       onImagePicked: logo => {
         upsertTalentAvatarMutate({
-          bucket: 'organizations_avatars',
+          bucket: 'brand_avatars',
           file: { uri: logo.uri, type: logo.type, name: logo.name },
           folderName: organizationMember?.current_context?.brand?.id,
         });
@@ -99,7 +99,7 @@ export const OrgProfileSetupScreen = () => {
           showSkeleton={isUpsertingAvatar}
           imgPath={organizationMember?.current_context?.brand?.logo_path}
           containerStyle={styles.imageContainer}
-          bucket="organizations_avatars"
+          bucket="brand_avatars"
           placeholderIcon={ICONS.orgAvatarLogo('lihgt_gray4')}
           CustomElements={
             <View style={styles.cameraWrapper}>
@@ -110,7 +110,7 @@ export const OrgProfileSetupScreen = () => {
 
         <ImageSourcePickerModal
           bottomSheetRef={imageSourcePickerModalRef}
-          validateForBucket="organizations_avatars"
+          validateForBucket="brand_avatars"
         />
 
         <AppText typography="semibold_16" margin={{ top: 32, bottom: 27 }}>

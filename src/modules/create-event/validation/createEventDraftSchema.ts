@@ -106,9 +106,22 @@ const ageGroupDraftSchema = z
 
 export const createEventDraftSchema = z
   .object({
+    eventType: z
+      .enum(['media_production', 'brand_activation'])
+      .optional()
+      .nullable(),
     title: z.string().min(1, 'Title of the event is required'),
+    description: z.string().optional().nullable(),
+    locationType: z
+      .enum(['entire_country', 'specific_location'])
+      .optional()
+      .nullable(),
+    officeId: z.string().optional().nullable(),
+    locationCountryCode: z.string().optional().nullable(),
     location: parsedLocationSchema.optional().nullable(),
     visibility: z.enum(['public', 'private']).optional().nullable(),
+    campaignStartAt: z.date().optional().nullable(),
+    campaignEndAt: z.date().optional().nullable(),
     startAt: z.date().optional().nullable(),
     endAt: z.date().optional().nullable(),
     ageGroups: z.array(ageGroupDraftSchema).optional().nullable(),

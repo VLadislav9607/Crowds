@@ -34,6 +34,7 @@ export const ProfileScreenTab = () => {
   return (
     <ProfileScreenLayout>
       {options.map((option, index) => {
+        if (option.isInvisible) return null;
         const isLastItem = index === options.length - 1;
         return (
           <View key={option.title}>

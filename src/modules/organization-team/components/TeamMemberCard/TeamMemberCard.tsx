@@ -13,24 +13,14 @@ export const TeamMemberCard: FC<TeamMemberCardProps> = ({
   member,
   onPress,
 }) => {
-  const initials = `${member.firstName.charAt(0)}${member.lastName.charAt(
-    0,
-  )}`.toUpperCase();
-
   return (
     <TouchableOpacity
       style={styles.container}
       onPress={() => onPress(member)}
       activeOpacity={0.7}
     >
-      <View style={styles.avatar}>
-        <AppText typography="bold_14" style={styles.avatarText}>
-          {initials}
-        </AppText>
-      </View>
-
       <View style={styles.info}>
-        <AppText typography="bold_14" numberOfLines={1}>
+        <AppText typography="bold_16" numberOfLines={1}>
           {member.firstName} {member.lastName}
         </AppText>
         <AppText
@@ -40,13 +30,11 @@ export const TeamMemberCard: FC<TeamMemberCardProps> = ({
         >
           {member.email}
         </AppText>
-        <AppText
-          typography="regular_12"
-          style={styles.secondaryText}
-          numberOfLines={1}
-        >
-          {member.position}
-        </AppText>
+        <View style={styles.positionContainer}>
+          <AppText typography="medium_12" color="main" numberOfLines={1}>
+            {member.position}
+          </AppText>
+        </View>
       </View>
 
       {member.status === 'pending' && (

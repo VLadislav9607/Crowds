@@ -23,7 +23,7 @@ export const EventHeaderElement = ({
           {/* <Image style={styles.image} /> */}
           <AppImage
             imgPath={image}
-            bucket="organizations_avatars"
+            bucket="brand_avatars"
             containerStyle={styles.image}
           />
         </>

@@ -1,6 +1,8 @@
 import { View, StyleSheet } from 'react-native';
 import { AppButton } from '@ui';
 import { COLORS } from '@styles';
+import { useGetMe } from '@actions';
+import { If } from '@components';
 
 interface CreateEventFooterProps {
   onCancel: () => void;
@@ -13,6 +15,14 @@ export const CreateEventFooter = ({
   onSaveDraft,
   onNext,
 }: CreateEventFooterProps) => {
+  const { organizationMember } = useGetMe();
+  const currentContext = organizationMember?.current_context;
+
+  const hasAccessToPublishEvent =
+    currentContext?.capabilitiesAccess.create_events;
+  const hasAccessToCreateDraft =
+    currentContext?.capabilitiesAccess.create_event_draft;
+
   return (
     <View style={styles.footer}>
       <AppButton
@@ -21,13 +31,17 @@ export const CreateEventFooter = ({
         onPress={onCancel}
         titleStyles={styles.buttonTitle}
       />
-      <AppButton
-        title="Save draft"
-        variant="withBorder"
-        onPress={onSaveDraft}
-        titleStyles={styles.buttonTitle}
-      />
-      <AppButton title="Publish event" onPress={onNext} />
+      <If condition={!!hasAccessToCreateDraft || !!hasAccessToPublishEvent}>
+        <AppButton
+          title="Save draft"
+          variant="withBorder"
+          onPress={onSaveDraft}
+          titleStyles={styles.buttonTitle}
+        />
+      </If>
+      <If condition={!!hasAccessToPublishEvent}>
+        <AppButton title="Publish event" onPress={onNext} />
+      </If>
     </View>
   );
 };

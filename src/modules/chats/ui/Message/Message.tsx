@@ -47,7 +47,7 @@ export const Message = ({
             <Avatar
               size={20}
               imgPath={senderAvatar}
-              bucket={isTalent ? 'organizations_avatars' : 'talents_avatars'}
+              bucket={isTalent ? 'brand_avatars' : 'talents_avatars'}
               name={senderName}
             />
           </View>

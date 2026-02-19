@@ -8,17 +8,19 @@ import { COLORS, TYPOGRAPHY } from '@styles';
 import { InviteMemberFormData } from '../../hooks';
 import { CheckboxRowList } from '../../ui';
 import { useGetMe, useGetBrandCapabilities } from '@actions';
-import { If, AppTabSelector, ITabOption } from '@components';
+import { If, AppTabSelector, ITabOption, Skeleton } from '@components';
 import { countriesWithFlag } from '@constants';
 
 interface RoleAccessFormProps {
   control: Control<InviteMemberFormData>;
   errors?: FieldErrors<InviteMemberFormData>;
+  isLoading?: boolean;
 }
 
-export const RoleAccessForm = ({ control }: RoleAccessFormProps) => {
+export const RoleAccessForm = ({ control, isLoading }: RoleAccessFormProps) => {
   const { organizationMember } = useGetMe();
-  const { data: brandCapabilities } = useGetBrandCapabilities();
+  const { data: brandCapabilities, isLoading: isCapabilitiesLoading } =
+    useGetBrandCapabilities();
   const roleAccess = useWatch({ control, name: 'roleAccess' });
 
   const invitableOffices = useMemo(() => {
@@ -60,6 +62,78 @@ export const RoleAccessForm = ({ control }: RoleAccessFormProps) => {
   )
     ? selectedOfficeId
     : invitableOffices[0]?.office_id ?? '';
+
+  const showLoader = isCapabilitiesLoading || isLoading;
+
+  if (showLoader) {
+    return (
+      <>
+        <AppText style={styles.title}>Role Access</AppText>
+
+        <AppText style={styles.subtitle}>
+          Please select which abilities this user should have
+        </AppText>
+
+        <View style={styles.container}>
+          <Skeleton>
+            <Skeleton.Item gap={20}>
+              <Skeleton.Item width={'100%'} height={36} borderRadius={8} />
+              <Skeleton.Item gap={10}>
+                <Skeleton.Item width={80} height={16} borderRadius={4} />
+                <Skeleton.Item flexDirection="row" gap={'5%'} flexWrap="wrap">
+                  <Skeleton.Item
+                    width={'21.25%'}
+                    height={60}
+                    borderRadius={8}
+                  />
+                  <Skeleton.Item
+                    width={'21.25%'}
+                    height={60}
+                    borderRadius={8}
+                  />
+                  <Skeleton.Item
+                    width={'21.25%'}
+                    height={60}
+                    borderRadius={8}
+                  />
+                  <Skeleton.Item
+                    width={'21.25%'}
+                    height={60}
+                    borderRadius={8}
+                  />
+                </Skeleton.Item>
+              </Skeleton.Item>
+              <Skeleton.Item gap={10}>
+                <Skeleton.Item width={80} height={16} borderRadius={4} />
+                <Skeleton.Item flexDirection="row" gap={'5%'} flexWrap="wrap">
+                  <Skeleton.Item
+                    width={'21.25%'}
+                    height={60}
+                    borderRadius={8}
+                  />
+                  <Skeleton.Item
+                    width={'21.25%'}
+                    height={60}
+                    borderRadius={8}
+                  />
+                  <Skeleton.Item
+                    width={'21.25%'}
+                    height={60}
+                    borderRadius={8}
+                  />
+                  <Skeleton.Item
+                    width={'21.25%'}
+                    height={60}
+                    borderRadius={8}
+                  />
+                </Skeleton.Item>
+              </Skeleton.Item>
+            </Skeleton.Item>
+          </Skeleton>
+        </View>
+      </>
+    );
+  }
 
   return (
     <>
@@ -165,161 +239,6 @@ export const RoleAccessForm = ({ control }: RoleAccessFormProps) => {
             )}
           />
         </If>
-
-        {/* <ScrollView
-          horizontal
-          showsHorizontalScrollIndicator={false}
-          contentContainerStyle={{ alignItems: 'center', alignSelf: 'center', flexGrow: 1 }}
-        >
-          <AppTabSelector
-          
-            onSelect={value => setActiveBranch(value)}
-            options={branchItems || []}
-            selectedValue={activeBranch}
-            
-          />
-        </ScrollView> */}
-
-        {/* <View style={styles.masterAdminContainer}>
-          <Controller
-            control={control}
-            name="roleAccess"
-            render={({ field: { onChange, value } }) => (
-              <CheckboxRowList
-                label="Master Admin"
-                hideBorderBottom
-                items={[
-                  {
-                    label: 'Assign as Master Admin',
-                    value: RoleAccess.ASSIGN_AS_MASTER_ADMIN,
-                  },
-                ]}
-                checkedValues={value?.map(v => v) || []}
-                onCheckedValuesChange={values =>
-                  onChange(values as RoleAccess[])
-                }
-              />
-            )}
-          />
-
-          <MasterAccessNote />
-        </View> */}
-
-        {/* <Controller
-          control={control}
-          name="roleAccess"
-          render={({ field: { onChange, value } }) => (
-            <CheckboxRowList
-              label="Talent"
-              items={[
-                {
-                  label: 'Recruit Applicants',
-                  value: RoleAccess.RECRUIT_APPLICANTS,
-                },
-                {
-                  label: 'Approve Applicants',
-                  value: RoleAccess.APPROVE_APPLICANTS,
-                },
-                { label: 'Give Feedback', value: RoleAccess.GIVE_FEEDBACK },
-                { label: 'Rate Applicants', value: RoleAccess.RATE_APPLICANTS },
-              ]}
-              checkedValues={value?.map(v => v) || []}
-              onCheckedValuesChange={values => onChange(values as RoleAccess[])}
-            />
-          )}
-        /> */}
-
-        {/* <Controller
-          control={control}
-          name="roleAccess"
-          render={({ field: { onChange, value } }) => (
-            <CheckboxRowList
-              label="Events"
-              items={[
-                {
-                  label: 'Create/Edit Events',
-                  value: RoleAccess.CREATE_EDIT_EVENTS,
-                },
-                { label: 'View Events', value: RoleAccess.VIEW_EVENTS },
-                {
-                  label: 'Message Applicants',
-                  value: RoleAccess.MESSAGE_APPLICANTS,
-                },
-                { label: 'Group Message', value: RoleAccess.GROUP_MESSAGE },
-                {
-                  label: 'One on One Message',
-                  value: RoleAccess.ONE_ON_ONE_MESSAGE,
-                },
-              ]}
-              checkedValues={value?.map(v => v) || []}
-              onCheckedValuesChange={values => onChange(values as RoleAccess[])}
-            />
-          )}
-        /> */}
-
-        {/* <Controller
-          control={control}
-          name="roleAccess"
-          render={({ field: { onChange, value } }) => (
-            <CheckboxRowList
-              label="Check-ins"
-              items={[
-                {
-                  label: 'Manage Check-Ins',
-                  value: RoleAccess.MANAGE_CHECK_INS,
-                },
-              ]}
-              checkedValues={value?.map(v => v) || []}
-              onCheckedValuesChange={values => onChange(values as RoleAccess[])}
-            />
-          )}
-        /> */}
-
-        {/* <Controller
-          control={control}
-          name="roleAccess"
-          render={({ field: { onChange, value } }) => (
-            <CheckboxRowList
-              label="Settings"
-              items={[
-                {
-                  label: 'Invite Team Members',
-                  value: RoleAccess.INVITE_TEAM_MEMBERS,
-                },
-                {
-                  label: 'Edit Team Members',
-                  value: RoleAccess.EDIT_TEAM_MEMBERS,
-                },
-                {
-                  label: 'Edit Business Info',
-                  value: RoleAccess.EDIT_BUSINESS_INFO,
-                },
-              ]}
-              checkedValues={value?.map(v => v) || []}
-              onCheckedValuesChange={values => onChange(values as RoleAccess[])}
-            />
-          )}
-        /> */}
-
-        {/* <Controller
-          control={control}
-          name="roleAccess"
-          render={({ field: { onChange, value } }) => (
-            <CheckboxRowList
-              label="Financial"
-              items={[
-                { label: 'View Earnings', value: RoleAccess.VIEW_EARNINGS },
-                {
-                  label: 'Authorize Talent Payments',
-                  value: RoleAccess.AUTHORIZE_TALENT_PAYMENTS,
-                },
-                { label: 'Edit Bank Info', value: RoleAccess.EDIT_BANK_INFO },
-              ]}
-              checkedValues={value?.map(v => v) || []}
-              onCheckedValuesChange={values => onChange(values as RoleAccess[])}
-            />
-          )}
-        /> */}
       </View>
     </>
   );

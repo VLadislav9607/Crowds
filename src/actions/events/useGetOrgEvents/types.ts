@@ -12,6 +12,7 @@ export interface OrgEventListItemPublishedDto
     | 'visibility'
     | 'payment_amount'
     | 'payment_mode'
+    | 'office_id'
   > {
   event_location: Pick<
     Tables<'event_locations'>,
@@ -22,6 +23,7 @@ export interface OrgEventListItemPublishedDto
     'male_count' | 'female_count' | 'other_count'
   >[];
   participants_count?: number;
+  office_country_code: string | null;
 }
 
 export interface OrgEventListDraftItemDto
