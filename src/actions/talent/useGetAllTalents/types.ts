@@ -15,7 +15,7 @@ export interface GetAllTalentsFiltersDto {
 }
 
 export interface GetAllTalentsBodyDto {
-  eventId: string;
+  eventId?: string;
   offset: number;
   search: string;
   filters?: GetAllTalentsFiltersDto | null;
@@ -43,7 +43,7 @@ export interface GetAllTalentsRespDto {
 }
 
 export interface GetAllTalentsParams {
-  eventId: string;
+  eventId?: string;
   search: string;
   filters?: GetAllTalentsFiltersDto | null;
 }

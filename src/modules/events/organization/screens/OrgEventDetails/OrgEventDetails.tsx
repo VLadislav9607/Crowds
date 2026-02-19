@@ -1,14 +1,16 @@
+import { useState } from 'react';
 import { TouchableOpacity, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { If, ScreenWithScrollWrapper, Skeleton } from '@components';
 import {
   ActionPurpleButton,
+  AppButton,
   AppText,
   ChatButton,
   GridBoard,
   IGridBoardItem,
 } from '@ui';
-import { Screens, useScreenNavigation, goToScreen } from '@navigation';
+import { Screens, useScreenNavigation, goToScreen, goBack } from '@navigation';
 import { ICONS } from '@assets';
 import {
   useGetMe,
@@ -24,6 +26,7 @@ import {
   EventHeaderElement,
   EventGroupDetails,
 } from '../../../components';
+import { CancelEventModal } from '../../modals';
 import { styles } from './styles';
 import { formatInTimeZone } from 'date-fns-tz';
 import { calculateEventDuration } from '../../../helpers';
@@ -49,6 +52,8 @@ export const OrgEventDetails = () => {
         });
       },
     });
+
+  const [isCancelModalVisible, setIsCancelModalVisible] = useState(false);
 
   const { openChat, isPending: isCreatingChat } = useCreateChatAndNavigate();
 
@@ -299,7 +304,30 @@ export const OrgEventDetails = () => {
             />
           )}
         </If>
+
+        <If condition={!isLoading && event?.status === 'published'}>
+          <AppButton
+            onPress={() => setIsCancelModalVisible(true)}
+            title="Cancel event"
+            variant="withBorder"
+            size="60"
+            wrapperStyles={{ borderColor: COLORS.red }}
+            titleStyles={{ color: COLORS.red }}
+          />
+        </If>
       </View>
+
+      <CancelEventModal
+        eventId={params?.eventId!}
+        eventName={event?.title ?? ''}
+        isVisible={isCancelModalVisible}
+        onClose={() => setIsCancelModalVisible(false)}
+        onSuccess={() => {
+          setTimeout(() => {
+            goBack();
+          }, 300);
+        }}
+      />
     </ScreenWithScrollWrapper>
   );
 };

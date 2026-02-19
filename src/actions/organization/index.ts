@@ -7,3 +7,5 @@ export * from './useAcceptTalentApplication';
 export * from './useRejectTalentApplication';
 export * from './useCreateGlobalOrg';
 export * from './useCreateLocalOrg';
+export * from './useCancelEvent';
+export * from './useGetCancellationInfo';
