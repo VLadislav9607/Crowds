@@ -41,7 +41,8 @@ export interface  IAppHeaderProps {
   logoProps?: Partial<SvgProps>;
   headerStyles?: StyleProp<ViewStyle>;
   rightIcons?: {
-    icon: () => string | null;
+    icon?: () => string | null;
+    element?: React.ReactNode;
     onPress: () => void;
     size?: number;
   }[];
