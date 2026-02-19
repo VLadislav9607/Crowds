@@ -81,15 +81,27 @@ export type RootStackParamList = {
   [Screens.TalentSearchEvents]?: {
     autofocus?: boolean;
     showFilter?: boolean;
+    categoryId?: string;
+    categoryName?: string;
   };
   [Screens.TalentEventDetails]: {
     participationId: string;
     eventId: string;
   };
+  [Screens.AcceptEventNda]: {
+    eventId: string;
+    participationId: string;
+    ndaFilePath: string;
+    ndaFileName?: string;
+  };
   [Screens.ManageEvent]: { eventId: string };
   [Screens.EventParticipants]: undefined;
   [Screens.FlagParticipant]: { talentId: string; eventId: string };
-  [Screens.EventApplicants]: { eventId: string; capacity: number };
+  [Screens.EventApplicants]: {
+    eventId: string;
+    capacity: number;
+    initialTab?: 'invited' | 'applied' | 'approved' | 'rejected';
+  };
 
   // Talent screens
   [Screens.AvailabilitySetup]: undefined;

@@ -13,7 +13,7 @@ import {
 import { useEventParticipantsCounts } from '@actions';
 
 export const InviteTalentsScreen = () => {
-  const { params, navigation } = useScreenNavigation<Screens.InviteTalents>();
+  const { params } = useScreenNavigation<Screens.InviteTalents>();
   const eventId = params?.eventId ?? '';
 
   const { invited } = useEventParticipantsCounts(eventId);
@@ -33,11 +33,7 @@ export const InviteTalentsScreen = () => {
       contentContainerStyle={styles.contentContainer}
       title="Invite Talents"
       goBackCallback={() => {
-        if (params?.forwardFrom === Screens.CreateEvent) {
-          navigation.pop(2);
-        } else {
-          goBack();
-        }
+        goBack();
       }}
       customElement={
         <AppText style={styles.invitedText}>{invited} invited</AppText>

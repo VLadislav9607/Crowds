@@ -29,6 +29,7 @@ export interface PlacesPredictionsInputProps {
   defaultValue?: string;
   containerStyle?: ViewStyle;
   types?: PlaceAutocompleteType;
+  components?: string[];
   inputProps?: Omit<AppInputProps, 'value' | 'onChangeText'>;
   onSelectPlace?: (place: PlacesPredictionsInputPlace) => void;
   onChangeText?: (text: string) => void;

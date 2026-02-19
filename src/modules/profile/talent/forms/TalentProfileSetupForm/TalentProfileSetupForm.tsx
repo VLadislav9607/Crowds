@@ -17,7 +17,7 @@ export const TalentProfileSetupForm = forwardRef<
   TalentProfileSetupFormRef,
   TalentProfileSetupFormProps
 >(({ onSuccess, onFormStateChange }, ref) => {
-  const { me } = useGetMe();
+  const { talent } = useGetMe();
 
   const {
     control,
@@ -37,7 +37,7 @@ export const TalentProfileSetupForm = forwardRef<
     <>
       <PhysicalDetailsSection
         control={control}
-        isFemale={me?.gender === Gender.FEMALE}
+        isFemale={talent?.gender === Gender.FEMALE}
         monthsError={errors.months?.message}
         onMonthsChange={value => setValue('months', value)}
       />

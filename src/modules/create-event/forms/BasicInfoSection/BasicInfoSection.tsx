@@ -1,4 +1,4 @@
-import { forwardRef, useEffect } from 'react';
+import { forwardRef, useEffect, useMemo } from 'react';
 import { View, StyleSheet } from 'react-native';
 import { Controller, useFormContext } from 'react-hook-form';
 import { AppInput, AppText } from '@ui';
@@ -11,6 +11,7 @@ import {
   getOfficeCountries,
   findOfficeByCountryCode,
 } from '../../helpers/officeLocationHelpers';
+import { SubcategoriesPicker, TagsPicker } from '@modules/common';
 
 export const BasicInfoSection = forwardRef<View>((_props, ref) => {
   const {
@@ -26,9 +27,18 @@ export const BasicInfoSection = forwardRef<View>((_props, ref) => {
   const officeCountries = getOfficeCountries(offices);
   const isMultiOffice = officeCountries.length > 1;
 
+  const countryRestrictions = useMemo(() => {
+    if (officeCountries.length === 0) return undefined;
+    return officeCountries.map(c => `country:${c.code.toLowerCase()}`);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [officeCountries.length]);
+
   const locationType = watch('locationType');
   const locationCountryCode = watch('locationCountryCode');
   const eventType = watch('eventType');
+  const category = watch('category');
+  const subcategoryId = watch('subcategoryId');
+  const tags = watch('tags');
   const isMediaProduction = eventType === 'media_production';
   const isEntireCountry = locationType === 'entire_country';
 
@@ -95,7 +105,11 @@ export const BasicInfoSection = forwardRef<View>((_props, ref) => {
         name="category"
         render={({ field: { value, onChange } }) => (
           <SelectEventCategoryField
-            onChange={val => onChange(val.id)}
+            onChange={val => {
+              onChange(val.id);
+              setValue('subcategoryId', '');
+              setValue('tags', []);
+            }}
             selectedCategoryId={value}
             fieldProps={{
               label: 'Category',
@@ -107,6 +121,39 @@ export const BasicInfoSection = forwardRef<View>((_props, ref) => {
                 style: styles.label,
               },
             }}
+          />
+        )}
+      />
+
+      <Controller
+        control={control}
+        name="subcategoryId"
+        render={({ field: { value, onChange } }) => (
+          <SubcategoriesPicker
+            selectedCategoryIds={category ? [category] : []}
+            selectedSubcategories={value ? [value] : []}
+            onSubcategoriesChange={vals => {
+              const newValue = vals[vals.length - 1] || '';
+              onChange(newValue);
+              if (newValue !== value) {
+                setValue('tags', []);
+              }
+            }}
+            errorMessage={errors.subcategoryId?.message}
+          />
+        )}
+      />
+
+      <Controller
+        control={control}
+        name="tags"
+        render={({ field }) => (
+          <TagsPicker
+            title={tags?.length ? `Tags (${tags.length})` : 'Tags'}
+            selectedSubcategoryIds={subcategoryId ? [subcategoryId] : []}
+            tagsContainerStyle={styles.tagsPicker}
+            selectedTags={field.value}
+            onTagsChange={field.onChange}
           />
         )}
       />
@@ -169,6 +216,11 @@ export const BasicInfoSection = forwardRef<View>((_props, ref) => {
                 includeTimezone
                 containerStyle={{ marginTop: isMediaProduction ? 0 : 10 }}
                 types={PlaceAutocompleteType.address}
+                components={
+                  countryRestrictions
+                    ? [countryRestrictions.join('|')]
+                    : undefined
+                }
                 onChangeText={text => {
                   if (!text) {
                     onChange(undefined);
@@ -242,5 +294,8 @@ const styles = StyleSheet.create({
   countryList: {
     gap: 8,
     marginTop: 5,
+  },
+  tagsPicker: {
+    gap: 6,
   },
 });

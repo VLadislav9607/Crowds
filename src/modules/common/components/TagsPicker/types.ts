@@ -1,6 +1,7 @@
 import { StyleProp, ViewStyle } from 'react-native';
 
 export interface TagsPickerProps {
+  title?: string;
   selectedSubcategoryIds: string[];
   selectedTags?: string[];
   containerStyle?: StyleProp<ViewStyle>;

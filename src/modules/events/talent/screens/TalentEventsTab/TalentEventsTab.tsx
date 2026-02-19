@@ -1,4 +1,4 @@
-import { useMemo, useState } from 'react';
+import { useCallback, useMemo, useState } from 'react';
 import { AppTabSelector, ITabOption, ScreenWrapper } from '@components';
 import { useTalentEventsByStatus, useTalentEventsCounts } from '@actions';
 
@@ -34,13 +34,20 @@ export const TalentEventsTab = () => {
 
   const currentParams = useMemo(() => TAB_PARAMS[selectedTab], [selectedTab]);
 
-  const { data, isLoading, hasNextPage, fetchNextPage, refetch, error } =
+  const { data, isLoading, hasNextPage, fetchNextPage, refetch } =
     useTalentEventsByStatus(currentParams);
 
-  console.log('error', error);
+  const {
+    proposals,
+    pending,
+    approved,
+    denied,
+    refetch: refetchCounts,
+  } = useTalentEventsCounts();
 
-  console.log('data', data?.data);
-  const { proposals, pending, approved, denied } = useTalentEventsCounts();
+  const refetchAll = useCallback(async () => {
+    await Promise.all([refetch(), refetchCounts()]);
+  }, [refetch, refetchCounts]);
 
   const tabOptions: ITabOption<TalentEventsTabs>[] = useMemo(
     () => [
@@ -91,7 +98,7 @@ export const TalentEventsTab = () => {
         isLoading={isLoading}
         withBottomTab
         hasMoreItems={hasNextPage}
-        refetch={refetch}
+        refetch={refetchAll}
         onLoadMore={fetchNextPage}
         contentContainerStyle={styles.eventsListContent}
       />

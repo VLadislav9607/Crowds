@@ -3,6 +3,7 @@ import { useSearchEventsList } from './useSearchEventsList';
 import { TalentEventsViewList } from '../TalentEventsViewList';
 import { ITalentEventCard } from '../TalentEventCard';
 import { styles } from './styles';
+
 export const SearchEventsList = ({ ...props }: SearchEventsListProps) => {
   const { events, hasNextPage, isLoading, fetchNextPage, refetch } =
     useSearchEventsList(props);

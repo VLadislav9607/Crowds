@@ -15,7 +15,8 @@ export type EventDetailsCardWithMapProps = {
     formatted_address: string;
     latitude: number;
     longitude: number;
-  };
+  } | null;
+  officeCountryName?: string;
   startAtFormatted?: string;
   duration?: string;
 };

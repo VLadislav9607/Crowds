@@ -10,3 +10,6 @@ export * from './useTalentEventsByStatus';
 export * from './useTalentEventsCounts';
 export * from './useHideEvent';
 export * from './useGetMatchingTalents';
+export * from './useGetEventDetailsForTalent';
+export * from './useAcceptEventNda';
+export * from './useCopyEventToDraft';

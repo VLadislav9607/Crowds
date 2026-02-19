@@ -11,8 +11,14 @@ import {
 import { usePermissions, EPermissionTypes } from '@hooks';
 import { useIsFocused } from '@react-navigation/native';
 import { COLORS } from '@styles';
-import { useScanEventQRByTalent } from '@actions';
-import { showMutationErrorToast, showSuccessToast } from '@helpers';
+import { useScanEventQRByTalent, ScanEventQRByTalentResDto } from '@actions';
+import { showMutationErrorToast } from '@helpers';
+import {
+  TalentEventCheckinModal,
+  TalentEventCheckinModalRef,
+  TalentEventCheckoutModal,
+  TalentEventCheckoutModalRef,
+} from '../../modals';
 
 export const QRCodeScanTab = () => {
   const [hasPermission, setHasPermission] = useState<boolean>();
@@ -21,8 +27,33 @@ export const QRCodeScanTab = () => {
   const { askPermissions } = usePermissions(EPermissionTypes.CAMERA);
   const isFocused = useIsFocused();
 
+  const checkinModalRef = useRef<TalentEventCheckinModalRef>(null);
+  const checkoutModalRef = useRef<TalentEventCheckoutModalRef>(null);
+
   const scanLockRef = useRef(false);
   const SCAN_QR_CODE_LOCK_TIME = 1000;
+
+  const handleScanSuccess = (data: ScanEventQRByTalentResDto) => {
+    const { event, qr_code, session } = data;
+
+    if (data.action === 'checkin') {
+      checkinModalRef.current?.open({
+        eventTitle: event.title,
+        brandLogoPath: event.brand_logo_path,
+        venue: event.venue,
+        qrCodeId: qr_code.id,
+        onCheckinSuccess: () => {},
+      });
+    } else if (data.action === 'checkout') {
+      checkoutModalRef.current?.open({
+        eventTitle: event.title,
+        brandLogoPath: event.brand_logo_path,
+        venue: event.venue,
+        sessionId: session!.id,
+        onCheckoutSuccess: () => {},
+      });
+    }
+  };
 
   const { mutate: scanEventQRByTalent } = useScanEventQRByTalent({
     onError: error => {
@@ -31,10 +62,8 @@ export const QRCodeScanTab = () => {
       }, SCAN_QR_CODE_LOCK_TIME);
       showMutationErrorToast(error);
     },
-    onSuccess: () => {
-      showSuccessToast(
-        'QR Code scanned successfully, login will be added soon',
-      );
+    onSuccess: data => {
+      handleScanSuccess(data);
       setTimeout(() => {
         scanLockRef.current = false;
       }, SCAN_QR_CODE_LOCK_TIME);
@@ -42,7 +71,6 @@ export const QRCodeScanTab = () => {
   });
 
   const onScan = (token: string) => {
-    console.log('token', token);
     scanEventQRByTalent({ token: token });
   };
   // Camera is active only when the screen is focused and scanning is not paused
@@ -79,7 +107,6 @@ export const QRCodeScanTab = () => {
 
   return (
     <ScreenWrapper
-      // showLoader={isPending}
       withBottomTabBar
       containerStyle={styles.paddingBottom0}
       contentContainerStyle={styles.paddingBottom0}
@@ -135,6 +162,9 @@ export const QRCodeScanTab = () => {
           />
         </View>
       </If>
+
+      <TalentEventCheckinModal ref={checkinModalRef} />
+      <TalentEventCheckoutModal ref={checkoutModalRef} />
     </ScreenWrapper>
   );
 };

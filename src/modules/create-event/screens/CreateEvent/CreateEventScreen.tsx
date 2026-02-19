@@ -39,6 +39,7 @@ export const CreateEventScreen = () => {
     handleCreateDraft,
     handleCreatePublishedEvent,
     handleCancel,
+    handleCopyToDraft,
   } = useCreateEventScreen();
 
   return (
@@ -55,6 +56,7 @@ export const CreateEventScreen = () => {
             onCancel={handleCancel}
             onSaveDraft={handleCreateDraft}
             onNext={handleCreatePublishedEvent}
+            onCopyToDraft={handleCopyToDraft}
           />
         }
       >
@@ -69,7 +71,6 @@ export const CreateEventScreen = () => {
             ref={agePeopleSectionRef}
             widgetRefs={ageGroupWidgetRefs}
           />
-          {/* <TagsSection /> */}
           <PaymentSection ref={paymentSectionRef} />
           <OtherInfoSection ref={otherInfoSectionRef} />
         </View>

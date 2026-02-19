@@ -1,20 +1,33 @@
 import { useState } from 'react';
-import { View } from 'react-native';
+import { Alert, Linking, Platform, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { If, ScreenWithScrollWrapper } from '@components';
 import { ActionPurpleButton, AppButton, ChatButton } from '@ui';
 import { COLORS } from '@styles';
 import { Screens, useScreenNavigation, goToScreen } from '@navigation';
 import { ICONS } from '@assets';
-import { useGetMe, useGetGroupChatId, ChatType } from '@actions';
+import {
+  useGetMe,
+  useGetGroupChatId,
+  ChatType,
+  useGetEventDetailsForTalent,
+} from '@actions';
 import { useCreateChatAndNavigate } from '@modules/common';
+import {
+  getCountryNameByCode,
+  showSuccessToast,
+  showErrorToast,
+  showInfoToast,
+} from '@helpers';
+import { formatInTimeZone } from 'date-fns-tz';
+import RNCalendarEvents from 'react-native-calendar-events';
+import { calculateEventDuration } from '../../../helpers';
 
 import {
   EventDetailsCardWithMap,
   EventDetailsTextBlock,
-  EventDetailsRequirements,
-  EventDetailsTags,
   EventHeaderElement,
+  EventGroupDetails,
 } from '../../../components';
 import { CancelEventAttendanceModal } from '../../modals';
 import { styles } from './styles';
@@ -24,7 +37,12 @@ export const TalentEventDetailsScreen = () => {
   const { params } = useScreenNavigation<Screens.TalentEventDetails>();
   const { me } = useGetMe();
   const [isOpenModal, setIsOpenModal] = useState(false);
-  const eventName = 'Fun Live Stage';
+
+  const { data: event, isLoading } = useGetEventDetailsForTalent({
+    event_id: params?.eventId!,
+  });
+
+  console.log('event', event);
 
   const { mutate: getGroupChatId, isPending: isGettingGroupChatId } =
     useGetGroupChatId({
@@ -53,66 +71,134 @@ export const TalentEventDetailsScreen = () => {
     getGroupChatId(params?.eventId ?? '');
   };
 
-  const isLoading = false;
+  const handleAddToCalendar = async () => {
+    try {
+      const status = await RNCalendarEvents.requestPermissions();
+
+      if (status !== 'authorized') {
+        Alert.alert(
+          'Calendar Access Required',
+          'Please enable calendar access in your device settings to add events.',
+          [
+            { text: 'Cancel', style: 'cancel' },
+            {
+              text: 'Open Settings',
+              onPress: () => Linking.openSettings(),
+            },
+          ],
+        );
+        return;
+      }
+
+      const startDate = new Date(event?.start_at ?? '').toISOString();
+      const endDate = new Date(event?.end_at ?? '').toISOString();
+      const title = event?.title ?? 'Event';
+
+      const existingEvents = await RNCalendarEvents.fetchAllEvents(
+        startDate,
+        endDate,
+      );
+      const alreadyAdded = existingEvents.some(e => e.title === title);
+
+      if (alreadyAdded) {
+        showInfoToast('Event is already in your calendar');
+        return;
+      }
+
+      const location = event?.event_location?.formatted_address ?? '';
+      const notes = event?.description ?? event?.brief ?? '';
+
+      await RNCalendarEvents.saveEvent(title, {
+        startDate,
+        endDate,
+        location,
+        notes: Platform.OS === 'ios' ? notes : undefined,
+        description: Platform.OS === 'android' ? notes : undefined,
+      });
+
+      showSuccessToast('Event added to your calendar');
+    } catch (error) {
+      console.log('Calendar error:', error);
+      showErrorToast('Failed to add event to calendar');
+    }
+  };
+
+  const timezone = event?.event_location?.timezone || 'UTC';
+
+  const startAtFormatted = event?.start_at
+    ? formatInTimeZone(event.start_at, timezone, 'd MMM, yyyy')
+    : '';
+
+  const duration =
+    event?.start_at && event?.end_at
+      ? calculateEventDuration(event.start_at, event.end_at)
+      : { formatted: '' };
+
+  const officeCountryName = event?.office_country_code
+    ? getCountryNameByCode(event.office_country_code)
+    : undefined;
 
   return (
     <ScreenWithScrollWrapper
       headerVariant="withTitleAndImageBg"
       headerStyles={styles.header}
       contentContainerStyle={{ paddingBottom: insets.bottom || 24 }}
-      customElement={<EventHeaderElement />}
+      customElement={
+        <EventHeaderElement
+          showSkeleton={isLoading}
+          title={event?.title}
+          image={event?.brand_logo_path ?? undefined}
+        />
+      }
       rightIcons={[
         { icon: () => ICONS.bell('white'), onPress: () => {}, size: 20 },
       ]}
     >
       <View style={styles.container}>
-        {/* <EventDetailsTextBlock
-          label="Description"
-          text="This event is based on Australia for an live music concert. Please make sure that you arrive at or before the time specified below. Once you have arrived, please proceed to the check in area, click check in below and follow the prompts."
+        <EventDetailsTextBlock
           showSkeleton={isLoading}
-        /> */}
+          label="Description"
+          text={event?.description}
+        />
 
         <EventDetailsCardWithMap
-          location={{
-            latitude: -37.8136,
-            longitude: 144.9631,
-            formatted_address: '333 Bridge Road, Richmond VIC Australia',
-          }}
-          startAtFormatted="03 OCT, 2025"
-          duration="8:30 PM"
           showSkeleton={isLoading}
-        />
-
-        <EventDetailsRequirements
-          requirements={[
-            { title: 'Gender Required', options: ['Male'] },
-            {
-              title: 'People Required',
-              options: ['30 Adults upto 29 years of age'],
-            },
-            { title: 'Industry', options: ['Reality Television'] },
-          ]}
-          showSkeleton={isLoading}
-        />
-
-        <EventDetailsTags
-          tags={['Tag 1', 'Tag 2', 'Tag 3']}
-          showSkeleton={isLoading}
+          startAtFormatted={startAtFormatted}
+          location={
+            event?.event_location
+              ? {
+                  formatted_address: event.event_location.formatted_address,
+                  latitude: event.event_location.latitude,
+                  longitude: event.event_location.longitude,
+                }
+              : null
+          }
+          officeCountryName={officeCountryName}
+          duration={duration.formatted}
         />
 
         <EventDetailsTextBlock
-          label="Additional Details/Notes"
-          text="Full details including times will be sent to your Crowds Now inbox no earlier than 24 hours prior to filming."
           showSkeleton={isLoading}
+          label="Payment"
+          text={
+            event?.payment_mode === 'fixed'
+              ? `$${event?.payment_amount}`
+              : event?.payment_amount
+              ? `$${event.payment_amount} per hour`
+              : undefined
+          }
         />
+
+        <If condition={!!event?.event_age_groups?.length}>
+          <View style={{ gap: 10 }}>
+            {event?.event_age_groups?.map(group => (
+              <EventGroupDetails group={group} key={group.id} />
+            ))}
+          </View>
+        </If>
 
         <If condition={!isLoading}>
           <>
-            <ActionPurpleButton
-              icon={ICONS.calendarEvent('main')}
-              title="ADD EVENT TO MY CALENDER"
-            />
-
             <View style={styles.chatButtonsContainer}>
               <ChatButton
                 isLoading={isCreatingChat}
@@ -130,10 +216,25 @@ export const TalentEventDetailsScreen = () => {
               />
             </View>
 
+            {!!event?.nda_file_path && (
+              <ActionPurpleButton
+                icon={ICONS.upload('main')}
+                titleIcon={ICONS.paperClip('main')}
+                title="VIEW NDA"
+                onPress={() => {
+                  goToScreen(Screens.PDFViewer, {
+                    pdfPath: event?.nda_file_path!,
+                    bucket: 'event_nda',
+                    title: 'Event NDA',
+                  });
+                }}
+              />
+            )}
+
             <ActionPurpleButton
-              icon={ICONS.upload('main')}
-              titleIcon={ICONS.paperClip('main')}
-              title="DOWNLOAD ATTACHED PDF"
+              icon={ICONS.calendarEvent('main')}
+              title="ADD EVENT TO MY CALENDAR"
+              onPress={handleAddToCalendar}
             />
           </>
 
@@ -148,7 +249,7 @@ export const TalentEventDetailsScreen = () => {
       </View>
 
       <CancelEventAttendanceModal
-        eventName={eventName}
+        eventName={event?.title ?? ''}
         participationId={params?.participationId ?? ''}
         isVisible={isOpenModal}
         onClose={() => setIsOpenModal(false)}

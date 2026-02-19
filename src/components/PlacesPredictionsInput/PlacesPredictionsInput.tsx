@@ -31,6 +31,7 @@ import { showInfoToast } from '@helpers';
 export const PlacesPredictionsInput = ({
   containerStyle,
   types,
+  components,
   defaultValue = '',
   onSelectPlace,
   onChangeText,
@@ -48,6 +49,7 @@ export const PlacesPredictionsInput = ({
     query: debouncedInputValue,
     sessiontoken: sessionToken,
     types: types || PlaceAutocompleteType.address,
+    components,
   });
 
   const { mutateAsync: getPlaceTimezoneMutateAsync } = usePlaceTimezone();

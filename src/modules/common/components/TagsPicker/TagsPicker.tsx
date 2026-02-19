@@ -10,6 +10,7 @@ import { styles } from './styles';
 import { TagsPickerProps } from './types';
 
 export const TagsPicker = ({
+  title = 'Tags',
   selectedSubcategoryIds,
   selectedTags = [],
   containerStyle,
@@ -85,7 +86,7 @@ export const TagsPicker = ({
   return (
     <View style={[styles.container, containerStyle]}>
       <View style={styles.headerContainer}>
-        <AppText typography="semibold_18">Tags</AppText>
+        <AppText typography="semibold_18">{title}</AppText>
         <If condition={hasMoreTags && !isLoading}>
           <TouchableOpacity
             onPress={() =>

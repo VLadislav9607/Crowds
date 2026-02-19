@@ -1,15 +1,18 @@
 import { forwardRef } from 'react';
 import { AppModal } from '@components';
 import { AppButton } from '@ui';
-import { goBack, goToScreen, Screens } from '@navigation';
+import { goBack, Screens, useScreenNavigation } from '@navigation';
 import { OrgBaseEventCard } from '../../../events/organization/ui';
 import { useImperativeModal } from '@hooks';
 import { EventCreatedModalRef, EventCreatedModalRefProps } from './types';
 import { styles } from './styles';
+import { OrgEventListItemDto } from '@actions';
 
 export const EventCreatedModal = forwardRef<EventCreatedModalRef>((_, ref) => {
   const { isVisible, close, refProps } =
     useImperativeModal<EventCreatedModalRefProps>(ref);
+
+  const { navigation } = useScreenNavigation<Screens.CreateEvent>();
 
   const onClose = () => {
     close();
@@ -20,7 +23,7 @@ export const EventCreatedModal = forwardRef<EventCreatedModalRef>((_, ref) => {
     close();
 
     setTimeout(() => {
-      goToScreen(Screens.InviteTalents, {
+      navigation.replace(Screens.InviteTalents, {
         eventId: refProps?.event?.id,
         forwardFrom: Screens.CreateEvent,
       });
@@ -34,7 +37,7 @@ export const EventCreatedModal = forwardRef<EventCreatedModalRef>((_, ref) => {
       isVisible={isVisible}
       onClose={onClose}
     >
-      <OrgBaseEventCard event={refProps?.event} />
+      <OrgBaseEventCard event={refProps?.event as OrgEventListItemDto} />
 
       <AppButton
         title="Invite Talents"

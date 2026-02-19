@@ -21,6 +21,7 @@ export const useCreateEventForm = () => {
       endAt: undefined,
       ageGroups: [],
       category: '',
+      subcategoryId: '',
       tags: [],
       paymentMode: 'perHour',
       paymentAmount: undefined,

@@ -20,6 +20,7 @@ export const EventDetailsCardWithMap = ({
   showSkeleton = false,
   containerStyle,
   location,
+  officeCountryName,
   startAtFormatted,
   duration,
 }: EventDetailsCardWithMapProps) => {
@@ -31,6 +32,11 @@ export const EventDetailsCardWithMap = ({
         </Skeleton>
       </View>
     );
+
+  const hasSpecificLocation = !!location?.formatted_address;
+  const locationText = hasSpecificLocation
+    ? location.formatted_address
+    : officeCountryName ?? '';
 
   return (
     <View style={[styles.cardWithMapContainer, containerStyle]}>
@@ -56,40 +62,37 @@ export const EventDetailsCardWithMap = ({
           gap={6}
           textProps={{ typography: 'medium_12', color: 'black_60' }}
         />
-        {/* <IconText
-            icon={ICONS.locationPin('main')}
-            text="23 Km"
-            iconSize={22}
-            gap={6}
-            textProps={{ typography: 'medium_12', color: 'black_60' }}
-          /> */}
       </View>
 
-      <IconText
-        gap={6}
-        icon={ICONS.locationMap('main')}
-        text={location?.formatted_address ?? ''}
-        iconSize={22}
-        textProps={{
-          typography: 'medium_12',
-          color: 'black_60',
-          style: styles.flex1,
-        }}
-      />
-
-      <TouchableOpacity
-        activeOpacity={0.8}
-        onPress={() => {
-          Linking.openURL(
-            `https://maps.google.com/maps?q=${location?.latitude},${location?.longitude}`,
-          );
-        }}
-      >
-        <Image
-          style={styles.mapImage}
-          src={`https://maps.googleapis.com/maps/api/staticmap?center=${location?.latitude},${location?.longitude}&zoom=14&size=1200x720&scale=2&markers=color:0x1A9F9C%7Csize:medium%7C${location?.latitude},${location?.longitude}&maptype=roadmap&style=feature:poi.business%7Cvisibility:on&style=feature:poi.medical%7Cvisibility:on&style=feature:road%7Celement:geometry%7Ccolor:0xffffff&style=feature:water%7Celement:geometry%7Ccolor:0x1A9F9C&key=${GOOGLE_PLACES_API_KEY}`}
+      <If condition={!!locationText}>
+        <IconText
+          gap={6}
+          icon={ICONS.locationMap('main')}
+          text={locationText}
+          iconSize={22}
+          textProps={{
+            typography: 'medium_12',
+            color: 'black_60',
+            style: styles.flex1,
+          }}
         />
-      </TouchableOpacity>
+      </If>
+
+      <If condition={hasSpecificLocation}>
+        <TouchableOpacity
+          activeOpacity={0.8}
+          onPress={() => {
+            Linking.openURL(
+              `https://maps.google.com/maps?q=${location?.latitude},${location?.longitude}`,
+            );
+          }}
+        >
+          <Image
+            style={styles.mapImage}
+            src={`https://maps.googleapis.com/maps/api/staticmap?center=${location?.latitude},${location?.longitude}&zoom=14&size=1200x720&scale=2&markers=color:0x1A9F9C%7Csize:medium%7C${location?.latitude},${location?.longitude}&maptype=roadmap&style=feature:poi.business%7Cvisibility:on&style=feature:poi.medical%7Cvisibility:on&style=feature:road%7Celement:geometry%7Ccolor:0xffffff&style=feature:water%7Celement:geometry%7Ccolor:0x1A9F9C&key=${GOOGLE_PLACES_API_KEY}`}
+          />
+        </TouchableOpacity>
+      </If>
     </View>
   );
 };

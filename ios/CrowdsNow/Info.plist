@@ -49,6 +49,8 @@
 			</dict>
 		</dict>
 	</dict>
+	<key>NSCalendarsFullAccessUsageDescription</key>
+	<string>We need access to your calendar to add events you are attending</string>
 	<key>NSCameraUsageDescription</key>
 	<string>We need access to your camera to take photos for your profile</string>
 	<key>NSLocationWhenInUseUsageDescription</key>

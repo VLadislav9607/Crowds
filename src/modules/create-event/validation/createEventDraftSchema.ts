@@ -106,10 +106,7 @@ const ageGroupDraftSchema = z
 
 export const createEventDraftSchema = z
   .object({
-    eventType: z
-      .enum(['media_production', 'brand_activation'])
-      .optional()
-      .nullable(),
+    eventType: z.enum(['media_production', 'brand_activation']),
     title: z.string().min(1, 'Title of the event is required'),
     description: z.string().optional().nullable(),
     locationType: z
@@ -126,6 +123,7 @@ export const createEventDraftSchema = z
     endAt: z.date().optional().nullable(),
     ageGroups: z.array(ageGroupDraftSchema).optional().nullable(),
     category: z.string().optional().nullable(),
+    subcategoryId: z.string().optional().nullable(),
     tags: z.array(z.string()).optional(),
     paymentMode: z.enum(['perHour', 'fixed']),
     paymentAmount: z
@@ -146,6 +144,22 @@ export const createEventDraftSchema = z
   .refine(validateRegistrationClosingDate, {
     message: 'Registration closing date cannot be after start date',
     path: ['registrationClosingAt'],
+  })
+  .superRefine((data, ctx) => {
+    if (data.locationType === 'specific_location' && !data.location) {
+      ctx.addIssue({
+        code: z.ZodIssueCode.custom,
+        message: 'Please select a location',
+        path: ['location'],
+      });
+    }
+    if (data.locationType === 'entire_country' && !data.locationCountryCode) {
+      ctx.addIssue({
+        code: z.ZodIssueCode.custom,
+        message: 'Please select a country',
+        path: ['locationCountryCode'],
+      });
+    }
   });
 
 export type CreateEventDraftFormData = z.infer<typeof createEventDraftSchema>;
