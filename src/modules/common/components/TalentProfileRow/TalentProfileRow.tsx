@@ -14,6 +14,7 @@ export const TalentProfileRow = ({
   onMenuSelect,
   renderRightAction,
   onPressCard,
+  showMenu = true,
 }: TalentProfileRowProps) => {
   const { name, location, avatar_url, flag } = talent;
   const { showPopup } = usePopupMenu();
@@ -22,7 +23,7 @@ export const TalentProfileRow = ({
     const { pageX, pageY } = event.nativeEvent;
 
     showPopup({
-      items: popUpItems,
+      items: popUpItems ?? [],
       position: { x: pageX, y: pageY },
       onSelect: onMenuSelect,
     });
@@ -49,13 +50,15 @@ export const TalentProfileRow = ({
         </AppText>
       </View>
 
-      {renderRightAction()}
+      {renderRightAction?.()}
 
-      <IconButton
-        icon={ICONS.dotsVertical()}
-        iconSize={24}
-        onPress={handleOpenMenu}
-      />
+      {showMenu && (
+        <IconButton
+          icon={ICONS.dotsVertical()}
+          iconSize={24}
+          onPress={handleOpenMenu}
+        />
+      )}
     </Pressable>
   );
 };

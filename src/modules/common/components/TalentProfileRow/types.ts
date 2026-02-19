@@ -13,8 +13,9 @@ export interface IEventParticipant {
 
 export interface TalentProfileRowProps {
   talent: IEventParticipant;
-  popUpItems: IPopupMenuItem[];
-  renderRightAction: () => React.ReactNode;
-  onMenuSelect: (item: IPopupMenuItem) => void;
+  popUpItems?: IPopupMenuItem[];
+  renderRightAction?: () => React.ReactNode;
+  onMenuSelect?: (item: IPopupMenuItem) => void;
   onPressCard?: () => void;
+  showMenu?: boolean;
 }

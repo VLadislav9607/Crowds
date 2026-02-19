@@ -5,10 +5,11 @@ export interface FilterTalentsModalProps {
   bottomSheetRef: RefObject<BottomSheetModal<null> | null>;
   onApplyFilters?: (filters: FiltersState | null) => void;
   initialFilters?: FiltersState | null;
+  hideDistance?: boolean;
 }
 
 export interface FiltersState {
-  distance: number;
+  distance?: number;
   hairColour?: string;
   hairStyle?: string;
   eyeColour?: string;

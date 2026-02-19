@@ -29,14 +29,6 @@ export const AppButton = ({
   const { buttonStyles, textStyles, disabledButton, disabledText } =
     VARIANTS[variant];
 
-  const combinedButtonStyles = isDisabled
-    ? { ...buttonStyles, ...disabledButton }
-    : buttonStyles;
-
-  const combinedTextStyles = isDisabled
-    ? { ...textStyles, ...disabledText }
-    : textStyles;
-
   const { buttonSizeStyle, textSizeStyles } = SIZES[size];
 
   return (
@@ -44,13 +36,14 @@ export const AppButton = ({
       activeOpacity={0.8}
       style={[
         styles.buttonWrapper,
-        combinedButtonStyles,
+        buttonStyles,
         buttonSizeStyle,
         { marginBottom: mb },
         wrapperStyles,
         /* eslint-disable react-native/no-inline-styles */
         width ? { width, paddingHorizontal: 0 } : {},
         { flexDirection: iconPlace === 'right' ? 'row-reverse' : 'row' },
+        isDisabled && disabledButton,
       ]}
       onPress={onPress}
       disabled={isDisabled || isLoading}
@@ -74,9 +67,10 @@ export const AppButton = ({
             <AppText
               style={[
                 styles.mainTextStyles,
-                combinedTextStyles,
+                textStyles,
                 textSizeStyles,
                 titleStyles,
+                isDisabled && disabledText,
               ]}
             >
               {title}
