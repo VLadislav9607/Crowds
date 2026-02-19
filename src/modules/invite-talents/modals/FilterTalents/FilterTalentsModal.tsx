@@ -23,6 +23,7 @@ export const FilterTalentsModal = ({
   bottomSheetRef,
   onApplyFilters,
   initialFilters,
+  hideDistance,
 }: FilterTalentsModalProps) => {
   const insets = useSafeAreaInsets();
   const [contentHeight, setContentHeight] = useState(0);
@@ -87,18 +88,20 @@ export const FilterTalentsModal = ({
             showsVerticalScrollIndicator={false}
             contentContainerStyle={styles.scrollContent}
           >
-            <RangeSelector
-              label="Distance"
-              labelProps={{ typography: 'h5' }}
-              min={1}
-              max={100}
-              disableRange
-              defaultMinValue={filters?.distance || 1}
-              defaultMaxValue={100}
-              bottomLabels={{ minValueLabel: '1 Km', maxValueLabel: '100 Km' }}
-              onRenderValue={values => `${values.min} Km`}
-              onSlidingComplete={values => updateFilter('distance', values[0])}
-            />
+            {!hideDistance && (
+              <RangeSelector
+                label="Distance"
+                labelProps={{ typography: 'h5' }}
+                min={1}
+                max={100}
+                disableRange
+                defaultMinValue={filters?.distance || 1}
+                defaultMaxValue={100}
+                bottomLabels={{ minValueLabel: '1 Km', maxValueLabel: '100 Km' }}
+                onRenderValue={values => `${values.min} Km`}
+                onSlidingComplete={values => updateFilter('distance', values[0])}
+              />
+            )}
 
             <AppText typography="semibold_18" margin={{ bottom: 16, top: 16 }}>
               By talent profile

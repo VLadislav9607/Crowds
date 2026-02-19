@@ -11,6 +11,7 @@ import {
 } from '../../modules/events';
 import { ChatsTabScreen } from '../../modules/chats';
 import { ProfileScreenTab } from '../../modules/profile';
+import { TalentsTabScreen } from '../../modules/talent-profile';
 
 import { BottomTabsConfigType } from '../types';
 import { Screens } from './screens';
@@ -26,6 +27,11 @@ export const BottomTabsConfig: BottomTabsConfigType = {
       name: Screens.UpcomingEvents,
       component: UpcomingEventsTabScreen,
       icon: (opacity: number) => ICONS.BOTTOM_TABS.events(opacity),
+    },
+    {
+      name: Screens.TalentsTab,
+      component: TalentsTabScreen,
+      icon: (opacity: number) => ICONS.BOTTOM_TABS.profiles(opacity),
     },
     {
       name: Screens.Chats,

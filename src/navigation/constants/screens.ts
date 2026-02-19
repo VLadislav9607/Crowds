@@ -35,6 +35,8 @@ export enum Screens {
   EventsDashboard = 'EventsDashboard',
   UpcomingEvents = 'UpcomingEvents',
 
+  TalentsTab = 'TalentsTab',
+
   //Bottom Tabs Talent
   HomeTalent = 'HomeTalent',
   TalerQRCode = 'TalerQRCode',
