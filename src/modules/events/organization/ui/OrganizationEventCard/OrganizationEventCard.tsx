@@ -14,6 +14,10 @@ export const OrganizationEventCard = ({
   const getOrgEventCardType = (
     eventData: OrgEventListItemDto,
   ): EventCardType => {
+    if (eventData.status === 'cancelled') {
+      return 'cancelled';
+    }
+
     if (eventData.status === 'draft') {
       return 'draft';
     }
@@ -51,6 +55,9 @@ export const OrganizationEventCard = ({
 
     case 'past':
       return <PastEventCard event={event} />;
+
+    case 'cancelled':
+      return <PastEventCard event={event} isCancelled />;
 
     default:
       return <ActiveUpcomingEventCard event={event} />;

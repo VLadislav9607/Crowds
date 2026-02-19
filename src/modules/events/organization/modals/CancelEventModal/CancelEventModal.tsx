@@ -38,8 +38,12 @@ export const CancelEventModal = ({
         queryKey: [TANSTACK_QUERY_KEYS.GET_ORG_EVENTS_COUNTERS],
       });
       showSuccessToast('Event cancelled successfully');
-      handleClose();
-      onSuccess();
+      setStep('reason');
+      setReason('');
+      onClose();
+      setTimeout(() => {
+        onSuccess();
+      }, 300);
     },
   });
 

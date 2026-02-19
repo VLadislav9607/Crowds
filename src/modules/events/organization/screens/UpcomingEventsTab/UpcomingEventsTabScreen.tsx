@@ -103,7 +103,12 @@ export const UpcomingEventsTabScreen = () => {
         <OrganizationEventsList
           filters={{
             brand_id: organizationMember?.current_context?.brand?.id!,
-            status_filter: mainTab === 'drafts' ? 'draft' : 'published',
+            status_filter:
+              mainTab === 'drafts'
+                ? 'draft'
+                : mainTab === 'past'
+                  ? 'published,cancelled'
+                  : 'published',
             ...(mainTab === 'past' && { end_before: now }),
             ...(mainTab === 'active' && { end_after: now }),
             visibility_filter:

@@ -98,6 +98,7 @@ export const TalentEventsViewList = ({
     <>
       <AppFlashList
         data={data}
+        extraData={data.length}
         emptyText="No events found"
         renderItem={renderItem}
         withBottomTab={withBottomTab}

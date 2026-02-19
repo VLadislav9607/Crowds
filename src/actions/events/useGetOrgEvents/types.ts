@@ -39,7 +39,7 @@ export type OrgEventListItemDto =
 export interface UseGetOrgEventsBodyDto {
   brand_id: string;
   search_query?: string;
-  status_filter?: Database['public']['Enums']['EventStatus'];
+  status_filter?: Database['public']['Enums']['EventStatus'] | string;
   visibility_filter?: Database['public']['Enums']['EventVisibility'];
   participants_count?: number;
   limit?: number;
