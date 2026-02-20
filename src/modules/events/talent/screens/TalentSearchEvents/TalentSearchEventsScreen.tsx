@@ -39,6 +39,9 @@ export const TalentSearchEventsScreen = () => {
     [me?.talent?.talent_location],
   );
 
+  const categoryId = params?.categoryId;
+  const categoryName = params?.categoryName;
+
   // Конвертуємо фільтри в параметри для запиту
   const searchFilters = useMemo(() => {
     const convertedFilters = convertFiltersToSearchParams(
@@ -48,8 +51,9 @@ export const TalentSearchEventsScreen = () => {
     return {
       ...convertedFilters,
       search_query: debouncedSearchValue || undefined,
+      ...(categoryId ? { filter_category_id: categoryId } : {}),
     };
-  }, [filters, profileLocation, debouncedSearchValue]);
+  }, [filters, profileLocation, debouncedSearchValue, categoryId]);
 
   // Підраховуємо кількість активних фільтрів (без search_query)
   const filtersCount = useMemo(() => {
@@ -78,6 +82,16 @@ export const TalentSearchEventsScreen = () => {
         },
       ]}
     >
+      {categoryName && (
+        <AppText
+          typography="extra_bold_18"
+          color="black"
+          style={styles.categoryTitle}
+        >
+          {categoryName}
+        </AppText>
+      )}
+
       <View style={styles.searchContainer}>
         <AppSearchInputPrimary
           containerStyle={styles.searchInput}

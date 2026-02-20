@@ -333,33 +333,75 @@ export const TalentEventCard = ({
 
           <If condition={type === 'approved'}>
             <View style={styles.approvedButtons}>
-              <AppButton
-                size="37"
-                icon={ICONS.chats('white')}
-                iconSize={20}
-                title="Message"
-                wrapperStyles={styles.messageButtonWrapper}
-                onPress={() => {}}
-              />
-
-              <TouchableOpacity
-                onPress={() =>
-                  goToScreen(Screens.TalentEventDetails, {
-                    participationId: event.participant?.id!,
-                    eventId: event.event_id,
-                  })
-                }
-                style={styles.eventDetailsButton}
-              >
-                <AppText typography="bold_12" color="main">
-                  EVENT DETAILS
-                </AppText>
-                <SvgXml
-                  xml={ICONS.chevronRight('black')}
-                  width={14}
-                  height={14}
+              <If condition={!event.nda_file_path || !!event.nda_accepted_at}>
+                <AppButton
+                  size="37"
+                  icon={ICONS.chats('white')}
+                  iconSize={20}
+                  title="Message"
+                  wrapperStyles={styles.messageButtonWrapper}
+                  onPress={() => {}}
                 />
-              </TouchableOpacity>
+              </If>
+
+              <If condition={!!event.nda_file_path && !event.nda_accepted_at}>
+                {/* <TouchableOpacity
+                  onPress={() =>
+                    goToScreen(Screens.AcceptEventNda, {
+                      eventId: event.event_id,
+                      participationId: event.participant?.id!,
+                      ndaFilePath: event.nda_file_path!,
+                      ndaFileName: event.nda_file_name || undefined,
+                    })
+                  }
+                  style={styles.ndaButton}
+                >
+                  <AppText typography="bold_12" color="red">
+                    ACCEPT NDA
+                  </AppText>
+                  <SvgXml
+                    xml={ICONS.chevronRight('red')}
+                    width={14}
+                    height={14}
+                  />
+                </TouchableOpacity> */}
+
+                <AppButton
+                  onPress={() => {
+                    goToScreen(Screens.AcceptEventNda, {
+                      eventId: event.event_id,
+                      participationId: event.participant?.id!,
+                      ndaFilePath: event.nda_file_path!,
+                      ndaFileName: event.nda_file_name || undefined,
+                    });
+                  }}
+                  size="37"
+                  iconSize={20}
+                  title="ACCEPT NDA"
+                  wrapperStyles={styles.acceptNdaButtonWrapper}
+                />
+              </If>
+
+              <If condition={!event.nda_file_path || !!event.nda_accepted_at}>
+                <TouchableOpacity
+                  onPress={() =>
+                    goToScreen(Screens.TalentEventDetails, {
+                      participationId: event.participant?.id!,
+                      eventId: event.event_id,
+                    })
+                  }
+                  style={styles.eventDetailsButton}
+                >
+                  <AppText typography="bold_12" color="main">
+                    EVENT DETAILS
+                  </AppText>
+                  <SvgXml
+                    xml={ICONS.chevronRight('black')}
+                    width={14}
+                    height={14}
+                  />
+                </TouchableOpacity>
+              </If>
             </View>
           </If>
         </View>

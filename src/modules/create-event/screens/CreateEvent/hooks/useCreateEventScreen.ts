@@ -43,6 +43,7 @@ export const useCreateEventScreen = () => {
     isLoadingDraft,
     isDraftEditing,
     handleCreateDraft,
+    handleCopyToDraft,
   } = useDraftControll({
     formData,
     onScrollToErrorSection,
@@ -86,5 +87,6 @@ export const useCreateEventScreen = () => {
     handleCreateDraft,
     handleCreatePublishedEvent,
     handleCancel,
+    handleCopyToDraft: isDraftEditing ? handleCopyToDraft : undefined,
   };
 };

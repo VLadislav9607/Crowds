@@ -148,6 +148,9 @@ export const createPublishedEventSchema = z
     category: z
       .string({ message: 'Category is required' })
       .min(1, 'Category is required'),
+    subcategoryId: z
+      .string({ message: 'Subcategory is required' })
+      .min(1, 'Subcategory is required'),
     tags: z.array(z.string()).optional(),
     paymentMode: z.enum(['perHour', 'fixed']),
     paymentAmount: z

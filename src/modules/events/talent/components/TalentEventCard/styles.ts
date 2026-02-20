@@ -89,6 +89,11 @@ export const styles = StyleSheet.create({
     alignItems: 'center',
     gap: 3,
   },
+  ndaButton: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 3,
+  },
   approvedButtons: {
     flexDirection: 'row',
     justifyContent: 'space-between',
@@ -96,6 +101,10 @@ export const styles = StyleSheet.create({
   },
   messageButtonWrapper: {
     width: 117,
+  },
+  acceptNdaButtonWrapper: {
+    width: 140,
+    backgroundColor: COLORS.red,
   },
   saveButton: {
     width: 18,

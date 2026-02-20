@@ -11,6 +11,7 @@ export interface TalentPublicEventsBodyDto {
   filter_date_from?: string; // ISO datetime string
   filter_date_to?: string; // ISO datetime string
   filter_payment_type?: 'hourly' | 'fixed';
+  filter_category_id?: string;
 }
 
 export interface TalentPublicEvent {

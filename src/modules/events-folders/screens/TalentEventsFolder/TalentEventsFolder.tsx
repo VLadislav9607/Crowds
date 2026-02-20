@@ -20,7 +20,10 @@ export const TalentEventsFolder = () => {
     hasNextPage,
     refetch,
     fetchNextPage,
+    error,
   } = useGetEventsInEventsFolder({ folder_id: params?.folderId! });
+
+  console.log('error', error);
 
   return (
     <ScreenWrapper

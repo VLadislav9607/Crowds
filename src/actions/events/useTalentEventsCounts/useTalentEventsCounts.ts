@@ -3,7 +3,7 @@ import { useQuery } from '@tanstack/react-query';
 import { getTalentEventsCountsAction } from './action';
 
 export const useTalentEventsCounts = () => {
-  const { data } = useQuery({
+  const { data, refetch } = useQuery({
     queryKey: [TANSTACK_QUERY_KEYS.GET_TALENT_EVENTS_COUNTS],
     queryFn: getTalentEventsCountsAction,
   });
@@ -13,5 +13,6 @@ export const useTalentEventsCounts = () => {
     pending: data?.[0]?.pending || 0,
     approved: data?.[0]?.approved || 0,
     denied: data?.[0]?.denied || 0,
+    refetch,
   };
 };

@@ -41,4 +41,5 @@ export const TANSTACK_QUERY_KEYS = {
   GET_NOTIFICATION_SETTINGS: 'get_notification_settings',
   GET_NOTIFICATIONS: 'get_notifications',
   GET_UNREAD_NOTIFICATIONS_COUNT: 'get_unread_notifications_count',
+  GET_EVENT_DETAILS_FOR_TALENT: 'get_event_details_for_talent',
 } as const;
