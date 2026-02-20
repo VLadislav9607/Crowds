@@ -1,5 +1,5 @@
 import { useState, useMemo, useCallback, useRef } from 'react';
-import { StyleSheet } from 'react-native';
+import { Keyboard, StyleSheet } from 'react-native';
 import { BottomSheetModal } from '@gorhom/bottom-sheet';
 import { ScreenWrapper, AppFlashList } from '@components';
 import { TalentProfileRow, TalentsListSkeleton } from '@modules/common';
@@ -63,7 +63,10 @@ export const TalentsTabScreen = () => {
         onSearchChange={setSearch}
         placeholder="Search talents..."
         activeFiltersCount={activeFiltersCount}
-        onFilterPress={() => filterModalRef.current?.present()}
+        onFilterPress={() => {
+          Keyboard.dismiss();
+          filterModalRef.current?.present();
+        }}
         containerStyle={styles.searchInput}
       />
 

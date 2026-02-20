@@ -3,6 +3,7 @@ import { useRef } from 'react';
 import { AppSearchInputPrimaryProps } from './types';
 import { SvgXml } from 'react-native-svg';
 import { ICONS } from '@assets';
+import { COLORS } from '@styles';
 import { styles } from './styles';
 
 export const AppSearchInputPrimary = ({
@@ -21,6 +22,7 @@ export const AppSearchInputPrimary = ({
         ref={inputRef}
         style={styles.input}
         placeholder="Search by keyword"
+        placeholderTextColor={COLORS.black_40}
         numberOfLines={1}
         multiline={false}
         {...props}

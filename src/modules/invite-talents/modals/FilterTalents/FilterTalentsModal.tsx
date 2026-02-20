@@ -39,7 +39,6 @@ export const FilterTalentsModal = ({
 
   const handleClearFilters = () => {
     setFilters(null);
-    onApplyFilters?.(null);
   };
 
   const handleApplyFilters = () => {
@@ -108,7 +107,7 @@ export const FilterTalentsModal = ({
             </AppText>
 
             <RangeSelector
-              label="Your Weight"
+              label="Weight"
               min={20}
               max={150}
               defaultMinValue={filters?.weight?.min || 20}
@@ -125,7 +124,7 @@ export const FilterTalentsModal = ({
             />
 
             <RangeSelector
-              label="Your Height"
+              label="Height"
               min={2}
               max={8}
               defaultMinValue={filters?.height?.min || 2}
