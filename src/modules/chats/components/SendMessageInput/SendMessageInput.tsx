@@ -5,6 +5,7 @@ import { useSendMessage, useGetMe } from '@actions';
 import { IconButton } from '@ui';
 import { ICONS } from '@assets';
 
+import { COLORS } from '@styles';
 import { styles } from './styles';
 import { messagesCache } from '../../cache';
 
@@ -75,6 +76,7 @@ export const SendMessageInput = ({ chatId }: SendMessageInputProps) => {
     <View style={[styles.container, { paddingBottom: bottom || 16 }]}>
       <TextInput
         placeholder="Type your message"
+        placeholderTextColor={COLORS.black_40}
         style={[styles.input, { height: inputHeight }]}
         value={message}
         onChangeText={handleChange}

@@ -18,7 +18,6 @@ import {
   ChatType,
   useGetEventForOrgMember,
 } from '@actions';
-import { useCreateChatAndNavigate } from '@modules/common';
 
 import {
   EventDetailsCardWithMap,
@@ -36,7 +35,7 @@ import { SvgXml } from 'react-native-svg';
 export const OrgEventDetails = () => {
   const insets = useSafeAreaInsets();
   const { params } = useScreenNavigation<Screens.TalentEventDetails>();
-  const { me, organizationMember } = useGetMe();
+  const { organizationMember } = useGetMe();
   const { data: event, isLoading } = useGetEventForOrgMember({
     event_id: params?.eventId!,
   });
@@ -54,17 +53,6 @@ export const OrgEventDetails = () => {
     });
 
   const [isCancelModalVisible, setIsCancelModalVisible] = useState(false);
-
-  const { openChat, isPending: isCreatingChat } = useCreateChatAndNavigate();
-
-  const handleChatWithOrganizer = () => {
-    openChat({
-      eventId: params?.eventId ?? '',
-      talentId: me?.id ?? '',
-      title: 'Organizer',
-      imageUrl: '',
-    });
-  };
 
   console.log('event', event);
 
@@ -189,11 +177,20 @@ export const OrgEventDetails = () => {
 
         <View style={styles.chatButtonsContainer}>
           <ChatButton
-            isLoading={isCreatingChat}
             style={styles.chatButton}
             topText="CHAT WITH"
             bottomText="INDIVIDUALS"
-            onPress={handleChatWithOrganizer}
+            onPress={() => {
+              const capacity = event?.event_age_groups?.reduce(
+                (sum, g) => sum + (g.male_count || 0) + (g.female_count || 0) + (g.other_count || 0),
+                0,
+              ) ?? 0;
+              goToScreen(Screens.EventApplicants, {
+                eventId: params?.eventId!,
+                capacity,
+                initialTab: 'approved',
+              });
+            }}
             showSkeleton={isLoading}
           />
           <ChatButton

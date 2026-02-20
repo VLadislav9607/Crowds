@@ -92,7 +92,7 @@ export const TalentProfileScreen = () => {
         {profile.avatar_full_path ? (
           <View style={styles.photoContainer}>
             <AppImage
-              bucket="talents_avatars"
+              bucket='talents_full_body_photos'
               imgPath={profile.avatar_full_path}
               containerStyle={styles.photo}
             />
