@@ -2,7 +2,7 @@ import { useMemo, useEffect } from 'react';
 import { TouchableOpacity, View } from 'react-native';
 
 import { AppText } from '@ui';
-import { Skeleton } from '@components';
+import { If, Skeleton } from '@components';
 import { useGetEventsSubCategories } from '@actions';
 
 import { styles } from './styles';
@@ -12,6 +12,7 @@ export const SubcategoriesPicker = ({
   selectedCategoryIds,
   selectedSubcategories = [],
   containerStyle,
+  errorMessage,
   onSubcategoriesChange,
   onSubcategoryPress,
 }: SubcategoriesPickerProps) => {
@@ -106,6 +107,12 @@ export const SubcategoriesPicker = ({
           })}
         </View>
       )}
+
+      <If condition={!!errorMessage}>
+        <AppText typography="medium_10" color="red">
+          {errorMessage}
+        </AppText>
+      </If>
     </View>
   );
 };

@@ -61,11 +61,12 @@ export const useErrorsScroll = () => {
     options: {
       eventType: basicInfoSectionRef,
       title: basicInfoSectionRef,
-      description: descriptionSectionRef,
       category: basicInfoSectionRef,
+      subcategoryId: basicInfoSectionRef,
       location: basicInfoSectionRef,
       locationCountryCode: basicInfoSectionRef,
       locationType: basicInfoSectionRef,
+      description: descriptionSectionRef,
       campaignStartAt: campaignTimeSectionRef,
       campaignEndAt: campaignTimeSectionRef,
       startAt: dateTimeSectionRef,

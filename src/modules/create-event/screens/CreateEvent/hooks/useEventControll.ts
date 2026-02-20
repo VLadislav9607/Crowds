@@ -136,6 +136,8 @@ export const useEventControll = ({
       location,
       title: values.title,
       category: values.category,
+      subcategoryId: values.subcategoryId,
+      tags: values.tags,
       visibility: values.visibility as Enums<'EventVisibility'>,
       campaignStartAt,
       campaignEndAt,

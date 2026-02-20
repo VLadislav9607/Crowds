@@ -1877,7 +1877,7 @@ PODS:
     - React-RCTFBReactNativeSpec
     - ReactCommon/turbomodule/core
     - SocketRocket
-  - react-native-blob-util (0.24.6):
+  - react-native-blob-util (0.24.7):
     - boost
     - DoubleConversion
     - fast_float
@@ -2727,6 +2727,8 @@ PODS:
     - ReactCommon/turbomodule/core
     - SocketRocket
     - Yoga
+  - RNCalendarEvents (2.2.0):
+    - React
   - RNCAsyncStorage (2.2.0):
     - boost
     - DoubleConversion
@@ -3090,7 +3092,7 @@ PODS:
     - RNWorklets
     - SocketRocket
     - Yoga
-  - RNScreens (4.22.0):
+  - RNScreens (4.23.0):
     - boost
     - DoubleConversion
     - fast_float
@@ -3117,10 +3119,10 @@ PODS:
     - ReactCodegen
     - ReactCommon/turbomodule/bridging
     - ReactCommon/turbomodule/core
-    - RNScreens/common (= 4.22.0)
+    - RNScreens/common (= 4.23.0)
     - SocketRocket
     - Yoga
-  - RNScreens/common (4.22.0):
+  - RNScreens/common (4.23.0):
     - boost
     - DoubleConversion
     - fast_float
@@ -3177,7 +3179,7 @@ PODS:
     - ReactCommon/turbomodule/core
     - SocketRocket
     - Yoga
-  - RNSVG (15.15.2):
+  - RNSVG (15.15.3):
     - boost
     - DoubleConversion
     - fast_float
@@ -3203,10 +3205,10 @@ PODS:
     - ReactCodegen
     - ReactCommon/turbomodule/bridging
     - ReactCommon/turbomodule/core
-    - RNSVG/common (= 15.15.2)
+    - RNSVG/common (= 15.15.3)
     - SocketRocket
     - Yoga
-  - RNSVG/common (15.15.2):
+  - RNSVG/common (15.15.3):
     - boost
     - DoubleConversion
     - fast_float
@@ -3428,6 +3430,7 @@ DEPENDENCIES:
   - ReactCodegen (from `build/generated/ios`)
   - ReactCommon/turbomodule/core (from `../node_modules/react-native/ReactCommon`)
   - RNBootSplash (from `../node_modules/react-native-bootsplash`)
+  - RNCalendarEvents (from `../node_modules/react-native-calendar-events`)
   - "RNCAsyncStorage (from `../node_modules/@react-native-async-storage/async-storage`)"
   - "RNCClipboard (from `../node_modules/@react-native-clipboard/clipboard`)"
   - "RNCMaskedView (from `../node_modules/@react-native-masked-view/masked-view`)"
@@ -3636,6 +3639,8 @@ EXTERNAL SOURCES:
     :path: "../node_modules/react-native/ReactCommon"
   RNBootSplash:
     :path: "../node_modules/react-native-bootsplash"
+  RNCalendarEvents:
+    :path: "../node_modules/react-native-calendar-events"
   RNCAsyncStorage:
     :path: "../node_modules/@react-native-async-storage/async-storage"
   RNCClipboard:
@@ -3730,7 +3735,7 @@ SPEC CHECKSUMS:
   React-logger: 500f2fa5697d224e63c33d913c8a4765319e19bf
   React-Mapbuffer: 06d59c448da7e34eb05b3fb2189e12f6a30fec57
   React-microtasksnativemodule: d1ee999dc9052e23f6488b730fa2d383a4ea40e5
-  react-native-blob-util: 04189c38b188b2b76ee453be34765241c552547f
+  react-native-blob-util: 6dec9023ecc3ee5ac8ad377598e943f9ca63f741
   react-native-date-picker: 4f4f40f6e65798038bb4b1bff47890c2be69c2e6
   react-native-document-picker: a7929a36c2db933505f6aa5108819c40e5ab29c4
   react-native-hole-view: 65534a8404f2a46b6cb86044977c38a3f8ca4fff
@@ -3771,6 +3776,7 @@ SPEC CHECKSUMS:
   ReactCodegen: 878add6c7d8ff8cea87697c44d29c03b79b6f2d9
   ReactCommon: 804dc80944fa90b86800b43c871742ec005ca424
   RNBootSplash: a50a2908e25aa4a3e5e2eb429bcf5ed54cbcb9e2
+  RNCalendarEvents: f90f73666b6bcbb3cc8a491ffbb5e48c0db3de37
   RNCAsyncStorage: 29f0230e1a25f36c20b05f65e2eb8958d6526e82
   RNCClipboard: 4b58c780f63676367640f23c8e114e9bd0cf86ac
   RNCMaskedView: 5ef8c95cbab95334a32763b72896a7b7d07e6299
@@ -3782,11 +3788,11 @@ SPEC CHECKSUMS:
   RNGestureHandler: f97d19585553412302394c42495cdaf499589d34
   RNLocalize: 23e6689ec46c6cba49eb8cde959e30e49160a35b
   RNNotifee: 5e3b271e8ea7456a36eec994085543c9adca9168
-  RNPermissions: aaeb87328ea3d700e1ab6f65aec08e7313cc865c
+  RNPermissions: 127dd9ea8e16cf27e6533e33e8fa92b0d94e0859
   RNReanimated: f1868b36f4b2b52a0ed00062cfda69506f75eaee
-  RNScreens: c77cc7a5d1fbc23f0725b54e96eec81118453382
+  RNScreens: afaf526a9c804c3b4503f950cf3e67ed81e29ada
   RNShare: 60a6937925595bf06a0061ffe8a34dbbdd8c6584
-  RNSVG: 84fa21d6ec8de3808b83a743b96b5a3b491b2272
+  RNSVG: 91da5f4f11f562cafee06e2a6f04bb4401ef1090
   RNWorklets: d9c050940f140af5d8b611d937eab1cbfce5e9a5
   SDWebImage: e9c98383c7572d713c1a0d7dd2783b10599b9838
   SDWebImageAVIFCoder: afe194a084e851f70228e4be35ef651df0fc5c57
@@ -3796,6 +3802,6 @@ SPEC CHECKSUMS:
   VisionCamera: 7187b3dac1ff3071234ead959ce311875748e14f
   Yoga: 689c8e04277f3ad631e60fe2a08e41d411daf8eb
 
-PODFILE CHECKSUM: 4e6952b9070ef4d8ad338109d67642b1e41ff1c9
+PODFILE CHECKSUM: 0ef7ee13062a14bb29a5a80ecb8fb2477a05367c
 
 COCOAPODS: 1.16.2

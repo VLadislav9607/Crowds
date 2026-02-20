@@ -18,7 +18,7 @@ import {
 } from '../../../validation';
 import z, { ZodError } from 'zod';
 import { FieldErrors, FieldError } from 'react-hook-form';
-import { showMutationErrorToast } from '@helpers';
+import { showMutationErrorToast, showSuccessToast } from '@helpers';
 import { SavedToDraftModalRef } from '../../../modals';
 import { Enums } from '@services';
 import { UseDraftControllProps } from '../types';
@@ -48,6 +48,13 @@ export const useDraftControll = ({
       setShowFullScreenLoader(false);
     },
     onSuccess: () => savedToDraftModalRef.current?.open({}),
+  });
+
+  const { mutateAsync: copyDraftMutateAsync } = useCreateEventDraft({
+    onError: e => {
+      showMutationErrorToast(e);
+      setShowFullScreenLoader(false);
+    },
   });
 
   const { mutateAsync: updateDraftMutateAsync } = useUpdateEventDraft({
@@ -175,7 +182,8 @@ export const useDraftControll = ({
       endAt: parseDate(eventData.end_at),
       ageGroups: ageGroups,
       category: eventData.category_id || '',
-      tags: undefined,
+      subcategoryId: (eventData as any).subcategory_id || undefined,
+      tags: (eventData as any).event_tags?.map((t: any) => t.id) || [],
       paymentMode: (eventData.payment_mode === 'per_hour'
         ? 'perHour'
         : eventData.payment_mode === 'fixed'
@@ -291,7 +299,7 @@ export const useDraftControll = ({
     const visibility =
       values.visibility === null ? undefined : values.visibility;
 
-    const eventType = values.eventType || undefined;
+    const eventType = values.eventType;
     const description = values.description || undefined;
     const campaignStartAt = values.campaignStartAt
       ? fromZonedTime(values.campaignStartAt, timezone).toISOString()
@@ -300,11 +308,16 @@ export const useDraftControll = ({
       ? fromZonedTime(values.campaignEndAt, timezone).toISOString()
       : undefined;
 
+    const subcategoryId = values.subcategoryId || undefined;
+    const tags = values.tags?.length ? values.tags : undefined;
+
     return {
       title: values.title,
       eventType,
       description,
       category,
+      subcategoryId,
+      tags,
       visibility: visibility as Enums<'EventVisibility'> | undefined,
       campaignStartAt,
       campaignEndAt,
@@ -392,6 +405,34 @@ export const useDraftControll = ({
     }
   };
 
+  const handleCopyToDraft = async () => {
+    const values = formData.getValues();
+    const result = createEventDraftSchema.safeParse(values);
+
+    if (!result.success) {
+      onProcessDraftErrors(result.error as ZodError<CreateEventFormData>);
+      return;
+    }
+    formData.clearErrors();
+    setShowFullScreenLoader(true);
+
+    try {
+      const dto = await prepareDraftDataToSave(values);
+      if (!dto) {
+        setShowFullScreenLoader(false);
+        return;
+      }
+
+      dto.title = (dto.title || '') + ' Copy';
+      await copyDraftMutateAsync(dto as CreateEventDraftBodyDto);
+      showSuccessToast('Event copied to draft');
+    } catch (error) {
+      console.error('Error copying to draft:', error);
+    } finally {
+      setShowFullScreenLoader(false);
+    }
+  };
+
   useEffect(() => {
     if (draftData && !isLoadingDraft) {
       console.log('draftData', draftData);
@@ -406,6 +447,7 @@ export const useDraftControll = ({
     savedToDraftModalRef,
     isDraftEditing: !!params?.draftId,
     handleCreateDraft,
+    handleCopyToDraft,
     organizationMember,
   };
 };

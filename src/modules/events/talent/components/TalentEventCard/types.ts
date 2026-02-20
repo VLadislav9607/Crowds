@@ -27,6 +27,10 @@ export interface ITalentEventCard {
   can_reaccept?: boolean;
   is_in_any_folder?: boolean;
   office_country_code?: string | null;
+  nda_required?: boolean | null;
+  nda_accepted_at?: string | null;
+  nda_file_path?: string | null;
+  nda_file_name?: string | null;
 }
 
 export interface TalentEventCardProps {
