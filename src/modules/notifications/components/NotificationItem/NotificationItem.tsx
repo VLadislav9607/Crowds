@@ -1,8 +1,15 @@
 import { Pressable, View } from 'react-native';
 import { formatDistanceToNow } from 'date-fns';
 import { AppText } from '@ui';
+import { COLORS } from '@styles';
+import { formatDate } from '@utils';
 import { styles } from './styles';
 import { NotificationItemProps } from './types';
+
+const FLAG_BAR_COLORS: Record<string, string> = {
+  yellow: COLORS.yellow,
+  red: COLORS.red,
+};
 
 export const NotificationItem = ({
   item,
@@ -10,6 +17,13 @@ export const NotificationItem = ({
   onDelete,
 }: NotificationItemProps) => {
   const isUnread = !item.is_read;
+  const isFlag = item.type === 'flag_applied';
+  const flagData = isFlag
+    ? (item.data as Record<string, unknown> | null)
+    : null;
+  const flagBarColor = flagData?.flagType
+    ? FLAG_BAR_COLORS[flagData.flagType as string]
+    : undefined;
 
   return (
     <Pressable
@@ -17,7 +31,11 @@ export const NotificationItem = ({
       onPress={() => onPress(item)}
       onLongPress={() => onDelete(item.id)}
     >
-      {isUnread && <View style={styles.unreadDot} />}
+      {isFlag && flagBarColor ? (
+        <View style={[styles.flagBar, { backgroundColor: flagBarColor }]} />
+      ) : (
+        isUnread && <View style={styles.unreadDot} />
+      )}
       <View style={styles.content}>
         <View style={styles.header}>
           <AppText
@@ -34,9 +52,16 @@ export const NotificationItem = ({
             })}
           </AppText>
         </View>
-        <AppText typography="regular_12" color="dark_gray" numberOfLines={2}>
+        <AppText typography="regular_12" color="dark_gray" numberOfLines={isFlag ? 4 : 2}>
           {item.body}
         </AppText>
+        {flagData?.expiresOn && (
+          <View style={styles.flagExpiresRow}>
+            <AppText typography="regular_12" color="gray_primary">
+              Expires: {formatDate(flagData.expiresOn as string, 'MMM dd, yyyy')}
+            </AppText>
+          </View>
+        )}
       </View>
     </Pressable>
   );

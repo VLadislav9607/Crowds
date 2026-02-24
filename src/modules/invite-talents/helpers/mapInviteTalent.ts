@@ -48,6 +48,5 @@ export const mapInviteTalent = (
     location,
     avatar_url: talent.avatar_path,
     flag,
-    status: 'pending',
   };
 };

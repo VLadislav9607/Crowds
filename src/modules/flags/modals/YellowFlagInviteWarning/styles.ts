@@ -31,7 +31,6 @@ export const styles = StyleSheet.create({
   },
   value: {
     lineHeight: 20,
-    flex: 1,
   },
   expiresRow: {
     marginTop: 4,

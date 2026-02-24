@@ -26,7 +26,6 @@ export const TalentSearchEventsScreen = () => {
 
   const debouncedSearchValue = useDebounce(searchValue, 450);
 
-  // Отримуємо локацію профілю користувача
   const { data: me } = useGetMe();
   const profileLocation = useMemo(
     () =>
@@ -42,7 +41,6 @@ export const TalentSearchEventsScreen = () => {
   const categoryId = params?.categoryId;
   const categoryName = params?.categoryName;
 
-  // Конвертуємо фільтри в параметри для запиту
   const searchFilters = useMemo(() => {
     const convertedFilters = convertFiltersToSearchParams(
       filters,
@@ -55,7 +53,6 @@ export const TalentSearchEventsScreen = () => {
     };
   }, [filters, profileLocation, debouncedSearchValue, categoryId]);
 
-  // Підраховуємо кількість активних фільтрів (без search_query)
   const filtersCount = useMemo(() => {
     return Object.keys(filters).length;
   }, [filters]);
@@ -70,17 +67,11 @@ export const TalentSearchEventsScreen = () => {
 
   return (
     <ScreenWrapper
-      headerVariant="withLogo"
+      headerVariant="withTitleAndImageBg"
+      title="Search events"
       logoProps={{ width: 164, height: 34.5 }}
       containerStyle={styles.container}
       headerStyles={{ backgroundColor: COLORS.black }}
-      rightIcons={[
-        {
-          icon: () => ICONS.bell('white'),
-          onPress: () => {},
-          size: 20,
-        },
-      ]}
     >
       {categoryName && (
         <AppText

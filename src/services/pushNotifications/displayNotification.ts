@@ -12,6 +12,7 @@ import {
 import { queryClient } from '../reactQuery';
 import { TANSTACK_QUERY_KEYS } from '@constants';
 import { navigateFromNotification } from './notificationNavigator';
+import { invalidateCacheForNotificationType } from './notificationCacheInvalidator';
 
 const ANDROID_CHANNEL_ID = 'default';
 
@@ -72,6 +73,12 @@ export const setForegroundMessageHandler = (): void => {
       queryClient.invalidateQueries({
         queryKey: [TANSTACK_QUERY_KEYS.GET_UNREAD_NOTIFICATIONS_COUNT],
       });
+      queryClient.invalidateQueries({
+        queryKey: [TANSTACK_QUERY_KEYS.GET_NOTIFICATIONS],
+      });
+      invalidateCacheForNotificationType(
+        remoteMessage.data?.type,
+      );
     } catch (e) {
       console.warn('[Push] Failed to display foreground notification:', e);
     }
