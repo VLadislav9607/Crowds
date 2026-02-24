@@ -33,4 +33,13 @@ export const styles = StyleSheet.create({
     flex: 1,
     marginRight: 8,
   },
+  flagBar: {
+    width: 4,
+    borderRadius: 2,
+    alignSelf: 'stretch',
+    marginRight: 12,
+  },
+  flagExpiresRow: {
+    marginTop: 6,
+  },
 });

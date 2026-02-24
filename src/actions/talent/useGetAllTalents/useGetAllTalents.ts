@@ -13,6 +13,7 @@ export const useGetAllTalents = (params: GetAllTalentsParams) => {
       params.search,
       params.filters,
     ],
+    staleTime: 0,
     initialPageParam: 1,
     queryFn: async ({ pageParam }) => {
       const offset = ((pageParam as number) - 1) * limit;

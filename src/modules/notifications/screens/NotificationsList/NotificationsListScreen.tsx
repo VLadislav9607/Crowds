@@ -9,6 +9,7 @@ import {
   useDeleteNotification,
   useClearAllNotifications,
   NotificationItem as NotificationItemType,
+  useGetMe,
 } from '@actions';
 import {
   ActionConfirmationModal,
@@ -17,10 +18,13 @@ import {
 import { navigateFromNotification } from '@services';
 import { NotificationItem } from '../../components';
 import { styles } from './styles';
+import { COLORS } from '@styles';
 
 export const NotificationsListScreen = () => {
+  const { isTalent } = useGetMe();
   const { data, isLoading, refetch } = useGetNotifications();
-  const { mutate: markAllAsRead, isPending: isMarkingAllAsRead } = useMarkAllAsRead();
+  const { mutate: markAllAsRead, isPending: isMarkingAllAsRead } =
+    useMarkAllAsRead();
   const { mutate: deleteNotification } = useDeleteNotification();
   const { mutate: clearAll } = useClearAllNotifications();
 
@@ -30,13 +34,10 @@ export const NotificationsListScreen = () => {
 
   const hasUnread = notifications.some(n => !n.is_read);
 
-  const handlePress = useCallback(
-    (item: NotificationItemType) => {
-      const parsedData = item.data as Record<string, string> | null;
-      navigateFromNotification(item.type, parsedData ?? undefined);
-    },
-    [],
-  );
+  const handlePress = useCallback((item: NotificationItemType) => {
+    const parsedData = item.data as Record<string, string> | null;
+    navigateFromNotification(item.type, parsedData ?? undefined);
+  }, []);
 
   const handleDelete = useCallback(
     (id: string) => {
@@ -73,12 +74,14 @@ export const NotificationsListScreen = () => {
   return (
     <ScreenWrapper
       headerVariant="withTitle"
+      headerStyles={isTalent ? { backgroundColor: COLORS.black } : undefined}
       title="Notifications"
       rightIcons={rightIcons}
     >
       <AppFlashList
         data={notifications}
         gap={1}
+        extraData={notifications?.length}
         emptyText="No notifications yet"
         renderItem={({ item }) => (
           <NotificationItem

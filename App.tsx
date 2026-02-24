@@ -9,6 +9,7 @@ import {
   supabase,
   getDeviceId,
   subscribeToTokenRefresh,
+  requestPermissionAndGetTokens,
   queryClient,
   setNotifeeForegroundEventHandler,
 } from './src/services';
@@ -64,6 +65,33 @@ const App = () => {
       .catch(() => {
         onNavigateAfterAuth();
       });
+  }, []);
+
+  useEffect(() => {
+    const { data: { subscription } } = supabase.auth.onAuthStateChange(
+      (event) => {
+        if (event === 'SIGNED_IN') {
+          // Fire and forget — must NOT block setSession
+          (async () => {
+            try {
+              const { granted, tokens } =
+                await requestPermissionAndGetTokens();
+              if (granted && tokens?.fcmToken) {
+                const deviceId = await getDeviceId();
+                await upsertPushDeviceAction({
+                  deviceId,
+                  platform: Platform.OS,
+                  fcmToken: tokens.fcmToken,
+                });
+              }
+            } catch (e) {
+              console.warn('[Push] registration failed:', e);
+            }
+          })();
+        }
+      },
+    );
+    return () => subscription.unsubscribe();
   }, []);
 
   useEffect(() => {

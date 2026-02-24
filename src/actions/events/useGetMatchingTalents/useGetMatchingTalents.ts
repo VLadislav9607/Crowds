@@ -25,6 +25,7 @@ export const useGetMatchingTalents = (
       TANSTACK_QUERY_KEYS.GET_MATCHING_TALENTS,
       JSON.stringify(params),
     ],
+    staleTime: 0,
     initialPageParam: 1,
     queryFn: getInfiniteQueryFn(getMatchingTalentsAction, params),
     getNextPageParam: getInfiniteQueryNextPageParams,

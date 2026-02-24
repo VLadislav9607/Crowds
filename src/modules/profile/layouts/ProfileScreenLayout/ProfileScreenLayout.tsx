@@ -15,7 +15,7 @@ interface ProfileScreenLayoutProps {
 }
 
 export const ProfileScreenLayout = ({ children }: ProfileScreenLayoutProps) => {
-  const { me, isTalent, talent } = useGetMe();
+  const { isTalent, talent } = useGetMe();
   const insets = useSafeAreaInsets();
 
   const location = talent?.talent_location;
@@ -23,6 +23,7 @@ export const ProfileScreenLayout = ({ children }: ProfileScreenLayoutProps) => {
   return (
     <ScreenWithScrollWrapper
       title={isTalent ? undefined : 'Profile'}
+      showBackButton={false}
       headerVariant={isTalent ? 'empty' : 'withTitleAndImageBg'}
       headerStyles={{ backgroundColor: COLORS.black }}
       contentContainerStyle={{ paddingBottom: insets.bottom + 75 }}
@@ -30,7 +31,7 @@ export const ProfileScreenLayout = ({ children }: ProfileScreenLayoutProps) => {
         isTalent ? (
           <TalentProfileHeader
             fullName={talent?.first_name ?? '' + ' ' + talent?.last_name}
-            gender={me?.gender || ''}
+            gender={talent?.gender || ''}
             age={calculateAge(talent?.birth_date)}
             avatarUri={talent?.avatar_path || undefined}
             location={`${location?.country}, ${location?.city}`}

@@ -14,7 +14,7 @@ export const styles = StyleSheet.create({
     marginBottom: 20,
   },
   textareaInput: {
-    height: 70,
+    height: 50,
   },
   textarea: {
     marginBottom: 16,

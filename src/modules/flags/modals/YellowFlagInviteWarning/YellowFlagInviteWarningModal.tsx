@@ -30,7 +30,7 @@ export const YellowFlagInviteWarningModal = ({
     ? `This talent has received a suspension notice for ${durationText}.`
     : 'This talent has an active suspension notice.';
 
-  const reasonLabel = getReasonLabel(flag.reason, flag.description);
+  const reasonLabel = getReasonLabel(flag.reason ?? '', flag.description);
   const expiresFormatted = flag.expires_on
     ? formatDate(flag.expires_on, 'MMM dd, yyyy')
     : null;
@@ -50,8 +50,12 @@ export const YellowFlagInviteWarningModal = ({
           >
             Reason
           </AppText>
-          <AppText typography="regular_14" style={styles.value}>
-            {reasonLabel}
+          <AppText
+            typography="regular_14"
+            numberOfLines={5}
+            style={styles.value}
+          >
+            {reasonLabel + reasonLabel + reasonLabel}
           </AppText>
 
           {expiresFormatted ? (

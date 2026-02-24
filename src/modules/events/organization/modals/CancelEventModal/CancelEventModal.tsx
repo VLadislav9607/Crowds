@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { View } from 'react-native';
+import { Keyboard, TouchableWithoutFeedback, View } from 'react-native';
 import { AppModal } from '@components';
 import { AppButton, AppText, AppTextarea } from '@ui';
 import { useCancelEvent, useGetCancellationInfo } from '@actions';
@@ -140,40 +140,44 @@ export const CancelEventModal = ({
 
   return (
     <AppModal title="Cancel Event" isVisible={isVisible} onClose={handleClose}>
-      <AppText typography="regular_14" color="black_60" margin={{ bottom: 16 }}>
-        Please provide a reason for cancellation.
-      </AppText>
+      <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
+        <View>
+          <AppText typography="regular_14" color="black_60" margin={{ bottom: 16 }}>
+            Please provide a reason for cancellation.
+          </AppText>
 
-      <AppTextarea
-        placeholder="Reason for cancellation..."
-        value={reason}
-        onChangeText={setReason}
-        containerStyle={styles.textarea}
-        style={styles.textareaInput}
-        numberOfLines={2}
-        errorMessage={
-          reason.length > 0 && reason.trim().length < 10
-            ? 'Minimum 10 characters'
-            : undefined
-        }
-      />
+          <AppTextarea
+            placeholder="Reason for cancellation..."
+            value={reason}
+            onChangeText={setReason}
+            containerStyle={styles.textarea}
+            style={styles.textareaInput}
+            numberOfLines={2}
+            errorMessage={
+              reason.length > 0 && reason.trim().length < 10
+                ? 'Minimum 10 characters'
+                : undefined
+            }
+          />
 
-      <AppButton
-        title="Cancel event"
-        mb={10}
-        size="60"
-        wrapperStyles={styles.cancelButton}
-        onPress={handleNext}
-        isLoading={isLoadingInfo}
-        isDisabled={!isReasonValid || isLoadingInfo}
-      />
-      <AppButton
-        title="Go back"
-        variant="withBorder"
-        size="60"
-        onPress={handleClose}
-        isDisabled={isLoadingInfo}
-      />
+          <AppButton
+            title="Cancel event"
+            mb={10}
+            size="60"
+            wrapperStyles={styles.cancelButton}
+            onPress={handleNext}
+            isLoading={isLoadingInfo}
+            isDisabled={!isReasonValid || isLoadingInfo}
+          />
+          <AppButton
+            title="Go back"
+            variant="withBorder"
+            size="60"
+            onPress={handleClose}
+            isDisabled={isLoadingInfo}
+          />
+        </View>
+      </TouchableWithoutFeedback>
     </AppModal>
   );
 };

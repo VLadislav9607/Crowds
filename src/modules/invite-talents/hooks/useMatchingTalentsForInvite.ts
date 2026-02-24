@@ -28,12 +28,14 @@ export const useMatchingTalentsForInvite = (eventId: string) => {
     distance: filters.distance,
   });
 
+  console.log('matchingTalentsResponse', matchingTalentsResponse);
+
   const talentsForInviteList = useMemo<IEventParticipant[]>(() => {
     if (!matchingTalentsResponse?.data) return [];
     return matchingTalentsResponse.data.map(talent =>
       mapInviteTalent(talent, talent.flag as TalentFlag),
     );
-  }, [matchingTalentsResponse]);
+  }, [matchingTalentsResponse?.data]);
 
   const handleOpenFilter = () => {
     filterModalRef.current?.present();
