@@ -25,6 +25,9 @@ export const NotificationItem = ({
     ? FLAG_BAR_COLORS[flagData.flagType as string]
     : undefined;
 
+  const itemData = item.data as Record<string, unknown> | null;
+  const checkinCutoff = itemData?.checkin_cutoff as string | undefined;
+
   return (
     <Pressable
       style={[styles.container, isUnread && styles.unreadContainer]}
@@ -59,6 +62,13 @@ export const NotificationItem = ({
           <View style={styles.flagExpiresRow}>
             <AppText typography="regular_12" color="gray_primary">
               Expires: {formatDate(flagData.expiresOn as string, 'MMM dd, yyyy')}
+            </AppText>
+          </View>
+        )}
+        {checkinCutoff && (
+          <View style={styles.flagExpiresRow}>
+            <AppText typography="regular_12" color="gray_primary">
+              New cutoff: {formatDate(checkinCutoff, 'MMM dd, h:mm a')}
             </AppText>
           </View>
         )}

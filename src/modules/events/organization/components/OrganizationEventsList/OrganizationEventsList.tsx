@@ -13,6 +13,7 @@ import { useRef } from 'react';
 
 export const OrganizationEventsList = ({
   filters,
+  onRefresh,
 }: IOrganizationEventsListProps) => {
   const actionConfirmationModalRef = useRef<ActionConfirmationModalRef>(null);
 
@@ -26,6 +27,11 @@ export const OrganizationEventsList = ({
 
   console.log('error', error);
   const { isRefetchingQuery, refetchQuery } = useRefetchQuery(refetch);
+
+  const handleRefresh = () => {
+    onRefresh?.();
+    refetchQuery();
+  };
 
   const renderEventCard = ({ item }: { item: OrgEventListItemDto }) => (
     <OrganizationEventCard
@@ -72,7 +78,7 @@ export const OrganizationEventsList = ({
         withBottomTab
         skeleton={isLoading ? ListSkeletonComponent : undefined}
         emptyText="No events found"
-        onRefresh={refetchQuery}
+        onRefresh={handleRefresh}
         refreshing={isRefetchingQuery}
         showBottomLoader={hasNextPage}
       />

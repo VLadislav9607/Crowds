@@ -1,4 +1,7 @@
 export interface IEventManageBoardProps {
+  checkinCutoff: string | null;
+  isCutoffPassed: boolean;
+  isUpdating: boolean;
   onOpenEditCheckIn: () => void;
 }
 

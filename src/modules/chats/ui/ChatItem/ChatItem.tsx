@@ -25,10 +25,8 @@ export const ChatItem = ({
     lastMessageAt,
     hasUnread,
   } = chat;
-  const hideBottomBorder =
-    variant === 'organization' && isNextUnread && !hasUnread;
-  const isConsecutiveUnread =
-    variant === 'organization' && hasUnread && isPrevUnread;
+  const hideBottomBorder = isNextUnread && !hasUnread;
+  const isConsecutiveUnread = hasUnread && isPrevUnread;
 
   return (
     <TouchableOpacity

@@ -1,4 +1,4 @@
-import { AppInput } from '@ui';
+import { AppInput, AppText } from '@ui';
 import { View } from 'react-native';
 import {
   CreatePasswordFormData,
@@ -70,6 +70,11 @@ export const CreatePasswordForm = forwardRef<
           />
         )}
       />
+
+      <AppText typography="regular_12" color="gray_primary">
+        Password must be at least 8 characters and contain an uppercase letter,
+        a lowercase letter, and a number.
+      </AppText>
     </View>
   );
 });

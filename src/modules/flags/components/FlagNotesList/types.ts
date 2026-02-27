@@ -10,6 +10,7 @@ export const FLAG_REASONS = {
   late_cancel: 'Cancel event 48 hours before',
   bad_behavior: 'Bad behavior',
   terms_violation: 'Terms violation',
+  talent_complaint: 'Talent Complaint',
   yellow_flag_auto_expiration: 'Yellow flag automatically expired',
   red_flag_auto_expiration: 'Red flag automatically expired',
 };

@@ -22,7 +22,7 @@ export const OrganizationEventCard = ({
       return 'draft';
     }
 
-    const isPastEvent = eventData.start_at && isPast(eventData.start_at);
+    const isPastEvent = eventData.end_at && isPast(eventData.end_at);
     const isFutureEvent = eventData.start_at && isFuture(eventData.start_at);
 
     if (eventData.status === 'published' && isPastEvent) {
