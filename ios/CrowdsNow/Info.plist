@@ -49,7 +49,7 @@
 			</dict>
 		</dict>
 	</dict>
-	<key>NSCalendarUsageDescription</key>
+	<key>NSCalendarsUsageDescription</key>
 	<string>We need access to your calendar to add events you are attending</string>
 	<key>NSCameraUsageDescription</key>
 	<string>We need access to your camera to take photos for your profile</string>

@@ -2,7 +2,7 @@ import { Controller, useForm } from 'react-hook-form';
 import { View } from 'react-native';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { forwardRef, useEffect, useImperativeHandle } from 'react';
-import { AppInput } from '@ui';
+import { AppInput, AppText } from '@ui';
 import {
   ChangePasswordFormData,
   ChangePasswordFormProps,
@@ -88,6 +88,11 @@ export const ChangePasswordForm = forwardRef<
           />
         )}
       />
+
+      <AppText typography="regular_12" color="gray_primary">
+        Password must be at least 8 characters and contain an uppercase letter,
+        a lowercase letter, and a number.
+      </AppText>
     </View>
   );
 });

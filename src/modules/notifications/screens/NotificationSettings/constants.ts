@@ -10,7 +10,7 @@ export const TALENT_NOTIFICATION_OPTIONS: NotificationOption[] = [
   { key: 'groupMessages', title: 'Group messages', enabled: true },
   { key: 'applicationAcceptance', title: 'Application acceptance', enabled: true },
   { key: 'calendarItems', title: 'Calendar items', enabled: false },
-  { key: 'locationCheckInCheckOut', title: 'Location check in/check out', enabled: false },
+  { key: 'checkInCheckOut', title: 'Check in / Check out', enabled: true },
   { key: 'receivedFeedback', title: 'Received feedback', enabled: false },
   { key: 'receivedPayment', title: 'Received payment', enabled: false },
   {
@@ -27,7 +27,7 @@ export const ORG_NOTIFICATION_OPTIONS: NotificationOption[] = [
   { key: 'groupMessages', title: 'Group messages', enabled: true },
   { key: 'eventApplications', title: 'Event applications', enabled: true },
   { key: 'calendarItems', title: 'Calendar items', enabled: false },
-  { key: 'locationCheckInCheckOut', title: 'Location check in/check out', enabled: false },
+  { key: 'checkInCheckOut', title: 'Check in / Check out', enabled: true },
   { key: 'receivedFeedback', title: 'Received feedback', enabled: false },
   { key: 'receivedPayment', title: 'Received payment', enabled: false },
   { key: 'simpleMessages', title: 'Simple messages (hides all details)', enabled: false },
@@ -39,10 +39,12 @@ export const TALENT_DEFAULT_SETTINGS: Record<string, boolean> = {
   notificationsOfEventBefore24Hours: true,
   groupMessages: true,
   applicationAcceptance: true,
+  checkInCheckOut: true,
 };
 
 export const ORG_DEFAULT_SETTINGS: Record<string, boolean> = {
   oneToOneChats: true,
   groupMessages: true,
   eventApplications: true,
+  checkInCheckOut: true,
 };

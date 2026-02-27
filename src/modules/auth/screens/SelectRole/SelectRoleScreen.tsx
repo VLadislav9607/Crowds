@@ -3,7 +3,7 @@ import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { SvgXml } from 'react-native-svg';
 
 import { ICONS, IMAGES } from '@assets';
-import { AppText } from '@ui';
+import { AppButton, AppText } from '@ui';
 import { COLORS, TYPOGRAPHY } from '@styles';
 import { CardSelector } from '@components';
 import { Role } from '@modules/common';
@@ -47,6 +47,14 @@ export const SelectRoleScreen = () => {
         cardStyles={styles.card}
         cardTextStyles={styles.cardText}
       />
+
+      <AppButton
+        title="Log In"
+        variant="withBorder"
+        onPress={() => goToScreen(Screens.SignIn)}
+        wrapperStyles={styles.loginButton}
+        titleStyles={styles.loginButtonText}
+      />
     </ImageBackground>
   );
 };
@@ -66,6 +74,15 @@ const styles = StyleSheet.create({
     textAlign: 'center',
     marginTop: 39,
     marginBottom: 76,
+  },
+  loginButton: {
+    marginTop: 'auto',
+    width: '100%',
+    backgroundColor: 'transparent',
+    borderColor: COLORS.white,
+  },
+  loginButtonText: {
+    color: COLORS.white,
   },
   card: {
     height: 160,

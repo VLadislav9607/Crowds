@@ -5,10 +5,17 @@ import { useGetMe, useGetOrgEventsCounters } from '@actions';
 import { COLORS } from '@styles';
 import { If, NoAccess } from '@components';
 import { styles } from './styles';
-// import { OrganizationEventsList } from '../../components';
+import { OrganizationEventsList } from '../../components';
+import { useCallback, useState } from 'react';
 
 export const EventsDashboardTabScreen = () => {
   const { organizationMember } = useGetMe();
+
+  const [now, setNow] = useState(() => new Date().toISOString());
+
+  const handleRefreshNow = useCallback(() => {
+    setNow(new Date().toISOString());
+  }, []);
 
   const hasViewEventsAccess =
     !!organizationMember?.current_context?.capabilitiesAccess.view_events;
@@ -77,11 +84,15 @@ export const EventsDashboardTabScreen = () => {
           Today’s Events
         </AppText>
 
-        {/* <OrganizationEventsList filters={{
-        brand_id: organizationMember?.current_context?.brand?.id!,
-        status_filter: 'published',
-        start_after: new Date().toISOString(),
-      }} /> */}
+        <OrganizationEventsList
+          filters={{
+            brand_id: organizationMember?.current_context?.brand?.id!,
+            status_filter: 'published',
+            start_before: now,
+            end_after: now,
+          }}
+          onRefresh={handleRefreshNow}
+        />
       </If>
 
       <If condition={!hasViewEventsAccess}>

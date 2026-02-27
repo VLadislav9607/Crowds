@@ -44,7 +44,7 @@ export const OnboardingAuthTalentScreen = () => {
   } = useOnboardingAuthTalentScreen();
 
   const titles: Record<number, string> = {
-    0: 'Where do you live?',
+    0: 'Your city and country',
     1: 'Identity Verification',
     2: 'Set Up Secure Banking\nwith Stripe',
     3: 'Please set up your current\navailability',
