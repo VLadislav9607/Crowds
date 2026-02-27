@@ -13,3 +13,5 @@ export * from './useGetMatchingTalents';
 export * from './useGetEventDetailsForTalent';
 export * from './useAcceptEventNda';
 export * from './useCopyEventToDraft';
+export * from './useUpdateCheckinCutoff';
+export * from './useGetEventNoShowTalents';

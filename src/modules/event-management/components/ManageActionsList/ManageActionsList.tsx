@@ -28,7 +28,7 @@ export const ManageActionsList = ({ eventId }: { eventId: string }) => {
     },
     {
       label: 'View No Show',
-      onPress: () => {},
+      onPress: () => goToScreen(Screens.NoShowTalents, { eventId }),
     },
     {
       label: 'View Check-Outs & Task Completed',

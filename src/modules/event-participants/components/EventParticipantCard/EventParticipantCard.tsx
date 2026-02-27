@@ -14,7 +14,7 @@ export const EventParticipantCard = ({
   onMenuSelect,
   onPressImageIcon,
 }: EventParticipantCardProps) => {
-  const { name, location, status, time, flag, avatarUrl } = participant;
+  const { name, location, status, time, flag, avatarUrl, avatarPath, avatarBucket } = participant;
   const { showPopup } = usePopupMenu();
 
   const handleOpenMenu = (event: GestureResponderEvent) => {
@@ -35,7 +35,7 @@ export const EventParticipantCard = ({
 
   return (
     <View style={styles.container}>
-      <Avatar size={40} name={name} flag={flag} uri={avatarUrl} />
+      <Avatar size={40} name={name} flag={flag} uri={avatarUrl} imgPath={avatarPath} bucket={avatarBucket} />
 
       <View style={styles.infoContainer}>
         <AppText typography="bold_14">{name}</AppText>

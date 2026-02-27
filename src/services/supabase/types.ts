@@ -999,6 +999,7 @@ export type Database = {
           campaign_end_at: string | null;
           campaign_start_at: string | null;
           category_id: string | null;
+          checkin_cutoff: string | null;
           created_at: string;
           creator_id: string;
           deleted_at: string | null;
@@ -1024,6 +1025,7 @@ export type Database = {
           campaign_end_at?: string | null;
           campaign_start_at?: string | null;
           category_id?: string | null;
+          checkin_cutoff?: string | null;
           created_at?: string;
           creator_id: string;
           deleted_at?: string | null;
@@ -1049,6 +1051,7 @@ export type Database = {
           campaign_end_at?: string | null;
           campaign_start_at?: string | null;
           category_id?: string | null;
+          checkin_cutoff?: string | null;
           created_at?: string;
           creator_id?: string;
           deleted_at?: string | null;
@@ -2327,6 +2330,19 @@ export type Database = {
       get_event_details_for_talent: {
         Args: { p_event_id: string };
         Returns: Json;
+      };
+      get_event_no_show_talents: {
+        Args: {
+          p_event_id: string;
+        };
+        Returns: {
+          talentId: string;
+          participationId: string;
+          name: string;
+          avatar_url: string;
+          location: string;
+          flag: string;
+        }[];
       };
       get_event_participants_by_status: {
         Args: {

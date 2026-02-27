@@ -52,6 +52,7 @@ export enum Screens {
   TalentProfile = 'TalentProfile',
   ManageEvent = 'ManageEvent',
   EventParticipants = 'EventParticipants',
+  NoShowTalents = 'NoShowTalents',
   EventApplicants = 'EventApplicants',
   FlagParticipant = 'FlagParticipant',
   InviteTalents = 'InviteTalents',
