@@ -1,5 +1,6 @@
 import { TalentFlag } from '@modules/common';
 import { IPopupMenuItem } from '@components';
+import { BucketsTypes } from '@configs';
 
 export type ParticipantStatus =
   | 'checked_in'
@@ -15,6 +16,8 @@ export interface IEventParticipant {
   time: string;
   flag: TalentFlag;
   avatarUrl?: string;
+  avatarPath?: string;
+  avatarBucket?: BucketsTypes;
 }
 
 export interface EventParticipantCardProps {

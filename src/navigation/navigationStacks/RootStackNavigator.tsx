@@ -50,7 +50,10 @@ import {
 } from '../../modules/notifications';
 import { ManageEventScreen } from '../../modules/event-management';
 import { ChatRoomScreen } from '../../modules/chats';
-import { EventParticipantsScreen } from '../../modules/event-participants';
+import {
+  EventParticipantsScreen,
+  NoShowTalentsScreen,
+} from '../../modules/event-participants';
 import {
   ApplicantProfileScreen,
   EventApplicantsScreen,
@@ -199,6 +202,11 @@ export const RootStackNavigator = () => {
       <RootStack.Screen
         name={Screens.EventParticipants}
         component={EventParticipantsScreen}
+      />
+
+      <RootStack.Screen
+        name={Screens.NoShowTalents}
+        component={NoShowTalentsScreen}
       />
 
       <RootStack.Screen

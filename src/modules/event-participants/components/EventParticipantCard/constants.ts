@@ -4,7 +4,6 @@ import { ParticipantStatus } from './types';
 export const EVENT_PARTICIPANT_POPUP_ITEMS: IPopupMenuItem[] = [
   { label: 'Mark as no show', value: 'mark_no_show' },
   { label: 'Add flag', value: 'add_flag' },
-  { label: 'Report', value: 'report' },
 ];
 
 export const EVENT_PARTICIPANT_STATUS_TEXT: Record<ParticipantStatus, string> =
