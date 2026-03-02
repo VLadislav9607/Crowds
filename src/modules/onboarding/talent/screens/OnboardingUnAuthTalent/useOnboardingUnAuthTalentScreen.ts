@@ -1,4 +1,5 @@
 import { useRef, useState } from 'react';
+import { Keyboard } from 'react-native';
 import {
   TalentNameFormData,
   TalentNameFormRef,
@@ -58,6 +59,8 @@ export const useOnboardingUnAuthTalentScreen = () => {
   ) => setData({ ...data, [key]: value });
 
   const goToNextStep = () => {
+    Keyboard.dismiss();
+
     !step &&
       talentNameFormRef.current?.handleSubmit(handleTalentNameFormSubmit)();
 

@@ -55,7 +55,7 @@ export const OnboardingScreenLayout = ({
       colorHeader="main"
       useAnimatedScrollView={useAnimatedScrollView}
       animatedScrollHandler={animatedScrollHandler}
-      resetKeyboardOffset={true}
+      resetKeyboardOffset={false}
       footer={
         <ForwardBackArrows
           steps={stepsCount}

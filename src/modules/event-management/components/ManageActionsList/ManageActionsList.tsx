@@ -23,16 +23,16 @@ export const ManageActionsList = ({ eventId }: { eventId: string }) => {
       onPress: () => {},
     },
     {
-      label: 'Offer job extension to talent ',
-      onPress: () => {},
+      label: 'View Checked-In Talents',
+      onPress: () => goToScreen(Screens.CheckedInTalents, { eventId }),
     },
     {
-      label: 'View No Show',
+      label: 'View Checked-Out Talents',
+      onPress: () => goToScreen(Screens.CheckedOutTalents, { eventId }),
+    },
+    {
+      label: 'View No Show Talents',
       onPress: () => goToScreen(Screens.NoShowTalents, { eventId }),
-    },
-    {
-      label: 'View Check-Outs & Task Completed',
-      onPress: () => {},
     },
   ];
 

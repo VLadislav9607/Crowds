@@ -53,6 +53,8 @@ import { ChatRoomScreen } from '../../modules/chats';
 import {
   EventParticipantsScreen,
   NoShowTalentsScreen,
+  CheckedInTalentsScreen,
+  CheckedOutTalentsScreen,
 } from '../../modules/event-participants';
 import {
   ApplicantProfileScreen,
@@ -207,6 +209,16 @@ export const RootStackNavigator = () => {
       <RootStack.Screen
         name={Screens.NoShowTalents}
         component={NoShowTalentsScreen}
+      />
+
+      <RootStack.Screen
+        name={Screens.CheckedInTalents}
+        component={CheckedInTalentsScreen}
+      />
+
+      <RootStack.Screen
+        name={Screens.CheckedOutTalents}
+        component={CheckedOutTalentsScreen}
       />
 
       <RootStack.Screen
