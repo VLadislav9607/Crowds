@@ -46,10 +46,10 @@ export const OnboardingAuthTalentScreen = () => {
   const titles: Record<number, string> = {
     0: 'Your city and country',
     1: 'Identity Verification',
-    2: 'Set Up Secure Banking\nwith Stripe',
+    2: '',
     3: 'Please set up your current\navailability',
     4: '',
-    5: '',
+    5: 'Set Up Secure Banking\nwith Stripe',
   };
 
   const renderForwardButton = () => {
@@ -63,7 +63,7 @@ export const OnboardingAuthTalentScreen = () => {
       );
     }
 
-    if (step === 2) {
+    if (step === 5) {
       return (
         <AppButton
           title="Proceed to add details"
@@ -97,7 +97,7 @@ export const OnboardingAuthTalentScreen = () => {
     ),
   };
 
-  const isProfileSetupStep = step === 5;
+  const isProfileSetupStep = step === 2;
   const isAvailabilitySetupStep = step === 4;
 
   return (
@@ -142,9 +142,10 @@ export const OnboardingAuthTalentScreen = () => {
         </If>
 
         <If condition={step === 2}>
-          <TalentStripeSetup
-            ref={talentStripeSetupRef}
-            onSuccess={onStripeSetupSuccess}
+          <TalentProfileSetupForm
+            onFormStateChange={val => setShowFullScreenLoader(val.isUpdating)}
+            ref={talentProfileSetupFormRef}
+            onSuccess={onProfileSetupSuccess}
           />
         </If>
 
@@ -163,10 +164,9 @@ export const OnboardingAuthTalentScreen = () => {
         </If>
 
         <If condition={step === 5}>
-          <TalentProfileSetupForm
-            onFormStateChange={val => setShowFullScreenLoader(val.isUpdating)}
-            ref={talentProfileSetupFormRef}
-            onSuccess={onProfileSetupSuccess}
+          <TalentStripeSetup
+            ref={talentStripeSetupRef}
+            onSuccess={onStripeSetupSuccess}
           />
         </If>
       </View>
