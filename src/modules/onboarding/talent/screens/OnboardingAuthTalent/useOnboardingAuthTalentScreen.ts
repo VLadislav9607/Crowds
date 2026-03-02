@@ -36,10 +36,10 @@ export const useOnboardingAuthTalentScreen = () => {
       profileIdentityVerificationRef.current?.onVerify();
       setTimeout(() => setShowFullScreenLoader(false), 1000);
     }
-    step === 2 && talentStripeSetupRef.current?.onSetup();
+    step === 2 && talentProfileSetupFormRef.current?.onSubmit();
     step === 3 && setStep(4); // Availability info -> Availability form
     step === 4 && talentAvailabilityFormRef.current?.onSubmit();
-    step === 5 && talentProfileSetupFormRef.current?.onSubmit();
+    step === 5 && talentStripeSetupRef.current?.onSetup();
   };
 
   useEffect(() => {
@@ -52,7 +52,7 @@ export const useOnboardingAuthTalentScreen = () => {
       return setStep(Math.min(completedStep, 1));
     }
 
-    // Verified - continue from where user left off, minimum step 2 (Stripe)
+    // Verified - continue from where user left off, minimum step 2 (Profile Setup)
     setStep(Math.max(completedStep, 2));
   }, [isVerified, me?.talent?.onboarding_copleted_step, isLoadingKyc]);
 
@@ -69,13 +69,13 @@ export const useOnboardingAuthTalentScreen = () => {
 
   const onStripeSetupSuccess = () => {
     if (step === null) return;
-    setStep(step + 1);
     setShowFullScreenLoader(false);
-    step < 3 &&
+    step < 6 &&
       updateTalentMutate({
         id: me?.talent?.id!,
-        data: { onboarding_copleted_step: 3 },
+        data: { onboarding_copleted_step: 6 },
       });
+    goToScreen(Screens.BottomTabs);
   };
 
   const onAvailabilitySetupSuccess = () => {
@@ -91,13 +91,13 @@ export const useOnboardingAuthTalentScreen = () => {
 
   const onProfileSetupSuccess = () => {
     if (step === null) return;
+    setStep(step + 1);
     setShowFullScreenLoader(false);
-    step < 6 &&
+    step < 3 &&
       updateTalentMutate({
         id: me?.talent?.id!,
-        data: { onboarding_copleted_step: 6 },
+        data: { onboarding_copleted_step: 3 },
       });
-    goToScreen(Screens.BottomTabs);
   };
 
   const goToPreviousStep = async () => {
