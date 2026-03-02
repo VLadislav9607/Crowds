@@ -53,6 +53,8 @@ export enum Screens {
   ManageEvent = 'ManageEvent',
   EventParticipants = 'EventParticipants',
   NoShowTalents = 'NoShowTalents',
+  CheckedInTalents = 'CheckedInTalents',
+  CheckedOutTalents = 'CheckedOutTalents',
   EventApplicants = 'EventApplicants',
   FlagParticipant = 'FlagParticipant',
   InviteTalents = 'InviteTalents',

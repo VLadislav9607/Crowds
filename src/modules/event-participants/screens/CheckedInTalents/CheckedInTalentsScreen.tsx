@@ -1,6 +1,6 @@
 import { StyleSheet } from 'react-native';
 import { AppFlashList, IPopupMenuItem, ScreenWrapper } from '@components';
-import { useGetEventNoShowTalents } from '@actions';
+import { useGetEventCheckedInTalents } from '@actions';
 import { goToScreen, Screens, useScreenNavigation } from '@navigation';
 import { TalentFlag } from '@modules/common';
 
@@ -8,19 +8,20 @@ import {
   EventParticipantCard,
   IEventParticipant,
 } from '../../components';
+import { formatCheckinTime } from './utils';
 
-export const NoShowTalentsScreen = () => {
-  const { params } = useScreenNavigation<Screens.NoShowTalents>();
+export const CheckedInTalentsScreen = () => {
+  const { params } = useScreenNavigation<Screens.CheckedInTalents>();
   const eventId = params?.eventId ?? '';
 
-  const { data, isLoading } = useGetEventNoShowTalents(eventId);
+  const { data, isLoading } = useGetEventCheckedInTalents(eventId);
 
   const participants: IEventParticipant[] = (data ?? []).map(item => ({
     id: item.participationId,
     name: item.name,
     location: item.location,
-    status: 'no_show' as const,
-    time: '',
+    status: 'checked_in' as const,
+    time: formatCheckinTime(item.checked_in_time),
     flag: (item.flag as TalentFlag) ?? TalentFlag.GREEN,
     avatarPath: item.avatar_url,
     avatarBucket: 'talents_avatars' as const,
@@ -48,7 +49,7 @@ export const NoShowTalentsScreen = () => {
   return (
     <ScreenWrapper
       headerVariant="withTitleAndImageBg"
-      title="No Show Talents"
+      title="Checked in talent"
       showLoader={isLoading}
       contentContainerStyle={styles.contentContainer}
     >
@@ -58,7 +59,7 @@ export const NoShowTalentsScreen = () => {
         renderItem={renderItem}
         contentContainerStyle={{ paddingTop: 16 }}
         gap={0}
-        emptyText="No no-show talents found"
+        emptyText="No checked-in talents found"
       />
     </ScreenWrapper>
   );

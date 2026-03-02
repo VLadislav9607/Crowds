@@ -15,3 +15,5 @@ export * from './useAcceptEventNda';
 export * from './useCopyEventToDraft';
 export * from './useUpdateCheckinCutoff';
 export * from './useGetEventNoShowTalents';
+export * from './useGetEventCheckedInTalents';
+export * from './useGetEventCheckedOutTalents';
