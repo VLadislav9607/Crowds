@@ -40,10 +40,7 @@ import {
   TalentEventHistoryScreen,
   AcceptEventNdaScreen,
 } from '../../modules/events/talent/screens';
-import {
-  ChangePasswordScreen,
-  OrgProfileSetupScreen,
-} from '@modules/profile';
+import { ChangePasswordScreen, OrgProfileSetupScreen } from '@modules/profile';
 import {
   NotificationSettingsScreen,
   NotificationsListScreen,
@@ -81,6 +78,7 @@ import {
   FlagParticipantScreen,
   FlagOrganizationScreen,
 } from '../../modules/flags';
+import { StripeConnectOnboardingScreen } from '../../modules/stripe-connect';
 
 const RootStack = createStackNavigator<RootStackParamList>();
 
@@ -322,6 +320,10 @@ export const RootStackNavigator = () => {
       <RootStack.Screen
         name={Screens.Notifications}
         component={NotificationsListScreen}
+      />
+      <RootStack.Screen
+        name={Screens.StripeConnectOnboarding}
+        component={StripeConnectOnboardingScreen}
       />
     </RootStack.Navigator>
   );

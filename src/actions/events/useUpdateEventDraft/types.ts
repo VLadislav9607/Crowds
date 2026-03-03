@@ -48,7 +48,7 @@ export interface UpdateDraftEventBodyDto {
   title?: string;
   description?: string;
   category?: string;
-  subcategoryId?: string | null;
+  subcategoryIds?: string[] | null;
   tags?: string[] | null;
   visibility?: Enums<'EventVisibility'>;
   campaignStartAt?: string;

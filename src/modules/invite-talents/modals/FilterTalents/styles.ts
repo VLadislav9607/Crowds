@@ -15,6 +15,11 @@ export const styles = StyleSheet.create({
     alignItems: 'center',
     marginBottom: 24,
   },
+  switchRow: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+  },
   scrollContent: {
     gap: 16,
   },

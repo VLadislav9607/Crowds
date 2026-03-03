@@ -84,4 +84,7 @@ export enum Screens {
   //Profile
   NotificationSettings = 'NotificationSettings',
   Notifications = 'Notifications',
+
+  // Stripe Connect
+  StripeConnectOnboarding = 'StripeConnectOnboarding',
 }

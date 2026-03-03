@@ -45,4 +45,7 @@ export const TANSTACK_QUERY_KEYS = {
   GET_EVENT_NO_SHOW_TALENTS: 'get_event_no_show_talents',
   GET_EVENT_CHECKED_IN_TALENTS: 'get_event_checked_in_talents',
   GET_EVENT_CHECKED_OUT_TALENTS: 'get_event_checked_out_talents',
+  GET_EVENT_PAYMENT: 'get_event_payment',
+  GET_CONNECT_ACCOUNT: 'get_connect_account',
+  GET_PLATFORM_BALANCE: 'get_platform_balance',
 } as const;

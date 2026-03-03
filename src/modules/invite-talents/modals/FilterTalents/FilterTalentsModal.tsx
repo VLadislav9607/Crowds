@@ -2,7 +2,12 @@ import { BottomSheetView } from '@gorhom/bottom-sheet';
 import { useState, useEffect } from 'react';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { ScrollView, TouchableOpacity, View } from 'react-native';
-import { AppBottomSheet, RangeSelector, SelectOptionField } from '@components';
+import {
+  AppBottomSheet,
+  RangeSelector,
+  SelectOptionField,
+  Switch,
+} from '@components';
 import { AppButton, AppText } from '@ui';
 import { COLORS, TYPOGRAPHY } from '@styles';
 import {
@@ -88,18 +93,51 @@ export const FilterTalentsModal = ({
             contentContainerStyle={styles.scrollContent}
           >
             {!hideDistance && (
-              <RangeSelector
-                label="Distance"
-                labelProps={{ typography: 'h5' }}
-                min={1}
-                max={100}
-                disableRange
-                defaultMinValue={filters?.distance || 1}
-                defaultMaxValue={100}
-                bottomLabels={{ minValueLabel: '1 Km', maxValueLabel: '100 Km' }}
-                onRenderValue={values => `${values.min} Km`}
-                onSlidingComplete={values => updateFilter('distance', values[0])}
-              />
+              <>
+                <View style={styles.switchRow}>
+                  <AppText typography="h5" color="black_50">
+                    Filter by distance
+                  </AppText>
+                  <Switch
+                    activeColor="main"
+                    active={filters?.distance !== undefined}
+                    onChange={enabled => {
+                      if (enabled) {
+                        updateFilter('distance', 100);
+                      } else {
+                        setFilters(prev => {
+                          if (!prev) return null;
+                          // eslint-disable-next-line @typescript-eslint/no-unused-vars
+                          const { distance: _, ...rest } = prev;
+                          return Object.keys(rest).length > 0
+                            ? (rest as FiltersState)
+                            : null;
+                        });
+                      }
+                    }}
+                  />
+                </View>
+
+                {filters?.distance !== undefined && (
+                  <RangeSelector
+                    label="Distance"
+                    labelProps={{ typography: 'h5' }}
+                    min={1}
+                    max={100}
+                    disableRange
+                    defaultMinValue={filters.distance}
+                    defaultMaxValue={100}
+                    bottomLabels={{
+                      minValueLabel: '1 Km',
+                      maxValueLabel: '100 Km',
+                    }}
+                    onRenderValue={values => `${values.min} Km`}
+                    onSlidingComplete={values =>
+                      updateFilter('distance', values[0])
+                    }
+                  />
+                )}
+              </>
             )}
 
             <AppText typography="semibold_18" margin={{ bottom: 16, top: 16 }}>

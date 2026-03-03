@@ -62,7 +62,7 @@ export const useErrorsScroll = () => {
       eventType: basicInfoSectionRef,
       title: basicInfoSectionRef,
       category: basicInfoSectionRef,
-      subcategoryId: basicInfoSectionRef,
+      subcategoryIds: basicInfoSectionRef,
       location: basicInfoSectionRef,
       locationCountryCode: basicInfoSectionRef,
       locationType: basicInfoSectionRef,

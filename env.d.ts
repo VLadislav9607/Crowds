@@ -3,4 +3,5 @@ declare module '@env' {
   export const SUPABASE_ANON_KEY: string;
   export const GOOGLE_PLACES_API_KEY: string;
   export const GOOGLE_PLACES_API_URL: string;
+  export const STRIPE_PUBLISHABLE_KEY: string;
 }

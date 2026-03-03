@@ -4,19 +4,22 @@ import { AppTabSelector, If, ScreenWrapper } from '@components';
 import { COLORS, TYPOGRAPHY } from '@styles';
 import { AppText } from '@ui';
 import { goBack, Screens, useScreenNavigation } from '@navigation';
+import { useEventParticipantsCounts, useGetEventForOrgMember } from '@actions';
 
 import {
   MyCustomTalentsLists,
   MatchingTalentsTab,
   AllTalentsTab,
 } from '../../components';
-import { useEventParticipantsCounts } from '@actions';
 
 export const InviteTalentsScreen = () => {
   const { params } = useScreenNavigation<Screens.InviteTalents>();
   const eventId = params?.eventId ?? '';
 
   const { invited } = useEventParticipantsCounts(eventId);
+  const { data: eventData } = useGetEventForOrgMember({ event_id: eventId });
+
+  const hasLocation = !!eventData?.event_location;
 
   const [selectedTab, setSelectedTab] = useState('my_lists');
 
@@ -51,11 +54,11 @@ export const InviteTalentsScreen = () => {
       </If>
 
       <If condition={selectedTab === 'matching_talent'}>
-        <MatchingTalentsTab eventId={eventId} />
+        <MatchingTalentsTab eventId={eventId} hasLocation={hasLocation} />
       </If>
 
       <If condition={selectedTab === 'all_talent'}>
-        <AllTalentsTab eventId={eventId} />
+        <AllTalentsTab eventId={eventId} hasLocation={hasLocation} />
       </If>
     </ScreenWrapper>
   );

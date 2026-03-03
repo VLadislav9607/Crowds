@@ -2,7 +2,7 @@ import { BottomSheetView } from '@gorhom/bottom-sheet';
 import { useState, useEffect } from 'react';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { TouchableOpacity, View } from 'react-native';
-import { AppBottomSheet, RangeSelector } from '@components';
+import { AppBottomSheet, RangeSelector, Switch } from '@components';
 import { AppButton, AppText } from '@ui';
 import { TYPOGRAPHY } from '@styles';
 
@@ -12,6 +12,8 @@ import {
   FilterMatchingTalentsState,
 } from './types';
 
+const DEFAULT_DISTANCE = 100;
+
 export const FilterMatchingTalentsModal = ({
   bottomSheetRef,
   onApplyFilters,
@@ -19,8 +21,10 @@ export const FilterMatchingTalentsModal = ({
 }: FilterMatchingTalentsModalProps) => {
   const { bottom } = useSafeAreaInsets();
   const [filters, setFilters] = useState<FilterMatchingTalentsState>({
-    distance: 100,
+    distance: undefined,
   });
+
+  const isDistanceEnabled = filters.distance !== undefined;
 
   useEffect(() => {
     if (initialFilters && Object.keys(initialFilters).length > 0) {
@@ -29,7 +33,7 @@ export const FilterMatchingTalentsModal = ({
   }, [initialFilters]);
 
   const handleClearFilters = () => {
-    const clearedFilters = { distance: 100 };
+    const clearedFilters: FilterMatchingTalentsState = { distance: undefined };
     setFilters(clearedFilters);
     onApplyFilters?.(clearedFilters);
   };
@@ -39,11 +43,11 @@ export const FilterMatchingTalentsModal = ({
     bottomSheetRef?.current?.dismiss();
   };
 
-  const updateFilter = <K extends keyof FilterMatchingTalentsState>(
-    key: K,
-    value: FilterMatchingTalentsState[K],
-  ) => {
-    setFilters(prev => ({ ...prev, [key]: value }));
+  const handleDistanceToggle = (enabled: boolean) => {
+    setFilters(prev => ({
+      ...prev,
+      distance: enabled ? DEFAULT_DISTANCE : undefined,
+    }));
   };
 
   return (
@@ -67,18 +71,33 @@ export const FilterMatchingTalentsModal = ({
             </TouchableOpacity>
           </View>
 
-          <RangeSelector
-            label="Distance"
-            labelProps={{ typography: 'h5' }}
-            min={1}
-            max={100}
-            disableRange
-            defaultMinValue={filters.distance}
-            defaultMaxValue={100}
-            bottomLabels={{ minValueLabel: '1 Km', maxValueLabel: '100 Km' }}
-            onRenderValue={values => `${values.min} Km`}
-            onSlidingComplete={values => updateFilter('distance', values[0])}
-          />
+          <View style={styles.switchRow}>
+            <AppText typography="h5" color="black_50">
+              Filter by distance
+            </AppText>
+            <Switch
+              activeColor="main"
+              active={isDistanceEnabled}
+              onChange={handleDistanceToggle}
+            />
+          </View>
+
+          {isDistanceEnabled && (
+            <RangeSelector
+              label="Distance"
+              labelProps={{ typography: 'h5' }}
+              min={1}
+              max={100}
+              disableRange
+              defaultMinValue={filters.distance ?? DEFAULT_DISTANCE}
+              defaultMaxValue={100}
+              bottomLabels={{ minValueLabel: '1 Km', maxValueLabel: '100 Km' }}
+              onRenderValue={values => `${values.min} Km`}
+              onSlidingComplete={values =>
+                setFilters(prev => ({ ...prev, distance: values[0] }))
+              }
+            />
+          )}
 
           <AppButton
             title="Apply"

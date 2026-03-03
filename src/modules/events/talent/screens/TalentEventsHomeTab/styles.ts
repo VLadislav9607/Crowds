@@ -38,9 +38,13 @@ export const styles = StyleSheet.create({
     rowGap: 16,
     paddingHorizontal: 20,
   },
+  categoriesGrid: {
+    gap: 12,
+    paddingHorizontal: 20,
+  },
   categoriesRow: {
     flexDirection: 'row',
-    gap: 16,
+    gap: 12,
   },
   categoriesContainer: {
     flexDirection: 'row',

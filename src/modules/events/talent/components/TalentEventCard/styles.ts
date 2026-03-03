@@ -103,7 +103,6 @@ export const styles = StyleSheet.create({
     width: 117,
   },
   acceptNdaButtonWrapper: {
-    width: 140,
     backgroundColor: COLORS.red,
   },
   saveButton: {

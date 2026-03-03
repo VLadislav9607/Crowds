@@ -100,7 +100,11 @@ export type RootStackParamList = {
   [Screens.CheckedInTalents]: { eventId: string };
   [Screens.CheckedOutTalents]: { eventId: string };
   [Screens.FlagParticipant]: { talentId: string; eventId: string };
-  [Screens.EventApplicants]: { eventId: string; capacity: number; initialTab?: 'invited' | 'applied' | 'approved' | 'rejected' };
+  [Screens.EventApplicants]: {
+    eventId: string;
+    capacity: number;
+    initialTab?: 'invited' | 'applied' | 'approved' | 'rejected';
+  };
 
   // Talent screens
   [Screens.AvailabilitySetup]: undefined;
@@ -125,4 +129,7 @@ export type RootStackParamList = {
   //Profile
   [Screens.NotificationSettings]: { role: Role };
   [Screens.Notifications]: undefined;
+
+  // Stripe Connect
+  [Screens.StripeConnectOnboarding]: undefined;
 };

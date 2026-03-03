@@ -123,7 +123,7 @@ export const createEventDraftSchema = z
     endAt: z.date().optional().nullable(),
     ageGroups: z.array(ageGroupDraftSchema).optional().nullable(),
     category: z.string().optional().nullable(),
-    subcategoryId: z.string().optional().nullable(),
+    subcategoryIds: z.array(z.string()).optional().nullable(),
     tags: z.array(z.string()).optional(),
     paymentMode: z.enum(['perHour', 'fixed']),
     paymentAmount: z
