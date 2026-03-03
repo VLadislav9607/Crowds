@@ -6,9 +6,10 @@ import { useAllTalents, useSendInvite } from '../../hooks';
 
 interface AllTalentsTabProps {
   eventId: string;
+  hasLocation: boolean;
 }
 
-export const AllTalentsTab = ({ eventId }: AllTalentsTabProps) => {
+export const AllTalentsTab = ({ eventId, hasLocation }: AllTalentsTabProps) => {
   const allTalentsHook = useAllTalents(eventId);
   const {
     invitingTalentId,
@@ -41,6 +42,7 @@ export const AllTalentsTab = ({ eventId }: AllTalentsTabProps) => {
         bottomSheetRef={allTalentsHook.filterModalRef}
         onApplyFilters={allTalentsHook.handleApplyFilters}
         initialFilters={allTalentsHook.filters}
+        hideDistance={!hasLocation}
       />
 
       <YellowFlagInviteWarningModal

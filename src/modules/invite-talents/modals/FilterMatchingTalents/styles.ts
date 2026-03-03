@@ -19,6 +19,12 @@ export const styles = StyleSheet.create({
     flex: 1,
     borderColor: COLORS.main,
   },
+  switchRow: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    marginBottom: 16,
+  },
   applyButtonWrapper: {
     flex: 1,
     marginTop: 24,

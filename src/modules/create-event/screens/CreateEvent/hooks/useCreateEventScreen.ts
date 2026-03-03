@@ -1,4 +1,4 @@
-import { useEffect, useRef } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { useCreateEventForm } from '../../../hooks';
 import { useBoolean } from '@hooks';
 import { ActionConfirmationModalRef } from '@modules/common';
@@ -10,6 +10,7 @@ import { useEventControll } from './useEventControll';
 export const useCreateEventScreen = () => {
   const { formData } = useCreateEventForm();
   const { params } = useScreenNavigation<Screens.CreateEvent>();
+  const [createdDraftId, setCreatedDraftId] = useState<string | null>(null);
 
   useEffect(() => {
     if (params?.eventType) {
@@ -48,15 +49,21 @@ export const useCreateEventScreen = () => {
     formData,
     onScrollToErrorSection,
     setShowFullScreenLoader,
+    createdDraftId,
+    setCreatedDraftId,
   });
 
-  const { eventCreatedModalRef, handleCreatePublishedEvent } = useEventControll(
-    {
-      formData,
-      onScrollToErrorSection,
-      setShowFullScreenLoader,
-    },
-  );
+  const {
+    eventCreatedModalRef,
+    paymentConfirmationModalRef,
+    handleCreatePublishedEvent,
+  } = useEventControll({
+    formData,
+    onScrollToErrorSection,
+    setShowFullScreenLoader,
+    createdDraftId,
+    setCreatedDraftId,
+  });
 
   const handleCancel = async () => {
     actionConfirmationModalRef.current?.open({
@@ -70,6 +77,7 @@ export const useCreateEventScreen = () => {
     actionConfirmationModalRef,
     formData,
     eventCreatedModalRef,
+    paymentConfirmationModalRef,
     savedToDraftModalRef,
     scrollViewRef,
     basicInfoSectionRef,
@@ -84,6 +92,7 @@ export const useCreateEventScreen = () => {
     ageGroupWidgetRefs,
     showFullScreenLoader: showFullScreenLoader || isLoadingDraft,
     isDraftEditing,
+    params,
     handleCreateDraft,
     handleCreatePublishedEvent,
     handleCancel,

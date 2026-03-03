@@ -13,16 +13,22 @@ import {
   VisibilitySection,
 } from '../../forms';
 import { CreateEventFooter } from '../../components';
-import { EventCreatedModal, SavedToDraftModal } from '../../modals';
+import {
+  EventCreatedModal,
+  PaymentConfirmationModal,
+  SavedToDraftModal,
+} from '../../modals';
 import { useCreateEventScreen } from './hooks/useCreateEventScreen';
 import { ActionConfirmationModal } from '@modules/common';
 
 export const CreateEventScreen = () => {
   const {
     formData,
+    params,
     isDraftEditing,
     actionConfirmationModalRef,
     eventCreatedModalRef,
+    paymentConfirmationModalRef,
     savedToDraftModalRef,
     scrollViewRef,
     basicInfoSectionRef,
@@ -56,7 +62,7 @@ export const CreateEventScreen = () => {
             onCancel={handleCancel}
             onSaveDraft={handleCreateDraft}
             onNext={handleCreatePublishedEvent}
-            onCopyToDraft={handleCopyToDraft}
+            onCopyToDraft={params?.draftId ? handleCopyToDraft : undefined}
           />
         }
       >
@@ -77,6 +83,7 @@ export const CreateEventScreen = () => {
 
         <ActionConfirmationModal ref={actionConfirmationModalRef} />
         <EventCreatedModal ref={eventCreatedModalRef} />
+        <PaymentConfirmationModal ref={paymentConfirmationModalRef} />
         <SavedToDraftModal ref={savedToDraftModalRef} />
       </ScreenWithScrollWrapper>
     </FormProvider>
