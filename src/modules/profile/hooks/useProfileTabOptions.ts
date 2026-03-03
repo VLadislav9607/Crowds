@@ -44,7 +44,7 @@ export const useProfileTabOptions = ({
     {
       title: 'Bank account details',
       icon: ICONS.user(),
-      onPress: () => {},
+      onPress: () => goToScreen(Screens.StripeConnectOnboarding),
     },
     {
       title: 'Payment History',

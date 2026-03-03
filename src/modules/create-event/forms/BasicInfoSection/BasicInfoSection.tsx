@@ -37,7 +37,7 @@ export const BasicInfoSection = forwardRef<View>((_props, ref) => {
   const locationCountryCode = watch('locationCountryCode');
   const eventType = watch('eventType');
   const category = watch('category');
-  const subcategoryId = watch('subcategoryId');
+  const subcategoryIds = watch('subcategoryIds');
   const tags = watch('tags');
   const isMediaProduction = eventType === 'media_production';
   const isEntireCountry = locationType === 'entire_country';
@@ -107,7 +107,7 @@ export const BasicInfoSection = forwardRef<View>((_props, ref) => {
           <SelectEventCategoryField
             onChange={val => {
               onChange(val.id);
-              setValue('subcategoryId', '');
+              setValue('subcategoryIds', []);
               setValue('tags', []);
             }}
             selectedCategoryId={value}
@@ -127,19 +127,16 @@ export const BasicInfoSection = forwardRef<View>((_props, ref) => {
 
       <Controller
         control={control}
-        name="subcategoryId"
+        name="subcategoryIds"
         render={({ field: { value, onChange } }) => (
           <SubcategoriesPicker
             selectedCategoryIds={category ? [category] : []}
-            selectedSubcategories={value ? [value] : []}
+            selectedSubcategories={value || []}
             onSubcategoriesChange={vals => {
-              const newValue = vals[vals.length - 1] || '';
-              onChange(newValue);
-              if (newValue !== value) {
-                setValue('tags', []);
-              }
+              onChange(vals);
+              setValue('tags', []);
             }}
-            errorMessage={errors.subcategoryId?.message}
+            errorMessage={errors.subcategoryIds?.message}
           />
         )}
       />
@@ -150,7 +147,7 @@ export const BasicInfoSection = forwardRef<View>((_props, ref) => {
         render={({ field }) => (
           <TagsPicker
             title={tags?.length ? `Tags (${tags.length})` : 'Tags'}
-            selectedSubcategoryIds={subcategoryId ? [subcategoryId] : []}
+            selectedSubcategoryIds={subcategoryIds || []}
             tagsContainerStyle={styles.tagsPicker}
             selectedTags={field.value}
             onTagsChange={field.onChange}

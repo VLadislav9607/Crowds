@@ -8,4 +8,9 @@ export interface CancelEventResDto {
   status: 'cancelled';
   isWithin5Days: boolean;
   notifiedTalents: number;
+  refund: {
+    refunded: boolean;
+    refundAmountCents?: number;
+    stripeRefundId?: string;
+  };
 }

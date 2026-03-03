@@ -9,16 +9,16 @@ import { CreateEventFormData } from '../../validation';
 export const TagsSection = () => {
   const { control, watch } = useFormContext<CreateEventFormData>();
 
-  const subcategoryId = watch('subcategoryId');
+  const subcategoryIds = watch('subcategoryIds');
 
   return (
-    <If condition={!!subcategoryId}>
+    <If condition={!!subcategoryIds?.length}>
       <Controller
         control={control}
         name="tags"
         render={({ field }) => (
           <TagsPicker
-            selectedSubcategoryIds={subcategoryId ? [subcategoryId] : []}
+            selectedSubcategoryIds={subcategoryIds || []}
             tagsContainerStyle={styles.tagsPicker}
             selectedTags={field.value}
             onTagsChange={field.onChange}

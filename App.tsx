@@ -12,7 +12,9 @@ import {
   requestPermissionAndGetTokens,
   queryClient,
   setNotifeeForegroundEventHandler,
+  StripeProvider,
 } from './src/services';
+import { STRIPE_PUBLISHABLE_KEY } from '@env';
 import {
   AppNavigation,
   goToScreen,
@@ -68,29 +70,28 @@ const App = () => {
   }, []);
 
   useEffect(() => {
-    const { data: { subscription } } = supabase.auth.onAuthStateChange(
-      (event) => {
-        if (event === 'SIGNED_IN') {
-          // Fire and forget — must NOT block setSession
-          (async () => {
-            try {
-              const { granted, tokens } =
-                await requestPermissionAndGetTokens();
-              if (granted && tokens?.fcmToken) {
-                const deviceId = await getDeviceId();
-                await upsertPushDeviceAction({
-                  deviceId,
-                  platform: Platform.OS,
-                  fcmToken: tokens.fcmToken,
-                });
-              }
-            } catch (e) {
-              console.warn('[Push] registration failed:', e);
+    const {
+      data: { subscription },
+    } = supabase.auth.onAuthStateChange(event => {
+      if (event === 'SIGNED_IN') {
+        // Fire and forget — must NOT block setSession
+        (async () => {
+          try {
+            const { granted, tokens } = await requestPermissionAndGetTokens();
+            if (granted && tokens?.fcmToken) {
+              const deviceId = await getDeviceId();
+              await upsertPushDeviceAction({
+                deviceId,
+                platform: Platform.OS,
+                fcmToken: tokens.fcmToken,
+              });
             }
-          })();
-        }
-      },
-    );
+          } catch (e) {
+            console.warn('[Push] registration failed:', e);
+          }
+        })();
+      }
+    });
     return () => subscription.unsubscribe();
   }, []);
 
@@ -118,18 +119,20 @@ const App = () => {
   }, []);
 
   return (
-    <QueryClientProvider client={queryClient}>
-      <SafeAreaProvider>
-        <GestureHandlerRootView style={styles.container}>
-          <BottomSheetModalProvider>
-            <PopupMenuProvider>
-              <AppNavigation onNavigationReady={handleNavigationReady} />
-              <AppToast />
-            </PopupMenuProvider>
-          </BottomSheetModalProvider>
-        </GestureHandlerRootView>
-      </SafeAreaProvider>
-    </QueryClientProvider>
+    <StripeProvider publishableKey={STRIPE_PUBLISHABLE_KEY}>
+      <QueryClientProvider client={queryClient}>
+        <SafeAreaProvider>
+          <GestureHandlerRootView style={styles.container}>
+            <BottomSheetModalProvider>
+              <PopupMenuProvider>
+                <AppNavigation onNavigationReady={handleNavigationReady} />
+                <AppToast />
+              </PopupMenuProvider>
+            </BottomSheetModalProvider>
+          </GestureHandlerRootView>
+        </SafeAreaProvider>
+      </QueryClientProvider>
+    </StripeProvider>
   );
 };
 

@@ -58,7 +58,7 @@ export const AcceptEventNdaScreen = () => {
         </TouchableOpacity>
 
         <AppText color="black" typography="bold_16">
-          Event NDA
+          Sign NDA
         </AppText>
 
         <View style={styles.headerSpacer} />

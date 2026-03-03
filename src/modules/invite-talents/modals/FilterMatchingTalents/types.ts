@@ -8,5 +8,5 @@ export interface FilterMatchingTalentsModalProps {
 }
 
 export interface FilterMatchingTalentsState {
-  distance: number;
+  distance: number | undefined;
 }

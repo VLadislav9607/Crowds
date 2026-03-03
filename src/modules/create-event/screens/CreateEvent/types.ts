@@ -5,10 +5,14 @@ export interface UseDraftControllProps {
   formData: UseFormReturn<CreateEventFormData, any, FieldValues>;
   onScrollToErrorSection: (errors: FieldErrors<CreateEventFormData>) => void;
   setShowFullScreenLoader: (value: boolean) => void;
+  createdDraftId: string | null;
+  setCreatedDraftId: (id: string | null) => void;
 }
 
 export interface UseEventControllProps {
   formData: UseFormReturn<CreateEventFormData, any, FieldValues>;
   onScrollToErrorSection: (errors: FieldErrors<CreateEventFormData>) => void;
   setShowFullScreenLoader: (value: boolean) => void;
+  createdDraftId: string | null;
+  setCreatedDraftId: (id: string | null) => void;
 }

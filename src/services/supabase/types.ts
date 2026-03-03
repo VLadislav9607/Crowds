@@ -489,6 +489,42 @@ export type Database = {
           },
         ];
       };
+      event_event_subcategories: {
+        Row: {
+          created_at: string | null;
+          event_id: string;
+          id: string;
+          subcategory_id: string;
+        };
+        Insert: {
+          created_at?: string | null;
+          event_id: string;
+          id?: string;
+          subcategory_id: string;
+        };
+        Update: {
+          created_at?: string | null;
+          event_id?: string;
+          id?: string;
+          subcategory_id?: string;
+        };
+        Relationships: [
+          {
+            foreignKeyName: 'event_event_subcategories_event_id_fkey';
+            columns: ['event_id'];
+            isOneToOne: false;
+            referencedRelation: 'events';
+            referencedColumns: ['id'];
+          },
+          {
+            foreignKeyName: 'event_event_subcategories_subcategory_id_fkey';
+            columns: ['subcategory_id'];
+            isOneToOne: false;
+            referencedRelation: 'events_subcategories';
+            referencedColumns: ['id'];
+          },
+        ];
+      };
       event_event_tags: {
         Row: {
           created_at: string | null;
@@ -705,6 +741,77 @@ export type Database = {
             columns: ['talent_id'];
             isOneToOne: false;
             referencedRelation: 'talents';
+            referencedColumns: ['id'];
+          },
+        ];
+      };
+      event_payments: {
+        Row: {
+          commission_cents: number;
+          created_at: string;
+          currency: string;
+          event_duration_hours: number | null;
+          event_id: string;
+          failed_at: string | null;
+          id: string;
+          paid_at: string | null;
+          payment_amount_per_unit: number | null;
+          payment_mode: string | null;
+          status: Database['public']['Enums']['PaymentStatus'];
+          stripe_customer_id: string;
+          stripe_fee_cents: number;
+          stripe_payment_intent_id: string | null;
+          talent_budget_cents: number;
+          total_charge_cents: number;
+          total_headcount: number | null;
+          updated_at: string;
+        };
+        Insert: {
+          commission_cents: number;
+          created_at?: string;
+          currency?: string;
+          event_duration_hours?: number | null;
+          event_id: string;
+          failed_at?: string | null;
+          id?: string;
+          paid_at?: string | null;
+          payment_amount_per_unit?: number | null;
+          payment_mode?: string | null;
+          status?: Database['public']['Enums']['PaymentStatus'];
+          stripe_customer_id: string;
+          stripe_fee_cents?: number;
+          stripe_payment_intent_id?: string | null;
+          talent_budget_cents: number;
+          total_charge_cents: number;
+          total_headcount?: number | null;
+          updated_at?: string;
+        };
+        Update: {
+          commission_cents?: number;
+          created_at?: string;
+          currency?: string;
+          event_duration_hours?: number | null;
+          event_id?: string;
+          failed_at?: string | null;
+          id?: string;
+          paid_at?: string | null;
+          payment_amount_per_unit?: number | null;
+          payment_mode?: string | null;
+          status?: Database['public']['Enums']['PaymentStatus'];
+          stripe_customer_id?: string;
+          stripe_fee_cents?: number;
+          stripe_payment_intent_id?: string | null;
+          talent_budget_cents?: number;
+          total_charge_cents?: number;
+          total_headcount?: number | null;
+          updated_at?: string;
+        };
+        Relationships: [
+          {
+            foreignKeyName: 'event_payments_event_id_fkey';
+            columns: ['event_id'];
+            isOneToOne: true;
+            referencedRelation: 'events';
             referencedColumns: ['id'];
           },
         ];
@@ -993,6 +1100,81 @@ export type Database = {
           },
         ];
       };
+      event_settlements: {
+        Row: {
+          actual_commission_cents: number;
+          actual_talent_payout_cents: number;
+          completed_talents_count: number;
+          created_at: string;
+          crowds_earnings_cents: number;
+          event_id: string;
+          event_payment_id: string;
+          id: string;
+          notes: string | null;
+          refund_amount_cents: number;
+          review_deadline_at: string;
+          settled_at: string | null;
+          settled_by: string | null;
+          status: Database['public']['Enums']['SettlementStatus'];
+          stripe_refund_id: string | null;
+          total_talents_count: number;
+          updated_at: string;
+        };
+        Insert: {
+          actual_commission_cents?: number;
+          actual_talent_payout_cents?: number;
+          completed_talents_count?: number;
+          created_at?: string;
+          crowds_earnings_cents?: number;
+          event_id: string;
+          event_payment_id: string;
+          id?: string;
+          notes?: string | null;
+          refund_amount_cents?: number;
+          review_deadline_at: string;
+          settled_at?: string | null;
+          settled_by?: string | null;
+          status?: Database['public']['Enums']['SettlementStatus'];
+          stripe_refund_id?: string | null;
+          total_talents_count?: number;
+          updated_at?: string;
+        };
+        Update: {
+          actual_commission_cents?: number;
+          actual_talent_payout_cents?: number;
+          completed_talents_count?: number;
+          created_at?: string;
+          crowds_earnings_cents?: number;
+          event_id?: string;
+          event_payment_id?: string;
+          id?: string;
+          notes?: string | null;
+          refund_amount_cents?: number;
+          review_deadline_at?: string;
+          settled_at?: string | null;
+          settled_by?: string | null;
+          status?: Database['public']['Enums']['SettlementStatus'];
+          stripe_refund_id?: string | null;
+          total_talents_count?: number;
+          updated_at?: string;
+        };
+        Relationships: [
+          {
+            foreignKeyName: 'event_settlements_event_id_fkey';
+            columns: ['event_id'];
+            isOneToOne: true;
+            referencedRelation: 'events';
+            referencedColumns: ['id'];
+          },
+          {
+            foreignKeyName: 'event_settlements_event_payment_id_fkey';
+            columns: ['event_payment_id'];
+            isOneToOne: false;
+            referencedRelation: 'event_payments';
+            referencedColumns: ['id'];
+          },
+        ];
+      };
       events: {
         Row: {
           brief: string | null;
@@ -1010,9 +1192,11 @@ export type Database = {
           nda_file_name: string | null;
           nda_file_path: string | null;
           nda_required: boolean | null;
+          no_show_flags_processed: boolean;
           office_id: string;
           payment_amount: number | null;
           payment_mode: Database['public']['Enums']['EventPaymentMode'] | null;
+          payment_status: Database['public']['Enums']['PaymentStatus'] | null;
           registration_closes_at: string | null;
           start_at: string | null;
           status: Database['public']['Enums']['EventStatus'];
@@ -1036,9 +1220,11 @@ export type Database = {
           nda_file_name?: string | null;
           nda_file_path?: string | null;
           nda_required?: boolean | null;
+          no_show_flags_processed?: boolean;
           office_id: string;
           payment_amount?: number | null;
           payment_mode?: Database['public']['Enums']['EventPaymentMode'] | null;
+          payment_status?: Database['public']['Enums']['PaymentStatus'] | null;
           registration_closes_at?: string | null;
           start_at?: string | null;
           status?: Database['public']['Enums']['EventStatus'];
@@ -1062,9 +1248,11 @@ export type Database = {
           nda_file_name?: string | null;
           nda_file_path?: string | null;
           nda_required?: boolean | null;
+          no_show_flags_processed?: boolean;
           office_id?: string;
           payment_amount?: number | null;
           payment_mode?: Database['public']['Enums']['EventPaymentMode'] | null;
+          payment_status?: Database['public']['Enums']['PaymentStatus'] | null;
           registration_closes_at?: string | null;
           start_at?: string | null;
           status?: Database['public']['Enums']['EventStatus'];
@@ -1632,6 +1820,68 @@ export type Database = {
         };
         Relationships: [];
       };
+      stripe_connect_accounts: {
+        Row: {
+          charges_enabled: boolean;
+          created_at: string;
+          details_submitted: boolean;
+          id: string;
+          onboarding_completed: boolean;
+          payouts_enabled: boolean;
+          stripe_account_id: string;
+          talent_id: string;
+        };
+        Insert: {
+          charges_enabled?: boolean;
+          created_at?: string;
+          details_submitted?: boolean;
+          id?: string;
+          onboarding_completed?: boolean;
+          payouts_enabled?: boolean;
+          stripe_account_id: string;
+          talent_id: string;
+        };
+        Update: {
+          charges_enabled?: boolean;
+          created_at?: string;
+          details_submitted?: boolean;
+          id?: string;
+          onboarding_completed?: boolean;
+          payouts_enabled?: boolean;
+          stripe_account_id?: string;
+          talent_id?: string;
+        };
+        Relationships: [];
+      };
+      stripe_customers: {
+        Row: {
+          created_at: string;
+          id: string;
+          organization_network_id: string;
+          stripe_customer_id: string;
+        };
+        Insert: {
+          created_at?: string;
+          id?: string;
+          organization_network_id: string;
+          stripe_customer_id: string;
+        };
+        Update: {
+          created_at?: string;
+          id?: string;
+          organization_network_id?: string;
+          stripe_customer_id?: string;
+        };
+        Relationships: [
+          {
+            foreignKeyName: 'stripe_customers_organization_network_id_fkey';
+            columns: ['organization_network_id'];
+            isOneToOne: true;
+            referencedRelation: 'organizations_network';
+            referencedColumns: ['id'];
+          },
+        ];
+      };
       talent_event_folder_items: {
         Row: {
           added_at: string;
@@ -1755,6 +2005,76 @@ export type Database = {
             columns: ['talent_id'];
             isOneToOne: true;
             referencedRelation: 'talents';
+            referencedColumns: ['id'];
+          },
+        ];
+      };
+      talent_payouts: {
+        Row: {
+          amount_cents: number;
+          created_at: string;
+          event_id: string;
+          had_checkin: boolean;
+          had_checkout: boolean;
+          hours_worked: number | null;
+          id: string;
+          participation_id: string | null;
+          settlement_id: string;
+          status: Database['public']['Enums']['TalentPayoutStatus'];
+          stripe_transfer_id: string | null;
+          talent_id: string;
+          updated_at: string;
+        };
+        Insert: {
+          amount_cents?: number;
+          created_at?: string;
+          event_id: string;
+          had_checkin?: boolean;
+          had_checkout?: boolean;
+          hours_worked?: number | null;
+          id?: string;
+          participation_id?: string | null;
+          settlement_id: string;
+          status?: Database['public']['Enums']['TalentPayoutStatus'];
+          stripe_transfer_id?: string | null;
+          talent_id: string;
+          updated_at?: string;
+        };
+        Update: {
+          amount_cents?: number;
+          created_at?: string;
+          event_id?: string;
+          had_checkin?: boolean;
+          had_checkout?: boolean;
+          hours_worked?: number | null;
+          id?: string;
+          participation_id?: string | null;
+          settlement_id?: string;
+          status?: Database['public']['Enums']['TalentPayoutStatus'];
+          stripe_transfer_id?: string | null;
+          talent_id?: string;
+          updated_at?: string;
+        };
+        Relationships: [
+          {
+            foreignKeyName: 'talent_payouts_event_id_fkey';
+            columns: ['event_id'];
+            isOneToOne: false;
+            referencedRelation: 'events';
+            referencedColumns: ['id'];
+          },
+          {
+            foreignKeyName: 'talent_payouts_participation_id_fkey';
+            columns: ['participation_id'];
+            isOneToOne: false;
+            referencedRelation: 'event_participations';
+            referencedColumns: ['id'];
+          },
+          {
+            foreignKeyName: 'talent_payouts_settlement_id_fkey';
+            columns: ['settlement_id'];
+            isOneToOne: false;
+            referencedRelation: 'event_settlements';
             referencedColumns: ['id'];
           },
         ];
@@ -2137,7 +2457,6 @@ export type Database = {
         Args: { username_param: string };
         Returns: boolean;
       };
-      clear_all_notifications: { Args: never; Returns: undefined };
       copy_event_to_draft: { Args: { p_event_id: string }; Returns: string };
       core_accessible_events: {
         Args: { p_context: string; p_user_id: string };
@@ -2146,6 +2465,7 @@ export type Database = {
           campaign_end_at: string | null;
           campaign_start_at: string | null;
           category_id: string | null;
+          checkin_cutoff: string | null;
           created_at: string;
           creator_id: string;
           deleted_at: string | null;
@@ -2156,9 +2476,11 @@ export type Database = {
           nda_file_name: string | null;
           nda_file_path: string | null;
           nda_required: boolean | null;
+          no_show_flags_processed: boolean;
           office_id: string;
           payment_amount: number | null;
           payment_mode: Database['public']['Enums']['EventPaymentMode'] | null;
+          payment_status: Database['public']['Enums']['PaymentStatus'] | null;
           registration_closes_at: string | null;
           start_at: string | null;
           status: Database['public']['Enums']['EventStatus'];
@@ -2323,6 +2645,30 @@ export type Database = {
           owner_id: string;
         }[];
       };
+      get_event_checked_in_talents: {
+        Args: { p_event_id: string };
+        Returns: {
+          avatar_url: string;
+          checked_in_time: string;
+          flag: string;
+          location: string;
+          name: string;
+          participationId: string;
+          talentId: string;
+        }[];
+      };
+      get_event_checked_out_talents: {
+        Args: { p_event_id: string };
+        Returns: {
+          avatar_url: string;
+          checked_out_time: string;
+          flag: string;
+          location: string;
+          name: string;
+          participationId: string;
+          talentId: string;
+        }[];
+      };
       get_event_details_for_brand_member: {
         Args: { p_event_id: string };
         Returns: Json;
@@ -2451,6 +2797,8 @@ export type Database = {
         };
         Returns: Json;
       };
+      get_platform_earnings_summary: { Args: never; Returns: Json };
+      get_platform_reserved_funds: { Args: never; Returns: Json };
       get_public_events_for_talent: {
         Args: {
           filter_category_id?: string;
@@ -2648,6 +2996,10 @@ export type Database = {
         Args: { p_event_id: string; p_list_id: string; p_name: string };
         Returns: undefined;
       };
+      update_event_checkin_cutoff: {
+        Args: { p_checkin_cutoff: string; p_event_id: string };
+        Returns: Json;
+      };
       update_event_draft: {
         Args: { event_id_param: string; payload: Json };
         Returns: string;
@@ -2802,6 +3154,19 @@ export type Database = {
         | 'edit_bank_info';
       participation_initiator: 'organization' | 'talent';
       participation_status: 'pending' | 'approved' | 'rejected';
+      PaymentStatus:
+        | 'pending'
+        | 'processing'
+        | 'succeeded'
+        | 'failed'
+        | 'refunded'
+        | 'partially_refunded';
+      SettlementStatus:
+        | 'pending'
+        | 'review'
+        | 'processing'
+        | 'completed'
+        | 'failed';
       SkinTone:
         | 'porcelain'
         | 'ivory'
@@ -2815,6 +3180,12 @@ export type Database = {
         | 'almond'
         | 'chestnut'
         | 'espresso';
+      TalentPayoutStatus:
+        | 'pending'
+        | 'approved'
+        | 'rejected'
+        | 'paid'
+        | 'failed';
       TattooSpot:
         | 'on_sleeves'
         | 'on_body'
@@ -3070,6 +3441,21 @@ export const Constants = {
       ],
       participation_initiator: ['organization', 'talent'],
       participation_status: ['pending', 'approved', 'rejected'],
+      PaymentStatus: [
+        'pending',
+        'processing',
+        'succeeded',
+        'failed',
+        'refunded',
+        'partially_refunded',
+      ],
+      SettlementStatus: [
+        'pending',
+        'review',
+        'processing',
+        'completed',
+        'failed',
+      ],
       SkinTone: [
         'porcelain',
         'ivory',
@@ -3084,6 +3470,7 @@ export const Constants = {
         'chestnut',
         'espresso',
       ],
+      TalentPayoutStatus: ['pending', 'approved', 'rejected', 'paid', 'failed'],
       TattooSpot: [
         'on_sleeves',
         'on_body',

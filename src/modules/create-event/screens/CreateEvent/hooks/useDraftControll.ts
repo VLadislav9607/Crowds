@@ -28,6 +28,8 @@ export const useDraftControll = ({
   formData,
   onScrollToErrorSection,
   setShowFullScreenLoader,
+  createdDraftId,
+  setCreatedDraftId,
 }: UseDraftControllProps) => {
   const { organizationMember } = useGetMe();
   const offices = organizationMember?.current_context?.offices ?? [];
@@ -182,7 +184,8 @@ export const useDraftControll = ({
       endAt: parseDate(eventData.end_at),
       ageGroups: ageGroups,
       category: eventData.category_id || '',
-      subcategoryId: (eventData as any).subcategory_id || undefined,
+      subcategoryIds:
+        (eventData as any).event_subcategories?.map((s: any) => s.id) || [],
       tags: (eventData as any).event_tags?.map((t: any) => t.id) || [],
       paymentMode: (eventData.payment_mode === 'per_hour'
         ? 'perHour'
@@ -308,7 +311,9 @@ export const useDraftControll = ({
       ? fromZonedTime(values.campaignEndAt, timezone).toISOString()
       : undefined;
 
-    const subcategoryId = values.subcategoryId || undefined;
+    const subcategoryIds = values.subcategoryIds?.length
+      ? values.subcategoryIds
+      : undefined;
     const tags = values.tags?.length ? values.tags : undefined;
 
     return {
@@ -316,7 +321,7 @@ export const useDraftControll = ({
       eventType,
       description,
       category,
-      subcategoryId,
+      subcategoryIds,
       tags,
       visibility: visibility as Enums<'EventVisibility'> | undefined,
       campaignStartAt,
@@ -324,62 +329,60 @@ export const useDraftControll = ({
       startAt,
       endAt,
       registrationClosingAt,
-      payment_mode: values.paymentMode as Enums<'EventPaymentMode'>,
+      payment_mode: (values.paymentMode === 'perHour'
+        ? 'per_hour'
+        : 'fixed') as Enums<'EventPaymentMode'>,
       payment_amount,
       eventBrief,
       location,
       ageGroups,
       ndaDocumentName,
       ndaDocumentPath,
-      officeId: resolvedOfficeId,
+      officeId: resolvedOfficeId!,
     };
   };
 
-  const handleUpdateDraft = async () => {
-    if (!params?.draftId) {
-      return;
-    }
-    const values = formData.getValues();
-    const result = createEventDraftSchema.safeParse(values);
-
-    if (!result.success) {
-      onProcessDraftErrors(result.error as ZodError<CreateEventFormData>);
-      return;
-    }
-    formData.clearErrors();
-    setShowFullScreenLoader(true);
-
-    try {
-      const dto = await prepareDraftDataToSave(values);
-      if (!dto) {
-        setShowFullScreenLoader(false);
-        return;
-      }
-
-      // Convert undefined values to null so database can delete these fields
-      const body: UpdateDraftEventBodyDto = Object.fromEntries(
-        Object.entries(dto).map(([key, value]) => [
-          key,
-          value === undefined ? null : value,
-        ]),
-      ) as UpdateDraftEventBodyDto;
-
-      await updateDraftMutateAsync({
-        eventId: params.draftId,
-        body,
-      });
-    } catch (error) {
-      console.error('Error updating draft:', error);
-    } finally {
-      setShowFullScreenLoader(false);
-    }
-  };
-
   const handleCreateDraft = async () => {
-    if (params?.draftId) {
-      handleUpdateDraft();
+    const existingDraftId = params?.draftId || createdDraftId;
+
+    if (existingDraftId) {
+      // Draft already exists (from route params or created during payment flow)
+      const values = formData.getValues();
+      const result = createEventDraftSchema.safeParse(values);
+
+      if (!result.success) {
+        onProcessDraftErrors(result.error as ZodError<CreateEventFormData>);
+        return;
+      }
+      formData.clearErrors();
+      setShowFullScreenLoader(true);
+
+      try {
+        const dto = await prepareDraftDataToSave(values);
+        if (!dto) {
+          setShowFullScreenLoader(false);
+          return;
+        }
+
+        const body: UpdateDraftEventBodyDto = Object.fromEntries(
+          Object.entries(dto).map(([key, value]) => [
+            key,
+            value === undefined ? null : value,
+          ]),
+        ) as UpdateDraftEventBodyDto;
+
+        await updateDraftMutateAsync({
+          eventId: existingDraftId,
+          body,
+        });
+      } catch (error) {
+        console.error('Error updating draft:', error);
+      } finally {
+        setShowFullScreenLoader(false);
+      }
       return;
     }
+
     const values = formData.getValues();
     const result = createEventDraftSchema.safeParse(values);
 
@@ -387,17 +390,22 @@ export const useDraftControll = ({
       onProcessDraftErrors(result.error as ZodError<CreateEventFormData>);
       return;
     }
+
     formData.clearErrors();
     setShowFullScreenLoader(true);
 
     try {
       const dto = await prepareDraftDataToSave(values);
+
       if (!dto) {
         setShowFullScreenLoader(false);
         return;
       }
 
-      await createEventDraftMutateAsync(dto as CreateEventDraftBodyDto);
+      const draftResult = await createEventDraftMutateAsync(
+        dto as CreateEventDraftBodyDto,
+      );
+      setCreatedDraftId(draftResult.draft_id);
     } catch (error) {
       console.error('Error creating draft:', error);
     } finally {
@@ -445,7 +453,7 @@ export const useDraftControll = ({
   return {
     isLoadingDraft,
     savedToDraftModalRef,
-    isDraftEditing: !!params?.draftId,
+    isDraftEditing: !!(params?.draftId || createdDraftId),
     handleCreateDraft,
     handleCopyToDraft,
     organizationMember,
