@@ -7,14 +7,18 @@ import { useDebounce } from '@hooks';
 import { mapInviteTalent } from '../helpers';
 import { FilterMatchingTalentsState } from '../modals';
 
-export const useMatchingTalentsForInvite = (eventId: string) => {
+export const useMatchingTalentsForInvite = (
+  eventId: string,
+  _hasLocation: boolean,
+) => {
   const [search, setSearch] = useState('');
   const [filters, setFilters] = useState<FilterMatchingTalentsState>({
-    distance: 100,
+    distance: undefined,
   });
-  const [activeFiltersCount, setActiveFiltersCount] = useState(0);
   const filterModalRef = useRef<BottomSheetModal<null>>(null);
   const debouncedSearch = useDebounce(search, 400);
+
+  const activeFiltersCount = filters.distance !== undefined ? 1 : 0;
 
   const {
     data: matchingTalentsResponse,
@@ -43,7 +47,6 @@ export const useMatchingTalentsForInvite = (eventId: string) => {
 
   const handleApplyFilters = (appliedFilters: FilterMatchingTalentsState) => {
     setFilters(appliedFilters);
-    setActiveFiltersCount(1);
   };
 
   const handleEndReached = () => {
@@ -55,7 +58,6 @@ export const useMatchingTalentsForInvite = (eventId: string) => {
     search,
     setSearch,
     activeFiltersCount,
-    setActiveFiltersCount,
     filterModalRef,
     handleOpenFilter,
     handleApplyFilters,

@@ -16,3 +16,5 @@ export * from './team-invitations';
 export * from './team-members';
 export * from './notification-settings';
 export * from './notifications';
+export * from './payments';
+export * from './stripe-connect';

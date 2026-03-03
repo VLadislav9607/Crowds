@@ -6,10 +6,14 @@ import { useMatchingTalentsForInvite, useSendInvite } from '../../hooks';
 
 interface MatchingTalentsTabProps {
   eventId: string;
+  hasLocation: boolean;
 }
 
-export const MatchingTalentsTab = ({ eventId }: MatchingTalentsTabProps) => {
-  const matchingTalentsHook = useMatchingTalentsForInvite(eventId);
+export const MatchingTalentsTab = ({
+  eventId,
+  hasLocation,
+}: MatchingTalentsTabProps) => {
+  const matchingTalentsHook = useMatchingTalentsForInvite(eventId, hasLocation);
   const {
     invitingTalentId,
     handleInvite,
@@ -25,6 +29,7 @@ export const MatchingTalentsTab = ({ eventId }: MatchingTalentsTabProps) => {
         onSearchChange={matchingTalentsHook.setSearch}
         activeFiltersCount={matchingTalentsHook.activeFiltersCount}
         onFilterPress={matchingTalentsHook.handleOpenFilter}
+        hideFilterButton={!hasLocation}
       />
 
       <TalentsList
@@ -37,11 +42,13 @@ export const MatchingTalentsTab = ({ eventId }: MatchingTalentsTabProps) => {
         onPressRightAction={talentId => handleInvite(eventId, talentId)}
       />
 
-      <FilterMatchingTalentsModal
-        bottomSheetRef={matchingTalentsHook.filterModalRef}
-        onApplyFilters={matchingTalentsHook.handleApplyFilters}
-        initialFilters={matchingTalentsHook.filters}
-      />
+      {hasLocation && (
+        <FilterMatchingTalentsModal
+          bottomSheetRef={matchingTalentsHook.filterModalRef}
+          onApplyFilters={matchingTalentsHook.handleApplyFilters}
+          initialFilters={matchingTalentsHook.filters}
+        />
+      )}
 
       <YellowFlagInviteWarningModal
         isVisible={yellowFlagModal?.visible ?? false}

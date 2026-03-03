@@ -48,7 +48,7 @@ export interface CreatePublishedEventBodyDto {
   title: string;
   description: string;
   category: string;
-  subcategoryId?: string;
+  subcategoryIds?: string[];
   tags?: string[];
   visibility: Enums<'EventVisibility'>;
   campaignStartAt?: string;

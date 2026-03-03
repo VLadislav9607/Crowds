@@ -6,6 +6,7 @@ import {
   isErrorWithCode,
   errorCodes,
 } from '@react-native-documents/picker';
+import RNFS from 'react-native-fs';
 
 import { ICONS } from '@assets';
 import { If } from '@components';
@@ -37,13 +38,21 @@ export const DocumentPicker = ({
       });
 
       if (result) {
+        const fileUri = result.uri;
+        const mimeType = result.type ?? 'application/octet-stream';
+
+        // Read file immediately while the temporary URI is still accessible.
+        // On iOS, document picker URIs can become stale after some time,
+        // so we persist the content as a data URI right away.
+        const base64Content = await RNFS.readFile(fileUri, 'base64');
+        const dataUri = `data:${mimeType};base64,${base64Content}`;
+
         const document: PickedDocument = {
-          uri: result.uri,
+          uri: dataUri,
           name: result.name ?? 'Document',
-          type: result.type ?? undefined,
+          type: mimeType,
           size: result.size ?? undefined,
         };
-        // setSelectedDocument(document);
         onDocumentSelect?.(document);
       }
     } catch (err) {

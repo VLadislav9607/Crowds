@@ -1,33 +1,59 @@
-import { useRef } from 'react';
+import { useRef, useState, useCallback } from 'react';
 import { EventCreatedModalRef } from '../../../modals';
 import {
   CreatePublishedEventBodyDto,
+  CreateEventDraftBodyDto,
   prefetchEventForOrgMember,
   useBucketUpload,
-  useCreatePublishedEvent,
+  useCreateEventDraft,
   useGetMe,
-  usePublishEventDraft,
   useUpdateEventDraft,
 } from '@actions';
-import { showErrorToast, showMutationErrorToast } from '@helpers';
+import {
+  showErrorToast,
+  showMutationErrorToast,
+  showSuccessToast,
+} from '@helpers';
 import { CreateEventFormData } from '../../../validation';
 import { FieldErrors } from 'react-hook-form';
 import { Enums } from '@services';
 import { fromZonedTime } from 'date-fns-tz';
 import { UseEventControllProps } from '../types';
-import { Screens, useScreenNavigation } from '@navigation';
+import { goBack, Screens, useScreenNavigation } from '@navigation';
 import { findOfficeByCountryCode } from '../../../helpers/officeLocationHelpers';
+import { usePaymentFlow } from './usePaymentFlow';
+import { PaymentConfirmationData } from '../../../modals';
 
 export const useEventControll = ({
   formData,
   setShowFullScreenLoader,
   onScrollToErrorSection,
+  createdDraftId,
+  setCreatedDraftId,
 }: UseEventControllProps) => {
   const { organizationMember } = useGetMe();
   const offices = organizationMember?.current_context?.offices ?? [];
 
   const { params } = useScreenNavigation<Screens.CreateEvent>();
   const eventCreatedModalRef = useRef<EventCreatedModalRef>(null);
+
+  // Payment flow
+  const { paymentConfirmationModalRef, startPaymentFlow, processPayment } =
+    usePaymentFlow();
+
+  // Store prepared DTO between modal open and confirm
+  const [pendingDto, setPendingDto] =
+    useState<CreatePublishedEventBodyDto | null>(null);
+
+  // Ref + stable wrapper so the modal always calls the latest handlePaymentConfirm
+  const handlePaymentConfirmRef =
+    useRef<(data: PaymentConfirmationData) => Promise<void>>(null);
+  const stableHandlePaymentConfirm = useCallback(
+    async (data: PaymentConfirmationData) => {
+      await handlePaymentConfirmRef.current?.(data);
+    },
+    [],
+  );
 
   const { mutateAsync: uploadFileMutateAsync } = useBucketUpload({
     onError: e => {
@@ -43,28 +69,10 @@ export const useEventControll = ({
     },
   });
 
-  const { mutateAsync: createEventMutateAsync } = useCreatePublishedEvent({
+  const { mutateAsync: createDraftMutateAsync } = useCreateEventDraft({
     onError: e => {
       showMutationErrorToast(e);
       setShowFullScreenLoader(false);
-    },
-    onSuccess: async data => {
-      const eventData = await prefetchEventForOrgMember({
-        event_id: data.event_id,
-      });
-      eventCreatedModalRef.current?.open({ event: eventData });
-    },
-  });
-
-  const { mutateAsync: publishEventDraftMutateAsync } = usePublishEventDraft({
-    onSuccess: async data => {
-      const eventData = await prefetchEventForOrgMember({
-        event_id: data.event_id,
-      });
-      eventCreatedModalRef.current?.open({
-        event: eventData,
-        isDraftPublished: !!params?.draftId,
-      });
     },
   });
 
@@ -136,7 +144,7 @@ export const useEventControll = ({
       location,
       title: values.title,
       category: values.category,
-      subcategoryId: values.subcategoryId,
+      subcategoryIds: values.subcategoryIds,
       tags: values.tags,
       visibility: values.visibility as Enums<'EventVisibility'>,
       campaignStartAt,
@@ -147,7 +155,9 @@ export const useEventControll = ({
         values.registrationClosingAt,
         timezone,
       ).toISOString(),
-      payment_mode: values.paymentMode as Enums<'EventPaymentMode'>,
+      payment_mode: (values.paymentMode === 'perHour'
+        ? 'per_hour'
+        : 'fixed') as Enums<'EventPaymentMode'>,
       payment_amount: values.paymentAmount,
       eventBrief: values.eventBrief,
       ageGroups: values.ageGroups,
@@ -185,6 +195,8 @@ export const useEventControll = ({
     }
   };
 
+  const COMMISSION_RATE = 0.2;
+
   const handleCreatePublishedEvent = () => {
     formData.handleSubmit(
       async data => {
@@ -196,18 +208,60 @@ export const useEventControll = ({
           return;
         }
 
-        if (params?.draftId) {
-          await updateDraftMutateAsync({
-            eventId: params.draftId,
-            body: dto,
-          });
-          await publishEventDraftMutateAsync(params.draftId);
-        } else {
-          console.log('dto', dto);
-          await createEventMutateAsync(dto as CreatePublishedEventBodyDto);
+        // Calculate payment summary from form data (no DB call)
+        const totalHeadcount = (dto.ageGroups ?? []).reduce(
+          (sum, ag) =>
+            sum +
+            (ag.maleCount ?? 0) +
+            (ag.femaleCount ?? 0) +
+            (ag.othersCount ?? 0),
+          0,
+        );
+
+        if (totalHeadcount === 0) {
+          showErrorToast('Please add at least one talent position.');
+          setShowFullScreenLoader(false);
+          return;
         }
 
+        const paymentAmountCents = Math.round((dto.payment_amount ?? 0) * 100);
+        let talentBudgetCents: number;
+        let eventDurationHours: number | null = null;
+
+        if (dto.payment_mode === 'per_hour' && dto.startAt && dto.endAt) {
+          const startMs = new Date(dto.startAt).getTime();
+          const endMs = new Date(dto.endAt).getTime();
+          eventDurationHours = Math.max(
+            (endMs - startMs) / (1000 * 60 * 60),
+            0,
+          );
+          talentBudgetCents = Math.round(
+            paymentAmountCents * totalHeadcount * eventDurationHours,
+          );
+        } else {
+          talentBudgetCents = paymentAmountCents * totalHeadcount;
+        }
+
+        const commissionCents = Math.round(talentBudgetCents * COMMISSION_RATE);
+        const totalChargeCents = talentBudgetCents + commissionCents;
+
         setShowFullScreenLoader(false);
+
+        // Store DTO for later use when user confirms
+        setPendingDto(dto);
+
+        // Show payment summary modal (nothing saved to DB yet)
+        paymentConfirmationModalRef.current?.open({
+          eventId: params?.draftId ?? '',
+          talentBudgetCents,
+          commissionCents,
+          totalChargeCents,
+          totalHeadcount,
+          eventDurationHours,
+          paymentMode: dto.payment_mode ?? null,
+          paymentAmountPerUnit: paymentAmountCents,
+          onConfirm: stableHandlePaymentConfirm,
+        });
       },
       errors => {
         addLocationErrors(errors);
@@ -217,8 +271,76 @@ export const useEventControll = ({
     )();
   };
 
+  const handlePaymentConfirm = async (_data: PaymentConfirmationData) => {
+    if (!pendingDto) return;
+
+    try {
+      // 1. Save event to DB (create draft or update existing)
+      const existingDraftId = params?.draftId || createdDraftId;
+      let eventId: string;
+
+      if (existingDraftId) {
+        await updateDraftMutateAsync({
+          eventId: existingDraftId,
+          body: pendingDto,
+        });
+        eventId = existingDraftId;
+      } else {
+        const result = await createDraftMutateAsync(
+          pendingDto as CreateEventDraftBodyDto,
+        );
+        eventId = result.draft_id;
+        setCreatedDraftId(eventId);
+      }
+
+      // 2. Create payment intent on server
+      const paymentData = await startPaymentFlow(eventId);
+
+      // 3. Process Stripe payment
+      const result = await processPayment({
+        eventId,
+        talentBudgetCents: paymentData.talentBudgetCents,
+        commissionCents: paymentData.commissionCents,
+        totalChargeCents: paymentData.totalChargeCents,
+        totalHeadcount: paymentData.totalHeadcount,
+        eventDurationHours: paymentData.eventDurationHours,
+        paymentMode: null,
+        paymentAmountPerUnit: null,
+        clientSecret: paymentData.clientSecret,
+        paymentIntentId: paymentData.paymentIntentId,
+      });
+
+      if (result.success) {
+        paymentConfirmationModalRef.current?.close();
+        setPendingDto(null);
+
+        // Show success modal with event details
+        try {
+          const eventData = await prefetchEventForOrgMember({
+            event_id: eventId,
+          });
+          eventCreatedModalRef.current?.open({
+            event: eventData,
+            isDraftPublished: true,
+          });
+        } catch {
+          // If modal fails to load data, just navigate back
+          goBack();
+        }
+        showSuccessToast('Event published successfully!');
+      }
+    } catch {
+      setShowFullScreenLoader(false);
+      showErrorToast('Payment processing failed. Please try again.');
+    }
+  };
+
+  // Keep ref pointing to the latest version of handlePaymentConfirm
+  handlePaymentConfirmRef.current = handlePaymentConfirm;
+
   return {
     eventCreatedModalRef,
+    paymentConfirmationModalRef,
     handleCreatePublishedEvent,
     organizationMember,
   };
