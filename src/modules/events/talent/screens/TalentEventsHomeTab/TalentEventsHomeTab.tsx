@@ -19,13 +19,14 @@ export const TalentEventsHomeTab = () => {
 
   const categories = categoriesData?.categories ?? [];
 
+  // Групуємо категорії по 3 елементи в рядок
   const groupedCategories = categories.reduce(
     (
       acc: (typeof categories)[],
       category: (typeof categories)[0],
       index: number,
     ) => {
-      const rowIndex = Math.floor(index / 4);
+      const rowIndex = Math.floor(index / 3);
       if (!acc[rowIndex]) {
         acc[rowIndex] = [];
       }
@@ -83,37 +84,35 @@ export const TalentEventsHomeTab = () => {
               </TouchableOpacity>
             </View>
 
-            <View style={{ flexDirection: 'row' }}>
-              <ScrollView
-                horizontal
-                showsHorizontalScrollIndicator={false}
-                contentContainerStyle={styles.categoriesScrollView}
-              >
-                {groupedCategories.map((row, rowIndex) => (
-                  <View key={rowIndex} style={styles.categoriesRow}>
-                    {row.map(category => (
-                      <TouchableOpacity
-                        key={category.id}
-                        activeOpacity={0.8}
-                        style={styles.categoryButton}
-                        onPress={() =>
-                          goToScreen(Screens.TalentSearchEvents, {
-                            categoryId: category.id,
-                            categoryName: category.title,
-                          })
-                        }
-                      >
-                        <View style={styles.categoryOverlay}>
-                          <AppText typography="bold_14" color="white">
-                            {category.title}
-                          </AppText>
-                        </View>
-                      </TouchableOpacity>
-                    ))}
-                  </View>
-                ))}
-              </ScrollView>
-            </View>
+            <ScrollView
+              horizontal
+              showsHorizontalScrollIndicator={false}
+              contentContainerStyle={styles.categoriesScrollView}
+            >
+              {groupedCategories.map((row, rowIndex) => (
+                <View key={rowIndex} style={styles.categoriesRow}>
+                  {row.map(category => (
+                    <TouchableOpacity
+                      key={category.id}
+                      activeOpacity={0.8}
+                      style={styles.categoryButton}
+                      onPress={() =>
+                        goToScreen(Screens.TalentSearchEvents, {
+                          categoryId: category.id,
+                          categoryName: category.title,
+                        })
+                      }
+                    >
+                      <View style={styles.categoryOverlay}>
+                        <AppText typography="bold_14" color="white">
+                          {category.title}
+                        </AppText>
+                      </View>
+                    </TouchableOpacity>
+                  ))}
+                </View>
+              ))}
+            </ScrollView>
 
             <View style={styles.listTitle}>
               <AppText typography="extra_bold_18" color="black">

@@ -42,4 +42,7 @@ export const TANSTACK_QUERY_KEYS = {
   GET_NOTIFICATIONS: 'get_notifications',
   GET_UNREAD_NOTIFICATIONS_COUNT: 'get_unread_notifications_count',
   GET_EVENT_DETAILS_FOR_TALENT: 'get_event_details_for_talent',
+  GET_EVENT_PAYMENT: 'get_event_payment',
+  GET_CONNECT_ACCOUNT: 'get_connect_account',
+  GET_PLATFORM_BALANCE: 'get_platform_balance',
 } as const;
