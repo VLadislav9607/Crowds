@@ -55,6 +55,7 @@ export enum Screens {
   NoShowTalents = 'NoShowTalents',
   CheckedInTalents = 'CheckedInTalents',
   CheckedOutTalents = 'CheckedOutTalents',
+  TaskCompletionTalents = 'TaskCompletionTalents',
   EventApplicants = 'EventApplicants',
   FlagParticipant = 'FlagParticipant',
   InviteTalents = 'InviteTalents',

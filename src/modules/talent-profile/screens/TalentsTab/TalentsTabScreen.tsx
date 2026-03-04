@@ -74,6 +74,7 @@ export const TalentsTabScreen = () => {
         data={talents}
         emptyText="No talents found"
         gap={0}
+        withBottomTab
         showBottomLoader={isFetchingNextPage}
         skeleton={skeleton}
         renderItem={({ item }) => (

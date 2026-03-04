@@ -99,6 +99,7 @@ export type RootStackParamList = {
   [Screens.NoShowTalents]: { eventId: string };
   [Screens.CheckedInTalents]: { eventId: string };
   [Screens.CheckedOutTalents]: { eventId: string };
+  [Screens.TaskCompletionTalents]: { eventId: string };
   [Screens.FlagParticipant]: { talentId: string; eventId: string };
   [Screens.EventApplicants]: {
     eventId: string;

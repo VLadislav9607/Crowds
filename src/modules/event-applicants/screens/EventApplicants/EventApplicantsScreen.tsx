@@ -117,15 +117,11 @@ export const EventApplicantsScreen = () => {
         isRejecting={rejectApplication.isPending}
         handleAccept={handleAccept}
         handleDecline={handleDecline}
-        popUpItems={(talent: IEventParticipant) => [
+        popUpItems={() => [
           {
-            label: 'Add flag',
-            value: 'flag',
-            onPress: () =>
-              goToScreen(Screens.FlagParticipant, {
-                talentId: talent.talentId ?? '',
-                eventId: eventId,
-              }),
+            label: 'Report',
+            value: 'report',
+            onPress: () => {},
           },
         ]}
         onEndReached={() => {

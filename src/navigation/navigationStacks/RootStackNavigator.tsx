@@ -52,6 +52,7 @@ import {
   NoShowTalentsScreen,
   CheckedInTalentsScreen,
   CheckedOutTalentsScreen,
+  TaskCompletionTalentsScreen,
 } from '../../modules/event-participants';
 import {
   ApplicantProfileScreen,
@@ -217,6 +218,10 @@ export const RootStackNavigator = () => {
       <RootStack.Screen
         name={Screens.CheckedOutTalents}
         component={CheckedOutTalentsScreen}
+      />
+      <RootStack.Screen
+        name={Screens.TaskCompletionTalents}
+        component={TaskCompletionTalentsScreen}
       />
 
       <RootStack.Screen

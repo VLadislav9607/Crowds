@@ -1,8 +1,9 @@
-import { useState } from 'react';
+import { useRef, useState } from 'react';
 import { Alert, Linking, Platform, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
-import { If, ScreenWithScrollWrapper } from '@components';
-import { ActionPurpleButton, AppButton, ChatButton } from '@ui';
+import { BottomSheetModal } from '@gorhom/bottom-sheet';
+import { If, ScreenWithScrollWrapper, AppImage } from '@components';
+import { ActionPurpleButton, AppButton, AppText, ChatButton } from '@ui';
 import { COLORS } from '@styles';
 import { Screens, useScreenNavigation, goToScreen } from '@navigation';
 import { ICONS } from '@assets';
@@ -11,8 +12,15 @@ import {
   useGetGroupChatId,
   ChatType,
   useGetEventDetailsForTalent,
+  useBucketUpload,
+  useSubmitTaskPhoto,
 } from '@actions';
-import { useCreateChatAndNavigate } from '@modules/common';
+import {
+  useCreateChatAndNavigate,
+  ImageSourcePickerModalData,
+  ImageSourcePickerModal,
+  PickedImage,
+} from '@modules/common';
 import {
   getCountryNameByCode,
   showSuccessToast,
@@ -38,11 +46,34 @@ export const TalentEventDetailsScreen = () => {
   const { me } = useGetMe();
   const [isOpenModal, setIsOpenModal] = useState(false);
 
+  const imageSourcePickerModalRef =
+    useRef<BottomSheetModal<ImageSourcePickerModalData>>(null);
+
   const { data: event, isLoading } = useGetEventDetailsForTalent({
     event_id: params?.eventId!,
   });
 
-  console.log('event', event);
+  const { mutate: uploadFile, isPending: isUploading } = useBucketUpload({
+    onSuccess: data => {
+      if (!event?.participation_id) return;
+      submitTask({
+        participation_id: event.participation_id,
+        photo_path: data.uploadedFile.path,
+      });
+    },
+    onError: () => {
+      showErrorToast('Failed to upload photo');
+    },
+  });
+
+  const { mutate: submitTask, isPending: isSubmitting } = useSubmitTaskPhoto({
+    onSuccess: () => {
+      showSuccessToast('Task photo submitted successfully');
+    },
+    onError: () => {
+      showErrorToast('Failed to submit task');
+    },
+  });
 
   const { mutate: getGroupChatId, isPending: isGettingGroupChatId } =
     useGetGroupChatId({
@@ -69,6 +100,21 @@ export const TalentEventDetailsScreen = () => {
 
   const handleChatWithGroup = () => {
     getGroupChatId(params?.eventId ?? '');
+  };
+
+  const handleOpenPhotoPicker = () => {
+    imageSourcePickerModalRef.current?.present({
+      onImagePicked: (image: PickedImage) => {
+        uploadFile({
+          bucket: 'task_completion_photos',
+          file: {
+            uri: image.uri,
+            type: image.type,
+            name: image.name,
+          },
+        });
+      },
+    });
   };
 
   const handleAddToCalendar = async () => {
@@ -137,6 +183,14 @@ export const TalentEventDetailsScreen = () => {
   const officeCountryName = event?.office_country_code
     ? getCountryNameByCode(event.office_country_code)
     : undefined;
+
+  const isMediaProduction = event?.event_type === 'media_production';
+  const hasCheckedOut = !!event?.checked_out_at;
+  const showTaskUpload = hasCheckedOut && !isMediaProduction;
+  const hasSubmittedTask = event?.task_status === 'submitted';
+  const hasApprovedTask = event?.task_status === 'approved';
+  const hasRejectedTask = event?.task_status === 'rejected';
+  const isTaskProcessing = isUploading || isSubmitting;
 
   return (
     <ScreenWithScrollWrapper
@@ -236,17 +290,68 @@ export const TalentEventDetailsScreen = () => {
               title="ADD EVENT TO MY CALENDAR"
               onPress={handleAddToCalendar}
             />
+
+            <If condition={showTaskUpload}>
+              <View style={styles.taskUploadSection}>
+                <If condition={!!event?.task_photo_path}>
+                  <View style={styles.taskPhotoPreview}>
+                    <AppImage
+                      imgPath={event?.task_photo_path ?? undefined}
+                      bucket="task_completion_photos"
+                      containerStyle={styles.taskPhotoImage}
+                    />
+                  </View>
+                </If>
+
+                <If condition={hasApprovedTask}>
+                  <AppText typography="bold_14" color="green">
+                    Task approved
+                  </AppText>
+                </If>
+
+                <If condition={hasRejectedTask}>
+                  <AppText typography="bold_14" color="red">
+                    Task rejected - please resubmit
+                  </AppText>
+                </If>
+
+                <If condition={hasSubmittedTask}>
+                  <AppText typography="bold_14" color="main">
+                    Task submitted - pending review
+                  </AppText>
+                </If>
+
+                <If condition={!hasApprovedTask}>
+                  <ActionPurpleButton
+                    icon={ICONS.camera('main')}
+                    title={
+                      event?.task_photo_path
+                        ? 'CHANGE TASK PHOTO'
+                        : 'UPLOAD TASK PHOTO'
+                    }
+                    onPress={handleOpenPhotoPicker}
+                  />
+                </If>
+              </View>
+            </If>
           </>
 
-          <AppButton
-            onPress={() => setIsOpenModal(true)}
-            title="Cancel attendance"
-            variant="withBorder"
-            wrapperStyles={{ borderColor: COLORS.red }}
-            titleStyles={{ color: COLORS.red }}
-          />
+          <If condition={!showTaskUpload || hasApprovedTask || hasSubmittedTask}>
+            <AppButton
+              onPress={() => setIsOpenModal(true)}
+              title="Cancel attendance"
+              variant="withBorder"
+              wrapperStyles={{ borderColor: COLORS.red }}
+              titleStyles={{ color: COLORS.red }}
+            />
+          </If>
         </If>
       </View>
+
+      <ImageSourcePickerModal
+        bottomSheetRef={imageSourcePickerModalRef}
+        validateForBucket="task_completion_photos"
+      />
 
       <CancelEventAttendanceModal
         eventName={event?.title ?? ''}

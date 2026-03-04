@@ -59,6 +59,7 @@ export const OnboardingScreenLayout = ({
       animatedScrollHandler={animatedScrollHandler}
       scrollViewRef={scrollViewRef}
       resetKeyboardOffset={false}
+      footerStyle={isKeyboardVisible ? { paddingBottom: 0 } : undefined}
       footer={
         <ForwardBackArrows
           steps={stepsCount}

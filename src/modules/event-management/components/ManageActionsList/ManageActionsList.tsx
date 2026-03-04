@@ -34,6 +34,10 @@ export const ManageActionsList = ({ eventId }: { eventId: string }) => {
       label: 'View No Show Talents',
       onPress: () => goToScreen(Screens.NoShowTalents, { eventId }),
     },
+    {
+      label: 'View Task Completions',
+      onPress: () => goToScreen(Screens.TaskCompletionTalents, { eventId }),
+    },
   ];
 
   return (
