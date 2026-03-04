@@ -57,9 +57,20 @@ export const SendMessageInput = ({ chatId }: SendMessageInputProps) => {
     });
 
     try {
-      await mutateAsync({
+      const result = await mutateAsync({
         chatId,
         text: message.trim(),
+      });
+
+      // Replace temp message with real one from the server response
+      messagesCache.addOrReplaceMessage({
+        chatId,
+        message: {
+          id: result.id,
+          text: result.text,
+          created_at: result.created_at,
+          sender_id: result.sender_id,
+        },
       });
     } catch (error) {
       console.log('send-message error', error);

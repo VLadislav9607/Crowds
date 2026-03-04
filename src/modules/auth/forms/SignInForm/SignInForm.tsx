@@ -29,18 +29,15 @@ export const SignInForm = forwardRef<SignInFormRef, SignInFormProps>(
 
     const { mutate: loginMutate, isPending: isLoggingIn } = useLogin({
       onSuccess: async data => {
-        console.log('data', data);
         await supabase.auth.setSession({
           access_token: data.session.access_token,
           refresh_token: data.session.refresh_token,
         });
 
-        console.log('data', data);
-
         await onNavigateAfterAuth();
 
         const tokens = await askNotificationPermissionAndGetTokens();
-        console.log('tokens', tokens);
+
         if (tokens?.fcmToken) {
           try {
             const deviceId = await getDeviceId();
