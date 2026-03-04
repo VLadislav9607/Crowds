@@ -1,3 +1,4 @@
+import { Keyboard } from 'react-native';
 import { goBack, goToScreen, Screens } from '@navigation';
 import { useRef, useState } from 'react';
 
@@ -170,7 +171,10 @@ export const useOnboardingUnAuthOrganization = () => {
     primaryLocationFormRef,
   });
 
-  const goToNextStep = isGlobal ? goToNextStepInGlobal : goToNextStepInSingle;
+  const goToNextStep = () => {
+    Keyboard.dismiss();
+    (isGlobal ? goToNextStepInGlobal : goToNextStepInSingle)();
+  };
 
   const goToPreviousStep = () => {
     if (step === 0) {

@@ -55,7 +55,7 @@ export const YellowFlagInviteWarningModal = ({
             numberOfLines={5}
             style={styles.value}
           >
-            {reasonLabel + reasonLabel + reasonLabel}
+            {reasonLabel}
           </AppText>
 
           {expiresFormatted ? (

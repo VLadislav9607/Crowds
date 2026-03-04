@@ -2079,6 +2079,44 @@ export type Database = {
           },
         ];
       };
+      task_completions: {
+        Row: {
+          id: string;
+          participation_id: string;
+          photo_path: string | null;
+          status: string;
+          submitted_at: string | null;
+          reviewed_at: string | null;
+          created_at: string;
+        };
+        Insert: {
+          id?: string;
+          participation_id: string;
+          photo_path?: string | null;
+          status?: string;
+          submitted_at?: string | null;
+          reviewed_at?: string | null;
+          created_at?: string;
+        };
+        Update: {
+          id?: string;
+          participation_id?: string;
+          photo_path?: string | null;
+          status?: string;
+          submitted_at?: string | null;
+          reviewed_at?: string | null;
+          created_at?: string;
+        };
+        Relationships: [
+          {
+            foreignKeyName: 'task_completions_participation_id_fkey';
+            columns: ['participation_id'];
+            isOneToOne: true;
+            referencedRelation: 'event_participations';
+            referencedColumns: ['id'];
+          },
+        ];
+      };
       talents: {
         Row: {
           accent: Database['public']['Enums']['Accent'] | null;
@@ -3059,6 +3097,18 @@ export type Database = {
       validate_event_for_publish: {
         Args: { payload: Json };
         Returns: undefined;
+      };
+      submit_task_photo: {
+        Args: { p_participation_id: string; p_photo_path: string };
+        Returns: Json;
+      };
+      get_event_task_completions: {
+        Args: { p_event_id: string };
+        Returns: Json;
+      };
+      review_task_completion: {
+        Args: { p_task_completion_id: string; p_status: string };
+        Returns: Json;
       };
     };
     Enums: {

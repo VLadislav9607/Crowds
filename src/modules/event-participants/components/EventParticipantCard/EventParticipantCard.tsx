@@ -13,6 +13,7 @@ export const EventParticipantCard = ({
   participant,
   onMenuSelect,
   onPressImageIcon,
+  menuItems,
 }: EventParticipantCardProps) => {
   const { name, location, status, time, flag, avatarUrl, avatarPath, avatarBucket } = participant;
   const { showPopup } = usePopupMenu();
@@ -20,14 +21,15 @@ export const EventParticipantCard = ({
   const handleOpenMenu = (event: GestureResponderEvent) => {
     const { pageX, pageY } = event.nativeEvent;
 
-    const removeNoShowItem = EVENT_PARTICIPANT_POPUP_ITEMS.filter(
-      item => item.value !== 'mark_no_show',
-    );
-    const items =
-      status === 'no_show' ? removeNoShowItem : EVENT_PARTICIPANT_POPUP_ITEMS;
+    const defaultItems = (() => {
+      const removeNoShowItem = EVENT_PARTICIPANT_POPUP_ITEMS.filter(
+        item => item.value !== 'mark_no_show',
+      );
+      return status === 'no_show' ? removeNoShowItem : EVENT_PARTICIPANT_POPUP_ITEMS;
+    })();
 
     showPopup({
-      items,
+      items: menuItems ?? defaultItems,
       position: { x: pageX, y: pageY },
       onSelect: onMenuSelect,
     });

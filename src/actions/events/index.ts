@@ -17,3 +17,6 @@ export * from './useUpdateCheckinCutoff';
 export * from './useGetEventNoShowTalents';
 export * from './useGetEventCheckedInTalents';
 export * from './useGetEventCheckedOutTalents';
+export * from './useSubmitTaskPhoto';
+export * from './useGetEventTaskCompletions';
+export * from './useReviewTaskCompletion';

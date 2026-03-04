@@ -24,4 +24,5 @@ export interface EventParticipantCardProps {
   participant: IEventParticipant;
   onMenuSelect?: (item: IPopupMenuItem) => void;
   onPressImageIcon?: () => void;
+  menuItems?: IPopupMenuItem[];
 }
