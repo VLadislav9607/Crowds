@@ -1,4 +1,4 @@
-import { StyleSheet, View, StyleProp, ViewStyle } from 'react-native';
+import { StyleSheet, View, StyleProp, ViewStyle, ScrollView } from 'react-native';
 
 import { ScreenWithScrollWrapper } from '@components';
 import { AppText, IAppHeaderProps } from '@ui';
@@ -19,6 +19,7 @@ interface IOnboardingScreenLayoutProps {
   useAnimatedScrollView?: boolean;
   contentContainerStyle?: StyleProp<ViewStyle>;
   animatedScrollHandler?: (event: any) => void;
+  scrollViewRef?: React.RefObject<ScrollView | null>;
   onBackPress: () => void;
   onForwardPress: () => void;
   footerProps?: Pick<
@@ -42,6 +43,7 @@ export const OnboardingScreenLayout = ({
   animatedScrollHandler,
   useAnimatedScrollView = false,
   contentContainerStyle,
+  scrollViewRef,
 }: IOnboardingScreenLayoutProps) => {
   const { isKeyboardVisible } = useKeyboard();
 
@@ -55,6 +57,7 @@ export const OnboardingScreenLayout = ({
       colorHeader="main"
       useAnimatedScrollView={useAnimatedScrollView}
       animatedScrollHandler={animatedScrollHandler}
+      scrollViewRef={scrollViewRef}
       resetKeyboardOffset={false}
       footer={
         <ForwardBackArrows

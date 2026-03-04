@@ -1,4 +1,4 @@
-import { useEffect, useMemo } from 'react';
+import { useCallback, useEffect, useMemo, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useGetMe } from '@actions';
@@ -13,7 +13,8 @@ import { useTalentPhoto } from '../useTalentPhoto';
 export const useTalentProfileSetupForm = ({
   onSuccess,
   onFormStateChange,
-}: Pick<TalentProfileSetupFormProps, 'onSuccess' | 'onFormStateChange'>) => {
+  scrollViewRef,
+}: Pick<TalentProfileSetupFormProps, 'onSuccess' | 'onFormStateChange' | 'scrollViewRef'>) => {
   const { data: me } = useGetMe();
   const talent = me?.talent;
 
@@ -82,7 +83,25 @@ export const useTalentProfileSetupForm = ({
     if (talent) reset(defaultValues);
   }, [talent, reset, defaultValues]);
 
-  const onSubmit = handleSubmit(updateProfile);
+  const avatarPath = talent?.avatar_path;
+  const [photoError, setPhotoError] = useState<string | undefined>();
+
+  const onSubmit = useCallback(() => {
+    if (!avatarPath) {
+      setPhotoError('Please upload a photo');
+      scrollViewRef?.current?.scrollTo({ y: 0, animated: true });
+      return;
+    }
+    setPhotoError(undefined);
+    handleSubmit(updateProfile)();
+  }, [avatarPath, handleSubmit, updateProfile, scrollViewRef]);
+
+  // Clear photo error when avatar is uploaded
+  useEffect(() => {
+    if (avatarPath && photoError) {
+      setPhotoError(undefined);
+    }
+  }, [avatarPath, photoError]);
 
   // Notify parent about loading state
   const isPending = isUpdating || isUploadingPhoto;
@@ -96,6 +115,7 @@ export const useTalentProfileSetupForm = ({
     setValue,
     watch,
     errors,
+    photoError,
     onSubmit,
     // Photo
     currentPhoto,

@@ -18,10 +18,12 @@ import { IdentityVerification } from '@modules/kyc';
 import { AnimatedProfileSetupHeader } from '../../../../profile/components';
 import { AppButton, IAppHeaderProps } from '@ui';
 import { AnimatedProfileSetupHeaderRef } from '../../../../profile/components';
-import { useState } from 'react';
+import { useRef, useState } from 'react';
+import { ScrollView } from 'react-native';
 import { LogoutModal } from '../../../../profile/modals';
 
 export const OnboardingAuthTalentScreen = () => {
+  const scrollViewRef = useRef<ScrollView | null>(null);
   const [scrollHandler, setScrollHandler] =
     useState<AnimatedProfileSetupHeaderRef['scrollHandler']>();
 
@@ -66,7 +68,7 @@ export const OnboardingAuthTalentScreen = () => {
     if (step === 5) {
       return (
         <AppButton
-          title="Proceed to add details"
+          title="Get started"
           onPress={goToNextStep}
           wrapperStyles={{ flex: 1 }}
         />
@@ -107,6 +109,7 @@ export const OnboardingAuthTalentScreen = () => {
       currentStep={step ?? 0}
       useAnimatedScrollView={isProfileSetupStep}
       animatedScrollHandler={scrollHandler}
+      scrollViewRef={scrollViewRef}
       onBackPress={goToPreviousStep}
       onForwardPress={goToNextStep}
       showLoader={showFullScreenLoader}
@@ -146,6 +149,7 @@ export const OnboardingAuthTalentScreen = () => {
             onFormStateChange={val => setShowFullScreenLoader(val.isUpdating)}
             ref={talentProfileSetupFormRef}
             onSuccess={onProfileSetupSuccess}
+            scrollViewRef={scrollViewRef}
           />
         </If>
 

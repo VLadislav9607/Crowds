@@ -2,6 +2,8 @@ import { forwardRef, useImperativeHandle } from 'react';
 import { Gender } from '@modules/profile';
 import { useGetMe } from '@actions';
 import { ImageSourcePickerModal } from '@modules/common';
+import { If } from '@components';
+import { AppText } from '@ui';
 import {
   TalentProfileSetupFormProps,
   TalentProfileSetupFormRef,
@@ -16,25 +18,36 @@ import {
 export const TalentProfileSetupForm = forwardRef<
   TalentProfileSetupFormRef,
   TalentProfileSetupFormProps
->(({ onSuccess, onFormStateChange }, ref) => {
+>(({ onSuccess, onFormStateChange, scrollViewRef }, ref) => {
   const { talent } = useGetMe();
 
   const {
     control,
     setValue,
     errors,
+    photoError,
     onSubmit,
     // Photo
     currentPhoto,
     isUploadingPhoto,
     openPhotoPicker,
     imageSourcePickerModalRef,
-  } = useTalentProfileSetupForm({ onSuccess, onFormStateChange });
+  } = useTalentProfileSetupForm({ onSuccess, onFormStateChange, scrollViewRef });
 
   useImperativeHandle(ref, () => ({ onSubmit }));
 
   return (
     <>
+      <If condition={!!photoError}>
+        <AppText typography="medium_12" color="red" margin={{ bottom: 12 }}>
+          {photoError}
+        </AppText>
+      </If>
+
+      <AppText typography="regular_14" color="black_60" margin={{ bottom: 8 }}>
+        The more details you add, the more likely you are to get booked.
+      </AppText>
+
       <PhysicalDetailsSection
         control={control}
         isFemale={talent?.gender === Gender.FEMALE}
@@ -47,7 +60,6 @@ export const TalentProfileSetupForm = forwardRef<
       <PhotoUploadSection
         userFullBodyPhoto={currentPhoto}
         isUploadingPhoto={isUploadingPhoto}
-        errorMessage={errors.photo?.message}
         onPress={openPhotoPicker}
       />
 

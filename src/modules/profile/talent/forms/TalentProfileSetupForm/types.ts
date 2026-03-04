@@ -60,6 +60,7 @@ export interface TalentProfileSetupFormState {
 export interface TalentProfileSetupFormProps {
   onSuccess?: () => void;
   onFormStateChange?: (state: TalentProfileSetupFormState) => void;
+  scrollViewRef?: React.RefObject<import('react-native').ScrollView | null>;
 }
 
 export interface TalentProfileSetupFormRef {
