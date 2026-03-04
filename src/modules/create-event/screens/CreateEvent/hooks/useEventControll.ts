@@ -1,5 +1,8 @@
 import { useRef, useState, useCallback } from 'react';
-import { EventCreatedModalRef } from '../../../modals';
+import {
+  EventCreatedModalRef,
+  EventCreatedModalRefProps,
+} from '../../../modals';
 import {
   CreatePublishedEventBodyDto,
   CreateEventDraftBodyDto,
@@ -19,7 +22,7 @@ import { FieldErrors } from 'react-hook-form';
 import { Enums } from '@services';
 import { fromZonedTime } from 'date-fns-tz';
 import { UseEventControllProps } from '../types';
-import { goBack, Screens, useScreenNavigation } from '@navigation';
+import { Screens, useScreenNavigation } from '@navigation';
 import { findOfficeByCountryCode } from '../../../helpers/officeLocationHelpers';
 import { usePaymentFlow } from './usePaymentFlow';
 import { PaymentConfirmationData } from '../../../modals';
@@ -36,6 +39,11 @@ export const useEventControll = ({
 
   const { params } = useScreenNavigation<Screens.CreateEvent>();
   const eventCreatedModalRef = useRef<EventCreatedModalRef>(null);
+
+  // Pending data to show EventCreatedModal after PaymentConfirmation fully closes
+  const pendingEventCreatedDataRef = useRef<EventCreatedModalRefProps | null>(
+    null,
+  );
 
   // Payment flow
   const { paymentConfirmationModalRef, startPaymentFlow, processPayment } =
@@ -311,22 +319,22 @@ export const useEventControll = ({
       });
 
       if (result.success) {
-        paymentConfirmationModalRef.current?.close();
         setPendingDto(null);
 
-        // Show success modal with event details
+        // Prefetch event data and queue it for display after modal closes
         try {
           const eventData = await prefetchEventForOrgMember({
             event_id: eventId,
           });
-          eventCreatedModalRef.current?.open({
+          pendingEventCreatedDataRef.current = {
             event: eventData,
             isDraftPublished: true,
-          });
+          };
         } catch {
-          // If modal fails to load data, just navigate back
-          goBack();
+          pendingEventCreatedDataRef.current = null;
         }
+
+        paymentConfirmationModalRef.current?.close();
         showSuccessToast('Event published successfully!');
       }
     } catch {
@@ -338,10 +346,19 @@ export const useEventControll = ({
   // Keep ref pointing to the latest version of handlePaymentConfirm
   handlePaymentConfirmRef.current = handlePaymentConfirm;
 
+  const onPaymentModalHide = useCallback(() => {
+    const data = pendingEventCreatedDataRef.current;
+    if (data) {
+      pendingEventCreatedDataRef.current = null;
+      eventCreatedModalRef.current?.open(data);
+    }
+  }, []);
+
   return {
     eventCreatedModalRef,
     paymentConfirmationModalRef,
     handleCreatePublishedEvent,
+    onPaymentModalHide,
     organizationMember,
   };
 };

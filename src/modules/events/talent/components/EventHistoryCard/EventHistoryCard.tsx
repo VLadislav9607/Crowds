@@ -49,7 +49,7 @@ export const EventHistoryCard = ({
         <If condition={!!event.brand_logo_path}>
           <AppImage
             imgPath={event.brand_logo_path}
-            bucket="organizations_avatars"
+            bucket="brand_avatars"
             containerStyle={styles.logo}
           />
         </If>
@@ -118,7 +118,6 @@ export const EventHistoryCard = ({
           iconSize={14}
         />
       </If>
-
     </View>
   );
 };

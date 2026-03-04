@@ -46,6 +46,7 @@ export const CreateEventScreen = () => {
     handleCreatePublishedEvent,
     handleCancel,
     handleCopyToDraft,
+    onPaymentModalHide,
   } = useCreateEventScreen();
 
   return (
@@ -83,7 +84,10 @@ export const CreateEventScreen = () => {
 
         <ActionConfirmationModal ref={actionConfirmationModalRef} />
         <EventCreatedModal ref={eventCreatedModalRef} />
-        <PaymentConfirmationModal ref={paymentConfirmationModalRef} />
+        <PaymentConfirmationModal
+          ref={paymentConfirmationModalRef}
+          onModalHide={onPaymentModalHide}
+        />
         <SavedToDraftModal ref={savedToDraftModalRef} />
       </ScreenWithScrollWrapper>
     </FormProvider>
