@@ -54,4 +54,9 @@ export const styles = StyleSheet.create({
   webView: {
     flex: 1,
   },
+  loadingContainer: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
 });

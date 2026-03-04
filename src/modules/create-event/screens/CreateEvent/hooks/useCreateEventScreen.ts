@@ -57,6 +57,7 @@ export const useCreateEventScreen = () => {
     eventCreatedModalRef,
     paymentConfirmationModalRef,
     handleCreatePublishedEvent,
+    onPaymentModalHide,
   } = useEventControll({
     formData,
     onScrollToErrorSection,
@@ -97,5 +98,6 @@ export const useCreateEventScreen = () => {
     handleCreatePublishedEvent,
     handleCancel,
     handleCopyToDraft: isDraftEditing ? handleCopyToDraft : undefined,
+    onPaymentModalHide,
   };
 };

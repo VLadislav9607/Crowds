@@ -1,5 +1,6 @@
 import { useCallback, useState } from 'react';
 import {
+  ActivityIndicator,
   Image,
   Modal,
   RefreshControl,
@@ -9,7 +10,7 @@ import {
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { WebView } from 'react-native-webview';
-import { ScreenWrapper } from '@components';
+import { If, ScreenWrapper } from '@components';
 import { AppButton, AppText } from '@ui';
 import { IMAGES } from '@assets';
 import {
@@ -27,6 +28,7 @@ import {
   getConnectStatus,
 } from '../../helpers/getConnectStatus';
 import { styles } from './styles';
+import { COLORS } from '@styles';
 
 const REDIRECT_URL_PREFIX =
   'https://mznllzlcwtonsjqvzpux.supabase.co/functions/v1/stripe-connect-redirect';
@@ -124,7 +126,7 @@ export const StripeConnectOnboardingScreen = () => {
 
   const closeWebView = useCallback(() => {
     setWebViewUrl(null);
-    syncStatus({});
+    syncStatus();
   }, [syncStatus]);
 
   const { mutate: createAccount, isPending: isCreating } =
@@ -186,53 +188,62 @@ export const StripeConnectOnboardingScreen = () => {
       <ScreenWrapper
         headerVariant="withTitleAndImageBg"
         title="Set Up Banking"
-        showLoader={isLoadingAccount}
+        containerStyle={{ paddingBottom: 0 }}
+        contentContainerStyle={{ paddingBottom: 0 }}
+        withBottomTabBar
       >
-        <ScrollView
-          contentContainerStyle={styles.scrollContent}
-          refreshControl={
-            <RefreshControl
-              refreshing={isRefetchingQuery}
-              onRefresh={refetchQuery}
-            />
-          }
-        >
-          <View style={styles.descriptionContainer}>
-            {renderDescription(config.description, config.boldWord)}
-          </View>
-
-          <View style={styles.statusBadgeContainer}>
-            <View
-              style={[
-                styles.statusBadge,
-                { backgroundColor: config.statusColor },
-              ]}
-            >
-              <AppText typography="bold_12" color="black">
-                {config.statusLabel}
-              </AppText>
+        <If condition={!isLoadingAccount}>
+          <ScrollView
+            contentContainerStyle={[styles.scrollContent]}
+            refreshControl={
+              <RefreshControl
+                refreshing={isRefetchingQuery}
+                onRefresh={refetchQuery}
+              />
+            }
+          >
+            <View style={styles.descriptionContainer}>
+              {renderDescription(config.description, config.boldWord)}
             </View>
-          </View>
 
-          <View style={styles.illustrationContainer}>
-            <Image
-              source={IMAGES.stripeConnect}
-              style={styles.illustration}
-              resizeMode="contain"
-            />
-          </View>
+            <View style={styles.statusBadgeContainer}>
+              <View
+                style={[
+                  styles.statusBadge,
+                  { backgroundColor: config.statusColor },
+                ]}
+              >
+                <AppText typography="bold_12" color="black">
+                  {config.statusLabel}
+                </AppText>
+              </View>
+            </View>
 
-          <View style={styles.bottomSection}>
-            <AppButton
-              title={config.buttonTitle}
-              size="60"
-              onPress={handleAction}
-              isLoading={isActionLoading}
-              isDisabled={isActionLoading}
-              wrapperStyles={styles.buttonWrapper}
-            />
+            <View style={styles.illustrationContainer}>
+              <Image
+                source={IMAGES.stripeConnect}
+                style={styles.illustration}
+                resizeMode="contain"
+              />
+            </View>
+
+            <View style={styles.bottomSection}>
+              <AppButton
+                title={config.buttonTitle}
+                size="60"
+                onPress={handleAction}
+                isLoading={isActionLoading}
+                isDisabled={isActionLoading}
+                wrapperStyles={styles.buttonWrapper}
+              />
+            </View>
+          </ScrollView>
+        </If>
+        <If condition={isLoadingAccount}>
+          <View style={styles.loadingContainer}>
+            <ActivityIndicator size="large" color={COLORS.main} />
           </View>
-        </ScrollView>
+        </If>
       </ScreenWrapper>
 
       <Modal
