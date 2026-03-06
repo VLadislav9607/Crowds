@@ -7,12 +7,17 @@ import {
 export const reviewTaskCompletionAction = async (
   params: ReviewTaskCompletionBodyDto,
 ): Promise<ReviewTaskCompletionRespDto> => {
-  const { data, error } = await supabase.rpc('review_task_completion', {
-    p_task_completion_id: params.task_completion_id,
-    p_status: params.status,
-  });
+  const { data, error } = await supabase.functions.invoke(
+    'review-task-completion',
+    {
+      body: {
+        taskCompletionId: params.task_completion_id,
+        status: params.status,
+      },
+    },
+  );
 
   if (error) throw error;
 
-  return data as unknown as ReviewTaskCompletionRespDto;
+  return data as ReviewTaskCompletionRespDto;
 };
