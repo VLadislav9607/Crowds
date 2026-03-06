@@ -10,7 +10,6 @@ export interface IMessageListProps {
   sections: IMessageSection[];
   isLoading?: boolean;
   chatType: ChatType;
-  isTalent: boolean;
   onEndReached?: () => void;
   onEndReachedThreshold?: number;
 }

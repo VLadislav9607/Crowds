@@ -12,9 +12,9 @@ export const Message = ({
   chatType,
   isFirst,
   isLast,
-  isTalent,
 }: IMessageProps) => {
-  const { text, time, isMe, showTime, senderName, senderAvatar, id } = message;
+  const { text, time, isMe, showTime, senderName, senderAvatar, senderRole, id } =
+    message;
   const showAvatar = !isMe && chatType === ChatType.Group;
 
   const getBubbleStyle = () => {
@@ -47,7 +47,9 @@ export const Message = ({
             <Avatar
               size={20}
               imgPath={senderAvatar}
-              bucket={isTalent ? 'brand_avatars' : 'talents_avatars'}
+              bucket={
+                senderRole === 'talent' ? 'talents_avatars' : 'brand_avatars'
+              }
               name={senderName}
             />
           </View>

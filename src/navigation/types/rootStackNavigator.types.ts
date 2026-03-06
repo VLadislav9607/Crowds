@@ -111,7 +111,6 @@ export type RootStackParamList = {
   [Screens.AvailabilitySetup]: undefined;
   [Screens.TalentProfileSetup]: undefined;
   [Screens.TalentLocationSetup]: undefined;
-  [Screens.TalentEventHistory]: undefined;
   [Screens.FlagOrganization]: {
     eventId: string;
     officeId: string | null;

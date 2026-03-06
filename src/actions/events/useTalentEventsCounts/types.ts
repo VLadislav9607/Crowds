@@ -3,5 +3,6 @@ export interface UseGetTalentEventsCountsRespDto {
   pending: number;
   approved: number;
   denied: number;
+  history: number;
 }
 [];

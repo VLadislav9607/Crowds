@@ -20,4 +20,8 @@ export const styles = StyleSheet.create({
   eventsListContent: {
     paddingTop: 16,
   },
+  historyListContent: {
+    paddingTop: 16,
+    paddingHorizontal: 16,
+  },
 });

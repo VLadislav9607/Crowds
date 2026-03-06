@@ -12,9 +12,17 @@ export const useUpdateTalent = (
     mutationFn: updateTalentAction,
     ...options,
     onSuccess: async (...args) => {
-      await queryClient.invalidateQueries({
-        queryKey: [TANSTACK_QUERY_KEYS.GET_ME],
-      });
+      await Promise.all([
+        queryClient.refetchQueries({
+          queryKey: [TANSTACK_QUERY_KEYS.GET_ME],
+        }),
+        queryClient.refetchQueries({
+          queryKey: [TANSTACK_QUERY_KEYS.MY_CHATS],
+        }),
+        queryClient.refetchQueries({
+          queryKey: [TANSTACK_QUERY_KEYS.GET_CHAT_PARTICIPANTS],
+        }),
+      ]);
       await options?.onSuccess?.(...args);
     },
     onError: showMutationErrorToast,

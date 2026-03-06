@@ -10,6 +10,7 @@ export interface MyChatItem {
   title: string;
   eventName?: string | null;
   avatarUrl?: string | null;
+  avatarBucket?: 'brand_avatars' | 'talents_avatars';
 
   lastMessage?: string | null;
   lastMessageAt?: string | null;

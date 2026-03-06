@@ -2,7 +2,6 @@ import { AppText, DashedLine, IconText } from '@ui';
 import { Image, Linking, TouchableOpacity, View } from 'react-native';
 import {
   EventDetailsCardWithMapProps,
-  EventDetailsCardWithoutMapProps,
   EventDetailsTextBlockProps,
   EventDetailsRequirementsProps,
   EventDetailsTagsProps,
@@ -21,8 +20,9 @@ export const EventDetailsCardWithMap = ({
   containerStyle,
   location,
   officeCountryName,
-  startAtFormatted,
-  duration,
+  startTimeFormatted,
+  endTimeFormatted,
+  registrationClosesFormatted,
 }: EventDetailsCardWithMapProps) => {
   if (showSkeleton)
     return (
@@ -46,22 +46,31 @@ export const EventDetailsCardWithMap = ({
 
       <View style={styles.divider} />
 
-      <View style={styles.cardWithMapIconsRow}>
+      <View style={styles.timeBlock}>
         <IconText
           gap={6}
           icon={ICONS.calendarIcon('main')}
-          text={startAtFormatted ?? ''}
-          iconSize={22}
+          text={`Start: ${startTimeFormatted}`}
+          iconSize={20}
+          textProps={{ typography: 'medium_12', color: 'black_60' }}
+        />
+        <IconText
+          gap={6}
+          icon={ICONS.clockIcon('main')}
+          text={`End: ${endTimeFormatted}`}
+          iconSize={20}
           textProps={{ typography: 'medium_12', color: 'black_60' }}
         />
 
-        <IconText
-          icon={ICONS.clockIcon('main')}
-          text={duration ?? ''}
-          iconSize={20}
-          gap={6}
-          textProps={{ typography: 'medium_12', color: 'black_60' }}
-        />
+        <If condition={!!registrationClosesFormatted}>
+          <IconText
+            gap={6}
+            icon={ICONS.clockIcon('main')}
+            text={`Registration closes: ${registrationClosesFormatted}`}
+            iconSize={20}
+            textProps={{ typography: 'medium_12', color: 'black_60' }}
+          />
+        </If>
       </View>
 
       <If condition={!!locationText}>
@@ -93,69 +102,6 @@ export const EventDetailsCardWithMap = ({
           />
         </TouchableOpacity>
       </If>
-    </View>
-  );
-};
-
-export const EventDetailsCardWithoutMap = ({
-  showSkeleton = false,
-  containerStyle,
-}: EventDetailsCardWithoutMapProps) => {
-  if (showSkeleton)
-    return (
-      <View style={containerStyle}>
-        <Skeleton>
-          <Skeleton.Item width={'100%'} height={137} borderRadius={10} />
-        </Skeleton>
-      </View>
-    );
-
-  return (
-    <View style={[styles.cardWithoutMapContainer, containerStyle]}>
-      <AppText typography="bold_16" margin={{ bottom: 8 }}>
-        EVENT DETAILS
-      </AppText>
-
-      <View style={styles.divider} />
-
-      <View style={styles.cardWithoutMapContent}>
-        <IconText
-          gap={6}
-          icon={ICONS.calendarIcon('main')}
-          text="03 OCT, 2025"
-          iconSize={22}
-          textProps={{ typography: 'medium_12', color: 'black_60' }}
-        />
-        <IconText
-          gap={6}
-          icon={ICONS.locationMap('main')}
-          text="333 Bridge Road, Richmond VIC Australia, Richmond VIC Australia"
-          iconSize={22}
-          textProps={{
-            typography: 'medium_12',
-            color: 'black_60',
-            style: styles.flex1,
-          }}
-        />
-        <View style={styles.rowContainerWithMargin}>
-          <IconText
-            gap={6}
-            style={styles.flex1}
-            icon={ICONS.clockIcon('main')}
-            text="03:15 PM"
-            iconSize={20}
-            textProps={{ typography: 'medium_12', color: 'black_60' }}
-          />
-          <IconText
-            gap={6}
-            style={styles.flex1}
-            icon={ICONS.clockIcon('main')}
-            text="8:30 PM"
-            iconSize={20}
-            textProps={{ typography: 'medium_12', color: 'black_60' }}
-          />
-        </View>
-      </View>
     </View>
   );
 };

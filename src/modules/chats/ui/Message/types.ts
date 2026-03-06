@@ -8,11 +8,11 @@ export interface IMessageData {
   showTime?: boolean;
   senderName: string;
   senderAvatar: string;
+  senderRole: 'organization' | 'talent';
 }
 
 export interface IMessageProps {
   message: IMessageData;
-  isTalent: boolean;
   chatType: ChatType;
   isFirst?: boolean;
   isLast?: boolean;

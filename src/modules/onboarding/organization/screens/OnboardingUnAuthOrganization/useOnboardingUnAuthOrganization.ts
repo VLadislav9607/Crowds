@@ -22,6 +22,7 @@ import {
   useBucketUpload,
   useCheckUsernameExist,
   useSendOtp,
+  useUpdateBrand,
   useVerifyOtp,
 } from '@actions';
 import { showErrorToast, showMutationErrorToast } from '@helpers';
@@ -51,6 +52,7 @@ export const useOnboardingUnAuthOrganization = () => {
     useRef<OrganizationCreatorInformationFormRef>(null);
 
   const { mutateAsync: bucketUploadMutateAsync } = useBucketUpload();
+  const { mutateAsync: updateBrandMutateAsync } = useUpdateBrand();
 
   const {
     mutateAsync: checkUsernameExistMutateAsync,
@@ -66,10 +68,14 @@ export const useOnboardingUnAuthOrganization = () => {
     });
     const userData = await prefetchUseGetMe();
     if (data.image) {
-      await bucketUploadMutateAsync({
+      const uploadResult = await bucketUploadMutateAsync({
         bucket: 'brand_avatars',
         file: data.image,
         folderName: userData.organizationMember?.current_context?.brand?.id,
+      });
+      await updateBrandMutateAsync({
+        brand_id: userData.organizationMember?.current_context?.brand?.id!,
+        logo_path: uploadResult.uploadedFile.path,
       });
     }
 

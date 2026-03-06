@@ -1,28 +1,26 @@
-import { useState } from 'react';
-import { StyleSheet, View } from 'react-native';
+import { useCallback, useState } from 'react';
+import { Pressable, View } from 'react-native';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
+import { useQueryClient } from '@tanstack/react-query';
+import { AppFlashList, AppImage, AppModal, ScreenWrapper } from '@components';
 import {
-  AppFlashList,
-  AppImage,
-  AppModal,
-  IPopupMenuItem,
-  ScreenWrapper,
-} from '@components';
-import { useGetEventTaskCompletions, useReviewTaskCompletion } from '@actions';
-import { goToScreen, Screens, useScreenNavigation } from '@navigation';
-import { TalentFlag } from '@modules/common';
+  useGetEventTaskCompletions,
+  useReviewTaskCompletion,
+  TaskCompletionTalentDto,
+} from '@actions';
+import { TANSTACK_QUERY_KEYS } from '@constants';
+import { Screens, useScreenNavigation } from '@navigation';
+import { TaskCompletionCard } from '../../components';
+import { RejectTaskModal } from '../../modals';
 import { showSuccessToast, showErrorToast } from '@helpers';
-
-import { EventParticipantCard, IEventParticipant } from '../../components';
-
-const TASK_COMPLETION_MENU_ITEMS: IPopupMenuItem[] = [
-  // { label: 'Approve task', value: 'approve_task' },
-  // { label: 'Reject task', value: 'reject_task' },
-  { label: 'Add flag', value: 'add_flag' },
-];
+import { AppButton, AppText } from '@ui';
+import { styles } from './styles';
 
 export const TaskCompletionTalentsScreen = () => {
   const { params } = useScreenNavigation<Screens.TaskCompletionTalents>();
   const eventId = params?.eventId ?? '';
+  const insets = useSafeAreaInsets();
+  const queryClient = useQueryClient();
 
   const { data, isLoading } = useGetEventTaskCompletions(eventId);
   const { mutate: reviewTask } = useReviewTaskCompletion({
@@ -35,55 +33,77 @@ export const TaskCompletionTalentsScreen = () => {
   });
 
   const [previewPhoto, setPreviewPhoto] = useState<string | null>(null);
+  const [rejectId, setRejectId] = useState<string | null>(null);
+  const [selectedIds, setSelectedIds] = useState<Set<string>>(new Set());
 
-  const participants: IEventParticipant[] = (data ?? []).map(item => ({
-    id: item.participationId,
-    name: item.name,
-    location: item.location,
-    status: 'completed_tasks' as const,
-    time: '',
-    flag: (item.flag as TalentFlag) ?? TalentFlag.GREEN,
-    avatarPath: item.avatar_url,
-    avatarBucket: 'talents_avatars' as const,
-  }));
+  const talents = data ?? [];
+  const selectableIds = talents
+    .filter(t => t.task_status !== 'rejected')
+    .map(t => t.taskCompletionId);
+  const allSelected =
+    selectableIds.length > 0 && selectableIds.every(id => selectedIds.has(id));
 
-  const handleMenuSelect =
-    (talentId: string, taskCompletionId: string) => (item: IPopupMenuItem) => {
-      if (item.value === 'approve_task') {
-        reviewTask({
-          task_completion_id: taskCompletionId,
-          status: 'approved',
-        });
-      } else if (item.value === 'reject_task') {
-        reviewTask({
-          task_completion_id: taskCompletionId,
-          status: 'rejected',
-        });
-      } else if (item.value === 'add_flag') {
-        goToScreen(Screens.FlagParticipant, { talentId, eventId });
+  const toggleSelection = useCallback((id: string) => {
+    setSelectedIds(prev => {
+      const next = new Set(prev);
+      if (next.has(id)) {
+        next.delete(id);
+      } else {
+        next.add(id);
       }
-    };
+      return next;
+    });
+  }, []);
 
-  const renderItem = ({ item }: { item: IEventParticipant }) => {
-    const talentDto = data?.find(d => d.participationId === item.id);
-
-    return (
-      <EventParticipantCard
-        participant={item}
-        menuItems={TASK_COMPLETION_MENU_ITEMS}
-        // onMenuSelect={
-        //   talentDto
-        //     ? handleMenuSelect(talentDto.talentId, talentDto.taskCompletionId)
-        //     : undefined
-        // }
-        onPressImageIcon={
-          talentDto?.task_photo_path
-            ? () => setPreviewPhoto(talentDto.task_photo_path)
-            : undefined
-        }
-      />
-    );
+  const toggleSelectAll = () => {
+    if (allSelected) {
+      setSelectedIds(new Set());
+    } else {
+      setSelectedIds(new Set(selectableIds));
+    }
   };
+
+  const handleRejectConfirm = () => {
+    if (rejectId) {
+      queryClient.setQueryData<TaskCompletionTalentDto[]>(
+        [TANSTACK_QUERY_KEYS.GET_EVENT_TASK_COMPLETIONS, eventId],
+        prev =>
+          prev?.map(t =>
+            t.taskCompletionId === rejectId
+              ? { ...t, task_status: 'rejected' }
+              : t,
+          ),
+      );
+      selectedIds.delete(rejectId);
+      setSelectedIds(new Set(selectedIds));
+      reviewTask({
+        task_completion_id: rejectId,
+        status: 'rejected',
+      });
+    }
+    setRejectId(null);
+  };
+
+  const handleViewPhoto = useCallback((path: string) => {
+    setPreviewPhoto(path);
+  }, []);
+
+  const handleReject = useCallback((id: string) => {
+    setRejectId(id);
+  }, []);
+
+  const renderItem = useCallback(
+    ({ item }: { item: TaskCompletionTalentDto }) => (
+      <TaskCompletionCard
+        item={item}
+        isSelected={selectedIds.has(item.taskCompletionId)}
+        onToggleSelect={() => toggleSelection(item.taskCompletionId)}
+        onViewPhoto={handleViewPhoto}
+        onReject={handleReject}
+      />
+    ),
+    [selectedIds, toggleSelection, handleViewPhoto, handleReject],
+  );
 
   return (
     <ScreenWrapper
@@ -92,14 +112,34 @@ export const TaskCompletionTalentsScreen = () => {
       showLoader={isLoading}
       contentContainerStyle={styles.contentContainer}
     >
+      {talents.length > 0 && (
+        <Pressable onPress={toggleSelectAll} style={styles.selectAllRow}>
+          <AppText typography="bold_14" color="main">
+            {allSelected ? 'Deselect All' : 'Select All'}
+          </AppText>
+        </Pressable>
+      )}
+
       <AppFlashList
-        data={participants}
-        keyExtractor={item => item.id}
+        data={talents}
+        keyExtractor={item => item.taskCompletionId}
         renderItem={renderItem}
-        contentContainerStyle={{ paddingTop: 16 }}
-        gap={0}
+        contentContainerStyle={styles.listContent}
+        gap={8}
         emptyText="No task completions found"
       />
+
+      {selectedIds.size > 0 && (
+        <View
+          style={[styles.bottomBar, { paddingBottom: insets.bottom || 24 }]}
+        >
+          <AppButton
+            title={`Proceed to Pay (${selectedIds.size})`}
+            variant="primary"
+            onPress={() => {}}
+          />
+        </View>
+      )}
 
       <AppModal
         isVisible={!!previewPhoto}
@@ -115,27 +155,12 @@ export const TaskCompletionTalentsScreen = () => {
           />
         </View>
       </AppModal>
+
+      <RejectTaskModal
+        isVisible={!!rejectId}
+        onClose={() => setRejectId(null)}
+        onConfirm={handleRejectConfirm}
+      />
     </ScreenWrapper>
   );
 };
-
-const styles = StyleSheet.create({
-  contentContainer: {
-    paddingHorizontal: 16,
-    flex: 1,
-  },
-  modalContent: {
-    paddingHorizontal: 16,
-  },
-  photoContainer: {
-    width: '100%',
-    height: 400,
-    borderRadius: 12,
-    overflow: 'hidden',
-    marginTop: 12,
-  },
-  fullPhoto: {
-    width: '100%',
-    height: '100%',
-  },
-});

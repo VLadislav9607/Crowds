@@ -50,6 +50,7 @@ export const QRCodeScanTab = () => {
         brandLogoPath: event.brand_logo_path,
         venue: event.venue,
         sessionId: session!.id,
+        eventId: qr_code.event_id,
         onCheckoutSuccess: () => {},
       });
     }

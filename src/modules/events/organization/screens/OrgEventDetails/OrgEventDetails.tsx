@@ -130,14 +130,17 @@ export const OrgEventDetails = () => {
 
   const timezone = event?.event_location?.timezone || 'UTC';
 
-  const startAtTimezone = event?.start_at
-    ? formatInTimeZone(event.start_at, timezone, 'd MMM, yyyy')
+  const startDateTimeFormatted = event?.start_at
+    ? formatInTimeZone(event.start_at, timezone, 'd MMM yyyy, h:mm a')
     : '';
 
-  const duration =
-    event?.start_at && event?.end_at
-      ? calculateEventDuration(event.start_at, event.end_at)
-      : { formatted: '' };
+  const endDateTimeFormatted = event?.end_at
+    ? formatInTimeZone(event.end_at, timezone, 'd MMM yyyy, h:mm a')
+    : '';
+
+  const registrationClosesFormatted = event?.registration_closes_at
+    ? formatInTimeZone(event.registration_closes_at, timezone, 'd MMM yyyy, h:mm a')
+    : '';
 
   const officeCountryName = event?.office_country_code
     ? getCountryNameByCode(event.office_country_code)
@@ -281,7 +284,9 @@ export const OrgEventDetails = () => {
 
         <EventDetailsCardWithMap
           showSkeleton={isLoading}
-          startAtFormatted={startAtTimezone}
+          startTimeFormatted={startDateTimeFormatted}
+          endTimeFormatted={endDateTimeFormatted}
+          registrationClosesFormatted={registrationClosesFormatted}
           location={
             event?.event_location
               ? {
@@ -292,7 +297,6 @@ export const OrgEventDetails = () => {
               : null
           }
           officeCountryName={officeCountryName}
-          duration={duration.formatted}
         />
 
         <EventDetailsTextBlock

@@ -26,6 +26,7 @@ export interface EventDetailsForTalentDto {
   event_location: Omit<Tables<'event_locations'>, 'created_at'> | null;
   event_age_groups: EventAgeGroupDto[];
   participation_id: string | null;
+  checked_in_at: string | null;
   checked_out_at: string | null;
   task_status: string;
   task_photo_path: string | null;

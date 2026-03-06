@@ -8,7 +8,7 @@ export const ManageActionsList = ({ eventId }: { eventId: string }) => {
   const manageActions = [
     {
       label: 'Generate QR Code',
-      onPress: () => {},
+      onPress: () => goToScreen(Screens.EventQRCodes, { eventId }),
     },
     {
       label: 'Invite Talents',
