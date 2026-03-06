@@ -5,6 +5,7 @@ export interface TalentEventCheckoutModalProps {
   brandLogoPath: string | null;
   venue: string | null;
   sessionId: string;
+  eventId: string;
   onCheckoutSuccess: () => void;
 }
 

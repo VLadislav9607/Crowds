@@ -62,7 +62,6 @@ export const ChatRoomScreen = () => {
         keyboardVerticalOffset={Platform.OS === 'ios' ? top + 60 : 0}
       >
         <MessageList
-          isTalent={!!isTalent}
           chatType={params?.chatType ?? ChatType.Direct}
           sections={sections}
           isLoading={isLoadingMessages}

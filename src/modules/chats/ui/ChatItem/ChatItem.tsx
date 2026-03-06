@@ -20,6 +20,7 @@ export const ChatItem = ({
     title,
     eventName,
     avatarUrl,
+    avatarBucket,
     type,
     lastMessage,
     lastMessageAt,
@@ -63,7 +64,10 @@ export const ChatItem = ({
 
       <View style={styles.mainRow}>
         <Avatar
-          bucket={variant === 'talent' ? 'brand_avatars' : 'talents_avatars'}
+          bucket={
+            avatarBucket ??
+            (variant === 'talent' ? 'brand_avatars' : 'talents_avatars')
+          }
           size={40}
           imgPath={avatarUrl || ''}
           name={title}

@@ -29,7 +29,6 @@ import {
 } from '@helpers';
 import { formatInTimeZone } from 'date-fns-tz';
 import RNCalendarEvents from 'react-native-calendar-events';
-import { calculateEventDuration } from '../../../helpers';
 
 import {
   EventDetailsCardWithMap,
@@ -61,8 +60,8 @@ export const TalentEventDetailsScreen = () => {
         photo_path: data.uploadedFile.path,
       });
     },
-    onError: () => {
-      showErrorToast('Failed to upload photo');
+    onError: (error: Error) => {
+      showErrorToast(error.message || 'Failed to upload photo');
     },
   });
 
@@ -70,8 +69,8 @@ export const TalentEventDetailsScreen = () => {
     onSuccess: () => {
       showSuccessToast('Task photo submitted successfully');
     },
-    onError: () => {
-      showErrorToast('Failed to submit task');
+    onError: (error: Error) => {
+      showErrorToast(error.message || 'Failed to submit task');
     },
   });
 
@@ -171,22 +170,32 @@ export const TalentEventDetailsScreen = () => {
 
   const timezone = event?.event_location?.timezone || 'UTC';
 
-  const startAtFormatted = event?.start_at
-    ? formatInTimeZone(event.start_at, timezone, 'd MMM, yyyy')
+  const startDateTimeFormatted = event?.start_at
+    ? formatInTimeZone(event.start_at, timezone, 'd MMM yyyy, h:mm a')
     : '';
 
-  const duration =
-    event?.start_at && event?.end_at
-      ? calculateEventDuration(event.start_at, event.end_at)
-      : { formatted: '' };
+  const endDateTimeFormatted = event?.end_at
+    ? formatInTimeZone(event.end_at, timezone, 'd MMM yyyy, h:mm a')
+    : '';
+
+  const registrationClosesFormatted = event?.registration_closes_at
+    ? formatInTimeZone(
+        event.registration_closes_at,
+        timezone,
+        'd MMM yyyy, h:mm a',
+      )
+    : '';
 
   const officeCountryName = event?.office_country_code
     ? getCountryNameByCode(event.office_country_code)
     : undefined;
 
   const isMediaProduction = event?.event_type === 'media_production';
+  const hasCheckedIn = !!event?.checked_in_at;
   const hasCheckedOut = !!event?.checked_out_at;
-  const showTaskUpload = hasCheckedOut && !isMediaProduction;
+  const showTaskUpload = hasCheckedIn && !isMediaProduction;
+  const showTaskBanner =
+    hasCheckedOut && !isMediaProduction && event?.task_status === 'pending';
   const hasSubmittedTask = event?.task_status === 'submitted';
   const hasApprovedTask = event?.task_status === 'approved';
   const hasRejectedTask = event?.task_status === 'rejected';
@@ -209,6 +218,16 @@ export const TalentEventDetailsScreen = () => {
       ]}
     >
       <View style={styles.container}>
+        <If condition={showTaskBanner}>
+          <View style={styles.taskBanner}>
+            <AppText typography="semibold_14" color="main">
+              You've checked out! Please upload a task photo to complete your
+              job. Once approved by the organizer, you'll be eligible for
+              payment.
+            </AppText>
+          </View>
+        </If>
+
         <EventDetailsTextBlock
           showSkeleton={isLoading}
           label="Description"
@@ -217,7 +236,9 @@ export const TalentEventDetailsScreen = () => {
 
         <EventDetailsCardWithMap
           showSkeleton={isLoading}
-          startAtFormatted={startAtFormatted}
+          startTimeFormatted={startDateTimeFormatted}
+          endTimeFormatted={endDateTimeFormatted}
+          registrationClosesFormatted={registrationClosesFormatted}
           location={
             event?.event_location
               ? {
@@ -228,7 +249,6 @@ export const TalentEventDetailsScreen = () => {
               : null
           }
           officeCountryName={officeCountryName}
-          duration={duration.formatted}
         />
 
         <EventDetailsTextBlock
@@ -322,21 +342,28 @@ export const TalentEventDetailsScreen = () => {
                 </If>
 
                 <If condition={!hasApprovedTask}>
-                  <ActionPurpleButton
-                    icon={ICONS.camera('main')}
-                    title={
-                      event?.task_photo_path
-                        ? 'CHANGE TASK PHOTO'
-                        : 'UPLOAD TASK PHOTO'
-                    }
+                  <AppButton
                     onPress={handleOpenPhotoPicker}
+                    isDisabled={isTaskProcessing}
+                    isLoading={isTaskProcessing}
+                    loadingColor={COLORS.main}
+                    title={
+                      isTaskProcessing
+                        ? 'Uploading...'
+                        : event?.task_photo_path
+                        ? 'Change task photo'
+                        : 'Upload task photo'
+                    }
+                    variant="withBorder"
+                    wrapperStyles={{ borderColor: COLORS.main }}
+                    titleStyles={{ color: COLORS.main }}
                   />
                 </If>
               </View>
             </If>
           </>
 
-          <If condition={!showTaskUpload || hasApprovedTask || hasSubmittedTask}>
+          <If condition={!hasCheckedIn && !event?.task_photo_path}>
             <AppButton
               onPress={() => setIsOpenModal(true)}
               title="Cancel attendance"

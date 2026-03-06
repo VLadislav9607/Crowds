@@ -1,13 +1,26 @@
 import { useCallback, useMemo, useState } from 'react';
-import { AppTabSelector, ITabOption, ScreenWrapper } from '@components';
-import { useTalentEventsByStatus, useTalentEventsCounts } from '@actions';
+import {
+  AppTabSelector,
+  ITabOption,
+  ScreenWrapper,
+  AppFlashList,
+  IPopupMenuItem,
+} from '@components';
+import {
+  useTalentEventsByStatus,
+  useTalentEventsCounts,
+  useGetTalentEventHistory,
+  TalentEventHistoryItem,
+} from '@actions';
+import { useRefetchQuery } from '@hooks';
+import { goToScreen, Screens } from '@navigation';
 
 import { TalentEventStatus, TalentEventsTabs } from '../../../types';
 import { styles } from './styles';
-import { TalentEventsViewList } from '../../components';
+import { TalentEventsViewList, EventHistoryCard } from '../../components';
 
 const TAB_PARAMS: Record<
-  TalentEventsTabs,
+  Exclude<TalentEventsTabs, 'history'>,
   {
     status: TalentEventStatus;
     initiatedBy?: 'organization' | 'talent';
@@ -32,22 +45,42 @@ const TAB_PARAMS: Record<
 export const TalentEventsTab = () => {
   const [selectedTab, setSelectedTab] = useState<TalentEventsTabs>('proposed');
 
-  const currentParams = useMemo(() => TAB_PARAMS[selectedTab], [selectedTab]);
+  const isHistoryTab = selectedTab === 'history';
+
+  const currentParams = useMemo(
+    () => (isHistoryTab ? TAB_PARAMS.approved : TAB_PARAMS[selectedTab]),
+    [selectedTab, isHistoryTab],
+  );
 
   const { data, isLoading, hasNextPage, fetchNextPage, refetch } =
-    useTalentEventsByStatus(currentParams);
+    useTalentEventsByStatus(currentParams, { enabled: !isHistoryTab });
+
+  const {
+    data: historyData,
+    isLoading: historyLoading,
+    hasNextPage: historyHasNextPage,
+    fetchNextPage: historyFetchNextPage,
+    refetch: historyRefetch,
+  } = useGetTalentEventHistory({ enabled: isHistoryTab });
+
+  const { isRefetchingQuery: isHistoryRefetching, refetchQuery: refetchHistoryQuery } =
+    useRefetchQuery(historyRefetch);
 
   const {
     proposals,
     pending,
     approved,
     denied,
+    history,
     refetch: refetchCounts,
   } = useTalentEventsCounts();
 
   const refetchAll = useCallback(async () => {
-    await Promise.all([refetch(), refetchCounts()]);
-  }, [refetch, refetchCounts]);
+    await Promise.all([
+      isHistoryTab ? historyRefetch() : refetch(),
+      refetchCounts(),
+    ]);
+  }, [isHistoryTab, refetch, historyRefetch, refetchCounts]);
 
   const tabOptions: ITabOption<TalentEventsTabs>[] = useMemo(
     () => [
@@ -71,8 +104,27 @@ export const TalentEventsTab = () => {
         value: 'denied',
         badge: denied || 0,
       },
+      {
+        label: 'Completed',
+        value: 'history',
+        badge: history || 0,
+      },
     ],
-    [proposals, pending, approved, denied],
+    [proposals, pending, approved, denied, history],
+  );
+
+  const handleHistoryMenuSelect = useCallback(
+    (item: TalentEventHistoryItem, menuItem: IPopupMenuItem) => {
+      if (menuItem.value === 'flag_organization') {
+        goToScreen(Screens.FlagOrganization, {
+          eventId: item.event_id,
+          officeId: item.office_id,
+          brandName: item.brand_name,
+          brandLogoPath: item.brand_logo_path,
+        });
+      }
+    },
+    [],
   );
 
   return (
@@ -93,15 +145,39 @@ export const TalentEventsTab = () => {
         />
       }
     >
-      <TalentEventsViewList
-        data={data?.data || []}
-        isLoading={isLoading}
-        withBottomTab
-        hasMoreItems={hasNextPage}
-        refetch={refetchAll}
-        onLoadMore={fetchNextPage}
-        contentContainerStyle={styles.eventsListContent}
-      />
+      {isHistoryTab ? (
+        <AppFlashList<TalentEventHistoryItem>
+          data={historyData?.data ?? []}
+          gap={8}
+          renderItem={({ item }) => (
+            <EventHistoryCard
+              event={item}
+              onMenuSelect={(menuItem: IPopupMenuItem) =>
+                handleHistoryMenuSelect(item, menuItem)
+              }
+            />
+          )}
+          keyExtractor={item => item.event_id}
+          contentContainerStyle={styles.historyListContent}
+          emptyText="No past events yet"
+          showBottomLoader={!!historyHasNextPage}
+          onEndReached={() => historyHasNextPage && historyFetchNextPage()}
+          onEndReachedThreshold={0.5}
+          refreshing={isHistoryRefetching}
+          onRefresh={refetchHistoryQuery}
+          withBottomTab
+        />
+      ) : (
+        <TalentEventsViewList
+          data={data?.data || []}
+          isLoading={isLoading}
+          withBottomTab
+          hasMoreItems={hasNextPage}
+          refetch={refetchAll}
+          onLoadMore={fetchNextPage}
+          contentContainerStyle={styles.eventsListContent}
+        />
+      )}
     </ScreenWrapper>
   );
 };

@@ -10,4 +10,6 @@ export interface TaskCompletionTalentDto {
   task_photo_path: string | null;
   task_submitted_at: string;
   task_reviewed_at: string | null;
+  checked_in_at: string | null;
+  checked_out_at: string | null;
 }

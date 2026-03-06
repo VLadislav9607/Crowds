@@ -71,7 +71,6 @@ export enum Screens {
   // Talent screens
   TalentSearchEvents = 'TalentSearchEvents',
   TalentEventDetails = 'TalentEventDetails',
-  TalentEventHistory = 'TalentEventHistory',
   FlagOrganization = 'FlagOrganization',
   AcceptEventNda = 'AcceptEventNda',
 

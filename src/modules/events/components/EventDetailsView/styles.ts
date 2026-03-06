@@ -9,30 +9,10 @@ export const styles = StyleSheet.create({
     borderRadius: 10,
     padding: 16,
   },
-  cardWithMapIconsRow: { flexDirection: 'row', gap: 16, marginBottom: 12 },
-  cardWithMapLastIconsRow: {
-    flex: 1,
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-  },
   mapImage: {
     height: 120,
     borderRadius: 10,
     marginTop: 12,
-  },
-
-  // EventDetailsCardWithoutMap
-  cardWithoutMapContainer: {
-    borderWidth: 1,
-    borderColor: COLORS.gray_100,
-    borderRadius: 10,
-    backgroundColor: COLORS.gray_200,
-    padding: 16,
-  },
-  rowContainerWithMargin: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    marginTop: 5,
   },
 
   // EventDetailsRequirements
@@ -64,6 +44,14 @@ export const styles = StyleSheet.create({
     borderColor: COLORS.gray,
   },
 
+  timeBlock: {
+    gap: 8,
+    backgroundColor: COLORS.gray_200,
+    borderRadius: 8,
+    padding: 12,
+    marginBottom: 12,
+  },
+
   // Common styles
   divider: {
     height: 1,
@@ -72,9 +60,6 @@ export const styles = StyleSheet.create({
   },
   flex1: {
     flex: 1,
-  },
-  cardWithoutMapContent: {
-    gap: 5,
   },
   tagsContainerSkeleton: {
     flexDirection: 'row',

@@ -71,6 +71,7 @@ export const buildMessageSections = ({
       isMe,
       senderName: foundParticipant?.display_name ?? '',
       senderAvatar: foundParticipant?.avatar_url ?? '',
+      senderRole: foundParticipant?.role ?? 'talent',
     };
 
     sections[sections.length - 1].data.push(messageData);

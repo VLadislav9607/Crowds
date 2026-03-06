@@ -10,6 +10,7 @@ import { styles } from './styles';
 import { ImageBackground, View } from 'react-native';
 import { IMAGES } from '@assets';
 import { useCheckoutEvent } from '@actions';
+import { Screens, goToScreen } from '@navigation';
 import { showMutationErrorToast } from '@helpers';
 
 export const TalentEventCheckoutModal = forwardRef<TalentEventCheckoutModalRef>(
@@ -20,6 +21,7 @@ export const TalentEventCheckoutModal = forwardRef<TalentEventCheckoutModalRef>(
       setFalse: setIsCheckedOutFalse,
     } = useBoolean();
     const [checkoutTime, setCheckoutTime] = useState('');
+    const [participationId, setParticipationId] = useState('');
 
     const { isVisible, refProps, close } =
       useImperativeModal<TalentEventCheckoutModalProps>(ref, {
@@ -33,6 +35,7 @@ export const TalentEventCheckoutModal = forwardRef<TalentEventCheckoutModalRef>(
           minute: '2-digit',
         });
         setCheckoutTime(time);
+        setParticipationId(data.participant_id);
         setIsCheckedOutTrue();
         refProps.onCheckoutSuccess?.();
       },
@@ -104,10 +107,16 @@ export const TalentEventCheckoutModal = forwardRef<TalentEventCheckoutModalRef>(
           </AppText>
 
           <AppButton
-            title="Okay"
+            title="View Event"
             size="56"
             variant="withBorder"
-            onPress={close}
+            onPress={() => {
+              close();
+              goToScreen(Screens.TalentEventDetails, {
+                eventId: refProps.eventId,
+                participationId,
+              });
+            }}
           />
         </If>
       </AppModal>

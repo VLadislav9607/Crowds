@@ -37,7 +37,6 @@ import { CreateEventScreen } from '../../modules/create-event';
 import {
   TalentEventDetailsScreen,
   TalentSearchEventsScreen,
-  TalentEventHistoryScreen,
   AcceptEventNdaScreen,
 } from '../../modules/events/talent/screens';
 import { ChangePasswordScreen, OrgProfileSetupScreen } from '@modules/profile';
@@ -313,10 +312,6 @@ export const RootStackNavigator = () => {
         options={{
           presentation: 'modal',
         }}
-      />
-      <RootStack.Screen
-        name={Screens.TalentEventHistory}
-        component={TalentEventHistoryScreen}
       />
       <RootStack.Screen
         name={Screens.FlagOrganization}

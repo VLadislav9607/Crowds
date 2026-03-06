@@ -1,4 +1,5 @@
 import { StyleSheet } from "react-native";
+import { COLORS } from '@styles';
 
 export const styles = StyleSheet.create({
     container: {
@@ -15,6 +16,13 @@ export const styles = StyleSheet.create({
     },
     chatButton: {
       flex: 1,
+    },
+    taskBanner: {
+      backgroundColor: COLORS.light_purple,
+      borderRadius: 12,
+      padding: 16,
+      borderLeftWidth: 4,
+      borderLeftColor: COLORS.main,
     },
     taskUploadSection: {
       gap: 12,

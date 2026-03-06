@@ -17,7 +17,6 @@ export const MessageList = ({
   sections,
   isLoading,
   chatType,
-  isTalent,
   onEndReached,
   onEndReachedThreshold = 0.2,
 }: IMessageListProps) => {
@@ -33,7 +32,6 @@ export const MessageList = ({
     return (
       <Message
         message={item}
-        isTalent={isTalent}
         chatType={chatType}
         isFirst={isFirst}
         isLast={isLast}

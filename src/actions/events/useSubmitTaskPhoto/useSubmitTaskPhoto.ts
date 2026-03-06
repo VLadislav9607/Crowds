@@ -10,6 +10,7 @@ export const useSubmitTaskPhoto = (
   const queryClient = useQueryClient();
 
   return useMutation({
+    ...options,
     mutationFn: submitTaskPhotoAction,
     onSuccess: (...args) => {
       queryClient.invalidateQueries({
@@ -17,6 +18,5 @@ export const useSubmitTaskPhoto = (
       });
       options?.onSuccess?.(...args);
     },
-    ...options,
   });
 };

@@ -13,6 +13,7 @@ export const useTalentEventsCounts = () => {
     pending: data?.[0]?.pending || 0,
     approved: data?.[0]?.approved || 0,
     denied: data?.[0]?.denied || 0,
+    history: data?.[0]?.history || 0,
     refetch,
   };
 };

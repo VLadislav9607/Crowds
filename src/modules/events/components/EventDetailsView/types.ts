@@ -17,13 +17,9 @@ export type EventDetailsCardWithMapProps = {
     longitude: number;
   } | null;
   officeCountryName?: string;
-  startAtFormatted?: string;
-  duration?: string;
-};
-
-export type EventDetailsCardWithoutMapProps = {
-  showSkeleton?: boolean;
-  containerStyle?: StyleProp<ViewStyle>;
+  startTimeFormatted?: string;
+  endTimeFormatted?: string;
+  registrationClosesFormatted?: string;
 };
 
 export interface EventDetailsRequirementItem {

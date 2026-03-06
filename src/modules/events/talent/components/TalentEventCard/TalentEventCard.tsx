@@ -1,24 +1,23 @@
-import { SvgXml } from 'react-native-svg';
 import {
   ActivityIndicator,
   ImageBackground,
   TouchableOpacity,
   View,
 } from 'react-native';
+import { SvgXml } from 'react-native-svg';
+import { useState } from 'react';
 import { formatInTimeZone } from 'date-fns-tz';
 import { AppButton, AppText, IconText } from '@ui';
 import { ICONS, IMAGES } from '@assets';
 import { If } from '@components';
+import { getTimezoneOffsetHours, getCountryNameByCode } from '@helpers';
 import { COLORS } from '@styles';
 import { goToScreen, Screens } from '@navigation';
-import { calculateEventDuration } from '../../../helpers';
-import { styles } from './styles';
-import { getEventIcon } from '../../../helpers';
-import { TalentEventCardProps } from './types';
-import { useState } from 'react';
-import { ITalentEventCard } from './types';
+import { useGetGroupChatId, ChatType } from '@actions';
+import { calculateEventDuration, getEventIcon } from '../../../helpers';
 import { TalentEventsTabs } from '../../../types';
-import { getTimezoneOffsetHours, getCountryNameByCode } from '@helpers';
+import { TalentEventCardProps } from './types';
+import { styles } from './styles';
 
 export const TalentEventCard = ({
   event,
@@ -33,6 +32,18 @@ export const TalentEventCard = ({
   onCancelApplication,
   onRemoveEventFromFolder,
 }: TalentEventCardProps) => {
+  const { mutate: getGroupChatId, isPending: isGettingGroupChatId } =
+    useGetGroupChatId({
+      onSuccess: chatId => {
+        goToScreen(Screens.ChatRoom, {
+          chatId,
+          chatType: ChatType.Group,
+          title: 'Group',
+          imageUrl: '',
+        });
+      },
+    });
+
   const [isLoadingAccept, setIsLoadingAccept] = useState(false);
   const [isLoadingDecline, setIsLoadingDecline] = useState(false);
   const [isLoadingReject, setIsLoadingReject] = useState(false);
@@ -40,9 +51,7 @@ export const TalentEventCard = ({
   const [isLoadingRemoveEventFromFolder, setIsLoadingRemoveEventFromFolder] =
     useState(false);
 
-  const getEventStatus = (
-    event: ITalentEventCard,
-  ): TalentEventsTabs | 'random' => {
+  const getEventStatus = (): TalentEventsTabs | 'random' => {
     if (!event?.participant) {
       return 'random';
     } else if (event?.participant?.status === 'approved') {
@@ -63,7 +72,7 @@ export const TalentEventCard = ({
     return 'random';
   };
 
-  const type = getEventStatus(event);
+  const eventCardType = getEventStatus();
 
   const handleRemoveEventFromFolder = async () => {
     try {
@@ -264,12 +273,12 @@ export const TalentEventCard = ({
           </AppText>
         </View>
 
-        <If condition={type !== 'denied'}>
+        <If condition={eventCardType !== 'denied'}>
           <View style={styles.separatorDashedLine} />
         </If>
 
         <View style={styles.buttonsContainer}>
-          <If condition={type === 'random'}>
+          <If condition={eventCardType === 'random'}>
             <If condition={!hideRejectButton}>
               <AppButton
                 title="Reject"
@@ -291,7 +300,7 @@ export const TalentEventCard = ({
             />
           </If>
 
-          <If condition={type === 'proposed' && !!event?.participant}>
+          <If condition={eventCardType === 'proposed' && !!event?.participant}>
             <AppButton
               title="Decline"
               size="36"
@@ -304,8 +313,8 @@ export const TalentEventCard = ({
           </If>
           <If
             condition={
-              type === 'proposed' ||
-              (type === 'denied' && !!event?.can_reaccept)
+              eventCardType === 'proposed' ||
+              (eventCardType === 'denied' && !!event?.can_reaccept)
             }
           >
             <AppButton
@@ -319,7 +328,7 @@ export const TalentEventCard = ({
             />
           </If>
 
-          <If condition={type === 'pending' && !!event?.participant}>
+          <If condition={eventCardType === 'pending' && !!event?.participant}>
             <AppButton
               variant="withBorder"
               size="36"
@@ -331,7 +340,7 @@ export const TalentEventCard = ({
             />
           </If>
 
-          <If condition={type === 'approved'}>
+          <If condition={eventCardType === 'approved'}>
             <View style={styles.approvedButtons}>
               <If condition={!event.nda_file_path || !!event.nda_accepted_at}>
                 <AppButton
@@ -339,8 +348,9 @@ export const TalentEventCard = ({
                   icon={ICONS.chats('white')}
                   iconSize={20}
                   title="Message"
+                  isLoading={isGettingGroupChatId}
                   wrapperStyles={styles.messageButtonWrapper}
-                  onPress={() => {}}
+                  onPress={() => getGroupChatId(event.event_id)}
                 />
               </If>
 
