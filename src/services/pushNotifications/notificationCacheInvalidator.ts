@@ -77,5 +77,12 @@ export function invalidateCacheForNotificationType(
         queryKey: [TANSTACK_QUERY_KEYS.GET_MY_ACTIVE_FLAG],
       });
       break;
+
+    // Task rejected → refresh task completions so talent sees updated status
+    case 'task_rejected':
+      queryClient.refetchQueries({
+        queryKey: [TANSTACK_QUERY_KEYS.GET_EVENT_TASK_COMPLETIONS],
+      });
+      break;
   }
 }

@@ -23,6 +23,13 @@ export function navigateFromNotification(
         goToScreen(Screens.Notifications);
       }
       break;
+    case 'task_rejected':
+      if (data.eventId) {
+        goToScreen(Screens.TalentEventDetails, { eventId: data.eventId });
+      } else {
+        goToScreen(Screens.Notifications);
+      }
+      break;
     default:
       goToScreen(Screens.Notifications);
       break;
