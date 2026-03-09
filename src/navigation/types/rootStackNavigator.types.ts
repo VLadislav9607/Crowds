@@ -64,7 +64,7 @@ export type RootStackParamList = {
   [Screens.CustomTalentsList]: {
     listName: string;
     listId: string;
-    eventId: string;
+    eventId?: string;
   };
   [Screens.AddTalentsToList]: {
     listId: string;
@@ -72,6 +72,7 @@ export type RootStackParamList = {
   };
   [Screens.ManageOrgTeam]: undefined;
   [Screens.OrgProfileSetup]: undefined;
+  [Screens.MyLists]: undefined;
   [Screens.OrgEventDetails]: { eventId: string };
 
   // Event Management screens
@@ -129,6 +130,9 @@ export type RootStackParamList = {
   //Profile
   [Screens.NotificationSettings]: { role: Role };
   [Screens.Notifications]: undefined;
+  [Screens.FAQ]: undefined;
+  [Screens.TermsAndConditions]: undefined;
+  [Screens.PrivacyPolicy]: undefined;
 
   // Stripe Connect
   [Screens.StripeConnectOnboarding]: undefined;

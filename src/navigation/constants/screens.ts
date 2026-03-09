@@ -63,6 +63,7 @@ export enum Screens {
   AddTalentsToList = 'AddTalentsToList',
   ManageOrgTeam = 'ManageOrgTeam',
   OrgProfileSetup = 'OrgProfileSetup',
+  MyLists = 'MyLists',
   OrgEventDetails = 'OrgEventDetails',
 
   // Event Management screens
@@ -84,6 +85,11 @@ export enum Screens {
   //Profile
   NotificationSettings = 'NotificationSettings',
   Notifications = 'Notifications',
+
+  // Profile
+  FAQ = 'FAQ',
+  TermsAndConditions = 'TermsAndConditions',
+  PrivacyPolicy = 'PrivacyPolicy',
 
   // Stripe Connect
   StripeConnectOnboarding = 'StripeConnectOnboarding',

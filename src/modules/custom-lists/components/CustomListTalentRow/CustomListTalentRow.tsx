@@ -2,13 +2,14 @@ import { AppButton } from '@ui';
 import { TalentProfileRow } from '@modules/common';
 import { IEventParticipant } from '@modules/common';
 import { goToScreen, Screens } from '@navigation';
-import { InviteStatusBadge } from '../../ui';
+import { InviteStatusBadge } from '../../../invite-talents/ui';
 
 interface CustomListTalentRowProps {
   talent: IEventParticipant;
-  invitingTalentId: string | null;
-  onInvite: (talentId: string) => void;
+  invitingTalentId?: string | null;
+  onInvite?: (talentId: string) => void;
   onRemove: (talentId: string) => void;
+  showInviteAction?: boolean;
 }
 
 export const CustomListTalentRow = ({
@@ -16,8 +17,11 @@ export const CustomListTalentRow = ({
   invitingTalentId,
   onInvite,
   onRemove,
+  showInviteAction = true,
 }: CustomListTalentRowProps) => {
   const renderRightAction = () => {
+    if (!showInviteAction) return null;
+
     if (talent.status) {
       return <InviteStatusBadge status={talent.status} />;
     }
@@ -26,7 +30,7 @@ export const CustomListTalentRow = ({
       <AppButton
         title="Invite"
         isLoading={invitingTalentId === talent.talentId}
-        onPress={() => onInvite(talent.talentId)}
+        onPress={() => onInvite?.(talent.talentId)}
         size="36"
         width={71}
       />
@@ -43,7 +47,7 @@ export const CustomListTalentRow = ({
           talentId: talent.talentId,
         })
       }
-      renderRightAction={renderRightAction}
+      renderRightAction={showInviteAction ? renderRightAction : undefined}
     />
   );
 };

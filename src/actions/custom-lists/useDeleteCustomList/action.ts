@@ -6,7 +6,7 @@ export const deleteCustomListAction = async (
 ): Promise<void> => {
   const { error } = await supabase.rpc('delete_custom_list', {
     p_list_id: body.listId,
-    p_event_id: body.eventId,
+    p_event_id: body.eventId || null,
   });
 
   if (error) {

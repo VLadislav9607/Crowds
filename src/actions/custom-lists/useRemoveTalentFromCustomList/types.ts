@@ -1,5 +1,5 @@
 export interface RemoveTalentFromCustomListBodyDto {
   listId: string;
-  eventId: string;
+  eventId?: string;
   talentId: string;
 }

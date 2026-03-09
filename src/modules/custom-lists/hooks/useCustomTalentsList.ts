@@ -3,7 +3,7 @@ import { useCustomListMembers } from '@actions';
 import { IEventParticipant, TalentFlag } from '@modules/common';
 import { mapInviteTalent } from '../helpers';
 
-export const useCustomTalentsList = (eventId: string, listId: string) => {
+export const useCustomTalentsList = (eventId: string | undefined, listId: string) => {
   const {
     data: talentsResponse,
     fetchNextPage,
@@ -28,7 +28,7 @@ export const useCustomTalentsList = (eventId: string, listId: string) => {
     fetchNextPage();
   };
 
-  const totalCount = talentsResponse?.pages[0]?.pagination?.total ?? 0;
+  const totalCount = talentsList.length;
 
   return {
     talentsList,

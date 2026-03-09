@@ -34,6 +34,6 @@ export const useCustomListMembers = (params: GetCustomListTalentsParams) => {
       const currentPage = allPages.length;
       return currentPage + 1;
     },
-    enabled: !!params.eventId && !!params.listId,
+    enabled: !!params.listId,
   });
 };

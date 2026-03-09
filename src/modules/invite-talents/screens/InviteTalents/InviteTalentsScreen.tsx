@@ -6,11 +6,8 @@ import { AppText } from '@ui';
 import { goBack, Screens, useScreenNavigation } from '@navigation';
 import { useEventParticipantsCounts, useGetEventForOrgMember } from '@actions';
 
-import {
-  MyCustomTalentsLists,
-  MatchingTalentsTab,
-  AllTalentsTab,
-} from '../../components';
+import { MyCustomTalentsLists } from '../../../custom-lists/components';
+import { MatchingTalentsTab, AllTalentsTab } from '../../components';
 
 export const InviteTalentsScreen = () => {
   const { params } = useScreenNavigation<Screens.InviteTalents>();
@@ -50,7 +47,7 @@ export const InviteTalentsScreen = () => {
       />
 
       <If condition={selectedTab === 'my_lists'}>
-        <MyCustomTalentsLists />
+        <MyCustomTalentsLists eventId={eventId} />
       </If>
 
       <If condition={selectedTab === 'matching_talent'}>

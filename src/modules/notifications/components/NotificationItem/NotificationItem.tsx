@@ -55,13 +55,18 @@ export const NotificationItem = ({
             })}
           </AppText>
         </View>
-        <AppText typography="regular_12" color="dark_gray" numberOfLines={isFlag ? 4 : 2}>
+        <AppText
+          typography="regular_12"
+          color="dark_gray"
+          numberOfLines={isFlag ? 4 : 10}
+        >
           {item.body}
         </AppText>
-        {flagData?.expiresOn && (
+        {!!flagData?.expiresOn && (
           <View style={styles.flagExpiresRow}>
             <AppText typography="regular_12" color="gray_primary">
-              Expires: {formatDate(flagData.expiresOn as string, 'MMM dd, yyyy')}
+              Expires:{' '}
+              {formatDate(flagData.expiresOn as string, 'MMM dd, yyyy')}
             </AppText>
           </View>
         )}

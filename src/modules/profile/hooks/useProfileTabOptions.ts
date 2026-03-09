@@ -2,6 +2,7 @@ import { ICONS } from '@assets';
 import { goToScreen, Screens } from '@navigation';
 import { ColorsKeys } from '@styles';
 import { useGetMe } from '@actions';
+import DeviceInfo from 'react-native-device-info';
 
 interface ProfileOption {
   title: string;
@@ -57,9 +58,14 @@ export const useProfileTabOptions = ({
       onPress: () => goToScreen(Screens.AvailabilitySetup),
     },
     {
+      title: 'FAQ',
+      icon: ICONS.faq(),
+      onPress: () => goToScreen(Screens.FAQ),
+    },
+    {
       title: 'Terms and conditions',
       icon: ICONS.bookMark(),
-      onPress: () => {},
+      onPress: () => goToScreen(Screens.TermsAndConditions),
     },
     {
       title: 'Delete account information',
@@ -69,7 +75,7 @@ export const useProfileTabOptions = ({
     {
       title: 'Privacy policy',
       icon: ICONS.userShield(),
-      onPress: () => {},
+      onPress: () => goToScreen(Screens.PrivacyPolicy),
     },
     {
       title: 'Logout',
@@ -92,6 +98,11 @@ export const useProfileTabOptions = ({
       isInvisible:
         !organizationMember?.current_context?.capabilitiesAccess
           .edit_business_info,
+    },
+    {
+      title: 'My lists',
+      icon: ICONS.customList(),
+      onPress: () => goToScreen(Screens.MyLists),
     },
     {
       title: 'Manage team',
@@ -119,17 +130,22 @@ export const useProfileTabOptions = ({
       onPress: () => {},
     },
     {
+      title: 'FAQ',
+      icon: ICONS.faq(),
+      onPress: () => goToScreen(Screens.FAQ),
+    },
+    {
       title: 'Terms and conditions',
       icon: ICONS.bookMark(),
-      onPress: () => {},
+      onPress: () => goToScreen(Screens.TermsAndConditions),
     },
     {
       title: 'Privacy policy',
       icon: ICONS.userShield(),
-      onPress: () => {},
+      onPress: () => goToScreen(Screens.PrivacyPolicy),
     },
     {
-      title: 'App version 1.0',
+      title: `App version ${DeviceInfo.getVersion()} (${DeviceInfo.getBuildNumber()})`,
       icon: ICONS.circleInfo(),
       onPress: () => {},
     },

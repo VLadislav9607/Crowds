@@ -82,7 +82,6 @@ export const useAddTalentToCustomList = (
         });
       }
 
-      showSuccessToast('Talent added to list successfully');
       await options?.onSuccess?.(...args);
     },
     onError: (...args) => {

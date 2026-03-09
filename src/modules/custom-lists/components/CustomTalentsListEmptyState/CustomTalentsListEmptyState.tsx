@@ -5,13 +5,11 @@ import { goToScreen, Screens } from '@navigation';
 import { styles } from './styles';
 
 interface CustomTalentsListEmptyStateProps {
-  eventId: string;
   listId: string;
   listName: string;
 }
 
 export const CustomTalentsListEmptyState = ({
-  eventId,
   listId,
   listName,
 }: CustomTalentsListEmptyStateProps) => {
@@ -25,7 +23,6 @@ export const CustomTalentsListEmptyState = ({
         icon={ICONS.plus('white')}
         onPress={() =>
           goToScreen(Screens.AddTalentsToList, {
-            eventId,
             listId,
             listName,
           })

@@ -6,7 +6,7 @@ export const updateCustomListNameAction = async (
 ): Promise<void> => {
   const { error } = await supabase.rpc('update_custom_list_name', {
     p_list_id: body.listId,
-    p_event_id: body.eventId,
+    p_event_id: body.eventId || null,
     p_name: body.name,
   });
 

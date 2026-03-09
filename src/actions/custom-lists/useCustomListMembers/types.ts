@@ -2,7 +2,7 @@ import { EventParticipantStatus } from '@actions';
 
 export interface GetCustomListTalentsBodyDto {
   listId: string;
-  eventId: string;
+  eventId?: string;
   limit: number;
   offset: number;
   search?: string;
@@ -30,6 +30,6 @@ export interface GetCustomListTalentsRespDto {
 }
 
 export interface GetCustomListTalentsParams {
-  eventId: string;
+  eventId?: string;
   listId: string;
 }

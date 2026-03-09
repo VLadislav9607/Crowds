@@ -4,7 +4,7 @@ import { useGetMatchingTalents } from '@actions';
 import { IEventParticipant, TalentFlag } from '@modules/common';
 import { useDebounce } from '@hooks';
 
-import { mapInviteTalent } from '../helpers';
+import { mapInviteTalent } from '../../custom-lists/helpers';
 import { FilterMatchingTalentsState } from '../modals';
 
 export const useMatchingTalentsForInvite = (
