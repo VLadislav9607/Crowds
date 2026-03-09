@@ -39,7 +39,7 @@ import {
   TalentSearchEventsScreen,
   AcceptEventNdaScreen,
 } from '../../modules/events/talent/screens';
-import { ChangePasswordScreen, OrgProfileSetupScreen } from '@modules/profile';
+import { ChangePasswordScreen, OrgProfileSetupScreen, FAQScreen, TermsAndConditionsScreen, PrivacyPolicyScreen } from '@modules/profile';
 import {
   NotificationSettingsScreen,
   NotificationsListScreen,
@@ -58,11 +58,12 @@ import {
   EventApplicantsScreen,
 } from '../../modules/event-applicants';
 import { TalentProfileScreen } from '../../modules/talent-profile';
+import { InviteTalentsScreen } from '../../modules/invite-talents';
 import {
   AddTalentsToListScreen,
   CustomTalentsListScreen,
-  InviteTalentsScreen,
-} from '../../modules/invite-talents';
+  MyListsScreen,
+} from '../../modules/custom-lists';
 import { VerificationPersonScreen } from '../../modules/kyc';
 import { ManageOrgTeamScreen } from '../../modules/organization-team';
 import {
@@ -193,6 +194,18 @@ export const RootStackNavigator = () => {
         name={Screens.ChangePassword}
         component={ChangePasswordScreen}
       />
+      <RootStack.Screen
+        name={Screens.FAQ}
+        component={FAQScreen}
+      />
+      <RootStack.Screen
+        name={Screens.TermsAndConditions}
+        component={TermsAndConditionsScreen}
+      />
+      <RootStack.Screen
+        name={Screens.PrivacyPolicy}
+        component={PrivacyPolicyScreen}
+      />
 
       <RootStack.Screen
         name={Screens.ManageEvent}
@@ -269,6 +282,10 @@ export const RootStackNavigator = () => {
       <RootStack.Screen
         name={Screens.AddTalentsToList}
         component={AddTalentsToListScreen}
+      />
+      <RootStack.Screen
+        name={Screens.MyLists}
+        component={MyListsScreen}
       />
       <RootStack.Screen
         name={Screens.ManageOrgTeam}

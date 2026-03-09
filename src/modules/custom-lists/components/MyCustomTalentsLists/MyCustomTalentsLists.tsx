@@ -3,7 +3,7 @@ import { useState, useRef } from 'react';
 import { ICONS } from '@assets';
 import { AppButton } from '@ui';
 import { AppFlashList } from '@components';
-import { goToScreen, Screens, useScreenNavigation } from '@navigation';
+import { goToScreen, Screens } from '@navigation';
 import {
   useCreateCustomList,
   useGetCustomLists,
@@ -19,9 +19,13 @@ import { CreateEditCustomList } from '../../modals';
 import { CustomTalentsListCard, CustomListsSkeleton } from '../../ui';
 import { styles } from './styles';
 
-export const MyCustomTalentsLists = () => {
-  const { params } = useScreenNavigation<Screens.CustomTalentsList>();
-  const eventId = params?.eventId ?? '';
+interface MyCustomTalentsListsProps {
+  eventId?: string;
+}
+
+export const MyCustomTalentsLists = ({
+  eventId = '',
+}: MyCustomTalentsListsProps) => {
 
   const [isCreateListModalVisible, setIsCreateListModalVisible] =
     useState(false);

@@ -6,7 +6,7 @@ export interface CustomTalentsListCardProps {
   onPress: () => void;
   onMenuSelect: (value: string) => void;
   listId: string;
-  eventId: string;
+  eventId?: string;
 }
 
 export const POPUP_ITEMS_CUSTOM_LIST_CARD: IPopupMenuItem[] = [

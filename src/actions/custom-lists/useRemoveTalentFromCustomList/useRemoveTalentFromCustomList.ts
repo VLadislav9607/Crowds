@@ -20,20 +20,15 @@ export const useRemoveTalentFromCustomList = (
         queryKey: [TANSTACK_QUERY_KEYS.GET_CUSTOM_LISTS],
       });
 
-      // Invalidate custom list talents query for this event and list
-      if (listId && variables.eventId) {
+      // Invalidate all custom list talents queries for this list (any eventId)
+      if (listId) {
         await queryClient.invalidateQueries({
-          queryKey: [
-            TANSTACK_QUERY_KEYS.GET_CUSTOM_LIST_TALENTS,
-            variables.eventId,
-            listId,
-          ],
+          predicate: (query) =>
+            query.queryKey[0] === TANSTACK_QUERY_KEYS.GET_CUSTOM_LIST_TALENTS &&
+            query.queryKey[2] === listId,
         });
       }
 
-      setTimeout(() => {
-        showSuccessToast('Talent removed from list');
-      }, 1000);
       await options?.onSuccess?.(...args);
     },
     onError: showMutationErrorToast,

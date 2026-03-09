@@ -9,7 +9,7 @@ export const getCustomListTalentsAction = async (
 ): Promise<GetCustomListTalentsRespDto> => {
   const { data, error } = await supabase.rpc('get_custom_list_talents', {
     p_list_id: body.listId,
-    p_event_id: body.eventId,
+    p_event_id: body.eventId || null,
     p_limit: body.limit,
     p_offset: body.offset,
   });

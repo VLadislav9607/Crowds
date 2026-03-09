@@ -16,9 +16,6 @@ export const useDeleteCustomList = (
       await queryClient.invalidateQueries({
         queryKey: [TANSTACK_QUERY_KEYS.GET_CUSTOM_LISTS],
       });
-      setTimeout(() => {
-        showSuccessToast('List deleted successfully');
-      }, 1000);
       await options?.onSuccess?.(...args);
     },
     onError: showMutationErrorToast,

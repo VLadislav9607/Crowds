@@ -4,7 +4,7 @@ import { useGetAllTalents } from '@actions';
 import { IEventParticipant, TalentFlag } from '@modules/common';
 import { useDebounce } from '@hooks';
 
-import { mapInviteTalent } from '../helpers';
+import { mapInviteTalent } from '../../custom-lists/helpers';
 import { FiltersState } from '../modals';
 
 export const useAllTalents = (eventId: string) => {

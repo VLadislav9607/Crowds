@@ -16,9 +16,6 @@ export const useCreateCustomList = (
       await queryClient.invalidateQueries({
         queryKey: [TANSTACK_QUERY_KEYS.GET_CUSTOM_LISTS],
       });
-      setTimeout(() => {
-        showSuccessToast('List created successfully');
-      }, 1000);
       await options?.onSuccess?.(...args);
     },
     onError: showMutationErrorToast,

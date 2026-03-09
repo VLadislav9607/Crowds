@@ -4,19 +4,22 @@ import { IconButton } from '@ui';
 import { ICONS } from '@assets';
 import { useRemoveTalentFromCustomList } from '@actions';
 
+import { useSendInvite } from '../../../invite-talents/hooks';
+import { YellowFlagInviteWarningModal } from '../../../flags/modals';
+
 import { styles } from './styles';
-import { useSendInvite, useCustomTalentsList } from '../../hooks';
+import { useCustomTalentsList } from '../../hooks';
 import {
   CustomListTalentRow,
   CustomTalentsListEmptyState,
 } from '../../components';
-import { YellowFlagInviteWarningModal } from '../../../flags/modals';
 
 export const CustomTalentsListScreen = () => {
   const { params } = useScreenNavigation<Screens.CustomTalentsList>();
   const listId = params?.listId ?? '';
-  const eventId = params?.eventId ?? '';
+  const eventId = params?.eventId;
   const listName = params?.listName ?? '';
+  const hasEventContext = !!eventId;
 
   const {
     invitingTalentId,
@@ -82,6 +85,7 @@ export const CustomTalentsListScreen = () => {
               invitingTalentId={invitingTalentId}
               onInvite={handleInvitePress}
               onRemove={handleRemove}
+              showInviteAction={hasEventContext}
             />
           )}
           emptyText="No talents found"
@@ -90,19 +94,20 @@ export const CustomTalentsListScreen = () => {
 
       <If condition={!hasTalents && !isLoading}>
         <CustomTalentsListEmptyState
-          eventId={eventId}
           listId={listId}
           listName={listName}
         />
       </If>
 
-      <YellowFlagInviteWarningModal
-        isVisible={yellowFlagModal?.visible ?? false}
-        flag={yellowFlagModal?.flag ?? null}
-        onClose={closeYellowFlagModal}
-        onConfirm={confirmYellowFlagModal}
-        isInviting={!!invitingTalentId}
-      />
+      <If condition={hasEventContext}>
+        <YellowFlagInviteWarningModal
+          isVisible={yellowFlagModal?.visible ?? false}
+          flag={yellowFlagModal?.flag ?? null}
+          onClose={closeYellowFlagModal}
+          onConfirm={confirmYellowFlagModal}
+          isInviting={!!invitingTalentId}
+        />
+      </If>
     </ScreenWrapper>
   );
 };

@@ -60,6 +60,8 @@ import { heart } from './heart';
 import { arrowLeftInCircle } from './arrowLeftInCircle';
 import { arrowRightInCircle } from './arrowRightInCircle';
 
+import { customList } from './customList';
+import { faq } from './faq';
 import { orgAvatarLogo } from './orgAvatarLogo';
 import { globe } from './globe';
 import { BOTTOM_TABS } from './bottomTabs';
@@ -128,6 +130,8 @@ export const ICONS = {
   orgAvatarLogo,
   globe,
   heart,
+  customList,
+  faq,
   arrowLeftInCircle,
   arrowRightInCircle,
 };
