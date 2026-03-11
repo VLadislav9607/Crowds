@@ -43,7 +43,7 @@ export const ChatItem = ({
     >
       <View style={styles.eventRow}>
         <View style={styles.eventLabel}>
-          <AppText typography="bold_10" color="main">
+          <AppText typography="bold_10" color="main" numberOfLines={1}>
             Event:{' '}
             <AppText typography="medium_10" color="main">
               {eventName}
@@ -57,7 +57,7 @@ export const ChatItem = ({
             </AppText>
           </AppText>
         </View>
-        <AppText typography="regular_10" color="gray_primary">
+        <AppText style={styles.timeText} typography="regular_10" color="gray_primary">
           {lastMessageAt ? formatDistanceToNow(lastMessageAt) : ''}
         </AppText>
       </View>

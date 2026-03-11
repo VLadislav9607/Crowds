@@ -1,7 +1,8 @@
 import { useEffect } from 'react';
 
-import { realtimeService } from '@services';
-import { ChatMessage, useGetMe } from '@actions';
+import { realtimeService, queryClient } from '@services';
+import { ChatMessage, useGetMe, IChatParticipant } from '@actions';
+import { TANSTACK_QUERY_KEYS } from '@constants';
 
 import { messagesCache, chatsCache } from '../../cache';
 
@@ -34,6 +35,14 @@ export const useChatMessagesRealtime = ({ chatId, limit = 50 }: IParams) => {
             },
             limit,
           });
+
+          // Refetch participants if sender is unknown (e.g. new talent in group chat)
+          const participantsKey = [TANSTACK_QUERY_KEYS.GET_CHAT_PARTICIPANTS, chatId];
+          const participants = queryClient.getQueryData<IChatParticipant[]>(participantsKey);
+          const senderKnown = participants?.some(p => p.user_id === message.sender_id);
+          if (!senderKnown) {
+            queryClient.refetchQueries({ queryKey: participantsKey });
+          }
 
           // Update chat cache with last message info
           chatsCache.updateChat({

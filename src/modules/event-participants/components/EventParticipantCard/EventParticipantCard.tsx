@@ -1,4 +1,4 @@
-import { View, StyleSheet, GestureResponderEvent } from 'react-native';
+import { View, StyleSheet, GestureResponderEvent, TouchableOpacity } from 'react-native';
 
 import { COLORS } from '@styles';
 import { AppText, Avatar, IconButton } from '@ui';
@@ -13,6 +13,7 @@ export const EventParticipantCard = ({
   participant,
   onMenuSelect,
   onPressImageIcon,
+  onPress,
   menuItems,
 }: EventParticipantCardProps) => {
   const { name, location, status, time, flag, avatarUrl, avatarPath, avatarBucket } = participant;
@@ -21,22 +22,15 @@ export const EventParticipantCard = ({
   const handleOpenMenu = (event: GestureResponderEvent) => {
     const { pageX, pageY } = event.nativeEvent;
 
-    const defaultItems = (() => {
-      const removeNoShowItem = EVENT_PARTICIPANT_POPUP_ITEMS.filter(
-        item => item.value !== 'mark_no_show',
-      );
-      return status === 'no_show' ? removeNoShowItem : EVENT_PARTICIPANT_POPUP_ITEMS;
-    })();
-
     showPopup({
-      items: menuItems ?? defaultItems,
+      items: menuItems ?? EVENT_PARTICIPANT_POPUP_ITEMS,
       position: { x: pageX, y: pageY },
       onSelect: onMenuSelect,
     });
   };
 
   return (
-    <View style={styles.container}>
+    <TouchableOpacity style={styles.container} onPress={onPress} activeOpacity={onPress ? 0.7 : 1}>
       <Avatar size={40} name={name} flag={flag} uri={avatarUrl} imgPath={avatarPath} bucket={avatarBucket} />
 
       <View style={styles.infoContainer}>
@@ -57,7 +51,7 @@ export const EventParticipantCard = ({
         iconSize={24}
         onPress={handleOpenMenu}
       />
-    </View>
+    </TouchableOpacity>
   );
 };
 

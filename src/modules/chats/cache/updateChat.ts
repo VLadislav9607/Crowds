@@ -17,10 +17,19 @@ export const updateChat = ({
 }: UpdateChatParams) => {
   const queryKey = [TANSTACK_QUERY_KEYS.MY_CHATS];
 
-  queryClient.setQueryData<MyChatItem[]>(queryKey, existing => {
-    if (!existing) return existing;
+  const existing = queryClient.getQueryData<MyChatItem[]>(queryKey);
 
-    return existing.map(chat =>
+  const chatExists = existing?.some(chat => chat.chatId === chatId);
+
+  if (!chatExists) {
+    queryClient.refetchQueries({ queryKey });
+    return;
+  }
+
+  queryClient.setQueryData<MyChatItem[]>(queryKey, prev => {
+    if (!prev) return prev;
+
+    return prev.map(chat =>
       chat.chatId === chatId
         ? {
             ...chat,

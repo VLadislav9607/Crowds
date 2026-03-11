@@ -117,13 +117,6 @@ export const EventApplicantsScreen = () => {
         isRejecting={rejectApplication.isPending}
         handleAccept={handleAccept}
         handleDecline={handleDecline}
-        popUpItems={() => [
-          {
-            label: 'Report',
-            value: 'report',
-            onPress: () => {},
-          },
-        ]}
         onEndReached={() => {
           if (hasNextPage && !isFetchingNextPage) {
             fetchNextPage();
