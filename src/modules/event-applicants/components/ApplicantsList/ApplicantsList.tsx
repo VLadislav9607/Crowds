@@ -92,7 +92,7 @@ export const ApplicantsList = ({
             })
           }
           onMenuSelect={() => {}}
-          popUpItems={popUpItems(item)}
+          popUpItems={popUpItems ? popUpItems(item) : undefined}
           renderRightAction={() => renderRightAction(item)}
         />
       )}

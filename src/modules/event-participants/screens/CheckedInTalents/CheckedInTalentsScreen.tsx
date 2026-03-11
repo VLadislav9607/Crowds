@@ -18,6 +18,7 @@ export const CheckedInTalentsScreen = () => {
 
   const participants: IEventParticipant[] = (data ?? []).map(item => ({
     id: item.participationId,
+    talentId: item.talentId,
     name: item.name,
     location: item.location,
     status: 'checked_in' as const,
@@ -33,18 +34,13 @@ export const CheckedInTalentsScreen = () => {
     }
   };
 
-  const renderItem = ({ item }: { item: IEventParticipant }) => {
-    const talentDto = data?.find(d => d.participationId === item.id);
-
-    return (
-      <EventParticipantCard
-        participant={item}
-        onMenuSelect={
-          talentDto ? handleMenuSelect(talentDto.talentId) : undefined
-        }
-      />
-    );
-  };
+  const renderItem = ({ item }: { item: IEventParticipant }) => (
+    <EventParticipantCard
+      participant={item}
+      onPress={() => goToScreen(Screens.TalentProfile, { talentId: item.talentId })}
+      onMenuSelect={handleMenuSelect(item.talentId)}
+    />
+  );
 
   return (
     <ScreenWrapper

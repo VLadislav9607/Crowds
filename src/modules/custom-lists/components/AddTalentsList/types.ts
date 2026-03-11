@@ -14,8 +14,3 @@ export interface AddTalentsListProps {
   onEndReached?: () => void;
   onPressRightAction: (talentId: string) => void;
 }
-
-// export const CUSTOM_LIST_POPUP_ITEMS: IPopupMenuItem[] = [
-//   { label: 'Remove from list', value: 'remove_from_list' },
-//   { label: 'Report', value: 'report' },
-// ];

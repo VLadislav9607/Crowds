@@ -1,10 +1,11 @@
-import { AppFlashList } from '@components';
+import { AppFlashList, IPopupMenuItem } from '@components';
 import { AppButton, IconButton } from '@ui';
 import { ICONS } from '@assets';
 import { TalentProfileRow, TalentsListSkeleton } from '@modules/common';
 
 import { AddTalentsListProps } from './types';
 import { styles } from './styles';
+import { goToScreen, Screens } from '@navigation';
 
 export const AddTalentsList = ({
   data,
@@ -46,8 +47,15 @@ export const AddTalentsList = ({
       renderItem={({ item }) => (
         <TalentProfileRow
           talent={item}
-          popUpItems={[{ label: 'Report', value: 'report' }]}
-          onMenuSelect={() => {}}
+          popUpItems={[{ label: 'Add flag', value: 'add_flag' }]}
+          onMenuSelect={(item: IPopupMenuItem) => {
+            if (item.value === 'add_flag') {
+              goToScreen(Screens.FlagParticipant, {
+                talentId: item.talentId,
+                eventId: item.event_id,
+              });
+            }
+          }}
           renderRightAction={() =>
             renderRightAction(item.talentId, item.isInList)
           }

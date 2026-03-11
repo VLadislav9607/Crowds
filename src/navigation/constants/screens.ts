@@ -51,7 +51,6 @@ export enum Screens {
   ApplicantProfile = 'ApplicantProfile',
   TalentProfile = 'TalentProfile',
   ManageEvent = 'ManageEvent',
-  EventParticipants = 'EventParticipants',
   NoShowTalents = 'NoShowTalents',
   CheckedInTalents = 'CheckedInTalents',
   CheckedOutTalents = 'CheckedOutTalents',

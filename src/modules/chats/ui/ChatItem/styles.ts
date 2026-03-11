@@ -48,10 +48,14 @@ export const styles = StyleSheet.create({
     gap: 10,
   },
   eventLabel: {
+    flex: 1,
     backgroundColor: '#0000000A',
     paddingHorizontal: 8,
     paddingVertical: 4,
     borderRadius: 4,
+  },
+  timeText: {
+    marginLeft: 8,
   },
   unreadDot: {
     width: 9,

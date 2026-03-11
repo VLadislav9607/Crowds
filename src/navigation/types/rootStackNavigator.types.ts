@@ -96,7 +96,6 @@ export type RootStackParamList = {
     ndaFileName?: string;
   };
   [Screens.ManageEvent]: { eventId: string };
-  [Screens.EventParticipants]: undefined;
   [Screens.NoShowTalents]: { eventId: string };
   [Screens.CheckedInTalents]: { eventId: string };
   [Screens.CheckedOutTalents]: { eventId: string };

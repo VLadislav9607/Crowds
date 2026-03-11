@@ -47,7 +47,6 @@ import {
 import { ManageEventScreen } from '../../modules/event-management';
 import { ChatRoomScreen } from '../../modules/chats';
 import {
-  EventParticipantsScreen,
   NoShowTalentsScreen,
   CheckedInTalentsScreen,
   CheckedOutTalentsScreen,
@@ -210,11 +209,6 @@ export const RootStackNavigator = () => {
       <RootStack.Screen
         name={Screens.ManageEvent}
         component={ManageEventScreen}
-      />
-
-      <RootStack.Screen
-        name={Screens.EventParticipants}
-        component={EventParticipantsScreen}
       />
 
       <RootStack.Screen

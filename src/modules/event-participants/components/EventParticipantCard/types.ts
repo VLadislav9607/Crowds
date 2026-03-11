@@ -10,6 +10,7 @@ export type ParticipantStatus =
 
 export interface IEventParticipant {
   id: string;
+  talentId: string;
   name: string;
   location: string;
   status: ParticipantStatus;
@@ -24,5 +25,6 @@ export interface EventParticipantCardProps {
   participant: IEventParticipant;
   onMenuSelect?: (item: IPopupMenuItem) => void;
   onPressImageIcon?: () => void;
+  onPress?: () => void;
   menuItems?: IPopupMenuItem[];
 }
