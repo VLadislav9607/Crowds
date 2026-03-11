@@ -78,6 +78,16 @@ export const useOnboardingAuthTalentScreen = () => {
     goToScreen(Screens.BottomTabs);
   };
 
+  const onStripeSetupSkip = () => {
+    if (step === null) return;
+    step < 6 &&
+      updateTalentMutate({
+        id: me?.talent?.id!,
+        data: { onboarding_copleted_step: 6 },
+      });
+    goToScreen(Screens.BottomTabs);
+  };
+
   const onAvailabilitySetupSuccess = () => {
     if (step === null) return;
     setStep(step + 1);
@@ -124,6 +134,7 @@ export const useOnboardingAuthTalentScreen = () => {
     goToNextStep,
     goToPreviousStep,
     onStripeSetupSuccess,
+    onStripeSetupSkip,
     onAvailabilitySetupSuccess,
     onProfileSetupSuccess,
     isVerified,

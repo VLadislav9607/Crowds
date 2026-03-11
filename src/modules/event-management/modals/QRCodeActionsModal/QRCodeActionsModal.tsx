@@ -53,6 +53,7 @@ export const QRCodeActionsModal = ({
               eventQRCodeEditorModalRef.current?.open({
                 eventId: data?.eventId!,
                 editingQRCodeId: data?.qrCodeId!,
+                eventStartAt: data?.eventStartAt!,
               });
             }}
           />

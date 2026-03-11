@@ -70,7 +70,7 @@ export const PrimaryLocationStep = forwardRef<
 
     const {
       control,
-      formState: { isValid },
+      formState: { isValid, errors },
       handleSubmit,
       getValues,
       resetField,
@@ -80,6 +80,8 @@ export const PrimaryLocationStep = forwardRef<
       mode: 'onBlur',
       defaultValues,
     });
+
+    console.log('errors', errors);
 
     const parsedLocation = watch('parsed_location');
     const isHeadOffice = watch('isHeadOffice');
@@ -105,21 +107,24 @@ export const PrimaryLocationStep = forwardRef<
         <Controller
           control={control}
           name="parsed_location"
-          render={({ field, fieldState }) => (
-            <PlacesPredictionsInput
-              inputProps={{
-                placeholder: 'Search primary location',
-                errorMessage: fieldState.error?.message,
-              }}
-              types={PlaceAutocompleteType.address}
-              onChangeText={() => {
-                resetField('parsed_location');
-                onChangeText?.();
-              }}
-              onSelectPlace={res => field.onChange(res.parsed_details)}
-              defaultValue={parsedLocation?.autocomplete_description}
-            />
-          )}
+          render={({ field, fieldState }) => {
+            console.log('fieldState', field);
+            return (
+              <PlacesPredictionsInput
+                inputProps={{
+                  placeholder: 'Search primary location',
+                  errorMessage: fieldState.error?.message,
+                }}
+                types={PlaceAutocompleteType.address}
+                onChangeText={() => {
+                  resetField('parsed_location');
+                  onChangeText?.();
+                }}
+                onSelectPlace={res => field.onChange(res.parsed_details)}
+                defaultValue={parsedLocation?.autocomplete_description}
+              />
+            );
+          }}
         />
 
         <Controller

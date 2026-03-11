@@ -3,7 +3,7 @@ import { Gender } from '@modules/profile';
 
 export interface ParsedLocation {
   autocomplete_description: string;
-  city: string;
+  city?: string;
   country: string;
   country_code: string;
   formatted_address: string;

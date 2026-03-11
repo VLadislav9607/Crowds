@@ -2,7 +2,7 @@ import { Enums } from '@services';
 
 export interface EventLocationDto {
   autocomplete_description: string;
-  city: string;
+  city?: string;
   coords?: string;
   country: string;
   formatted_address: string;

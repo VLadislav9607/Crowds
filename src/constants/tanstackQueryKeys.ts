@@ -49,4 +49,5 @@ export const TANSTACK_QUERY_KEYS = {
   GET_CONNECT_ACCOUNT: 'get_connect_account',
   GET_PLATFORM_BALANCE: 'get_platform_balance',
   GET_EVENT_TASK_COMPLETIONS: 'get_event_task_completions',
+  GET_TALENT_PAYMENT_HISTORY: 'get_talent_payment_history',
 } as const;

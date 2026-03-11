@@ -15,7 +15,11 @@ import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { BottomSheetModal } from '@gorhom/bottom-sheet';
 import { QRCodeActionsModalData } from '../../modals/QRCodeActionsModal/types';
 import { Screens, useScreenNavigation } from '@navigation';
-import { IEventQRCode, useGetEventQRCodes } from '@actions';
+import {
+  IEventQRCode,
+  useGetEventForOrgMember,
+  useGetEventQRCodes,
+} from '@actions';
 import { useBoolean, useRefetchQuery } from '@hooks';
 import { formatInTimeZone } from 'date-fns-tz';
 import { COLORS } from '@styles';
@@ -27,11 +31,19 @@ export const EventQRCodesScreen = () => {
   const insets = useSafeAreaInsets();
   const bottomPadding = insets.bottom || 16;
   const { params } = useScreenNavigation<Screens.EventQRCodes>();
-  const timezone = params?.timezone || 'UTC';
 
   const eventQRCodeEditorModalRef = useRef<EventQRCodeEditorModalRef>(null);
   const qrCodeActionsModalRef =
     useRef<BottomSheetModal<QRCodeActionsModalData>>(null);
+
+  const { data: eventData } = useGetEventForOrgMember({
+    event_id: params?.eventId!,
+  });
+
+  const deviceTimezone = Intl.DateTimeFormat().resolvedOptions().timeZone;
+  const timezone =
+    eventData?.event_location?.timezone || params?.timezone || deviceTimezone;
+  const eventStartAt = eventData?.start_at || '';
 
   const {
     data: eventQRCodesResponse,
@@ -96,9 +108,6 @@ export const EventQRCodesScreen = () => {
     const formattedStartAt = item.start_at
       ? formatInTimeZone(item.start_at, timezone, 'MMM d, yyyy h:mm a')
       : '';
-    const formattedEndAt = item.end_at
-      ? formatInTimeZone(item.end_at, timezone, 'MMM d, yyyy h:mm a')
-      : '';
     return (
       <View style={styles.item}>
         <View style={styles.itemContent}>
@@ -124,6 +133,7 @@ export const EventQRCodesScreen = () => {
                     qrCodeName: item.name,
                     qrCodeId: item.id,
                     eventId: params?.eventId!,
+                    eventStartAt,
                   })
                 }
               >
@@ -164,7 +174,7 @@ export const EventQRCodesScreen = () => {
                   Check-out
                 </AppText>
                 <AppText typography="regular_14" color="black">
-                  {formattedEndAt}
+                  After event ends
                 </AppText>
               </View>
             </View>
@@ -186,6 +196,7 @@ export const EventQRCodesScreen = () => {
   const onGenerateQRCode = () => {
     eventQRCodeEditorModalRef.current?.open({
       eventId: params?.eventId!,
+      eventStartAt,
     });
   };
 

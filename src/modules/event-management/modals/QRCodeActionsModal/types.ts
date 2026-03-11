@@ -5,6 +5,7 @@ export interface QRCodeActionsModalData {
   qrCodeName: string;
   qrCodeId: string;
   eventId: string;
+  eventStartAt: string;
 }
 
 export interface QRCodeActionsModalProps {

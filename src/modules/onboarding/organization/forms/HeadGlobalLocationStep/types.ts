@@ -25,7 +25,7 @@ export const headGlobalLocationFormSchema = z.object({
   parsed_location: z.object(
     {
       autocomplete_description: z.string(),
-      city: z.string(),
+      city: z.string().optional(),
       coords: z.string(),
       country: z.string(),
       country_code: z.string(),

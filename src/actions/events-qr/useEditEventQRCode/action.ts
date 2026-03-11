@@ -8,7 +8,6 @@ export const editEventQRCodeAction = async (
     p_qr_id: body.qr_id,
     p_name: body.name,
     p_start_at: body.start_at,
-    p_end_at: body.end_at,
   });
 
   if (error) throw error;

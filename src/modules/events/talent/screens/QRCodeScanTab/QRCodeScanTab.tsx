@@ -12,7 +12,12 @@ import { usePermissions, EPermissionTypes } from '@hooks';
 import { useIsFocused } from '@react-navigation/native';
 import { COLORS } from '@styles';
 import { useScanEventQRByTalent, ScanEventQRByTalentResDto } from '@actions';
-import { showMutationErrorToast } from '@helpers';
+import {
+  showErrorToast,
+  showMutationErrorToast,
+  showSuccessToast,
+} from '@helpers';
+import { format } from 'date-fns';
 import {
   TalentEventCheckinModal,
   TalentEventCheckinModalRef,
@@ -35,16 +40,48 @@ export const QRCodeScanTab = () => {
 
   const handleScanSuccess = (data: ScanEventQRByTalentResDto) => {
     const { event, qr_code, session } = data;
+    const now = new Date();
 
     if (data.action === 'checkin') {
+      const checkInAvailableAt = new Date(qr_code.start_at);
+      if (now < checkInAvailableAt) {
+        const formattedTime = format(checkInAvailableAt, 'MMM d, yyyy h:mm a');
+        showErrorToast(
+          `Check-in is not available yet. It opens at ${formattedTime}.`,
+        );
+        return;
+      }
+
+      if (event.checkin_cutoff) {
+        const cutoff = new Date(event.checkin_cutoff);
+        if (now > cutoff) {
+          const formattedTime = format(cutoff, 'MMM d, yyyy h:mm a');
+          showErrorToast(
+            `Check-in is no longer available. The cutoff was at ${formattedTime}.`,
+          );
+          return;
+        }
+      }
+
       checkinModalRef.current?.open({
         eventTitle: event.title,
         brandLogoPath: event.brand_logo_path,
         venue: event.venue,
         qrCodeId: qr_code.id,
-        onCheckinSuccess: () => {},
+        onCheckinSuccess: () => {
+          showSuccessToast('You have successfully checked in!');
+        },
       });
     } else if (data.action === 'checkout') {
+      const checkOutAvailableAt = new Date(event.end_at);
+      if (now < checkOutAvailableAt) {
+        const formattedTime = format(checkOutAvailableAt, 'MMM d, yyyy h:mm a');
+        showErrorToast(
+          `Check-out is not available yet. It will be available after the event ends at ${formattedTime}.`,
+        );
+        return;
+      }
+
       checkoutModalRef.current?.open({
         eventTitle: event.title,
         brandLogoPath: event.brand_logo_path,

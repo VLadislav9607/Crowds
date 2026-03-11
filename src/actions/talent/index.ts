@@ -13,3 +13,4 @@ export * from './useApplyEvent';
 export * from './useCancelApplication';
 export * from './useCancelAttendance';
 export * from './useGetTalentEventHistory';
+export * from './useGetTalentPaymentHistory';

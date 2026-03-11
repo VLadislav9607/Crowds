@@ -41,6 +41,7 @@ export const OnboardingAuthTalentScreen = () => {
     goToNextStep,
     goToPreviousStep,
     onStripeSetupSuccess,
+    onStripeSetupSkip,
     onAvailabilitySetupSuccess,
     onProfileSetupSuccess,
   } = useOnboardingAuthTalentScreen();
@@ -51,7 +52,7 @@ export const OnboardingAuthTalentScreen = () => {
     2: '',
     3: 'Please set up your current\navailability',
     4: '',
-    5: 'Set Up Secure Banking\nwith Stripe',
+    // 5: 'Set Up Secure Banking\nwith Stripe',
   };
 
   const renderForwardButton = () => {
@@ -60,7 +61,7 @@ export const OnboardingAuthTalentScreen = () => {
         <AppButton
           title="Start Verification"
           onPress={goToNextStep}
-          wrapperStyles={{ flex: 1 }}
+          wrapperStyles={styles.flexOne}
         />
       );
     }
@@ -68,9 +69,10 @@ export const OnboardingAuthTalentScreen = () => {
     if (step === 5) {
       return (
         <AppButton
-          title="Get started"
-          onPress={goToNextStep}
-          wrapperStyles={{ flex: 1 }}
+          title="Skip"
+          variant="withBorder"
+          onPress={onStripeSetupSkip}
+          wrapperStyles={styles.flexOne}
         />
       );
     }
@@ -126,8 +128,8 @@ export const OnboardingAuthTalentScreen = () => {
       <View
         style={[
           styles.container,
-          isProfileSetupStep && { paddingTop: 120 },
-          isAvailabilitySetupStep && { paddingTop: 24 },
+          isProfileSetupStep && styles.profileSetupPaddingTop,
+          isAvailabilitySetupStep && styles.availabilityPaddingTop,
         ]}
       >
         <If condition={step === 0}>
