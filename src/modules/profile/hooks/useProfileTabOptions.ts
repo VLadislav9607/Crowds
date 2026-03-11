@@ -45,7 +45,7 @@ export const useProfileTabOptions = ({
     {
       title: 'Payment History',
       icon: ICONS.moneyBag(),
-      onPress: () => {},
+      onPress: () => goToScreen(Screens.TalentPaymentHistory),
     },
     {
       title: 'Manage password',

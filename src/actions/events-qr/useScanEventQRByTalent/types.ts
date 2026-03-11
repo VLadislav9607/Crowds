@@ -7,6 +7,9 @@ export interface ScanQREventInfo {
   title: string;
   brand_logo_path: string | null;
   venue: string | null;
+  start_at: string;
+  end_at: string;
+  checkin_cutoff: string | null;
 }
 
 export interface ScanQRSessionInfo {
@@ -22,7 +25,6 @@ export interface ScanEventQRByTalentResDto {
     event_id: string;
     name: string;
     start_at: string;
-    end_at: string;
   };
   session: ScanQRSessionInfo | null;
 }

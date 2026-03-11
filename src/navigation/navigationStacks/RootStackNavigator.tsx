@@ -37,9 +37,17 @@ import { CreateEventScreen } from '../../modules/create-event';
 import {
   TalentEventDetailsScreen,
   TalentSearchEventsScreen,
+  TalentEventHistoryScreen,
+  TalentPaymentHistoryScreen,
   AcceptEventNdaScreen,
 } from '../../modules/events/talent/screens';
-import { ChangePasswordScreen, OrgProfileSetupScreen, FAQScreen, TermsAndConditionsScreen, PrivacyPolicyScreen } from '@modules/profile';
+import {
+  ChangePasswordScreen,
+  OrgProfileSetupScreen,
+  FAQScreen,
+  TermsAndConditionsScreen,
+  PrivacyPolicyScreen,
+} from '@modules/profile';
 import {
   NotificationSettingsScreen,
   NotificationsListScreen,
@@ -193,10 +201,7 @@ export const RootStackNavigator = () => {
         name={Screens.ChangePassword}
         component={ChangePasswordScreen}
       />
-      <RootStack.Screen
-        name={Screens.FAQ}
-        component={FAQScreen}
-      />
+      <RootStack.Screen name={Screens.FAQ} component={FAQScreen} />
       <RootStack.Screen
         name={Screens.TermsAndConditions}
         component={TermsAndConditionsScreen}
@@ -277,10 +282,7 @@ export const RootStackNavigator = () => {
         name={Screens.AddTalentsToList}
         component={AddTalentsToListScreen}
       />
-      <RootStack.Screen
-        name={Screens.MyLists}
-        component={MyListsScreen}
-      />
+      <RootStack.Screen name={Screens.MyLists} component={MyListsScreen} />
       <RootStack.Screen
         name={Screens.ManageOrgTeam}
         component={ManageOrgTeamScreen}
@@ -323,6 +325,14 @@ export const RootStackNavigator = () => {
         options={{
           presentation: 'modal',
         }}
+      />
+      <RootStack.Screen
+        name={Screens.TalentEventHistory}
+        component={TalentEventHistoryScreen}
+      />
+      <RootStack.Screen
+        name={Screens.TalentPaymentHistory}
+        component={TalentPaymentHistoryScreen}
       />
       <RootStack.Screen
         name={Screens.FlagOrganization}

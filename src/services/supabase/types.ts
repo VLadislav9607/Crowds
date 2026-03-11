@@ -14,6 +14,30 @@ export type Database = {
   };
   public: {
     Tables: {
+      admin_users: {
+        Row: {
+          created_at: string | null;
+          email: string;
+          id: string;
+          name: string;
+          role: string;
+        };
+        Insert: {
+          created_at?: string | null;
+          email?: string;
+          id: string;
+          name?: string;
+          role: string;
+        };
+        Update: {
+          created_at?: string | null;
+          email?: string;
+          id?: string;
+          name?: string;
+          role?: string;
+        };
+        Relationships: [];
+      };
       black_flag_reports: {
         Row: {
           created_at: string;
@@ -227,6 +251,7 @@ export type Database = {
           event_id: string;
           id: string;
           last_message_at: string | null;
+          last_message_sender_id: string | null;
           last_message_text: string | null;
           organization_id: string | null;
           talent_id: string | null;
@@ -237,6 +262,7 @@ export type Database = {
           event_id: string;
           id?: string;
           last_message_at?: string | null;
+          last_message_sender_id?: string | null;
           last_message_text?: string | null;
           organization_id?: string | null;
           talent_id?: string | null;
@@ -247,6 +273,7 @@ export type Database = {
           event_id?: string;
           id?: string;
           last_message_at?: string | null;
+          last_message_sender_id?: string | null;
           last_message_text?: string | null;
           organization_id?: string | null;
           talent_id?: string | null;
@@ -564,7 +591,7 @@ export type Database = {
       event_locations: {
         Row: {
           autocomplete_description: string;
-          city: string;
+          city: string | null;
           coords: unknown;
           country: string;
           created_at: string;
@@ -582,7 +609,7 @@ export type Database = {
         };
         Insert: {
           autocomplete_description: string;
-          city: string;
+          city?: string | null;
           coords: unknown;
           country: string;
           created_at?: string;
@@ -600,7 +627,7 @@ export type Database = {
         };
         Update: {
           autocomplete_description?: string;
-          city?: string;
+          city?: string | null;
           coords?: unknown;
           country?: string;
           created_at?: string;
@@ -1554,7 +1581,7 @@ export type Database = {
       office_location: {
         Row: {
           autocomplete_description: string;
-          city: string;
+          city: string | null;
           coords: unknown;
           country: string;
           country_code: string;
@@ -1573,7 +1600,7 @@ export type Database = {
         };
         Insert: {
           autocomplete_description: string;
-          city: string;
+          city?: string | null;
           coords: unknown;
           country: string;
           country_code: string;
@@ -1592,7 +1619,7 @@ export type Database = {
         };
         Update: {
           autocomplete_description?: string;
-          city?: string;
+          city?: string | null;
           coords?: unknown;
           country?: string;
           country_code?: string;
@@ -1953,7 +1980,7 @@ export type Database = {
       talent_location: {
         Row: {
           autocomplete_description: string;
-          city: string;
+          city: string | null;
           coords: unknown;
           country: string;
           country_code: string | null;
@@ -1969,7 +1996,7 @@ export type Database = {
         };
         Insert: {
           autocomplete_description: string;
-          city: string;
+          city?: string | null;
           coords: unknown;
           country: string;
           country_code?: string | null;
@@ -1985,7 +2012,7 @@ export type Database = {
         };
         Update: {
           autocomplete_description?: string;
-          city?: string;
+          city?: string | null;
           coords?: unknown;
           country?: string;
           country_code?: string | null;
@@ -2075,44 +2102,6 @@ export type Database = {
             columns: ['settlement_id'];
             isOneToOne: false;
             referencedRelation: 'event_settlements';
-            referencedColumns: ['id'];
-          },
-        ];
-      };
-      task_completions: {
-        Row: {
-          id: string;
-          participation_id: string;
-          photo_path: string | null;
-          status: string;
-          submitted_at: string | null;
-          reviewed_at: string | null;
-          created_at: string;
-        };
-        Insert: {
-          id?: string;
-          participation_id: string;
-          photo_path?: string | null;
-          status?: string;
-          submitted_at?: string | null;
-          reviewed_at?: string | null;
-          created_at?: string;
-        };
-        Update: {
-          id?: string;
-          participation_id?: string;
-          photo_path?: string | null;
-          status?: string;
-          submitted_at?: string | null;
-          reviewed_at?: string | null;
-          created_at?: string;
-        };
-        Relationships: [
-          {
-            foreignKeyName: 'task_completions_participation_id_fkey';
-            columns: ['participation_id'];
-            isOneToOne: true;
-            referencedRelation: 'event_participations';
             referencedColumns: ['id'];
           },
         ];
@@ -2218,6 +2207,44 @@ export type Database = {
           username?: string;
         };
         Relationships: [];
+      };
+      task_completions: {
+        Row: {
+          created_at: string;
+          id: string;
+          participation_id: string;
+          photo_path: string | null;
+          reviewed_at: string | null;
+          status: string;
+          submitted_at: string | null;
+        };
+        Insert: {
+          created_at?: string;
+          id?: string;
+          participation_id: string;
+          photo_path?: string | null;
+          reviewed_at?: string | null;
+          status?: string;
+          submitted_at?: string | null;
+        };
+        Update: {
+          created_at?: string;
+          id?: string;
+          participation_id?: string;
+          photo_path?: string | null;
+          reviewed_at?: string | null;
+          status?: string;
+          submitted_at?: string | null;
+        };
+        Relationships: [
+          {
+            foreignKeyName: 'task_completions_participation_id_fkey';
+            columns: ['participation_id'];
+            isOneToOne: true;
+            referencedRelation: 'event_participations';
+            referencedColumns: ['id'];
+          },
+        ];
       };
       team_invitations: {
         Row: {
@@ -2716,16 +2743,14 @@ export type Database = {
         Returns: Json;
       };
       get_event_no_show_talents: {
-        Args: {
-          p_event_id: string;
-        };
+        Args: { p_event_id: string };
         Returns: {
-          talentId: string;
-          participationId: string;
-          name: string;
           avatar_url: string;
-          location: string;
           flag: string;
+          location: string;
+          name: string;
+          participationId: string;
+          talentId: string;
         }[];
       };
       get_event_participants_by_status: {
@@ -2757,6 +2782,10 @@ export type Database = {
       get_event_qr_code: { Args: { p_qr_id: string }; Returns: Json };
       get_event_qr_codes: {
         Args: { p_event_id: string; p_limit?: number; p_offset?: number };
+        Returns: Json;
+      };
+      get_event_task_completions: {
+        Args: { p_event_id: string };
         Returns: Json;
       };
       get_invitable_talents: {
@@ -3007,7 +3036,15 @@ export type Database = {
         Args: { p_folder_id: string; p_name: string };
         Returns: undefined;
       };
+      review_task_completion: {
+        Args: { p_status: string; p_task_completion_id: string };
+        Returns: Json;
+      };
       scan_qr_code_by_talent: { Args: { p_token: string }; Returns: Json };
+      submit_task_photo: {
+        Args: { p_participation_id: string; p_photo_path: string };
+        Returns: Json;
+      };
       talent_checkin_event: { Args: { p_qr_code_id: string }; Returns: Json };
       talent_checkout_event: { Args: { p_session_id: string }; Returns: Json };
       timeslot_range: {
@@ -3097,18 +3134,6 @@ export type Database = {
       validate_event_for_publish: {
         Args: { payload: Json };
         Returns: undefined;
-      };
-      submit_task_photo: {
-        Args: { p_participation_id: string; p_photo_path: string };
-        Returns: Json;
-      };
-      get_event_task_completions: {
-        Args: { p_event_id: string };
-        Returns: Json;
-      };
-      review_task_completion: {
-        Args: { p_task_completion_id: string; p_status: string };
-        Returns: Json;
       };
     };
     Enums: {

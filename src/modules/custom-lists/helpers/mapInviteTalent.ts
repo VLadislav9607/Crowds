@@ -16,8 +16,8 @@ interface TalentWithCityCountry {
   first_name: string;
   last_name: string;
   avatar_path: string;
-  city: string;
-  country: string;
+  city?: string;
+  country?: string;
 }
 
 type TalentInput = TalentWithLocationObject | TalentWithCityCountry;

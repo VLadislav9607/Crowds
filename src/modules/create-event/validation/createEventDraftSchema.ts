@@ -39,7 +39,7 @@ const validateRegistrationClosingDate = (data: {
 const parsedLocationSchema = z.object(
   {
     autocomplete_description: z.string(),
-    city: z.string(),
+    city: z.string().optional(),
     coords: z.string(),
     country: z.string(),
     formatted_address: z.string(),

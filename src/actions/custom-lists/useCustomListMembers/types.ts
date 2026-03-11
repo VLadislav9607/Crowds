@@ -15,7 +15,7 @@ export interface CustomListTalentDto {
   first_name: string;
   last_name: string;
   avatar_path: string;
-  city: string;
+  city?: string;
   country: string;
   total: number;
   participation_status: EventParticipantStatus;

@@ -2,11 +2,11 @@ import { AppDateInput, AppModal } from '@components';
 import { useImperativeModal } from '@hooks';
 import {
   EventQRCodeEditorFormValues,
-  CreateEventQRCodeModalRef,
+  EventQRCodeEditorModalRef,
+  EventQRCodeEditorModalRefProps,
   eventQRCodeEditorSchema,
 } from './types';
 import { forwardRef, useEffect } from 'react';
-import { CreateEventQRCodeModalRefProps } from './types';
 import { AppButton, AppInput, AppText } from '@ui';
 import { View } from 'react-native';
 import { styles } from './styles';
@@ -19,7 +19,7 @@ import {
 } from '@actions';
 import { showMutationErrorToast, showSuccessToast } from '@helpers';
 
-export const EventQRCodeEditorModal = forwardRef<CreateEventQRCodeModalRef>(
+export const EventQRCodeEditorModal = forwardRef<EventQRCodeEditorModalRef>(
   (_, ref) => {
     const {
       mutate: createEventQRCodeMutate,
@@ -35,12 +35,11 @@ export const EventQRCodeEditorModal = forwardRef<CreateEventQRCodeModalRef>(
     });
 
     const { isVisible, close, refProps } =
-      useImperativeModal<CreateEventQRCodeModalRefProps>(ref, {
+      useImperativeModal<EventQRCodeEditorModalRefProps>(ref, {
         onRefClose: () => {
           form.reset({
             name: '',
             checkIn: undefined as unknown as Date,
-            checkOut: undefined as unknown as Date,
           });
         },
       });
@@ -69,19 +68,24 @@ export const EventQRCodeEditorModal = forwardRef<CreateEventQRCodeModalRef>(
       defaultValues: {
         name: '',
         checkIn: undefined as unknown as Date,
-        checkOut: undefined as unknown as Date,
       },
       mode: 'onChange',
     });
 
-    const checkIn = form.watch('checkIn');
-    const checkOut = form.watch('checkOut');
+    const eventStartAt = refProps.eventStartAt
+      ? new Date(refProps.eventStartAt)
+      : undefined;
+
+    const toMinutePrecisionISO = (date: Date) => {
+      const d = new Date(date);
+      d.setSeconds(0, 0);
+      return d.toISOString();
+    };
 
     const onCreateEventQRCode = async (data: EventQRCodeEditorFormValues) =>
       createEventQRCodeMutate({
         name: data.name,
-        start_at: data.checkIn.toISOString(),
-        end_at: data.checkOut.toISOString(),
+        start_at: toMinutePrecisionISO(data.checkIn),
         event_id: refProps.eventId,
       });
 
@@ -89,8 +93,7 @@ export const EventQRCodeEditorModal = forwardRef<CreateEventQRCodeModalRef>(
       editEventQRCodeMutate({
         qr_id: refProps.editingQRCodeId!,
         name: data.name,
-        start_at: data.checkIn.toISOString(),
-        end_at: data.checkOut.toISOString(),
+        start_at: toMinutePrecisionISO(data.checkIn),
         event_id: refProps.eventId,
       });
 
@@ -103,19 +106,33 @@ export const EventQRCodeEditorModal = forwardRef<CreateEventQRCodeModalRef>(
     const showActionLoading = isCreatingEventQRCode || isEditingEventQRCode;
 
     useEffect(() => {
+      if (isVisible && !refProps.editingQRCodeId && refProps.eventStartAt) {
+        form.reset({
+          name: '',
+          checkIn: new Date(refProps.eventStartAt),
+        });
+      }
+      // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [isVisible, refProps.eventStartAt, refProps.editingQRCodeId]);
+
+    useEffect(() => {
       if (qrCodeDetails && isVisible) {
-        console.log(qrCodeDetails.qr_code);
         form.reset({
           name: qrCodeDetails.qr_code.name,
           checkIn: new Date(qrCodeDetails.qr_code.start_at),
-          checkOut: new Date(qrCodeDetails.qr_code.end_at),
         });
       }
       // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [qrCodeDetails, isVisible]);
 
+    const isEditing = !!refProps.editingQRCodeId;
+
     return (
-      <AppModal title="Generate QR Code" isVisible={isVisible} onClose={close}>
+      <AppModal
+        title={isEditing ? 'Edit QR Code' : 'Generate QR Code'}
+        isVisible={isVisible}
+        onClose={close}
+      >
         <View style={styles.container}>
           <Controller
             control={form.control}
@@ -154,44 +171,21 @@ export const EventQRCodeEditorModal = forwardRef<CreateEventQRCodeModalRef>(
                 onChange={onChange}
                 errorMessage={fieldState.error?.message}
                 minimumDate={new Date()}
-                maximumDate={checkOut}
-                skeleton={isLoadingQRCodeDetails}
-              />
-            )}
-          />
-
-          <Controller
-            control={form.control}
-            name="checkOut"
-            render={({ field: { onChange, value }, fieldState }) => (
-              <AppDateInput
-                minimumDate={checkIn}
-                label="Check-out"
-                placeholder="Select Check-out date and time"
-                mode="datetime"
-                defaultIconColor="dark_gray"
-                labelProps={{
-                  typography: 'semibold_16',
-                  color: isLoadingQRCodeDetails ? 'black_40' : 'black',
-                }}
-                value={value}
-                onChange={onChange}
-                errorMessage={fieldState.error?.message}
+                maximumDate={eventStartAt}
                 skeleton={isLoadingQRCodeDetails}
               />
             )}
           />
 
           <AppText typography="medium_12" color="gray_primary">
-            Attendees can only check in/out within the specified time window.
-            The QR code will be inactive outside these hours.
+            Check-out will be available automatically after the event ends.
           </AppText>
         </View>
 
         <AppButton
           isDisabled={isLoadingQRCodeDetails}
           isLoading={showActionLoading}
-          title="Generate QR Code"
+          title={isEditing ? 'Edit QR Code' : 'Generate QR Code'}
           size="56"
           wrapperStyles={styles.generateButton}
           onPress={form.handleSubmit(onSubmit)}

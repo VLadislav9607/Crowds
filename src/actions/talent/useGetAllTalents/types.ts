@@ -28,7 +28,7 @@ export interface GetAllTalentDto {
   last_name: string;
   avatar_path: string;
   location: {
-    city: string;
+    city?: string;
     country: string;
   };
   participation_status?: EventParticipantStatus | null;

@@ -48,6 +48,7 @@ export const COLORS = {
   light_purple: '#F2EBF7',
   off_white: '#F0F0EE',
   blue: '#008AB8',
+  orange: '#FFB545',
 };
 
 export type ColorsKeys = keyof typeof COLORS;

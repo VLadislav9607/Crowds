@@ -1,7 +1,8 @@
 export interface TalentStripeSetupProps {
-    onSuccess?: () => void;
+  onSuccess?: () => void;
+  onSkip?: () => void;
 }
 
 export interface TalentStripeSetupRef {
-    onSetup: () => void;
+  onSetup: () => void;
 }
