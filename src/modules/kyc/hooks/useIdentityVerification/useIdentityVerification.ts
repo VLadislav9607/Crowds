@@ -15,8 +15,9 @@ export const useIdentityVerification = () => {
     });
 
     if (response?.redirectUrl) {
+      const url = response.redirectUrl;
       return goToScreen(Screens.VerificationPerson, {
-        url: response.redirectUrl,
+        url,
         userId,
       });
     }
