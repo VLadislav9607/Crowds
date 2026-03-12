@@ -9,7 +9,6 @@ import { Screens, useScreenNavigation, goToScreen } from '@navigation';
 import { ICONS } from '@assets';
 import {
   useGetMe,
-  useGetGroupChatId,
   ChatType,
   useGetEventDetailsForTalent,
   useBucketUpload,
@@ -74,18 +73,6 @@ export const TalentEventDetailsScreen = () => {
     },
   });
 
-  const { mutate: getGroupChatId, isPending: isGettingGroupChatId } =
-    useGetGroupChatId({
-      onSuccess: data => {
-        goToScreen(Screens.ChatRoom, {
-          chatId: data,
-          chatType: ChatType.Group,
-          title: 'Group',
-          imageUrl: '',
-        });
-      },
-    });
-
   const { openChat, isPending: isCreatingChat } = useCreateChatAndNavigate();
 
   const handleChatWithOrganizer = () => {
@@ -98,7 +85,13 @@ export const TalentEventDetailsScreen = () => {
   };
 
   const handleChatWithGroup = () => {
-    getGroupChatId(params?.eventId ?? '');
+    if (!event?.group_chat_id) return;
+    goToScreen(Screens.ChatRoom, {
+      chatId: event.group_chat_id,
+      chatType: ChatType.Group,
+      title: 'Group',
+      imageUrl: '',
+    });
   };
 
   const handleOpenPhotoPicker = () => {
@@ -284,7 +277,6 @@ export const TalentEventDetailsScreen = () => {
               <ChatButton
                 style={styles.chatButton}
                 topText="CHAT IN"
-                isLoading={isGettingGroupChatId}
                 bottomText="GROUP"
                 onPress={handleChatWithGroup}
               />

@@ -2,6 +2,7 @@ import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { useCallback, useState } from 'react';
 import { TextInput, View } from 'react-native';
 import { useSendMessage, useGetMe } from '@actions';
+import { showErrorToast } from '@helpers';
 import { IconButton } from '@ui';
 import { ICONS } from '@assets';
 
@@ -72,14 +73,9 @@ export const SendMessageInput = ({ chatId }: SendMessageInputProps) => {
           sender_id: result.sender_id,
         },
       });
-    } catch (error) {
-      console.log('send-message error', error);
-
-      // Remove optimistic message on error
-      messagesCache.removeMessage({
-        chatId,
-        messageId: tempId,
-      });
+    } catch {
+      messagesCache.removeMessage({ chatId, messageId: tempId });
+      showErrorToast('You can no longer send messages in this chat');
     }
   }, [chatId, message, mutateAsync, me?.id]);
 

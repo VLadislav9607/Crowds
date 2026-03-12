@@ -4,4 +4,3 @@ export * from './useGetChatMessages';
 export * from './useSendMessage';
 export * from './useChatParticipants';
 export * from './updateLastSeenChat';
-export * from './useGetGroupChatId';
