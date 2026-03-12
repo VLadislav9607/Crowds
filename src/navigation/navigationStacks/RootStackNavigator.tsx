@@ -37,7 +37,6 @@ import { CreateEventScreen } from '../../modules/create-event';
 import {
   TalentEventDetailsScreen,
   TalentSearchEventsScreen,
-  TalentEventHistoryScreen,
   TalentPaymentHistoryScreen,
   AcceptEventNdaScreen,
 } from '../../modules/events/talent/screens';
@@ -326,10 +325,7 @@ export const RootStackNavigator = () => {
           presentation: 'modal',
         }}
       />
-      <RootStack.Screen
-        name={Screens.TalentEventHistory}
-        component={TalentEventHistoryScreen}
-      />
+
       <RootStack.Screen
         name={Screens.TalentPaymentHistory}
         component={TalentPaymentHistoryScreen}
