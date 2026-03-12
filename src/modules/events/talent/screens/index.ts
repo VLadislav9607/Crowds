@@ -3,6 +3,5 @@ export * from './TalentSearchEvents';
 export * from './TalentEventsTab';
 export * from './TalentEventDetails';
 export * from './QRCodeScanTab';
-export * from './TalentEventHistory';
 export * from './TalentPaymentHistory';
 export * from './AcceptEventNda';
