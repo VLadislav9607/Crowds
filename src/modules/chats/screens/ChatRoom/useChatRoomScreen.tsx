@@ -33,7 +33,6 @@ export const useChatRoomScreen = () => {
   const { data: participants, isLoading: isParticipantsLoading } =
     useChatParticipants(chatId);
 
-  console.log('participants', participants);
   const sections = useMemo(() => {
     const infiniteData = data as InfiniteData<ChatMessage[]> | undefined;
 

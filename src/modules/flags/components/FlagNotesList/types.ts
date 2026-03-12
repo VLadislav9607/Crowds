@@ -11,6 +11,7 @@ export const FLAG_REASONS = {
   bad_behavior: 'Bad behavior',
   terms_violation: 'Terms violation',
   talent_complaint: 'Talent Complaint',
+  auto_escalation: 'Auto-escalation from yellow flag',
   yellow_flag_auto_expiration: 'Yellow flag automatically expired',
   red_flag_auto_expiration: 'Red flag automatically expired',
 };

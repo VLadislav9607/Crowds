@@ -30,4 +30,5 @@ export interface EventDetailsForTalentDto {
   checked_out_at: string | null;
   task_status: string;
   task_photo_path: string | null;
+  group_chat_id: string | null;
 }

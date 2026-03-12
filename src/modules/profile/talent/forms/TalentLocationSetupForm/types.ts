@@ -7,6 +7,7 @@ export const talentLocationSetupSchema = z.object({
       city: z.string().optional(),
       coords: z.string(),
       country: z.string(),
+      country_code: z.string().optional(),
       formatted_address: z.string(),
       latitude: z.number(),
       longitude: z.number(),

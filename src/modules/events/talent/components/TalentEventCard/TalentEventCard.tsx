@@ -13,7 +13,7 @@ import { If } from '@components';
 import { getTimezoneOffsetHours, getCountryNameByCode } from '@helpers';
 import { COLORS } from '@styles';
 import { goToScreen, Screens } from '@navigation';
-import { useGetGroupChatId, ChatType } from '@actions';
+import { ChatType } from '@actions';
 import { calculateEventDuration, getEventIcon } from '../../../helpers';
 import { TalentEventsTabs } from '../../../types';
 import { TalentEventCardProps } from './types';
@@ -32,17 +32,15 @@ export const TalentEventCard = ({
   onCancelApplication,
   onRemoveEventFromFolder,
 }: TalentEventCardProps) => {
-  const { mutate: getGroupChatId, isPending: isGettingGroupChatId } =
-    useGetGroupChatId({
-      onSuccess: chatId => {
-        goToScreen(Screens.ChatRoom, {
-          chatId,
-          chatType: ChatType.Group,
-          title: 'Group',
-          imageUrl: '',
-        });
-      },
+  const handleOpenGroupChat = () => {
+    if (!event.group_chat_id) return;
+    goToScreen(Screens.ChatRoom, {
+      chatId: event.group_chat_id,
+      chatType: ChatType.Group,
+      title: 'Group',
+      imageUrl: '',
     });
+  };
 
   const [isLoadingAccept, setIsLoadingAccept] = useState(false);
   const [isLoadingDecline, setIsLoadingDecline] = useState(false);
@@ -348,9 +346,8 @@ export const TalentEventCard = ({
                   icon={ICONS.chats('white')}
                   iconSize={20}
                   title="Message"
-                  isLoading={isGettingGroupChatId}
                   wrapperStyles={styles.messageButtonWrapper}
-                  onPress={() => getGroupChatId(event.event_id)}
+                  onPress={handleOpenGroupChat}
                 />
               </If>
 

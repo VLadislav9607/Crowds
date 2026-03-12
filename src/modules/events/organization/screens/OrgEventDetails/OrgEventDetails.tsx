@@ -14,7 +14,6 @@ import { Screens, useScreenNavigation, goToScreen, goBack } from '@navigation';
 import { ICONS } from '@assets';
 import {
   useGetMe,
-  useGetGroupChatId,
   ChatType,
   useGetEventForOrgMember,
   useCopyEventToDraft,
@@ -47,18 +46,6 @@ export const OrgEventDetails = () => {
     event_id: params?.eventId!,
   });
 
-  const { mutate: getGroupChatId, isPending: isGettingGroupChatId } =
-    useGetGroupChatId({
-      onSuccess: data => {
-        goToScreen(Screens.ChatRoom, {
-          chatId: data,
-          chatType: ChatType.Group,
-          title: 'Group',
-          imageUrl: '',
-        });
-      },
-    });
-
   const [isCancelModalVisible, setIsCancelModalVisible] = useState(false);
 
   const counts = useEventParticipantsCounts(params?.eventId ?? '');
@@ -90,10 +77,14 @@ export const OrgEventDetails = () => {
     onError: (e: Error) => showMutationErrorToast(e),
   });
 
-  console.log('event', event);
-
   const handleChatWithGroup = () => {
-    getGroupChatId(params?.eventId ?? '');
+    if (!event?.group_chat_id) return;
+    goToScreen(Screens.ChatRoom, {
+      chatId: event.group_chat_id,
+      chatType: ChatType.Group,
+      title: 'Group',
+      imageUrl: '',
+    });
   };
 
   // const converGroupDetailsRequirements = (group: EventAgeGroupDto): EventDetailsRequirementItem[] => {
@@ -246,7 +237,6 @@ export const OrgEventDetails = () => {
           <ChatButton
             style={styles.chatButton}
             topText="CHAT IN"
-            isLoading={isGettingGroupChatId}
             bottomText="GROUP"
             onPress={handleChatWithGroup}
             showSkeleton={isLoading}

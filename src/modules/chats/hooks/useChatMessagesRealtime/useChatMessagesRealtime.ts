@@ -1,7 +1,7 @@
 import { useEffect } from 'react';
 
 import { realtimeService, queryClient } from '@services';
-import { ChatMessage, useGetMe, IChatParticipant } from '@actions';
+import { ChatMessage, useGetMe, IChatParticipant, updateLastSeenChatAction } from '@actions';
 import { TANSTACK_QUERY_KEYS } from '@constants';
 
 import { messagesCache, chatsCache } from '../../cache';
@@ -43,6 +43,9 @@ export const useChatMessagesRealtime = ({ chatId, limit = 50 }: IParams) => {
           if (!senderKnown) {
             queryClient.refetchQueries({ queryKey: participantsKey });
           }
+
+          // User is on this chat screen — mark as seen
+          updateLastSeenChatAction(chatId);
 
           // Update chat cache with last message info
           chatsCache.updateChat({

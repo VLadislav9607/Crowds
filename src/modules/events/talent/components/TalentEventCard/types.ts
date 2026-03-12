@@ -31,6 +31,7 @@ export interface ITalentEventCard {
   nda_accepted_at?: string | null;
   nda_file_path?: string | null;
   nda_file_name?: string | null;
+  group_chat_id?: string | null;
 }
 
 export interface TalentEventCardProps {

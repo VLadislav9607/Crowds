@@ -28,9 +28,14 @@ export const TalentLocationSetupForm = forwardRef<
   const { data: me } = useGetMe();
 
   const onUpsertLocationSuccess = async () => {
-    await queryClient.invalidateQueries({
-      queryKey: [TANSTACK_QUERY_KEYS.GET_ME],
-    });
+    await Promise.all([
+      queryClient.invalidateQueries({
+        queryKey: [TANSTACK_QUERY_KEYS.GET_ME],
+      }),
+      queryClient.invalidateQueries({
+        queryKey: [TANSTACK_QUERY_KEYS.SEARCH_PUBLIC_EVENTS],
+      }),
+    ]);
     onSuccess?.();
   };
 

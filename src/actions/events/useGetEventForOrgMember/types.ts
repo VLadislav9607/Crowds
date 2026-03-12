@@ -35,4 +35,5 @@ export interface EventForOrgMemberDto
   event_tags: { id: string; title: string }[] | null;
   qr_codes_count: number;
   office_country_code: string | null;
+  group_chat_id: string | null;
 }
