@@ -7,11 +7,13 @@ import { useMatchingTalentsForInvite, useSendInvite } from '../../hooks';
 interface MatchingTalentsTabProps {
   eventId: string;
   hasLocation: boolean;
+  isRegistrationClosed?: boolean;
 }
 
 export const MatchingTalentsTab = ({
   eventId,
   hasLocation,
+  isRegistrationClosed,
 }: MatchingTalentsTabProps) => {
   const matchingTalentsHook = useMatchingTalentsForInvite(eventId, hasLocation);
   const {
@@ -40,6 +42,7 @@ export const MatchingTalentsTab = ({
         isFetchingNextPage={matchingTalentsHook.isFetchingNextPage}
         actionTalentId={invitingTalentId}
         onPressRightAction={talentId => handleInvite(eventId, talentId)}
+        isRegistrationClosed={isRegistrationClosed}
       />
 
       {hasLocation && (

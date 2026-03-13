@@ -63,7 +63,7 @@ export interface CreatePublishedEventBodyDto {
   eventBrief: string;
   ndaDocumentName?: string;
   ndaDocumentPath?: string;
-  location?: EventLocationDto;
+  location?: EventLocationDto | null;
   ageGroups: AgeGroupDto[];
 }
 

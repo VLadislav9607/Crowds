@@ -13,7 +13,6 @@ export const ORG_NOTIFICATION_OPTIONS: NotificationOption[] = [
   { key: 'groupMessages', title: 'Group messages', enabled: true },
   { key: 'events', title: 'Events', enabled: true },
   { key: 'checkInCheckOut', title: 'Check in / Check out', enabled: true },
-  { key: 'receivedPayment', title: 'Received payment', enabled: false },
 ];
 
 export const TALENT_DEFAULT_SETTINGS: Record<string, boolean> = {

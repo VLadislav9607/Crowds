@@ -91,7 +91,7 @@ export const useEventControll = ({
     let timezone = 'UTC';
 
     if (values.locationType === 'entire_country') {
-      location = undefined;
+      location = null;
     } else {
       if (!values.location) {
         return null;

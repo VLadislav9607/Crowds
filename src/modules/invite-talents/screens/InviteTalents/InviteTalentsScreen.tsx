@@ -1,5 +1,5 @@
-import { useState } from 'react';
-import { StyleSheet } from 'react-native';
+import { useMemo, useState } from 'react';
+import { StyleSheet, View } from 'react-native';
 import { AppTabSelector, If, ScreenWrapper } from '@components';
 import { COLORS, TYPOGRAPHY } from '@styles';
 import { AppText } from '@ui';
@@ -17,6 +17,11 @@ export const InviteTalentsScreen = () => {
   const { data: eventData } = useGetEventForOrgMember({ event_id: eventId });
 
   const hasLocation = !!eventData?.event_location;
+
+  const isRegistrationClosed = useMemo(() => {
+    if (!eventData?.registration_closes_at) return false;
+    return new Date(eventData.registration_closes_at) < new Date();
+  }, [eventData?.registration_closes_at]);
 
   const [selectedTab, setSelectedTab] = useState('my_lists');
 
@@ -46,16 +51,24 @@ export const InviteTalentsScreen = () => {
         marginBottom={0}
       />
 
+      <If condition={isRegistrationClosed}>
+        <View style={styles.bannerContainer}>
+          <AppText typography="regular_14" color="red">
+            Registration is closed. Invitations are disabled.
+          </AppText>
+        </View>
+      </If>
+
       <If condition={selectedTab === 'my_lists'}>
         <MyCustomTalentsLists eventId={eventId} />
       </If>
 
       <If condition={selectedTab === 'matching_talent'}>
-        <MatchingTalentsTab eventId={eventId} hasLocation={hasLocation} />
+        <MatchingTalentsTab eventId={eventId} hasLocation={hasLocation} isRegistrationClosed={isRegistrationClosed} />
       </If>
 
       <If condition={selectedTab === 'all_talent'}>
-        <AllTalentsTab eventId={eventId} hasLocation={hasLocation} />
+        <AllTalentsTab eventId={eventId} hasLocation={hasLocation} isRegistrationClosed={isRegistrationClosed} />
       </If>
     </ScreenWrapper>
   );
@@ -77,5 +90,11 @@ const styles = StyleSheet.create({
     paddingTop: 20,
     paddingHorizontal: 16,
     gap: 14,
+  },
+  bannerContainer: {
+    backgroundColor: COLORS.red_light,
+    paddingVertical: 10,
+    paddingHorizontal: 14,
+    borderRadius: 8,
   },
 });

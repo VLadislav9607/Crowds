@@ -18,8 +18,16 @@ export const ManageEventScreen = () => {
   const { mutate: updateCheckinCutoff, isPending: isUpdatingCutoff } =
     useUpdateCheckinCutoff();
 
-  const checkinCutoff = event?.checkin_cutoff ?? null;
   const endAt = event?.end_at ?? null;
+
+  const defaultCutoff = useMemo(() => {
+    if (!event?.start_at) return null;
+    const date = new Date(event.start_at);
+    date.setMinutes(date.getMinutes() + 15);
+    return date.toISOString();
+  }, [event?.start_at]);
+
+  const checkinCutoff = event?.checkin_cutoff ?? defaultCutoff;
 
   const isCutoffPassed = useMemo(() => {
     if (!checkinCutoff) return false;
@@ -58,7 +66,7 @@ export const ManageEventScreen = () => {
         onOpenEditCheckIn={onOpenEditCheckIn}
       />
 
-      <ManageActionsList eventId={eventId} />
+      <ManageActionsList eventId={eventId} eventStartAt={event?.start_at} />
 
       <DatePicker
         modal

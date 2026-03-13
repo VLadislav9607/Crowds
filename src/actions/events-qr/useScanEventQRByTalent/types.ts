@@ -19,6 +19,7 @@ export interface ScanQRSessionInfo {
 
 export interface ScanEventQRByTalentResDto {
   action: 'checkin' | 'checkout';
+  participation_id: string;
   event: ScanQREventInfo;
   qr_code: {
     id: string;
