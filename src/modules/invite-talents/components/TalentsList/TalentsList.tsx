@@ -14,6 +14,7 @@ export const TalentsList = ({
   onPressRightAction,
   actionTalentId,
   isLoading,
+  isRegistrationClosed,
 }: TalentsListProps) => {
   const skeleton = isLoading ? <TalentsListSkeleton /> : undefined;
 
@@ -28,6 +29,7 @@ export const TalentsList = ({
         onPress={() => onPressRightAction(item.talentId)}
         size="36"
         width={71}
+        disabled={isRegistrationClosed}
       />
     );
   };

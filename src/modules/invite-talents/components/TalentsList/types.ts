@@ -5,6 +5,7 @@ export interface TalentsListProps {
   hasNextPage?: boolean;
   isFetchingNextPage?: boolean;
   actionTalentId?: string | null;
+  isRegistrationClosed?: boolean;
   onEndReached?: () => void;
   onPressRightAction: (talentId: string) => void;
 }

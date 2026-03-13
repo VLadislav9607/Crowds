@@ -8,6 +8,7 @@
     "lint": "eslint .",
     "start": "react-native start",
     "test": "jest",
+    "postinstall": "patch -p1 -N --silent < patches/react-native-date-picker+5.0.13.patch || true",
     "prepare": "husky",
     "types:generate": "supabase gen types typescript --project-id mznllzlcwtonsjqvzpux > src/services/supabase/types.ts"
   },

@@ -1,5 +1,8 @@
 import { queryClient } from '../reactQuery';
 import { TANSTACK_QUERY_KEYS } from '@constants';
+import { TalentFlag } from '@modules/common';
+import type { UseGetMeResDto } from '../../actions/common/useGetMe/types';
+import type { GetActiveFlagForTargetRespDto } from '../../actions/flags/useGetActiveFlagForTarget/types';
 
 /**
  * Refetches relevant query caches based on push notification type.
@@ -71,11 +74,36 @@ export function invalidateCacheForNotificationType(
       });
       break;
 
-    // Flag applied → refresh flag data
+    // Flag applied → refresh flag data and update profile cache
     case 'flag_applied':
-      queryClient.refetchQueries({
-        queryKey: [TANSTACK_QUERY_KEYS.GET_MY_ACTIVE_FLAG],
-      });
+      queryClient
+        .refetchQueries({
+          queryKey: [TANSTACK_QUERY_KEYS.GET_MY_ACTIVE_FLAG],
+        })
+        .then(() => {
+          const flagData =
+            queryClient.getQueryData<GetActiveFlagForTargetRespDto>(
+              queryClient
+                .getQueryCache()
+                .findAll({
+                  queryKey: [TANSTACK_QUERY_KEYS.GET_MY_ACTIVE_FLAG],
+                })[0]?.queryKey ?? [],
+            );
+
+          const newFlag =
+            (flagData?.status as TalentFlag) ?? TalentFlag.GREEN;
+
+          queryClient.setQueryData<UseGetMeResDto>(
+            [TANSTACK_QUERY_KEYS.GET_ME],
+            old => {
+              if (!old?.talent) return old;
+              return {
+                ...old,
+                talent: { ...old.talent, flag: newFlag },
+              };
+            },
+          );
+        });
       break;
 
     // Task rejected → refresh task completions so talent sees updated status

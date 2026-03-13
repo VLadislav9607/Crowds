@@ -248,7 +248,7 @@ export const useDraftControll = ({
     let location;
     if (values.locationType === 'entire_country') {
       // No location for entire country — only office_id matters
-      location = undefined;
+      location = null;
     } else if (
       values.location &&
       values.location.country &&

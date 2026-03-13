@@ -17,6 +17,7 @@ import {
   showMutationErrorToast,
   showSuccessToast,
 } from '@helpers';
+import { goToScreen, Screens } from '@navigation';
 import { format } from 'date-fns';
 import {
   TalentEventCheckinModal,
@@ -70,6 +71,10 @@ export const QRCodeScanTab = () => {
         qrCodeId: qr_code.id,
         onCheckinSuccess: () => {
           showSuccessToast('You have successfully checked in!');
+          goToScreen(Screens.TalentEventDetails, {
+            eventId: qr_code.event_id,
+            participationId: data.participation_id,
+          });
         },
       });
     } else if (data.action === 'checkout') {

@@ -60,7 +60,7 @@ export interface CreateEventDraftBodyDto {
   eventBrief?: string;
   ndaDocumentName?: string;
   ndaDocumentPath?: string;
-  location?: EventLocationDto;
+  location?: EventLocationDto | null;
   ageGroups?: AgeGroupDto[];
   officeId: string;
 }

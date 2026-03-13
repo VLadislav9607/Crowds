@@ -1,22 +1,40 @@
+import { useMemo } from 'react';
 import { StyleSheet, View } from 'react-native';
 import { ICONS } from '@assets';
 import { IconText } from '@ui';
 import { COLORS } from '@styles';
 import { goToScreen, Screens } from '@navigation';
 
-export const ManageActionsList = ({ eventId }: { eventId: string }) => {
+interface ManageActionsListProps {
+  eventId: string;
+  eventStartAt?: string | null;
+}
+
+export const ManageActionsList = ({
+  eventId,
+  eventStartAt,
+}: ManageActionsListProps) => {
+  const isEventStarted = useMemo(() => {
+    if (!eventStartAt) return false;
+    return new Date() >= new Date(eventStartAt);
+  }, [eventStartAt]);
+
   const manageActions = [
     {
       label: 'Generate QR Code',
       onPress: () => goToScreen(Screens.EventQRCodes, { eventId }),
     },
-    {
-      label: 'Invite Talents',
-      onPress: () => goToScreen(Screens.InviteTalents, { eventId }),
-    },
+    ...(!isEventStarted
+      ? [
+          {
+            label: 'Invite Talents',
+            onPress: () => goToScreen(Screens.InviteTalents, { eventId }),
+          },
+        ]
+      : []),
     {
       label: 'Message Talents',
-      onPress: () => {},
+      onPress: () => goToScreen(Screens.MessageTalents, { eventId }),
     },
     {
       label: 'View Event Reports',

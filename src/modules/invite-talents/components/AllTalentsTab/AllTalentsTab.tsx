@@ -7,9 +7,10 @@ import { useAllTalents, useSendInvite } from '../../hooks';
 interface AllTalentsTabProps {
   eventId: string;
   hasLocation: boolean;
+  isRegistrationClosed?: boolean;
 }
 
-export const AllTalentsTab = ({ eventId, hasLocation }: AllTalentsTabProps) => {
+export const AllTalentsTab = ({ eventId, hasLocation, isRegistrationClosed }: AllTalentsTabProps) => {
   const allTalentsHook = useAllTalents(eventId);
   const {
     invitingTalentId,
@@ -36,6 +37,7 @@ export const AllTalentsTab = ({ eventId, hasLocation }: AllTalentsTabProps) => {
         isFetchingNextPage={allTalentsHook.isFetchingNextPage}
         actionTalentId={invitingTalentId}
         onPressRightAction={talentId => handleInvite(eventId, talentId)}
+        isRegistrationClosed={isRegistrationClosed}
       />
 
       <FilterTalentsModal
