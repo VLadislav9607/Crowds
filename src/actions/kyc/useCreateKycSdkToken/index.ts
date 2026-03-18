@@ -1,2 +1,2 @@
 export * from './useCreateKycSdkToken';
-export * from './useCreateKycChecks';
+export * from './types';

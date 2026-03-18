@@ -1,0 +1,52 @@
+diff --git a/node_modules/@complycube/react-native/android/src/main/java/com/complycubereactnative/ComplyCubeActivity.kt b/node_modules/@complycube/react-native/android/src/main/java/com/complycubereactnative/ComplyCubeActivity.kt
+--- a/node_modules/@complycube/react-native/android/src/main/java/com/complycubereactnative/ComplyCubeActivity.kt
++++ b/node_modules/@complycube/react-native/android/src/main/java/com/complycubereactnative/ComplyCubeActivity.kt
+@@ -21,9 +21,12 @@
+     private val eventBuffer = mutableListOf<Pair<String, String>>()
+
+     private fun emitToJS(eventName: String, payload: String) {
+-        val app = this.application as? ReactApplication
+-        val activityContext = app?.reactNativeHost?.reactInstanceManager?.currentReactContext
+         val moduleContext = ComplyCubeModule.lastReactContext
++        val activityContext = try {
++            val app = this.application as? ReactApplication
++            app?.reactNativeHost?.reactInstanceManager?.currentReactContext
++        } catch (_: Exception) {
++            null
++        }
+         val reactContext = moduleContext ?: activityContext
+         Log.d(
+             "ComplyCubeActivity",
+@@ -124,16 +127,11 @@
+
+             // Stages vs workflow
+-            if (settings.workflowTemplateId.isBlank()) {
+-                if (settings.stages.isNotEmpty()) {
+-                    builder.withStages(
+-                        settings.stages.first(),
+-                        *settings.stages.drop(1).toTypedArray()
+-                    )
+-                }
+-            } else {
+-                builder.withWorkflowId(settings.workflowTemplateId)
++            if (settings.stages.isNotEmpty()) {
++                builder.withStages(
++                    settings.stages.first(),
++                    *settings.stages.drop(1).toTypedArray()
++                )
+             }
+
+             // Countries (optional)
+diff --git a/node_modules/@complycube/react-native/ios/Sources/Bridge/ComplyCubeRN.swift b/node_modules/@complycube/react-native/ios/Sources/Bridge/ComplyCubeRN.swift
+--- a/node_modules/@complycube/react-native/ios/Sources/Bridge/ComplyCubeRN.swift
++++ b/node_modules/@complycube/react-native/ios/Sources/Bridge/ComplyCubeRN.swift
+@@ -24,7 +24,9 @@
+     }
+
+     private func emitEvent(_ name: String, body: Any) {
++        guard hasJSListeners else { return }
+         let emitBlock = {
++            guard self.hasJSListeners else { return }
+             self.sendEvent(withName: name, body: body)
+             CCLog.info("ComplyCube RN event emitted", ["name": name, "hasJSListeners": self.hasJSListeners])
+             self.traceCallback("emit:\(name)", payload: [
