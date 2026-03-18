@@ -44,6 +44,8 @@ export const OnboardingAuthTalentScreen = () => {
     onStripeSetupSkip,
     onAvailabilitySetupSuccess,
     onProfileSetupSuccess,
+    isKycPendingState,
+    setIsKycPendingState,
   } = useOnboardingAuthTalentScreen();
 
   const titles: Record<number, string> = {
@@ -61,6 +63,7 @@ export const OnboardingAuthTalentScreen = () => {
         <AppButton
           title="Start Verification"
           onPress={goToNextStep}
+          isLoading={isKycPendingState}
           wrapperStyles={styles.flexOne}
         />
       );
@@ -143,7 +146,11 @@ export const OnboardingAuthTalentScreen = () => {
         </If>
 
         <If condition={step === 1}>
-          <IdentityVerification ref={profileIdentityVerificationRef} />
+          <IdentityVerification
+            ref={profileIdentityVerificationRef}
+            origin="talent_onboarding"
+            onPendingChange={setIsKycPendingState}
+          />
         </If>
 
         <If condition={step === 2}>

@@ -3,7 +3,7 @@ import { LogoutModalRef } from '../../../../profile/modals';
 import { IdentityVerificationRef, useIdentityVerification } from '@modules/kyc';
 
 export const useOrgIdentityVerificationScreen = () => {
-  const { goToVerification, isPending } = useIdentityVerification();
+  const { goToVerification, isPending } = useIdentityVerification('org_onboarding');
   const logoutModalRef = useRef<LogoutModalRef>(null);
   const profileIdentityVerificationRef = useRef<IdentityVerificationRef>(null);
 

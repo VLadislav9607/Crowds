@@ -26,15 +26,14 @@ export const useOnboardingAuthTalentScreen = () => {
   const talentAvailabilityFormRef = useRef<TalentAvailabilityFormRef>(null);
   const talentProfileSetupFormRef = useRef<TalentProfileSetupFormRef>(null);
   const [showFullScreenLoader, setShowFullScreenLoader] = useState(false);
+  const [isKycPendingState, setIsKycPendingState] = useState(false);
 
   const [step, setStep] = useState<number | null>(null);
 
   const goToNextStep = () => {
     step === 0 && talentLocationSetupFormRef.current?.handleSubmit();
     if (step === 1) {
-      setShowFullScreenLoader(true);
       profileIdentityVerificationRef.current?.onVerify();
-      setTimeout(() => setShowFullScreenLoader(false), 1000);
     }
     step === 2 && talentProfileSetupFormRef.current?.onSubmit();
     step === 3 && setStep(4); // Availability info -> Availability form
@@ -138,5 +137,7 @@ export const useOnboardingAuthTalentScreen = () => {
     onAvailabilitySetupSuccess,
     onProfileSetupSuccess,
     isVerified,
+    isKycPendingState,
+    setIsKycPendingState,
   };
 };
