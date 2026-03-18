@@ -1,5 +1,6 @@
 export interface IEventManageBoardProps {
   checkinCutoff: string | null;
+  timezone: string;
   isCutoffPassed: boolean;
   isUpdating: boolean;
   onOpenEditCheckIn: () => void;
