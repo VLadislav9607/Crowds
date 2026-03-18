@@ -3,30 +3,11 @@ import { View } from 'react-native';
 import { styles } from './styles';
 import { ProfileIdentityVerificationRef } from './types';
 import { forwardRef, useImperativeHandle } from 'react';
-import { useCreateKycSession, useGetMe } from '@actions';
-import { goToScreen, Screens } from '@navigation';
+import { useIdentityVerification } from '@modules/kyc';
 
 export const ProfileIdentityVerification =
   forwardRef<ProfileIdentityVerificationRef>((_props, ref) => {
-    const { me } = useGetMe();
-    const { mutateAsync: createKycSession } = useCreateKycSession();
-
-    const goToVerification = async () => {
-      const userId = me?.id || '';
-      const response = await createKycSession({
-        userId,
-        firstName: me?.first_name || '',
-        lastName: me?.last_name || '',
-        dob: '2000-01-01',
-      });
-
-      if (response?.redirectUrl) {
-        return goToScreen(Screens.VerificationPerson, {
-          url: response.redirectUrl,
-          userId,
-        });
-      }
-    };
+    const { goToVerification } = useIdentityVerification('profile');
 
     useImperativeHandle(ref, () => ({
       onVerify: goToVerification,

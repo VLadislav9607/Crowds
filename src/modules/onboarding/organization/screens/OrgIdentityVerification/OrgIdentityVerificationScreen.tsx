@@ -30,13 +30,17 @@ export const OrgIdentityVerificationScreen = () => {
           <AppButton
             title="Start Verification"
             onPress={goToVerification}
+            isLoading={isPending}
             wrapperStyles={{ flex: 1 }}
           />
         ),
       }}
     >
       <View style={styles.container}>
-        <IdentityVerification ref={profileIdentityVerificationRef} />
+        <IdentityVerification
+          ref={profileIdentityVerificationRef}
+          origin="org_onboarding"
+        />
       </View>
 
       <LogoutModal ref={logoutModalRef} />
