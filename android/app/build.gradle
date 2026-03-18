@@ -78,6 +78,11 @@ android {
     compileSdk rootProject.ext.compileSdkVersion
 
     namespace "com.crowdsnow"
+    packaging {
+        resources {
+            excludes += ['META-INF/DEPENDENCIES']
+        }
+    }
     defaultConfig {
         applicationId "com.crowdsnow"
         minSdkVersion rootProject.ext.minSdkVersion

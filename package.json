@@ -8,11 +8,12 @@
     "lint": "eslint .",
     "start": "react-native start",
     "test": "jest",
-    "postinstall": "patch -p1 -N --silent < patches/react-native-date-picker+5.0.13.patch || true",
+    "postinstall": "patch -p1 -N --silent < patches/react-native-date-picker+5.0.13.patch || true; patch -p1 -N --silent < patches/complycube-react-native+1.2.1.patch || true",
     "prepare": "husky",
     "types:generate": "supabase gen types typescript --project-id mznllzlcwtonsjqvzpux > src/services/supabase/types.ts"
   },
   "dependencies": {
+    "@complycube/react-native": "1.2.1",
     "@d11/react-native-fast-image": "^8.13.0",
     "@googlemaps/google-maps-services-js": "^3.4.2",
     "@gorhom/bottom-sheet": "^5",
