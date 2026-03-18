@@ -1,1 +1,1 @@
-export * from './VerificationPerson';
+export * from './VerificationProcessing';

@@ -24,7 +24,6 @@ export enum Screens {
   OrgIdentityVerification = 'OrgIdentityVerification',
   TermsAndPrivacy = 'TermsAndPrivacy',
   Congratulations = 'Congratulations',
-  VerificationPerson = 'VerificationPerson',
 
   // Bottom Tabs
   BottomTabs = 'BottomTabs',
@@ -92,6 +91,9 @@ export enum Screens {
   FAQ = 'FAQ',
   TermsAndConditions = 'TermsAndConditions',
   PrivacyPolicy = 'PrivacyPolicy',
+
+  // KYC
+  VerificationProcessing = 'VerificationProcessing',
 
   // Stripe Connect
   StripeConnectOnboarding = 'StripeConnectOnboarding',

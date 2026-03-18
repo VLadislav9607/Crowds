@@ -41,7 +41,6 @@ export type RootStackParamList = {
   [Screens.OnboardingAuthTalent]: undefined;
   [Screens.OrgIdentityVerification]: undefined;
   [Screens.TermsAndPrivacy]: undefined;
-  [Screens.VerificationPerson]: { url: string; userId: string };
 
   // Organization screens
   [Screens.CopyInviteLink]: { deepLink: string; memberName: string };
@@ -134,6 +133,11 @@ export type RootStackParamList = {
   [Screens.FAQ]: undefined;
   [Screens.TermsAndConditions]: undefined;
   [Screens.PrivacyPolicy]: undefined;
+
+  // KYC
+  [Screens.VerificationProcessing]: {
+    origin: 'talent_onboarding' | 'org_onboarding' | 'profile';
+  };
 
   // Stripe Connect
   [Screens.StripeConnectOnboarding]: undefined;
