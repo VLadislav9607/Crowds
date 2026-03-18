@@ -12,11 +12,12 @@ import { styles } from './styles';
 
 export const EventManageBoard = ({
   checkinCutoff,
+  timezone,
   isCutoffPassed,
   isUpdating,
   onOpenEditCheckIn,
 }: IEventManageBoardProps) => {
-  const boardConfig = getBoardConfig(checkinCutoff);
+  const boardConfig = getBoardConfig(checkinCutoff, timezone);
 
   return (
     <View style={styles.container}>

@@ -1,5 +1,6 @@
 import { useMemo, useState } from 'react';
 import DatePicker from 'react-native-date-picker';
+import { getTimezoneOffset } from 'date-fns-tz';
 
 import { Screens, useScreenNavigation } from '@navigation';
 import { useGetEventForOrgMember, useUpdateCheckinCutoff } from '@actions';
@@ -17,6 +18,13 @@ export const ManageEventScreen = () => {
 
   const { mutate: updateCheckinCutoff, isPending: isUpdatingCutoff } =
     useUpdateCheckinCutoff();
+
+  const eventTimezone = event?.event_location?.timezone || 'UTC';
+
+  const timezoneOffsetInMinutes = useMemo(
+    () => getTimezoneOffset(eventTimezone) / 60000,
+    [eventTimezone],
+  );
 
   const endAt = event?.end_at ?? null;
 
@@ -61,6 +69,7 @@ export const ManageEventScreen = () => {
     >
       <EventManageBoard
         checkinCutoff={checkinCutoff}
+        timezone={eventTimezone}
         isCutoffPassed={isCutoffPassed}
         isUpdating={isUpdatingCutoff}
         onOpenEditCheckIn={onOpenEditCheckIn}
@@ -75,6 +84,7 @@ export const ManageEventScreen = () => {
         date={datePickerDate}
         minimumDate={event?.start_at ? new Date(event.start_at) : new Date()}
         maximumDate={endAt ? new Date(endAt) : undefined}
+        timeZoneOffsetInMinutes={timezoneOffsetInMinutes}
         onConfirm={onConfirmCutoff}
         onCancel={() => setShowDatePicker(false)}
       />
