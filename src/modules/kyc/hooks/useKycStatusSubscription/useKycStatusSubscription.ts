@@ -1,4 +1,4 @@
-import { useEffect, useCallback } from 'react';
+import { useEffect, useCallback, useRef } from 'react';
 import { realtimeService } from '@services';
 import { KycRecord, UseKycStatusSubscriptionProps } from './types';
 import { KycStatus } from '@modules/kyc';
@@ -9,6 +9,10 @@ export const useKycStatusSubscription = ({
   enabled = true,
 }: UseKycStatusSubscriptionProps) => {
   const channelName = `kyc_status_${userId}`;
+
+  // Stable ref so the subscription callback never goes stale
+  const onStatusChangeRef = useRef(onStatusChange);
+  onStatusChangeRef.current = onStatusChange;
 
   const subscribe = useCallback(() => {
     if (!userId || !enabled) return;
@@ -21,11 +25,15 @@ export const useKycStatusSubscription = ({
       onPayload: payload => {
         console.log('payload', payload);
         if (payload.new && 'status' in payload.new) {
-          onStatusChange(payload.new.status as KycStatus);
+          onStatusChangeRef.current({
+            status: payload.new.status as KycStatus,
+            checksTotal: (payload.new as KycRecord).checks_total ?? 0,
+            checksPassed: (payload.new as KycRecord).checks_passed ?? 0,
+          });
         }
       },
     });
-  }, [userId, enabled, channelName, onStatusChange]);
+  }, [userId, enabled, channelName]);
 
   const unsubscribe = useCallback(() => {
     realtimeService.unsubscribe(channelName);
