@@ -73,7 +73,6 @@ import {
   CustomTalentsListScreen,
   MyListsScreen,
 } from '../../modules/custom-lists';
-import { VerificationPersonScreen } from '../../modules/kyc';
 import { ManageOrgTeamScreen } from '../../modules/organization-team';
 import {
   TalentFoldersScreen,
@@ -88,6 +87,7 @@ import {
   FlagParticipantScreen,
   FlagOrganizationScreen,
 } from '../../modules/flags';
+import { VerificationProcessingScreen } from '../../modules/kyc/screens';
 import { StripeConnectOnboardingScreen } from '../../modules/stripe-connect';
 
 const RootStack = createStackNavigator<RootStackParamList>();
@@ -145,11 +145,6 @@ export const RootStackNavigator = () => {
       <RootStack.Screen
         name={Screens.TermsAndPrivacy}
         component={TermsAndPrivacyScreen}
-      />
-
-      <RootStack.Screen
-        name={Screens.VerificationPerson}
-        component={VerificationPersonScreen}
       />
 
       <RootStack.Screen
@@ -345,6 +340,11 @@ export const RootStackNavigator = () => {
       <RootStack.Screen
         name={Screens.Notifications}
         component={NotificationsListScreen}
+      />
+      <RootStack.Screen
+        name={Screens.VerificationProcessing}
+        component={VerificationProcessingScreen}
+        options={{ gestureEnabled: false }}
       />
       <RootStack.Screen
         name={Screens.StripeConnectOnboarding}
