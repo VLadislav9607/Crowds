@@ -76,6 +76,7 @@ export type RootStackParamList = {
 
   // Event Management screens
   [Screens.EventQRCodes]: { eventId: string; timezone?: string };
+  [Screens.EventReport]: { eventId: string };
 
   // Talent screens
   [Screens.TalentSearchEvents]?: {

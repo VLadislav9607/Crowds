@@ -37,23 +37,23 @@ export const ManageActionsList = ({
       onPress: () => goToScreen(Screens.MessageTalents, { eventId }),
     },
     {
-      label: 'View Event Reports',
-      onPress: () => {},
+      label: 'Event Reports',
+      onPress: () => goToScreen(Screens.EventReport, { eventId }),
     },
     {
-      label: 'View Checked-In Talents',
+      label: 'Checked-In Talents',
       onPress: () => goToScreen(Screens.CheckedInTalents, { eventId }),
     },
     {
-      label: 'View Checked-Out Talents',
+      label: 'Checked-Out Talents',
       onPress: () => goToScreen(Screens.CheckedOutTalents, { eventId }),
     },
     {
-      label: 'View No Show Talents',
+      label: 'No Show Talents',
       onPress: () => goToScreen(Screens.NoShowTalents, { eventId }),
     },
     {
-      label: 'View Task Completions',
+      label: 'Task Completions',
       onPress: () => goToScreen(Screens.TaskCompletionTalents, { eventId }),
     },
   ];

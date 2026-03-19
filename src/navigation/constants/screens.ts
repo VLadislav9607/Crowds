@@ -67,6 +67,7 @@ export enum Screens {
   // Event Management screens
   EventQRCodes = 'EventQRCodes',
   MessageTalents = 'MessageTalents',
+  EventReport = 'EventReport',
 
   // Talent screens
   TalentSearchEvents = 'TalentSearchEvents',
