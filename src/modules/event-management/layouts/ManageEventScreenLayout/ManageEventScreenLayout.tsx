@@ -1,15 +1,14 @@
 import { ReactNode } from 'react';
-import { Image, StyleSheet, View } from 'react-native';
+import { StyleSheet, View } from 'react-native';
 
-import { ScreenWithScrollWrapper } from '@components';
+import { AppImage, ScreenWithScrollWrapper } from '@components';
 import { AppText } from '@ui';
-import { IMAGES } from '@assets';
 
 interface IProps {
   children: ReactNode;
   eventTitle: string;
   eventLocation: string;
-  eventImage?: any;
+  eventImage?: string;
 }
 
 export const ManageEventScreenLayout = ({
@@ -35,10 +34,13 @@ export const ManageEventScreenLayout = ({
               {eventLocation}
             </AppText>
           </View>
-          <Image
-            source={eventImage || IMAGES.splash}
-            style={styles.headerContentImage}
-          />
+          {eventImage ? (
+            <AppImage
+              imgPath={eventImage}
+              bucket="brand_avatars"
+              containerStyle={styles.headerContentImage}
+            />
+          ) : null}
         </View>
       }
     >

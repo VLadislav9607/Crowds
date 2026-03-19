@@ -4331,6 +4331,7 @@ __metadata:
     react-native-dotenv: ^3.4.11
     react-native-fs: ^2.20.0
     react-native-gesture-handler: ^2.29.1
+    react-native-gifted-charts: ^1.4.76
     react-native-hole-view: ^4.0.0
     react-native-image-picker: ^8.2.1
     react-native-inappbrowser-reborn: ^3.7.0
@@ -7188,6 +7189,17 @@ __metadata:
   version: 2.0.0
   resolution: "getenv@npm:2.0.0"
   checksum: d5e4cd001952db17d546c8ae5961b68dd83d0a6c6027cc4c613cbe0f88ca835f661364a7eff32428953e7677af95fb0a35f035c98b661bef2fcabb5d7c711c86
+  languageName: node
+  linkType: hard
+
+"gifted-charts-core@npm:0.1.80":
+  version: 0.1.80
+  resolution: "gifted-charts-core@npm:0.1.80"
+  peerDependencies:
+    react: "*"
+    react-native: "*"
+    react-native-svg: "*"
+  checksum: 3807d6d1383a4a89d733189b47fb0b228422f81314a6e009e62a1cc5e50d4139b5e1096543b5b7f0033f280bcec5162e7ca1b9a5c5206ccd828d7a8c36d90e90
   languageName: node
   linkType: hard
 
@@ -10588,6 +10600,26 @@ __metadata:
     react: "*"
     react-native: "*"
   checksum: 130a1cc04879ea11808472dbe2f4e346baca0cb52713279f3d4b5fbd397324bef2379f1f60bf0ce1763e12a8656267abb0e879418fb37c81fc6bbdcdb7fc797d
+  languageName: node
+  linkType: hard
+
+"react-native-gifted-charts@npm:^1.4.76":
+  version: 1.4.76
+  resolution: "react-native-gifted-charts@npm:1.4.76"
+  dependencies:
+    gifted-charts-core: 0.1.80
+  peerDependencies:
+    expo-linear-gradient: "*"
+    react: "*"
+    react-native: "*"
+    react-native-linear-gradient: "*"
+    react-native-svg: "*"
+  peerDependenciesMeta:
+    expo-linear-gradient:
+      optional: true
+    react-native-linear-gradient:
+      optional: true
+  checksum: 3cf0651fdfa771b6039f25f196d58f4177e3569f37f500b75c76505fc7af5b062b5768e3ad59a2419f90e8d1dee26ffb9d1bdca20514b29b856353c2cac48aad
   languageName: node
   linkType: hard
 

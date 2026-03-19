@@ -50,6 +50,7 @@
     "react-native-dotenv": "^3.4.11",
     "react-native-fs": "^2.20.0",
     "react-native-gesture-handler": "^2.29.1",
+    "react-native-gifted-charts": "^1.4.76",
     "react-native-hole-view": "^4.0.0",
     "react-native-image-picker": "^8.2.1",
     "react-native-inappbrowser-reborn": "^3.7.0",

@@ -20,3 +20,4 @@ export * from './useGetEventCheckedOutTalents';
 export * from './useSubmitTaskPhoto';
 export * from './useGetEventTaskCompletions';
 export * from './useReviewTaskCompletion';
+export * from './useGetEventReport';

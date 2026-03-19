@@ -3,7 +3,11 @@ import DatePicker from 'react-native-date-picker';
 import { getTimezoneOffset } from 'date-fns-tz';
 
 import { Screens, useScreenNavigation } from '@navigation';
-import { useGetEventForOrgMember, useUpdateCheckinCutoff } from '@actions';
+import {
+  useGetEventForOrgMember,
+  useUpdateCheckinCutoff,
+  useGetMe,
+} from '@actions';
 
 import { ManageEventScreenLayout } from '../../layouts';
 import { EventManageBoard, ManageActionsList } from '../../components';
@@ -15,6 +19,9 @@ export const ManageEventScreen = () => {
   const eventId = params?.eventId ?? '';
 
   const { data: event } = useGetEventForOrgMember({ event_id: eventId });
+  const { data: meData } = useGetMe();
+  const brandLogoPath =
+    meData?.organizationMember?.current_context?.brand?.logo_path;
 
   const { mutate: updateCheckinCutoff, isPending: isUpdatingCutoff } =
     useUpdateCheckinCutoff();
@@ -63,9 +70,8 @@ export const ManageEventScreen = () => {
   return (
     <ManageEventScreenLayout
       eventTitle={event?.title ?? ''}
-      eventLocation={
-        event?.event_location?.formatted_address ?? ''
-      }
+      eventLocation={event?.event_location?.formatted_address ?? ''}
+      eventImage={brandLogoPath}
     >
       <EventManageBoard
         checkinCutoff={checkinCutoff}

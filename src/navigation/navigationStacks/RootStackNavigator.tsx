@@ -54,6 +54,7 @@ import {
 import {
   ManageEventScreen,
   MessageTalentsScreen,
+  EventReportScreen,
 } from '../../modules/event-management';
 import { ChatRoomScreen } from '../../modules/chats';
 import {
@@ -216,6 +217,11 @@ export const RootStackNavigator = () => {
       <RootStack.Screen
         name={Screens.MessageTalents}
         component={MessageTalentsScreen}
+      />
+
+      <RootStack.Screen
+        name={Screens.EventReport}
+        component={EventReportScreen}
       />
 
       <RootStack.Screen
