@@ -1,15 +1,15 @@
 import { supabase } from '@services';
 import {
-  CreateBlackFlagReportBodyDto,
-  CreateBlackFlagReportRespDto,
+  CreateFlagReportBodyDto,
+  CreateFlagReportRespDto,
 } from './types';
 import { FunctionsHttpError } from '@supabase/supabase-js';
 
-export const createBlackFlagReportAction = async (
-  body: CreateBlackFlagReportBodyDto,
-): Promise<CreateBlackFlagReportRespDto> => {
+export const createFlagReportAction = async (
+  body: CreateFlagReportBodyDto,
+): Promise<CreateFlagReportRespDto> => {
   const { data, error } = await supabase.functions.invoke(
-    'create-black-flag-report',
+    'create-flag-report',
     {
       body,
     },

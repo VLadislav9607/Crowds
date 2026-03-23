@@ -1,5 +1,5 @@
 import {
-  useCreateBlackFlagReport,
+  useCreateFlagReport,
   useCreateTalentRedFlag,
   useCreateTalentYellowFlag,
 } from '@actions';
@@ -65,7 +65,7 @@ export const useSetTalentFlag = ({
     onSuccess,
     onError,
   });
-  const createBlackFlagReport = useCreateBlackFlagReport({
+  const createFlagReport = useCreateFlagReport({
     onSuccess,
     onError,
   });
@@ -73,6 +73,6 @@ export const useSetTalentFlag = ({
   return {
     createYellowFlag,
     createRedFlag,
-    createBlackFlagReport,
+    createFlagReport,
   };
 };

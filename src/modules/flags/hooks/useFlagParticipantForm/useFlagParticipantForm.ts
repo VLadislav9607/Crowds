@@ -20,7 +20,7 @@ export const useFlagParticipantForm = ({
   const [pendingData, setPendingData] =
     useState<FlagParticipantFormValues | null>(null);
 
-  const { createYellowFlag, createRedFlag, createBlackFlagReport } =
+  const { createYellowFlag, createRedFlag, createFlagReport } =
     useSetTalentFlag({ resetForm, closeNoteModal });
 
   const {
@@ -77,15 +77,16 @@ export const useFlagParticipantForm = ({
           description: trimmedReason,
         });
       } else if (data.selectedFlag === TalentFlag.BLACK) {
-        await createBlackFlagReport.mutateAsync({
+        await createFlagReport.mutateAsync({
           targetType: 'talent',
           targetId: talentId,
           eventId,
+          requestedFlagType: 'black',
           description: trimmedReason,
         });
       }
     },
-    [createYellowFlag, createRedFlag, createBlackFlagReport, eventId, talentId],
+    [createYellowFlag, createRedFlag, createFlagReport, eventId, talentId],
   );
 
   const confirmNoteModal = useCallback(async () => {
@@ -104,7 +105,7 @@ export const useFlagParticipantForm = ({
     isLoading:
       createYellowFlag.isPending ||
       createRedFlag.isPending ||
-      createBlackFlagReport.isPending,
+      createFlagReport.isPending,
     isNoteModalVisible,
     openNoteModal,
     closeNoteModal,

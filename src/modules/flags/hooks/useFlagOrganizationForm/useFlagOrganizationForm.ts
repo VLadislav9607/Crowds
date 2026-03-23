@@ -19,7 +19,7 @@ export const useFlagOrganizationForm = ({
   const [pendingData, setPendingData] =
     useState<FlagOrganizationFormValues | null>(null);
 
-  const { createOrgYellowFlag, createOrgRedFlag, createBlackFlagReport } =
+  const { createFlagReport } =
     useSetOrgFlag({ resetForm, closeNoteModal });
 
   const {
@@ -62,26 +62,15 @@ export const useFlagOrganizationForm = ({
     async (data: FlagOrganizationFormValues) => {
       const trimmedReason = data.reason.trim();
 
-      if (data.selectedFlag === TalentFlag.YELLOW) {
-        await createOrgYellowFlag.mutateAsync({
-          eventId,
-          description: trimmedReason,
-        });
-      } else if (data.selectedFlag === TalentFlag.RED) {
-        await createOrgRedFlag.mutateAsync({
-          eventId,
-          description: trimmedReason,
-        });
-      } else if (data.selectedFlag === TalentFlag.BLACK) {
-        await createBlackFlagReport.mutateAsync({
-          targetType: 'organization',
-          targetId: brandId,
-          eventId,
-          description: trimmedReason,
-        });
-      }
+      await createFlagReport.mutateAsync({
+        targetType: 'organization',
+        targetId: brandId,
+        eventId,
+        requestedFlagType: data.selectedFlag as 'yellow' | 'red' | 'black',
+        description: trimmedReason,
+      });
     },
-    [createOrgYellowFlag, createOrgRedFlag, createBlackFlagReport, eventId, brandId],
+    [createFlagReport, eventId, brandId],
   );
 
   const confirmNoteModal = useCallback(async () => {
@@ -97,10 +86,7 @@ export const useFlagOrganizationForm = ({
     selectedFlag,
     setSelectedFlag,
     isValid,
-    isLoading:
-      createOrgYellowFlag.isPending ||
-      createOrgRedFlag.isPending ||
-      createBlackFlagReport.isPending,
+    isLoading: createFlagReport.isPending,
     isNoteModalVisible,
     openNoteModal,
     closeNoteModal,

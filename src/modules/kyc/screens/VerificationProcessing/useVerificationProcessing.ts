@@ -113,6 +113,18 @@ export const useVerificationProcessing = () => {
     }
   }, [state, handleVerificationSuccess]);
 
+  // Timeout: if still pending after 60s, treat as failed
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      if (state === 'pending' && !hasNavigatedRef.current) {
+        console.error('[KYC] Verification timed out — still pending after 60s');
+        setState('failed');
+      }
+    }, 60000);
+
+    return () => clearTimeout(timer);
+  }, [state]);
+
   // Block back button on Android
   useEffect(() => {
     const backHandler = BackHandler.addEventListener(

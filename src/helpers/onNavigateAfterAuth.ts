@@ -4,7 +4,7 @@ import { fetchUserKycStatus, UserKycRecord } from '@modules/kyc';
 
 const needsProcessingScreen = (kycData: UserKycRecord | null) =>
   kycData !== null &&
-  kycData.status !== 'completed' &&
+  kycData.status === 'pending' &&
   (kycData.checks_total ?? 0) > 0;
 
 export const onNavigateAfterAuth = async () => {
