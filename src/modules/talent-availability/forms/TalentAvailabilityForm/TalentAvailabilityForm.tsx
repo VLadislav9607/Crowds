@@ -9,11 +9,9 @@ import { If } from '@components';
 
 import {
   AvailabilitySelector,
-  TravelingToggle,
   DayTimeSchedule,
   WeeklyDaySelector,
 } from '../../components';
-import { TravelingForm } from '../TravelingForm';
 import { useAvailabilitySetupForm } from '../../hooks';
 import { AvailabilityType } from '../../types';
 import {
@@ -54,7 +52,6 @@ const TalentAvailabilityFormComponent: ForwardRefRenderFunction<
   const availability = watch('availability');
   const selectedDays = watch('selectedDays');
   const daySchedules = watch('daySchedules');
-  const isTraveling = watch('isTraveling');
 
   return (
     <View style={styles.container}>
@@ -79,15 +76,6 @@ const TalentAvailabilityFormComponent: ForwardRefRenderFunction<
             onChange={schedules => setValue('daySchedules', schedules)}
           />
         </If>
-      </If>
-
-      <TravelingToggle
-        value={isTraveling}
-        onChange={value => setValue('isTraveling', value)}
-      />
-
-      <If condition={isTraveling}>
-        <TravelingForm watch={watch} setValue={setValue} errors={errors} />
       </If>
     </View>
   );

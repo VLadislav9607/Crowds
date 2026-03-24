@@ -11,27 +11,10 @@ export interface IDaySchedule {
 }
 
 /**
- * Schedule for a specific date (used for travel)
- */
-export interface IDateSchedule {
-  date: Date;
-  timeSlot: TimeSlot;
-  customFrom?: Date;
-  customTo?: Date;
-}
-
-/**
  * DTO types for API (dates as ISO strings)
  */
 export interface IDayScheduleDto {
   day: DayOfWeek;
-  timeSlot: TimeSlot;
-  customFrom?: string | null;
-  customTo?: string | null;
-}
-
-export interface IDateScheduleDto {
-  date: string;
   timeSlot: TimeSlot;
   customFrom?: string | null;
   customTo?: string | null;

@@ -6,11 +6,9 @@ import { goBack } from '@navigation';
 
 import {
   AvailabilitySelector,
-  TravelingToggle,
   DayTimeSchedule,
   WeeklyDaySelector,
 } from '../../components';
-import { TravelingForm } from '../../forms';
 import { useAvailabilitySetupForm } from '../../hooks';
 import { AvailabilityType } from '../../types';
 import { showSuccessToast } from '@helpers';
@@ -48,7 +46,6 @@ export const AvailabilitySetupScreen = () => {
   const availability = watch('availability');
   const selectedDays = watch('selectedDays');
   const daySchedules = watch('daySchedules');
-  const isTraveling = watch('isTraveling');
 
   return (
     <ScreenWithScrollWrapper
@@ -88,15 +85,6 @@ export const AvailabilitySetupScreen = () => {
               onChange={schedules => setValue('daySchedules', schedules)}
             />
           </If>
-        </If>
-
-        <TravelingToggle
-          value={isTraveling}
-          onChange={value => setValue('isTraveling', value)}
-        />
-
-        <If condition={isTraveling}>
-          <TravelingForm watch={watch} setValue={setValue} errors={errors} />
         </If>
       </View>
     </ScreenWithScrollWrapper>

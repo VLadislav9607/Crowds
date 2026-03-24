@@ -125,11 +125,17 @@ export const TalentLocationSetupForm = forwardRef<
           return (
             <PlacesPredictionsInput
               types={PlaceAutocompleteType.cities}
+              includeTimezone
               onChangeText={onFormReset}
               inputProps={{
                 errorMessage: fieldState?.error?.message,
               }}
-              onSelectPlace={res => field.onChange(res.parsed_details)}
+              onSelectPlace={res =>
+                field.onChange({
+                  ...res.parsed_details,
+                  timezone: res.timezone?.timeZoneId,
+                })
+              }
               defaultValue={parsedLocation?.autocomplete_description}
             />
           );

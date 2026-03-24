@@ -1,5 +1,5 @@
 import { GetUserAvailabilityResDto, UpdateAvailabilityBodyDto } from '@actions';
-import { AvailabilityType, TimeSlot, TripAvailability } from '../../types';
+import { AvailabilityType } from '../../types';
 import { AvailabilitySetupFormData } from './schema';
 
 /**
@@ -34,23 +34,10 @@ export const mapApiToFormData = (
     customTo: parseTimeString(s.customTo),
   }));
 
-  const travelDays = data.traveldays.map(d => ({
-    date: new Date(d.date),
-    timeSlot: d.timeSlot,
-    customFrom: parseTimeString(d.customFrom),
-    customTo: parseTimeString(d.customTo),
-  }));
-
   return {
     availability: data.availability,
     selectedDays: daySchedules.map(s => s.day),
     daySchedules,
-    isTraveling: data.is_traveling,
-    location: data.location ?? '',
-    startDate: data.start_date ? new Date(data.start_date) : null,
-    endDate: data.end_date ? new Date(data.end_date) : null,
-    tripAvailability: data.trip_availability,
-    travelDays,
   };
 };
 
@@ -63,12 +50,10 @@ export const mapFormDataToApi = (
 ): UpdateAvailabilityBodyDto => {
   const isAlwaysAvailable =
     data.availability === AvailabilityType.AlwaysAvailable;
-  const { isTraveling } = data;
 
   return {
     talentId,
     availability: data.availability,
-
     selectedDays: isAlwaysAvailable ? [] : data.selectedDays,
     daySchedules: isAlwaysAvailable
       ? []
@@ -78,28 +63,5 @@ export const mapFormDataToApi = (
           customFrom: toTimeString(s.customFrom),
           customTo: toTimeString(s.customTo),
         })),
-
-    isTraveling,
-    location: isTraveling ? data.location : '',
-    startDate: isTraveling
-      ? data.startDate?.toISOString().split('T')[0] ?? null
-      : null,
-    endDate: isTraveling
-      ? data.endDate?.toISOString().split('T')[0] ?? null
-      : null,
-    tripAvailability: isTraveling
-      ? data.tripAvailability
-      : TripAvailability.SameAsRegular,
-    travelDays:
-      isTraveling && data.tripAvailability === TripAvailability.CustomSchedule
-        ? data.travelDays
-            .filter(d => d.timeSlot !== TimeSlot.NotAvailable)
-            .map(d => ({
-              date: d.date.toISOString().split('T')[0], // YYYY-MM-DD
-              timeSlot: d.timeSlot,
-              customFrom: toTimeString(d.customFrom),
-              customTo: toTimeString(d.customTo),
-            }))
-        : [],
   };
 };

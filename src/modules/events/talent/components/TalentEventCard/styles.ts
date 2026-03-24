@@ -111,4 +111,23 @@ export const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
   },
+  unavailableOverlay: {
+    position: 'absolute',
+    top: 0,
+    left: 0,
+    right: 0,
+    bottom: 0,
+    backgroundColor: 'rgba(255, 255, 255, 0.5)',
+    zIndex: 1,
+  },
+  unavailableBadge: {
+    position: 'absolute',
+    top: 8,
+    right: 8,
+    backgroundColor: COLORS.red_20,
+    paddingHorizontal: 8,
+    paddingVertical: 4,
+    borderRadius: 100,
+    zIndex: 2,
+  },
 });

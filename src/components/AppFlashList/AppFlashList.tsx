@@ -10,6 +10,7 @@ import { AppFlashListProps } from './types';
 export const AppFlashList = <T,>({
   gap = 16,
   emptyText = 'No items found',
+  emptyTextStyle,
   withBottomTab = false,
   contentContainerStyle,
   data,
@@ -47,7 +48,7 @@ export const AppFlashList = <T,>({
               renderIf={!showBottomLoader}
               typography="medium_14"
               color="gray"
-              style={styles.emptyText}
+              style={[styles.emptyText, emptyTextStyle]}
             >
               {emptyText}
             </AppText>

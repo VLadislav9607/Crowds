@@ -156,8 +156,19 @@ export const TalentEventCard = ({
     }
   };
 
+  const isUnavailable = event.is_available === false;
+
   return (
     <View style={[styles.container, containerStyle]}>
+      <If condition={isUnavailable}>
+        <View style={styles.unavailableOverlay} pointerEvents="none" />
+        <View style={styles.unavailableBadge} pointerEvents="none">
+          <AppText typography="bold_10" color="red">
+            Unavailable
+          </AppText>
+        </View>
+      </If>
+
       <ImageBackground
         source={IMAGES.cardCrowdBg}
         style={styles.imageContainer}

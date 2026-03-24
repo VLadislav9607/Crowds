@@ -14,6 +14,7 @@ export const talentLocationSetupSchema = z.object({
       place_id: z.string(),
       postal_code: z.string().optional(),
       region: z.string(),
+      timezone: z.string().optional(),
     },
     { message: 'Location is required' },
   ),

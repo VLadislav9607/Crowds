@@ -33,6 +33,7 @@ export interface TalentPublicEvent {
   payment_mode: Enums<'EventPaymentMode'>;
   start_at: string;
   office_country_code: string | null;
+  is_available: boolean;
 }
 
 export interface TalentPublicEventsResDto

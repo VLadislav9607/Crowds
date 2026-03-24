@@ -9,9 +9,14 @@ export const useUpdateAvailability = (options?: IMutationOptions<void>) => {
     mutationFn: updateAvailabilityAction,
     ...options,
     onSuccess: async (...args) => {
-      await queryClient.invalidateQueries({
-        queryKey: [TANSTACK_QUERY_KEYS.GET_USER_AVAILABILITY],
-      });
+      await Promise.all([
+        queryClient.invalidateQueries({
+          queryKey: [TANSTACK_QUERY_KEYS.GET_USER_AVAILABILITY],
+        }),
+        queryClient.invalidateQueries({
+          queryKey: [TANSTACK_QUERY_KEYS.SEARCH_PUBLIC_EVENTS],
+        }),
+      ]);
       await options?.onSuccess?.(...args);
     },
     onError: showMutationErrorToast,

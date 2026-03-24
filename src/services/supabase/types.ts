@@ -1826,6 +1826,36 @@ export type Database = {
         }
         Relationships: []
       }
+      platform_withdrawals: {
+        Row: {
+          amount_cents: number
+          created_at: string | null
+          id: string
+          note: string | null
+          status: string
+          stripe_payout_id: string | null
+          withdrawn_by: string | null
+        }
+        Insert: {
+          amount_cents: number
+          created_at?: string | null
+          id?: string
+          note?: string | null
+          status?: string
+          stripe_payout_id?: string | null
+          withdrawn_by?: string | null
+        }
+        Update: {
+          amount_cents?: number
+          created_at?: string | null
+          id?: string
+          note?: string | null
+          status?: string
+          stripe_payout_id?: string | null
+          withdrawn_by?: string | null
+        }
+        Relationships: []
+      }
       push_devices: {
         Row: {
           device_id: string
@@ -1999,6 +2029,7 @@ export type Database = {
           postal_code: string | null
           region: string
           talent_id: string
+          timezone: string | null
         }
         Insert: {
           autocomplete_description: string
@@ -2015,6 +2046,7 @@ export type Database = {
           postal_code?: string | null
           region: string
           talent_id: string
+          timezone?: string | null
         }
         Update: {
           autocomplete_description?: string
@@ -2031,6 +2063,7 @@ export type Database = {
           postal_code?: string | null
           region?: string
           talent_id?: string
+          timezone?: string | null
         }
         Relationships: [
           {
@@ -2340,33 +2373,18 @@ export type Database = {
         Row: {
           availability: Database["public"]["Enums"]["availability_type"]
           created_at: string | null
-          end_date: string | null
-          is_traveling: boolean
-          location: string | null
-          start_date: string | null
-          trip_availability: Database["public"]["Enums"]["trip_availability_type"]
           updated_at: string | null
           user_id: string
         }
         Insert: {
           availability: Database["public"]["Enums"]["availability_type"]
           created_at?: string | null
-          end_date?: string | null
-          is_traveling?: boolean
-          location?: string | null
-          start_date?: string | null
-          trip_availability: Database["public"]["Enums"]["trip_availability_type"]
           updated_at?: string | null
           user_id: string
         }
         Update: {
           availability?: Database["public"]["Enums"]["availability_type"]
           created_at?: string | null
-          end_date?: string | null
-          is_traveling?: boolean
-          location?: string | null
-          start_date?: string | null
-          trip_availability?: Database["public"]["Enums"]["trip_availability_type"]
           updated_at?: string | null
           user_id?: string
         }
@@ -2395,36 +2413,6 @@ export type Database = {
           complycube_client_id?: string | null
           status?: string
           updated_at?: string | null
-          user_id?: string
-        }
-        Relationships: []
-      }
-      user_travel_availability: {
-        Row: {
-          created_at: string | null
-          custom_from: string | null
-          custom_to: string | null
-          date: string
-          id: string
-          time_slot: Database["public"]["Enums"]["time_slot"]
-          user_id: string
-        }
-        Insert: {
-          created_at?: string | null
-          custom_from?: string | null
-          custom_to?: string | null
-          date: string
-          id?: string
-          time_slot: Database["public"]["Enums"]["time_slot"]
-          user_id: string
-        }
-        Update: {
-          created_at?: string | null
-          custom_from?: string | null
-          custom_to?: string | null
-          date?: string
-          id?: string
-          time_slot?: Database["public"]["Enums"]["time_slot"]
           user_id?: string
         }
         Relationships: []
@@ -2466,14 +2454,6 @@ export type Database = {
           availability: Database["public"]["Enums"]["availability_type"] | null
           created_at: string | null
           dayschedules: Json | null
-          end_date: string | null
-          is_traveling: boolean | null
-          location: string | null
-          start_date: string | null
-          traveldays: Json | null
-          trip_availability:
-            | Database["public"]["Enums"]["trip_availability_type"]
-            | null
           updated_at: string | null
           user_id: string | null
         }
@@ -2481,14 +2461,6 @@ export type Database = {
           availability?: Database["public"]["Enums"]["availability_type"] | null
           created_at?: string | null
           dayschedules?: never
-          end_date?: string | null
-          is_traveling?: boolean | null
-          location?: string | null
-          start_date?: string | null
-          traveldays?: never
-          trip_availability?:
-            | Database["public"]["Enums"]["trip_availability_type"]
-            | null
           updated_at?: string | null
           user_id?: string | null
         }
@@ -2496,14 +2468,6 @@ export type Database = {
           availability?: Database["public"]["Enums"]["availability_type"] | null
           created_at?: string | null
           dayschedules?: never
-          end_date?: string | null
-          is_traveling?: boolean | null
-          location?: string | null
-          start_date?: string | null
-          traveldays?: never
-          trip_availability?:
-            | Database["public"]["Enums"]["trip_availability_type"]
-            | null
           updated_at?: string | null
           user_id?: string | null
         }
@@ -2525,6 +2489,10 @@ export type Database = {
         Returns: {
           user_id: string
         }[]
+      }
+      check_user_available_at: {
+        Args: { p_at_utc: string; p_user_id: string }
+        Returns: boolean
       }
       check_user_exists_by_username: {
         Args: { username_param: string }
@@ -2970,16 +2938,19 @@ export type Database = {
           rejected: number
         }[]
       }
+      get_event_payment: { Args: { p_event_id: string }; Returns: Json }
       get_event_qr_code: { Args: { p_qr_id: string }; Returns: Json }
       get_event_qr_codes: {
         Args: { p_event_id: string; p_limit?: number; p_offset?: number }
         Returns: Json
       }
       get_event_report: { Args: { p_event_id: string }; Returns: Json }
-      get_event_task_completions: {
-        Args: { p_event_id: string }
-        Returns: Json
-      }
+      get_event_task_completions:
+        | { Args: { p_event_id: string }; Returns: Json }
+        | {
+            Args: { p_event_id: string; p_limit?: number; p_offset?: number }
+            Returns: Json
+          }
       get_invitable_talents: {
         Args: {
           p_event_id: string
@@ -3299,30 +3270,10 @@ export type Database = {
         Args: { p_name?: string; p_qr_id: string; p_start_at?: string }
         Returns: undefined
       }
-      update_talent_availability: {
-        Args: {
-          p_availability: Database["public"]["Enums"]["availability_type"]
-          p_day_schedules: Json
-          p_end_date: string
-          p_is_traveling: boolean
-          p_location: string
-          p_start_date: string
-          p_talent_id: string
-          p_travel_days: Json
-          p_trip_availability: Database["public"]["Enums"]["trip_availability_type"]
-        }
-        Returns: undefined
-      }
       update_user_availability: {
         Args: {
           p_availability: Database["public"]["Enums"]["availability_type"]
           p_day_schedules: Json
-          p_end_date: string
-          p_is_traveling: boolean
-          p_location: string
-          p_start_date: string
-          p_travel_days: Json
-          p_trip_availability: Database["public"]["Enums"]["trip_availability_type"]
         }
         Returns: undefined
       }
@@ -3489,7 +3440,6 @@ export type Database = {
         | "evening"
         | "custom"
         | "not_available"
-      trip_availability_type: "regular" | "custom" | "not_available"
       СapabilityСategory:
         | "talent"
         | "events"
@@ -3773,7 +3723,6 @@ export const Constants = {
         "custom",
         "not_available",
       ],
-      trip_availability_type: ["regular", "custom", "not_available"],
       СapabilityСategory: [
         "talent",
         "events",

@@ -57,6 +57,7 @@ export const TalentEventsHomeTab = () => {
           styles.listContentContainer,
           { paddingBottom: bottomPadding },
         ]}
+        emptyTextStyle={{ marginTop: 40 }}
         ListHeaderComponent={
           <>
             <View style={styles.searchContainer}>
