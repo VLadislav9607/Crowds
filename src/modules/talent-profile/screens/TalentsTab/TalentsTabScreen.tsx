@@ -1,10 +1,10 @@
 import { useState, useMemo, useCallback, useRef } from 'react';
 import { Keyboard, StyleSheet } from 'react-native';
 import { BottomSheetModal } from '@gorhom/bottom-sheet';
-import { ScreenWrapper, AppFlashList } from '@components';
+import { ScreenWrapper, AppFlashList, If, NoAccess } from '@components';
 import { TalentProfileRow, TalentsListSkeleton } from '@modules/common';
 import { SearchWithFilter } from '@ui';
-import { useGetAllTalents } from '@actions';
+import { useGetAllTalents, useGetMe } from '@actions';
 import { goToScreen, Screens } from '@navigation';
 import { useDebounce } from '@hooks';
 import {
@@ -14,6 +14,11 @@ import {
 import { mapTalentToParticipant } from './helpers';
 
 export const TalentsTabScreen = () => {
+  const { organizationMember } = useGetMe();
+  const hasAccess =
+    !!organizationMember?.current_context?.capabilitiesAccess
+      .recruit_applicants;
+
   const [search, setSearch] = useState('');
   const [filters, setFilters] = useState<FiltersState | null>(null);
   const [activeFiltersCount, setActiveFiltersCount] = useState(0);
@@ -58,45 +63,50 @@ export const TalentsTabScreen = () => {
       titleProps={{ style: styles.title }}
       contentContainerStyle={styles.contentContainer}
     >
-      <SearchWithFilter
-        searchValue={search}
-        onSearchChange={setSearch}
-        placeholder="Search talents..."
-        activeFiltersCount={activeFiltersCount}
-        onFilterPress={() => {
-          Keyboard.dismiss();
-          filterModalRef.current?.present();
-        }}
-        containerStyle={styles.searchInput}
-      />
+      <If condition={hasAccess}>
+        <SearchWithFilter
+          searchValue={search}
+          onSearchChange={setSearch}
+          placeholder="Search talents..."
+          activeFiltersCount={activeFiltersCount}
+          onFilterPress={() => {
+            Keyboard.dismiss();
+            filterModalRef.current?.present();
+          }}
+          containerStyle={styles.searchInput}
+        />
 
-      <AppFlashList
-        data={talents}
-        emptyText="No talents found"
-        gap={0}
-        withBottomTab
-        showBottomLoader={isFetchingNextPage}
-        skeleton={skeleton}
-        renderItem={({ item }) => (
-          <TalentProfileRow
-            talent={item}
-            showMenu={false}
-            onPressCard={() =>
-              goToScreen(Screens.TalentProfile, {
-                talentId: item.talentId,
-              })
-            }
-          />
-        )}
-        onEndReached={hasNextPage ? handleEndReached : undefined}
-      />
+        <AppFlashList
+          data={talents}
+          emptyText="No talents found"
+          gap={0}
+          withBottomTab
+          showBottomLoader={isFetchingNextPage}
+          skeleton={skeleton}
+          renderItem={({ item }) => (
+            <TalentProfileRow
+              talent={item}
+              showMenu={false}
+              onPressCard={() =>
+                goToScreen(Screens.TalentProfile, {
+                  talentId: item.talentId,
+                })
+              }
+            />
+          )}
+          onEndReached={hasNextPage ? handleEndReached : undefined}
+        />
 
-      <FilterTalentsModal
-        bottomSheetRef={filterModalRef}
-        onApplyFilters={handleApplyFilters}
-        initialFilters={filters}
-        hideDistance
-      />
+        <FilterTalentsModal
+          bottomSheetRef={filterModalRef}
+          onApplyFilters={handleApplyFilters}
+          initialFilters={filters}
+          hideDistance
+        />
+      </If>
+      <If condition={!hasAccess}>
+        <NoAccess />
+      </If>
     </ScreenWrapper>
   );
 };

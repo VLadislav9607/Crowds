@@ -1,4 +1,4 @@
-import { StyleSheet } from 'react-native';
+import { Platform, StyleSheet } from 'react-native';
 import { COLORS } from '@styles';
 
 export const styles = StyleSheet.create({
@@ -15,6 +15,10 @@ export const styles = StyleSheet.create({
   },
   flag: {
     fontSize: 24,
+    ...Platform.select({
+      ios: { fontFamily: 'System' },
+      android: { fontFamily: 'sans-serif' },
+    }),
   },
   networkItem: {
     flexDirection: 'row',

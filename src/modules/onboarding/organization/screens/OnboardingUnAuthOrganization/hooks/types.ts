@@ -1,5 +1,6 @@
 import { CreateGlobalOrgResDto, CreateLocalOrgResDto } from '@actions';
 import {
+  BranchManagerEmailsStepData,
   HeadGlobalLocationFormData,
   HeadquartersSetupStepData,
   NetworkSetupStepData,
@@ -13,6 +14,7 @@ export interface OnboardingOrganizationData {
   organizationNameFormData?: OrganizationNameFormData;
   headquartersSetupFormData?: HeadquartersSetupStepData;
   networkSetupFormData?: NetworkSetupStepData;
+  branchManagerEmailsFormData?: BranchManagerEmailsStepData;
   headGlobalLocationFormData?: HeadGlobalLocationFormData;
   primaryLocationFormData?: Partial<PrimaryLocationFormData>;
   organizationCreatorInformationFormData?: OrganizationCreatorInformationFormData;

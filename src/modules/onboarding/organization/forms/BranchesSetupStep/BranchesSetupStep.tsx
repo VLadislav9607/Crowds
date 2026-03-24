@@ -1,5 +1,6 @@
 import { ICONS } from '@assets';
 import { ICountryWithFlag, countriesWithFlag } from '@constants';
+import CountryFlag from 'react-native-country-flag';
 import { BottomSheetModal } from '@gorhom/bottom-sheet';
 import { CountryPickerModal, CountryPickerModalData } from '@modules/common';
 import { AppButton, AppInput, AppText } from '@ui';
@@ -269,9 +270,12 @@ export const BranchesSetupStep = forwardRef<
         <View style={styles.hqContainer}>
           <View style={styles.hqInfoContainer}>
             <View style={styles.hqInfo}>
-              <AppText style={styles.flag}>
-                {selectedHeadOfficeCountry?.flag}
-              </AppText>
+              {selectedHeadOfficeCountry && (
+                <CountryFlag
+                  isoCode={selectedHeadOfficeCountry.code}
+                  size={20}
+                />
+              )}
               <AppText
                 typography="semibold_16"
                 style={styles.countryName}
@@ -310,7 +314,7 @@ export const BranchesSetupStep = forwardRef<
               <View key={country.code} style={styles.branch}>
                 <View style={styles.branchHeader}>
                   <View style={styles.branchInfo}>
-                    <AppText style={styles.flag}>{country.flag}</AppText>
+                    <CountryFlag isoCode={country.code} size={20} />
                     <View>
                       <AppText typography="semibold_16" color="black">
                         {country.name}

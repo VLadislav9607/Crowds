@@ -15,6 +15,11 @@ export const styles = StyleSheet.create({
     paddingBottom: 16,
     paddingHorizontal: 4,
   },
+  listContentNoHeader: {
+    paddingTop: 16,
+    paddingBottom: 16,
+    paddingHorizontal: 4,
+  },
   bottomBar: {
     paddingTop: 12,
     paddingHorizontal: 4,

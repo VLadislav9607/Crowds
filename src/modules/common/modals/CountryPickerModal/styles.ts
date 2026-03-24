@@ -1,4 +1,4 @@
-import { StyleSheet } from 'react-native';
+import { Platform, StyleSheet } from 'react-native';
 import { COLORS } from '@styles';
 
 export const styles = StyleSheet.create({
@@ -52,6 +52,10 @@ export const styles = StyleSheet.create({
   },
   flagText: {
     fontSize: 24,
+    ...Platform.select({
+      ios: { fontFamily: 'System' },
+      android: { fontFamily: 'sans-serif' },
+    }),
   },
   doneButton: {
     position: 'absolute',

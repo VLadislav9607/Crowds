@@ -3,6 +3,7 @@ import { OnboardingScreenLayout } from '../../../layouts';
 import { useOnboardingUnAuthOrganization } from './useOnboardingUnAuthOrganization';
 import { UINSaveConfirmationModal } from '../../../modals';
 import {
+  BranchManagerEmailsStep,
   NetworkSetupStep,
   OrganizationCreatorInformationStep,
   OrganizationNameStep,
@@ -12,6 +13,7 @@ import {
 import { HeadquartersSetupStep } from '../../forms/HeadquartersSetupStep';
 import { OtpVerificationForm } from '@modules/common';
 import { CreatePasswordForm } from '../../../../onboarding/forms';
+import { useMemo } from 'react';
 
 export const OnboardingUnAuthOrganizationScreen = () => {
   const {
@@ -20,6 +22,7 @@ export const OnboardingUnAuthOrganizationScreen = () => {
     data,
     networkSetupFormRef,
     headquartersSetupFormRef,
+    branchManagerEmailsFormRef,
     organizationNameFormRef,
     primaryLocationFormRef,
     showFullScreenLoader,
@@ -28,6 +31,7 @@ export const OnboardingUnAuthOrganizationScreen = () => {
     headGlobalLocationFormRef,
     uinSaveConfirmationModalRef,
     organizationCreatorInformationFormRef,
+    needsBranchManagerEmails,
     setData,
     goToNextStep,
     goToPreviousStep,
@@ -43,15 +47,26 @@ export const OnboardingUnAuthOrganizationScreen = () => {
     4: 'Create a password',
   };
 
-  const titlesGlobal = {
-    0: '',
-    1: '',
-    2: '',
-    3: 'Primary Location',
-    4: 'Your Information',
-    5: 'Verification Code',
-    6: 'Create a password',
-  };
+  const offset = needsBranchManagerEmails ? 1 : 0;
+
+  const titlesGlobal = useMemo(() => {
+    const titles: Record<number, string> = {
+      0: '',
+      1: '',
+      2: '',
+    };
+
+    if (needsBranchManagerEmails) {
+      titles[3] = '';
+    }
+
+    titles[3 + offset] = 'Primary Location';
+    titles[4 + offset] = 'Your Information';
+    titles[5 + offset] = 'Verification Code';
+    titles[6 + offset] = 'Create a password';
+
+    return titles;
+  }, [needsBranchManagerEmails, offset]);
 
   const titles = isGlobal ? titlesGlobal : titlesSingle;
 
@@ -126,7 +141,15 @@ export const OnboardingUnAuthOrganizationScreen = () => {
           />
         </If>
 
-        <If condition={step === 3}>
+        <If condition={step === 3 && needsBranchManagerEmails}>
+          <BranchManagerEmailsStep
+            ref={branchManagerEmailsFormRef}
+            branches={data.networkSetupFormData?.branches ?? []}
+            defaultValues={data.branchManagerEmailsFormData}
+          />
+        </If>
+
+        <If condition={step === 3 + offset}>
           <HeadGlobalLocationStep
             ref={headGlobalLocationFormRef}
             defaultValues={data.headGlobalLocationFormData}
@@ -141,14 +164,14 @@ export const OnboardingUnAuthOrganizationScreen = () => {
           />
         </If>
 
-        <If condition={step === 4}>
+        <If condition={step === 4 + offset}>
           <OrganizationCreatorInformationStep
             ref={organizationCreatorInformationFormRef}
             defaultValues={data.organizationCreatorInformationFormData}
           />
         </If>
 
-        <If condition={step === 5}>
+        <If condition={step === 5 + offset}>
           <OtpVerificationForm
             email={data.organizationCreatorInformationFormData?.email}
             onResendButtonPress={onResendOtpCode}
@@ -157,7 +180,7 @@ export const OnboardingUnAuthOrganizationScreen = () => {
           />
         </If>
 
-        <If condition={step === 6}>
+        <If condition={step === 6 + offset}>
           <CreatePasswordForm ref={createPasswordFormRef} />
         </If>
       </If>

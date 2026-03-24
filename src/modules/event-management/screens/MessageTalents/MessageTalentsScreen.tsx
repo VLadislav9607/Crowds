@@ -1,8 +1,7 @@
 import { useState } from 'react';
-import { ScreenWrapper } from '@components';
-import { AppFlashList } from '@components';
+import { AppFlashList, If, NoAccess, ScreenWrapper } from '@components';
 import { Screens, useScreenNavigation, goToScreen } from '@navigation';
-import { useEventParticipantsByStatus } from '@actions';
+import { useEventParticipantsByStatus, useGetMe } from '@actions';
 import {
   IEventParticipant,
   TalentProfileRow,
@@ -15,6 +14,11 @@ import { ICONS } from '@assets';
 import { styles } from './styles';
 
 export const MessageTalentsScreen = () => {
+  const { organizationMember } = useGetMe();
+  const hasAccess =
+    !!organizationMember?.current_context?.capabilitiesAccess
+      .message_applicants;
+
   const { params } = useScreenNavigation<Screens.MessageTalents>();
   const [selectedTalentId, setSelectedTalentId] = useState<string | null>(null);
 
@@ -48,49 +52,54 @@ export const MessageTalentsScreen = () => {
       headerImageBg="crowd"
       contentContainerStyle={styles.contentContainer}
     >
-      <AppFlashList
-        data={participants}
-        emptyText="No approved talents found"
-        gap={0}
-        skeleton={skeleton}
-        showBottomLoader={isFetchingNextPage}
-        contentContainerStyle={styles.listContainer}
-        renderItem={({ item }) => {
-          const isSelected = item.talentId === selectedTalentId;
-          return (
-            <TalentProfileRow
-              talent={item}
-              showMenu={false}
-              onPressCard={() =>
-                goToScreen(Screens.ApplicantProfile, {
-                  applicantId: item.talentId,
-                })
-              }
-              renderRightAction={() => (
-                <AppButton
-                  icon={ICONS.chats('black')}
-                  title="Message"
-                  isLoading={isSelected && isCreatingChat}
-                  onPress={() => chatWithTalent(item)}
-                  size="28"
-                  wrapperStyles={styles.messageButton}
-                  titleStyles={styles.messageButtonText}
-                  width={94}
-                />
-              )}
-            />
-          );
-        }}
-        onEndReached={
-          hasNextPage
-            ? () => {
-                if (!isFetchingNextPage) {
-                  fetchNextPage();
+      <If condition={hasAccess}>
+        <AppFlashList
+          data={participants}
+          emptyText="No approved talents found"
+          gap={0}
+          skeleton={skeleton}
+          showBottomLoader={isFetchingNextPage}
+          contentContainerStyle={styles.listContainer}
+          renderItem={({ item }) => {
+            const isSelected = item.talentId === selectedTalentId;
+            return (
+              <TalentProfileRow
+                talent={item}
+                showMenu={false}
+                onPressCard={() =>
+                  goToScreen(Screens.ApplicantProfile, {
+                    applicantId: item.talentId,
+                  })
                 }
-              }
-            : undefined
-        }
-      />
+                renderRightAction={() => (
+                  <AppButton
+                    icon={ICONS.chats('black')}
+                    title="Message"
+                    isLoading={isSelected && isCreatingChat}
+                    onPress={() => chatWithTalent(item)}
+                    size="28"
+                    wrapperStyles={styles.messageButton}
+                    titleStyles={styles.messageButtonText}
+                    width={94}
+                  />
+                )}
+              />
+            );
+          }}
+          onEndReached={
+            hasNextPage
+              ? () => {
+                  if (!isFetchingNextPage) {
+                    fetchNextPage();
+                  }
+                }
+              : undefined
+          }
+        />
+      </If>
+      <If condition={!hasAccess}>
+        <NoAccess />
+      </If>
     </ScreenWrapper>
   );
 };

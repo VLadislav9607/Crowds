@@ -5,3 +5,4 @@ export * from './HeadGlobalLocationStep';
 export * from './BranchesSetupStep';
 export * from './NetworkSetupStep';
 export * from './HeadquartersSetupStep';
+export * from './BranchManagerEmailsStep';

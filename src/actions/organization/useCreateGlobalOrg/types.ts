@@ -35,6 +35,7 @@ export interface CreateGlobalOrgBodyDto {
   isLocalDecisionMaker: boolean;
   location: ParsedLocation;
   creator: OrganizationCreatorInformationFormData;
+  branchManagerEmails?: Record<string, string>;
 }
 
 export interface CreateGlobalOrgResDto {

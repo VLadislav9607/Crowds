@@ -13,6 +13,7 @@ import {
 import { BottomSheetModal } from '@gorhom/bottom-sheet';
 import { CountryPickerModal, CountryPickerModalData } from '@modules/common';
 import { ICountryWithFlag } from '@constants';
+import CountryFlag from 'react-native-country-flag';
 import { If, SelectButton } from '@components';
 import { HQBadge, OPSBadge } from '../../components';
 import {
@@ -108,7 +109,7 @@ export const HeadquartersSetupStep = forwardRef<
       <View style={styles.hqContainer}>
         <View style={styles.hqInfoContainer}>
           <View style={styles.hqInfo}>
-            <AppText style={styles.flag}>{country?.flag}</AppText>
+            {country && <CountryFlag isoCode={country.code} size={20} />}
             <AppText
               typography="semibold_16"
               style={styles.countryName}

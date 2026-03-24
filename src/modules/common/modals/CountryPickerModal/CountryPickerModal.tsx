@@ -8,6 +8,7 @@ import { AppButton, AppSearchInputSecondary, AppText } from '@ui';
 import { countriesWithFlag, ICountryWithFlag } from '@constants';
 import { SvgXml } from 'react-native-svg';
 import { ICONS } from '@assets';
+import CountryFlag from 'react-native-country-flag';
 import { FlashList } from '@shopify/flash-list';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { useCallback, useEffect, useMemo, useState } from 'react';
@@ -150,7 +151,7 @@ export const CountryPickerModal = ({
                 ]}
               >
                 <View style={styles.countryInfoRow}>
-                  <AppText style={styles.flagText}>{item.flag}</AppText>
+                  <CountryFlag isoCode={item.code} size={20} />
                   <AppText typography="regular_14" style={styles.countryName}>
                     {item.name}
                   </AppText>

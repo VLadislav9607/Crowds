@@ -1,16 +1,23 @@
 import { StyleSheet } from 'react-native';
-import { AppFlashList, IPopupMenuItem, ScreenWrapper } from '@components';
-import { useGetEventCheckedInTalents } from '@actions';
+import {
+  AppFlashList,
+  If,
+  IPopupMenuItem,
+  NoAccess,
+  ScreenWrapper,
+} from '@components';
+import { useGetEventCheckedInTalents, useGetMe } from '@actions';
 import { goToScreen, Screens, useScreenNavigation } from '@navigation';
 import { TalentFlag } from '@modules/common';
 
-import {
-  EventParticipantCard,
-  IEventParticipant,
-} from '../../components';
+import { EventParticipantCard, IEventParticipant } from '../../components';
 import { formatCheckinTime } from './utils';
 
 export const CheckedInTalentsScreen = () => {
+  const { organizationMember } = useGetMe();
+  const hasAccess =
+    !!organizationMember?.current_context?.capabilitiesAccess.manage_checkins;
+
   const { params } = useScreenNavigation<Screens.CheckedInTalents>();
   const eventId = params?.eventId ?? '';
 
@@ -37,7 +44,9 @@ export const CheckedInTalentsScreen = () => {
   const renderItem = ({ item }: { item: IEventParticipant }) => (
     <EventParticipantCard
       participant={item}
-      onPress={() => goToScreen(Screens.TalentProfile, { talentId: item.talentId })}
+      onPress={() =>
+        goToScreen(Screens.TalentProfile, { talentId: item.talentId })
+      }
       onMenuSelect={handleMenuSelect(item.talentId)}
     />
   );
@@ -46,17 +55,22 @@ export const CheckedInTalentsScreen = () => {
     <ScreenWrapper
       headerVariant="withTitleAndImageBg"
       title="Checked in talent"
-      showLoader={isLoading}
+      showLoader={isLoading && hasAccess}
       contentContainerStyle={styles.contentContainer}
     >
-      <AppFlashList
-        data={participants}
-        keyExtractor={item => item.id}
-        renderItem={renderItem}
-        contentContainerStyle={{ paddingTop: 16 }}
-        gap={0}
-        emptyText="No checked-in talents found"
-      />
+      <If condition={hasAccess}>
+        <AppFlashList
+          data={participants}
+          keyExtractor={item => item.id}
+          renderItem={renderItem}
+          contentContainerStyle={{ paddingTop: 16 }}
+          gap={0}
+          emptyText="No checked-in talents found"
+        />
+      </If>
+      <If condition={!hasAccess}>
+        <NoAccess />
+      </If>
     </ScreenWrapper>
   );
 };

@@ -6,6 +6,7 @@ import { OrganizationType, OtpVerificationFormRef } from '@modules/common';
 
 import {
   BranchesSetupStepRef,
+  BranchManagerEmailsStepRef,
   HeadGlobalLocationFormRef,
   HeadquartersSetupStepRef,
   OrganizationCreatorInformationFormData,
@@ -45,6 +46,7 @@ export const useOnboardingUnAuthOrganization = () => {
 
   const headquartersSetupFormRef = useRef<HeadquartersSetupStepRef>(null);
   const networkSetupFormRef = useRef<NetworkSetupStepRef>(null);
+  const branchManagerEmailsFormRef = useRef<BranchManagerEmailsStepRef>(null);
 
   const branchesSetupFormRef = useRef<BranchesSetupStepRef>(null);
 
@@ -165,11 +167,16 @@ export const useOnboardingUnAuthOrganization = () => {
     onCreatingAccountSuccess,
   };
 
-  const { goToNextStepInGlobal, isGlobalOrgCreating } = useGlobalOrgRegister({
+  const {
+    goToNextStepInGlobal,
+    isGlobalOrgCreating,
+    needsBranchManagerEmails,
+  } = useGlobalOrgRegister({
     ...commonParams,
     headGlobalLocationFormRef,
     headquartersSetupFormRef,
     networkSetupFormRef,
+    branchManagerEmailsFormRef,
   });
 
   const { goToNextStepInSingle, isLocalOrgCreating } = useSingleOrgRegister({
@@ -192,10 +199,13 @@ export const useOnboardingUnAuthOrganization = () => {
       setStep(2);
       return;
     }
-    if (step === 6 && isGlobal) {
-      setStep(4);
+
+    const offset = needsBranchManagerEmails ? 1 : 0;
+    if (step === 6 + offset && isGlobal) {
+      setStep(4 + offset);
       return;
     }
+
     setStep(prev => prev - 1);
   };
 
@@ -220,6 +230,7 @@ export const useOnboardingUnAuthOrganization = () => {
     primaryLocationFormRef,
     isGlobal,
     networkSetupFormRef,
+    branchManagerEmailsFormRef,
     organizationCreatorInformationFormRef,
     isCheckingUsernameExist,
     showFullScreenLoader,
@@ -228,6 +239,7 @@ export const useOnboardingUnAuthOrganization = () => {
     createPasswordFormRef,
     branchesSetupFormRef,
     headquartersSetupFormRef,
+    needsBranchManagerEmails,
     setData,
     onResendOtpCode,
     goToNextStep,

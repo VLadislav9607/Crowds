@@ -1,15 +1,22 @@
 import { StyleSheet } from 'react-native';
-import { AppFlashList, IPopupMenuItem, ScreenWrapper } from '@components';
-import { useGetEventNoShowTalents } from '@actions';
+import {
+  AppFlashList,
+  If,
+  IPopupMenuItem,
+  NoAccess,
+  ScreenWrapper,
+} from '@components';
+import { useGetEventNoShowTalents, useGetMe } from '@actions';
 import { goToScreen, Screens, useScreenNavigation } from '@navigation';
 import { TalentFlag } from '@modules/common';
 
-import {
-  EventParticipantCard,
-  IEventParticipant,
-} from '../../components';
+import { EventParticipantCard, IEventParticipant } from '../../components';
 
 export const NoShowTalentsScreen = () => {
+  const { organizationMember } = useGetMe();
+  const hasAccess =
+    !!organizationMember?.current_context?.capabilitiesAccess.manage_checkins;
+
   const { params } = useScreenNavigation<Screens.NoShowTalents>();
   const eventId = params?.eventId ?? '';
 
@@ -36,7 +43,9 @@ export const NoShowTalentsScreen = () => {
   const renderItem = ({ item }: { item: IEventParticipant }) => (
     <EventParticipantCard
       participant={item}
-      onPress={() => goToScreen(Screens.TalentProfile, { talentId: item.talentId })}
+      onPress={() =>
+        goToScreen(Screens.TalentProfile, { talentId: item.talentId })
+      }
       onMenuSelect={handleMenuSelect(item.talentId)}
     />
   );
@@ -45,17 +54,22 @@ export const NoShowTalentsScreen = () => {
     <ScreenWrapper
       headerVariant="withTitleAndImageBg"
       title="No Show Talents"
-      showLoader={isLoading}
+      showLoader={isLoading && hasAccess}
       contentContainerStyle={styles.contentContainer}
     >
-      <AppFlashList
-        data={participants}
-        keyExtractor={item => item.id}
-        renderItem={renderItem}
-        contentContainerStyle={{ paddingTop: 16 }}
-        gap={0}
-        emptyText="No no-show talents found"
-      />
+      <If condition={hasAccess}>
+        <AppFlashList
+          data={participants}
+          keyExtractor={item => item.id}
+          renderItem={renderItem}
+          contentContainerStyle={{ paddingTop: 16 }}
+          gap={0}
+          emptyText="No no-show talents found"
+        />
+      </If>
+      <If condition={!hasAccess}>
+        <NoAccess />
+      </If>
     </ScreenWrapper>
   );
 };

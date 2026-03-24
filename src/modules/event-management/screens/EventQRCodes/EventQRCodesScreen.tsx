@@ -22,6 +22,7 @@ import {
 } from '@actions';
 import { useBoolean, useRefetchQuery } from '@hooks';
 import { formatInTimeZone } from 'date-fns-tz';
+import { isPast } from 'date-fns';
 import { COLORS } from '@styles';
 import Share from 'react-native-share';
 import RNFS from 'react-native-fs';
@@ -44,6 +45,7 @@ export const EventQRCodesScreen = () => {
   const timezone =
     eventData?.event_location?.timezone || params?.timezone || deviceTimezone;
   const eventStartAt = eventData?.start_at || '';
+  const isEventStarted = eventStartAt ? isPast(new Date(eventStartAt)) : false;
 
   const {
     data: eventQRCodesResponse,
@@ -126,23 +128,25 @@ export const EventQRCodesScreen = () => {
               >
                 {item.name}
               </AppText>
-              <TouchableOpacity
-                hitSlop={{ top: 10, bottom: 10, left: 10, right: 10 }}
-                onPress={() =>
-                  qrCodeActionsModalRef.current?.present({
-                    qrCodeName: item.name,
-                    qrCodeId: item.id,
-                    eventId: params?.eventId!,
-                    eventStartAt,
-                  })
-                }
-              >
-                <SvgXml
-                  width={20}
-                  height={20}
-                  xml={ICONS.dotsVertical('black')}
-                />
-              </TouchableOpacity>
+              <If condition={!isEventStarted}>
+                <TouchableOpacity
+                  hitSlop={{ top: 10, bottom: 10, left: 10, right: 10 }}
+                  onPress={() =>
+                    qrCodeActionsModalRef.current?.present({
+                      qrCodeName: item.name,
+                      qrCodeId: item.id,
+                      eventId: params?.eventId!,
+                      eventStartAt,
+                    })
+                  }
+                >
+                  <SvgXml
+                    width={20}
+                    height={20}
+                    xml={ICONS.dotsVertical('black')}
+                  />
+                </TouchableOpacity>
+              </If>
             </View>
 
             <View style={styles.itemRow}>
@@ -223,30 +227,34 @@ export const EventQRCodesScreen = () => {
         check-ins at your event.
       </AppText>
 
-      <AppButton
-        onPress={onGenerateQRCode}
-        title="Generate QR Code"
-        icon={ICONS.plus()}
-        iconSize={24}
-        size="56"
-        wrapperStyles={styles.emptyButton}
-      />
+      <If condition={!isEventStarted}>
+        <AppButton
+          onPress={onGenerateQRCode}
+          title="Generate QR Code"
+          icon={ICONS.plus()}
+          iconSize={24}
+          size="56"
+          wrapperStyles={styles.emptyButton}
+        />
+      </If>
     </View>
   );
 
   const ListFooterComponent =
     isEmpty || isLoadingEventQRCodes ? null : (
       <>
-        <AppButton
-          onPress={onGenerateQRCode}
-          title="Generate QR Code"
-          variant="withBorder"
-          icon={ICONS.plus('main')}
-          iconSize={24}
-          titleStyles={styles.generateQRCodeButtonTitle}
-          size="56"
-          wrapperStyles={styles.generateQRCodeButton}
-        />
+        <If condition={!isEventStarted}>
+          <AppButton
+            onPress={onGenerateQRCode}
+            title="Generate QR Code"
+            variant="withBorder"
+            icon={ICONS.plus('main')}
+            iconSize={24}
+            titleStyles={styles.generateQRCodeButtonTitle}
+            size="56"
+            wrapperStyles={styles.generateQRCodeButton}
+          />
+        </If>
 
         <If condition={hasNextPage}>
           <ActivityIndicator style={{ marginTop: 16 }} color={COLORS.black} />

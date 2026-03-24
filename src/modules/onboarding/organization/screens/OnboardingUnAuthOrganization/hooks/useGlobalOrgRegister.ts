@@ -1,4 +1,6 @@
 import {
+  BranchManagerEmailsStepData,
+  BranchManagerEmailsStepRef,
   HeadGlobalLocationFormData,
   HeadGlobalLocationFormRef,
   HeadquartersSetupStepData,
@@ -22,6 +24,7 @@ export interface UseGlobalOrgRegisterParams extends CommonOrgRegisterParams {
   organizationCreatorInformationFormRef: RefObject<OrganizationCreatorInformationFormRef | null>;
   headquartersSetupFormRef: RefObject<HeadquartersSetupStepRef | null>;
   networkSetupFormRef: RefObject<NetworkSetupStepRef | null>;
+  branchManagerEmailsFormRef: RefObject<BranchManagerEmailsStepRef | null>;
   createPasswordFormRef: RefObject<CreatePasswordFormRef | null>;
 }
 
@@ -35,6 +38,7 @@ export const useGlobalOrgRegister = ({
   organizationCreatorInformationFormRef,
   headquartersSetupFormRef,
   networkSetupFormRef,
+  branchManagerEmailsFormRef,
   createPasswordFormRef,
   handleOrganizationNameFormSubmit,
   handleOrganizationCreatorInformationFormSubmit,
@@ -47,6 +51,12 @@ export const useGlobalOrgRegister = ({
     },
     onError: showMutationErrorToast,
   });
+
+  const needsBranchManagerEmails =
+    data.networkSetupFormData?.isLocalDecisionMaker === true &&
+    (data.networkSetupFormData?.branches?.length ?? 0) > 0;
+
+  const offset = needsBranchManagerEmails ? 1 : 0;
 
   const handleHeadquartersSetupFormSubmit = async (
     values: HeadquartersSetupStepData,
@@ -78,6 +88,16 @@ export const useGlobalOrgRegister = ({
     setStep(prev => prev + 1);
   };
 
+  const handleBranchManagerEmailsFormSubmit = async (
+    values: BranchManagerEmailsStepData,
+  ) => {
+    setData((prev: OnboardingOrganizationData) => ({
+      ...prev,
+      branchManagerEmailsFormData: values,
+    }));
+    setStep(prev => prev + 1);
+  };
+
   const handleHeadGlobalLocationFormSubmit = async (
     values: HeadGlobalLocationFormData,
   ) => {
@@ -100,34 +120,61 @@ export const useGlobalOrgRegister = ({
       location: data?.headGlobalLocationFormData
         ?.parsed_location! as ParsedLocation,
       creator: data.organizationCreatorInformationFormData!,
+      branchManagerEmails:
+        data.branchManagerEmailsFormData?.branchManagerEmails,
     });
   };
 
   const goToNextStepInGlobal = () => {
+    // Step 0: Organization Name
     !step &&
       organizationNameFormRef.current?.handleSubmit(
         handleOrganizationNameFormSubmit,
       )();
+
+    // Step 1: Headquarters Setup
     step === 1 &&
       headquartersSetupFormRef?.current?.handleSubmit(
         handleHeadquartersSetupFormSubmit,
       );
+
+    // Step 2: Network Setup
     step === 2 &&
       networkSetupFormRef?.current?.handleSubmit(handleNetworkSetupFormSubmit);
-    step === 3 &&
+
+    // Step 3: Branch Manager Emails (only when needsBranchManagerEmails)
+    if (step === 3 && needsBranchManagerEmails) {
+      branchManagerEmailsFormRef?.current?.handleSubmit(
+        handleBranchManagerEmailsFormSubmit,
+      );
+      return;
+    }
+
+    // Step 3 + offset: Head Global Location
+    step === 3 + offset &&
       headGlobalLocationFormRef?.current?.handleSubmit(
         handleHeadGlobalLocationFormSubmit,
       )();
-    step === 4 &&
+
+    // Step 4 + offset: Creator Information
+    step === 4 + offset &&
       organizationCreatorInformationFormRef.current?.handleSubmit(
         handleOrganizationCreatorInformationFormSubmit,
       )();
-    step === 5 && onOtpVerificationFormSubmit();
-    step === 6 &&
+
+    // Step 5 + offset: OTP Verification
+    step === 5 + offset && onOtpVerificationFormSubmit();
+
+    // Step 6 + offset: Create Password
+    step === 6 + offset &&
       createPasswordFormRef.current?.handleSubmit(
         onCreateGlobalCountryOrganization,
       )();
   };
 
-  return { goToNextStepInGlobal, isGlobalOrgCreating };
+  return {
+    goToNextStepInGlobal,
+    isGlobalOrgCreating,
+    needsBranchManagerEmails,
+  };
 };

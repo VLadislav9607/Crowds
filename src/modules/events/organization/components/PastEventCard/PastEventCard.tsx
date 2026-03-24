@@ -3,6 +3,7 @@ import { AppButton, AppText } from '@ui';
 import { OrgBaseEventCard, cardStyles, IOrgBaseEventCardProps } from '../../ui';
 import { ICONS } from '@assets';
 import { COLORS } from '@styles';
+import { goToScreen, Screens } from '@navigation';
 
 interface PastEventCardProps extends IOrgBaseEventCardProps {
   isCancelled?: boolean;
@@ -18,20 +19,29 @@ export const PastEventCard = ({ event, isCancelled }: PastEventCardProps) => {
           </AppText>
         </View>
       )}
+    </View>
+  );
+
+  const footer = (
+    <View style={cardStyles.bottomButtons}>
       <AppButton
-        title="VIEW"
+        title="MANAGE EVENT"
         size="28"
-        width={75}
-        onPress={() => {}}
-        iconPlace="right"
         icon={ICONS.chevronRight('main')}
+        iconPlace="right"
+        width={141}
+        onPress={() =>
+          goToScreen(Screens.ManageEvent, { eventId: event?.id ?? '' })
+        }
         wrapperStyles={cardStyles.primaryButton}
         titleStyles={cardStyles.primaryButtonText}
       />
     </View>
   );
 
-  return <OrgBaseEventCard event={event} headerRight={headerRight} />;
+  return (
+    <OrgBaseEventCard event={event} headerRight={headerRight} footer={footer} />
+  );
 };
 
 const pastStyles = StyleSheet.create({

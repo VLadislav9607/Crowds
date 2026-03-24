@@ -6,7 +6,11 @@ import { TalentFlag } from '@modules/common';
 import { AppCheckbox, AppText, Avatar } from '@ui';
 import { ICONS } from '@assets';
 import { styles } from './styles';
-import { TaskCompletionCardProps, STATUS_CONFIG } from './types';
+import {
+  TaskCompletionCardProps,
+  STATUS_CONFIG,
+  PAYOUT_STATUS_CONFIG,
+} from './types';
 
 const formatDuration = (
   checkinAt: string | null,
@@ -25,6 +29,7 @@ export const TaskCompletionCard = memo(
   ({
     item,
     isSelected,
+    isSettled,
     onToggleSelect,
     onViewPhoto,
     onReject,
@@ -34,18 +39,25 @@ export const TaskCompletionCard = memo(
     const statusConfig =
       STATUS_CONFIG[item.task_status] ?? STATUS_CONFIG.submitted;
 
+    const payoutConfig = item.payout_status
+      ? PAYOUT_STATUS_CONFIG[item.payout_status]
+      : null;
+
     return (
       <Pressable
         style={[styles.card, isRejected && styles.cardRejected]}
-        onPress={onToggleSelect}
+        onPress={isSettled ? undefined : onToggleSelect}
+        disabled={isSettled}
       >
-        <AppCheckbox
-          checked={isSelected}
-          type="circle"
-          color="main"
-          disabled={isRejected}
-          style={isRejected ? styles.disabledCheckbox : undefined}
-        />
+        {!isSettled && (
+          <AppCheckbox
+            checked={isSelected}
+            type="circle"
+            color="main"
+            disabled={isRejected}
+            style={isRejected ? styles.disabledCheckbox : undefined}
+          />
+        )}
 
         <Avatar
           size={40}
@@ -60,16 +72,35 @@ export const TaskCompletionCard = memo(
             {item.name}
           </AppText>
           <View style={styles.metaRow}>
-            <View
-              style={[styles.statusPill, { backgroundColor: statusConfig.bg }]}
-            >
-              <AppText
-                typography="medium_9"
-                style={{ color: statusConfig.color }}
+            {isSettled && payoutConfig ? (
+              <View
+                style={[
+                  styles.statusPill,
+                  { backgroundColor: payoutConfig.bg },
+                ]}
               >
-                {statusConfig.label}
-              </AppText>
-            </View>
+                <AppText
+                  typography="medium_9"
+                  style={{ color: payoutConfig.color }}
+                >
+                  {payoutConfig.label}
+                </AppText>
+              </View>
+            ) : (
+              <View
+                style={[
+                  styles.statusPill,
+                  { backgroundColor: statusConfig.bg },
+                ]}
+              >
+                <AppText
+                  typography="medium_9"
+                  style={{ color: statusConfig.color }}
+                >
+                  {statusConfig.label}
+                </AppText>
+              </View>
+            )}
             {!!duration && (
               <>
                 <AppText typography="regular_10" color="gray_primary">
@@ -97,7 +128,7 @@ export const TaskCompletionCard = memo(
           </Pressable>
         )}
 
-        {!isRejected && (
+        {!isSettled && !isRejected && (
           <Pressable
             style={styles.rejectBtn}
             hitSlop={8}

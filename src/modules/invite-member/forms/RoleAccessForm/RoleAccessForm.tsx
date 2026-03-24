@@ -1,4 +1,4 @@
-import { useState, useMemo } from 'react';
+import { useState, useMemo, useCallback } from 'react';
 import { StyleSheet, View } from 'react-native';
 import { Controller, Control, FieldErrors, useWatch } from 'react-hook-form';
 
@@ -7,6 +7,7 @@ import { COLORS, TYPOGRAPHY } from '@styles';
 
 import { InviteMemberFormData } from '../../hooks';
 import { CheckboxRowList } from '../../ui';
+import { applyPermissionCascade } from '../../helpers/permissionDependencies';
 import { useGetMe, useGetBrandCapabilities } from '@actions';
 import { If, AppTabSelector, ITabOption, Skeleton } from '@components';
 import { countriesWithFlag } from '@constants';
@@ -62,6 +63,19 @@ export const RoleAccessForm = ({ control, isLoading }: RoleAccessFormProps) => {
   )
     ? selectedOfficeId
     : invitableOffices[0]?.office_id ?? '';
+
+  const handleCascadeChange = useCallback(
+    (
+      onChange: (val: Record<string, string[]>) => void,
+      currentValue: Record<string, string[]>,
+      newValues: string[],
+    ) => {
+      const oldValues = currentValue?.[activeOfficeId] || [];
+      const cascaded = applyPermissionCascade(oldValues, newValues);
+      onChange({ ...currentValue, [activeOfficeId]: cascaded });
+    },
+    [activeOfficeId],
+  );
 
   const showLoader = isCapabilitiesLoading || isLoading;
 
@@ -167,7 +181,7 @@ export const RoleAccessForm = ({ control, isLoading }: RoleAccessFormProps) => {
                 }
                 checkedValues={value?.[activeOfficeId] || []}
                 onCheckedValuesChange={values =>
-                  onChange({ ...value, [activeOfficeId]: values })
+                  handleCascadeChange(onChange, value, values)
                 }
               />
             )}
@@ -189,7 +203,7 @@ export const RoleAccessForm = ({ control, isLoading }: RoleAccessFormProps) => {
                 }
                 checkedValues={value?.[activeOfficeId] || []}
                 onCheckedValuesChange={values =>
-                  onChange({ ...value, [activeOfficeId]: values })
+                  handleCascadeChange(onChange, value, values)
                 }
               />
             )}
@@ -211,7 +225,7 @@ export const RoleAccessForm = ({ control, isLoading }: RoleAccessFormProps) => {
                 }
                 checkedValues={value?.[activeOfficeId] || []}
                 onCheckedValuesChange={values =>
-                  onChange({ ...value, [activeOfficeId]: values })
+                  handleCascadeChange(onChange, value, values)
                 }
               />
             )}
@@ -233,7 +247,7 @@ export const RoleAccessForm = ({ control, isLoading }: RoleAccessFormProps) => {
                 }
                 checkedValues={value?.[activeOfficeId] || []}
                 onCheckedValuesChange={values =>
-                  onChange({ ...value, [activeOfficeId]: values })
+                  handleCascadeChange(onChange, value, values)
                 }
               />
             )}

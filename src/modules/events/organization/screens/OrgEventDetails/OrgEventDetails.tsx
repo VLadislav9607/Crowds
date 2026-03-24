@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { TouchableOpacity, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
+import { isPast } from 'date-fns';
 import { If, ScreenWithScrollWrapper, Skeleton } from '@components';
 import {
   ActionPurpleButton,
@@ -29,7 +30,6 @@ import {
 import { CancelEventModal } from '../../modals';
 import { styles } from './styles';
 import { formatInTimeZone } from 'date-fns-tz';
-import { calculateEventDuration } from '../../../helpers';
 import { COLORS } from '@styles';
 import { SvgXml } from 'react-native-svg';
 import {
@@ -42,6 +42,9 @@ export const OrgEventDetails = () => {
   const insets = useSafeAreaInsets();
   const { params } = useScreenNavigation<Screens.TalentEventDetails>();
   const { organizationMember } = useGetMe();
+  const capabilitiesAccess =
+    organizationMember?.current_context?.capabilitiesAccess;
+
   const { data: event, isLoading } = useGetEventForOrgMember({
     event_id: params?.eventId!,
   });
@@ -130,7 +133,11 @@ export const OrgEventDetails = () => {
     : '';
 
   const registrationClosesFormatted = event?.registration_closes_at
-    ? formatInTimeZone(event.registration_closes_at, timezone, 'd MMM yyyy, h:mm a')
+    ? formatInTimeZone(
+        event.registration_closes_at,
+        timezone,
+        'd MMM yyyy, h:mm a',
+      )
     : '';
 
   const officeCountryName = event?.office_country_code
@@ -205,71 +212,83 @@ export const OrgEventDetails = () => {
       ]}
     >
       <View style={styles.container}>
-        <GridBoard
-          containerStyle={styles.gridBoardContainer}
-          items={participationBoard}
-          counterProps={{ typography: 'bold_24', color: 'main' }}
-        />
-
-        <View style={styles.chatButtonsContainer}>
-          <ChatButton
-            style={styles.chatButton}
-            topText="CHAT WITH"
-            bottomText="INDIVIDUALS"
-            onPress={() => {
-              const capacity =
-                event?.event_age_groups?.reduce(
-                  (sum, g) =>
-                    sum +
-                    (g.male_count || 0) +
-                    (g.female_count || 0) +
-                    (g.other_count || 0),
-                  0,
-                ) ?? 0;
-              goToScreen(Screens.EventApplicants, {
-                eventId: params?.eventId!,
-                capacity,
-                initialTab: 'approved',
-              });
-            }}
-            showSkeleton={isLoading}
+        <If condition={!!capabilitiesAccess?.approve_applicants}>
+          <GridBoard
+            containerStyle={styles.gridBoardContainer}
+            items={participationBoard}
+            counterProps={{ typography: 'bold_24', color: 'main' }}
           />
-          <ChatButton
-            style={styles.chatButton}
-            topText="CHAT IN"
-            bottomText="GROUP"
-            onPress={handleChatWithGroup}
-            showSkeleton={isLoading}
-          />
-        </View>
-
-        <If condition={isLoading}>
-          <Skeleton>
-            <Skeleton.Item width={'100%'} height={60} borderRadius={20} />
-          </Skeleton>
         </If>
 
-        <If condition={!isLoading}>
-          <TouchableOpacity
-            activeOpacity={0.5}
-            onPress={() => {
-              goToScreen(Screens.EventQRCodes, {
-                eventId: params?.eventId!,
-                timezone: event?.event_location?.timezone,
-              });
-            }}
-            style={styles.qrCodeButton}
-          >
-            <AppText typography="bold_16" color="black">
-              QR CODES
-            </AppText>
-            <View style={styles.qrCodeButtonRight}>
-              <AppText typography="bold_16" color="main">
-                {event?.qr_codes_count || 0}
+        <View style={styles.chatButtonsContainer}>
+          <If condition={!!capabilitiesAccess?.one_on_one_message}>
+            <ChatButton
+              style={styles.chatButton}
+              topText="CHAT WITH"
+              bottomText="INDIVIDUALS"
+              onPress={() => {
+                const capacity =
+                  event?.event_age_groups?.reduce(
+                    (sum, g) =>
+                      sum +
+                      (g.male_count || 0) +
+                      (g.female_count || 0) +
+                      (g.other_count || 0),
+                    0,
+                  ) ?? 0;
+                goToScreen(Screens.EventApplicants, {
+                  eventId: params?.eventId!,
+                  capacity,
+                  initialTab: 'approved',
+                });
+              }}
+              showSkeleton={isLoading}
+            />
+          </If>
+          <If condition={!!capabilitiesAccess?.group_message}>
+            <ChatButton
+              style={styles.chatButton}
+              topText="CHAT IN"
+              bottomText="GROUP"
+              onPress={handleChatWithGroup}
+              showSkeleton={isLoading}
+            />
+          </If>
+        </View>
+
+        <If condition={!!capabilitiesAccess?.manage_checkins}>
+          <If condition={isLoading}>
+            <Skeleton>
+              <Skeleton.Item width={'100%'} height={60} borderRadius={20} />
+            </Skeleton>
+          </If>
+
+          <If condition={!isLoading}>
+            <TouchableOpacity
+              activeOpacity={0.5}
+              onPress={() => {
+                goToScreen(Screens.EventQRCodes, {
+                  eventId: params?.eventId!,
+                  timezone: event?.event_location?.timezone,
+                });
+              }}
+              style={styles.qrCodeButton}
+            >
+              <AppText typography="bold_16" color="black">
+                QR CODES
               </AppText>
-              <SvgXml width={22} height={22} xml={ICONS.chevronRight('main')} />
-            </View>
-          </TouchableOpacity>
+              <View style={styles.qrCodeButtonRight}>
+                <AppText typography="bold_16" color="main">
+                  {event?.qr_codes_count || 0}
+                </AppText>
+                <SvgXml
+                  width={22}
+                  height={22}
+                  xml={ICONS.chevronRight('main')}
+                />
+              </View>
+            </TouchableOpacity>
+          </If>
         </If>
 
         <EventDetailsCardWithMap
@@ -354,7 +373,7 @@ export const OrgEventDetails = () => {
           )}
         </If>
 
-        <If condition={!isLoading}>
+        <If condition={!isLoading && !!capabilitiesAccess?.create_event_draft}>
           <AppButton
             icon={ICONS.copyIcon('black')}
             title="Copy to draft"
@@ -366,7 +385,14 @@ export const OrgEventDetails = () => {
           />
         </If>
 
-        <If condition={!isLoading && event?.status === 'published'}>
+        <If
+          condition={
+            !isLoading &&
+            !!capabilitiesAccess?.create_events &&
+            event?.status === 'published' &&
+            !(event?.end_at && isPast(new Date(event.end_at)))
+          }
+        >
           <AppButton
             onPress={() => setIsCancelModalVisible(true)}
             title="Cancel event"

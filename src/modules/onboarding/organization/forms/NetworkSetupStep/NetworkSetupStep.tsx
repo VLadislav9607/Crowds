@@ -13,6 +13,7 @@ import {
 import { BottomSheetModal } from '@gorhom/bottom-sheet';
 import { CountryPickerModal, CountryPickerModalData } from '@modules/common';
 import { If, SelectButton } from '@components';
+import CountryFlag from 'react-native-country-flag';
 import {
   NetworkSetupStepData,
   NetworkSetupStepRef,
@@ -109,9 +110,12 @@ export const NetworkSetupStep = forwardRef<
       <View style={styles.networkSetupContainer}>
         <View style={styles.networkItem}>
           <View style={styles.flagContainer}>
-            <AppText style={styles.flag}>
-              {headquartersData?.hqCountry?.flag}
-            </AppText>
+            {headquartersData?.hqCountry && (
+              <CountryFlag
+                isoCode={headquartersData.hqCountry.code}
+                size={20}
+              />
+            )}
             <AppText typography="regular_14">
               {headquartersData?.hqCountry?.name}
             </AppText>
@@ -123,9 +127,12 @@ export const NetworkSetupStep = forwardRef<
           <View style={styles.networkItemSeparator} />
           <View style={styles.networkItem}>
             <View style={styles.flagContainer}>
-              <AppText style={styles.flag}>
-                {headquartersData?.opsCountry?.flag}
-              </AppText>
+              {headquartersData?.opsCountry && (
+                <CountryFlag
+                  isoCode={headquartersData.opsCountry.code}
+                  size={20}
+                />
+              )}
               <AppText typography="regular_14">
                 {headquartersData?.opsCountry?.name}
               </AppText>
@@ -143,7 +150,7 @@ export const NetworkSetupStep = forwardRef<
         <View style={styles.branchesList}>
           {data.branches.map((branch, index) => (
             <View style={styles.branchItem}>
-              <AppText style={styles.flag}>{branch.flag}</AppText>
+              <CountryFlag isoCode={branch.code} size={20} />
               <View style={styles.branchInfo}>
                 <AppText typography="semibold_16" margin={{ bottom: 2 }}>
                   {branch.name}

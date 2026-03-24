@@ -23,9 +23,24 @@ export const showErrorToast = (
   });
 };
 
-export const showMutationErrorToast = (error: Error) => {
+export const showMutationErrorToast = (error: unknown) => {
+  let message = 'Something went wrong';
+
+  if (error instanceof Error) {
+    message = error.message || message;
+  } else if (typeof error === 'object' && error !== null) {
+    const err = error as Record<string, unknown>;
+    if (typeof err.message === 'string' && err.message) {
+      message = err.message;
+    } else if (typeof err.error === 'string' && err.error) {
+      message = err.error;
+    }
+  } else if (typeof error === 'string' && error) {
+    message = error;
+  }
+
   Toast.show({
-    text1: error.message || 'Something went wrong',
+    text1: message,
     type: 'error',
   });
 };

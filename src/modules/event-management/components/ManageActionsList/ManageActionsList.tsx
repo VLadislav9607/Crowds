@@ -4,6 +4,7 @@ import { ICONS } from '@assets';
 import { IconText } from '@ui';
 import { COLORS } from '@styles';
 import { goToScreen, Screens } from '@navigation';
+import { useGetMe } from '@actions';
 
 interface ManageActionsListProps {
   eventId: string;
@@ -14,17 +15,25 @@ export const ManageActionsList = ({
   eventId,
   eventStartAt,
 }: ManageActionsListProps) => {
+  const { organizationMember } = useGetMe();
+  const capabilitiesAccess =
+    organizationMember?.current_context?.capabilitiesAccess;
+
   const isEventStarted = useMemo(() => {
     if (!eventStartAt) return false;
     return new Date() >= new Date(eventStartAt);
   }, [eventStartAt]);
 
   const manageActions = [
-    {
-      label: 'Generate QR Code',
-      onPress: () => goToScreen(Screens.EventQRCodes, { eventId }),
-    },
-    ...(!isEventStarted
+    ...(!isEventStarted && capabilitiesAccess?.manage_checkins
+      ? [
+          {
+            label: 'Generate QR Code',
+            onPress: () => goToScreen(Screens.EventQRCodes, { eventId }),
+          },
+        ]
+      : []),
+    ...(!isEventStarted && capabilitiesAccess?.recruit_applicants
       ? [
           {
             label: 'Invite Talents',
@@ -32,30 +41,43 @@ export const ManageActionsList = ({
           },
         ]
       : []),
-    {
-      label: 'Message Talents',
-      onPress: () => goToScreen(Screens.MessageTalents, { eventId }),
-    },
-    {
-      label: 'Event Reports',
-      onPress: () => goToScreen(Screens.EventReport, { eventId }),
-    },
-    {
-      label: 'Checked-In Talents',
-      onPress: () => goToScreen(Screens.CheckedInTalents, { eventId }),
-    },
-    {
-      label: 'Checked-Out Talents',
-      onPress: () => goToScreen(Screens.CheckedOutTalents, { eventId }),
-    },
-    {
-      label: 'No Show Talents',
-      onPress: () => goToScreen(Screens.NoShowTalents, { eventId }),
-    },
-    {
-      label: 'Task Completions',
-      onPress: () => goToScreen(Screens.TaskCompletionTalents, { eventId }),
-    },
+    ...(capabilitiesAccess?.message_applicants
+      ? [
+          {
+            label: 'Message Talents',
+            onPress: () => goToScreen(Screens.MessageTalents, { eventId }),
+          },
+        ]
+      : []),
+    ...(capabilitiesAccess?.view_events
+      ? [
+          {
+            label: 'Event Reports',
+            onPress: () => goToScreen(Screens.EventReport, { eventId }),
+          },
+        ]
+      : []),
+    ...(capabilitiesAccess?.manage_checkins
+      ? [
+          {
+            label: 'Checked-In Talents',
+            onPress: () => goToScreen(Screens.CheckedInTalents, { eventId }),
+          },
+          {
+            label: 'Checked-Out Talents',
+            onPress: () => goToScreen(Screens.CheckedOutTalents, { eventId }),
+          },
+          {
+            label: 'No Show Talents',
+            onPress: () => goToScreen(Screens.NoShowTalents, { eventId }),
+          },
+          {
+            label: 'Task Completions',
+            onPress: () =>
+              goToScreen(Screens.TaskCompletionTalents, { eventId }),
+          },
+        ]
+      : []),
   ];
 
   return (

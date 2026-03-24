@@ -1,2 +1,5 @@
 export * from './useGetEventTaskCompletions';
-export type { TaskCompletionTalentDto } from './types';
+export type {
+  TaskCompletionTalentDto,
+  GetEventTaskCompletionsRespDto,
+} from './types';

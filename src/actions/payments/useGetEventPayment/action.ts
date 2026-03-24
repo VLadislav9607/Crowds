@@ -5,14 +5,12 @@ export const getEventPaymentAction = async (
   eventId: string,
 ): Promise<EventPaymentDto | null> => {
   const { data, error } = await supabase
-    .from('event_payments')
-    .select('*')
-    .eq('event_id', eventId)
-    .maybeSingle();
+    .rpc('get_event_payment', { p_event_id: eventId })
+    .single();
 
   if (error) {
     throw error;
   }
 
-  return data;
+  return data as unknown as EventPaymentDto | null;
 };
