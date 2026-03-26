@@ -4,8 +4,8 @@ import { MyChatItem } from '@actions';
 
 interface UpdateChatParams {
   chatId: string;
-  lastMessage?: string;
-  lastMessageAt?: string;
+  lastMessage?: string | null;
+  lastMessageAt?: string | null;
   hasUnread?: boolean;
 }
 
@@ -13,7 +13,7 @@ export const updateChat = ({
   chatId,
   lastMessage,
   lastMessageAt,
-  hasUnread = false,
+  hasUnread,
 }: UpdateChatParams) => {
   const queryKey = [TANSTACK_QUERY_KEYS.MY_CHATS];
 
@@ -33,8 +33,8 @@ export const updateChat = ({
       chat.chatId === chatId
         ? {
             ...chat,
-            lastMessage: lastMessage || chat.lastMessage,
-            lastMessageAt: lastMessageAt || chat.lastMessageAt,
+            lastMessage: lastMessage !== undefined ? lastMessage : chat.lastMessage,
+            lastMessageAt: lastMessageAt !== undefined ? lastMessageAt : chat.lastMessageAt,
             hasUnread: hasUnread === undefined ? chat.hasUnread : hasUnread,
           }
         : chat,

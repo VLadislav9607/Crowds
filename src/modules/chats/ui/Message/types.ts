@@ -9,6 +9,7 @@ export interface IMessageData {
   senderName: string;
   senderAvatar: string;
   senderRole: 'organization' | 'talent';
+  isEdited?: boolean;
 }
 
 export interface IMessageProps {
@@ -16,4 +17,5 @@ export interface IMessageProps {
   chatType: ChatType;
   isFirst?: boolean;
   isLast?: boolean;
+  onLongPress?: (message: IMessageData) => void;
 }

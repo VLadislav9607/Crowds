@@ -199,6 +199,7 @@ export const useTalentEventsViewList = ({
         : '',
       startAt: event.start_at || '',
       endAt: event.end_at || '',
+      isAvailable: event.is_available,
       onConfirm: () => applyEvent.mutate({ eventId: event.event_id }),
     });
   };

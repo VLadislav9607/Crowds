@@ -26,7 +26,7 @@ import {
 } from '@modules/common';
 import { supabase } from '@services';
 import { showErrorToast, showMutationErrorToast } from '@helpers';
-import { goBack, goToScreen, Screens, RootStackParamList } from '@navigation';
+import { goBack, goToScreen, resetToScreen, Screens, RootStackParamList } from '@navigation';
 
 type OnboardingUnAuthTeamMemberRouteProp = RouteProp<
   RootStackParamList,
@@ -236,7 +236,7 @@ export const useOnboardingUnAuthTeamMember = () => {
         title: 'Stop Onboarding',
         subtitle: 'Are you sure you want to stop the onboarding process?',
         confirmButtonText: 'Yes, stop',
-        onConfirm: () => goToScreen(Screens.First),
+        onConfirm: () => resetToScreen(Screens.First),
       });
     } else {
       setStep(step - 1);

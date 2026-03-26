@@ -2,8 +2,8 @@ import { forwardRef, useState } from 'react';
 import { AppModal } from '@components';
 import { useImperativeModal } from '@hooks';
 import { AppButton } from '@ui';
-import { queryClient, supabase } from '@services';
-import { goToScreen, Screens } from '@navigation';
+import { queryClient, supabase, realtimeService } from '@services';
+import { resetToScreen, Screens } from '@navigation';
 import { showErrorToast } from '@helpers';
 import { removePushDevice } from '@actions';
 
@@ -18,9 +18,10 @@ export const LogoutModal = forwardRef<LogoutModalRef>((_, ref) => {
     try {
       setIsLoading(true);
       await removePushDevice();
+      realtimeService.unsubscribeAll();
       await supabase.auth.signOut();
       queryClient.clear();
-      goToScreen(Screens.First);
+      resetToScreen(Screens.First);
       close();
     } catch (error) {
       const errorMessage =

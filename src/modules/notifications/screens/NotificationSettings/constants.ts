@@ -1,18 +1,15 @@
-import { NotificationOption } from './types';
-
-export const TALENT_NOTIFICATION_OPTIONS: NotificationOption[] = [
-  { key: 'oneToOneChats', title: '1 on 1 chats', enabled: true },
-  { key: 'groupMessages', title: 'Group messages', enabled: true },
-  { key: 'events', title: 'Events', enabled: true },
-  { key: 'checkInCheckOut', title: 'Check in / Check out', enabled: true },
-  { key: 'receivedPayment', title: 'Received payment', enabled: false },
+export const TALENT_NOTIFICATION_OPTIONS = [
+  { key: 'oneToOneChats', title: '1 on 1 chats' },
+  { key: 'groupMessages', title: 'Group messages' },
+  { key: 'events', title: 'Events' },
+  { key: 'checkInCheckOut', title: 'Check in / Check out' },
 ];
 
-export const ORG_NOTIFICATION_OPTIONS: NotificationOption[] = [
-  { key: 'oneToOneChats', title: '1 on 1 chats', enabled: true },
-  { key: 'groupMessages', title: 'Group messages', enabled: true },
-  { key: 'events', title: 'Events', enabled: true },
-  { key: 'checkInCheckOut', title: 'Check in / Check out', enabled: true },
+export const ORG_NOTIFICATION_OPTIONS = [
+  { key: 'oneToOneChats', title: '1 on 1 chats' },
+  { key: 'groupMessages', title: 'Group messages' },
+  { key: 'events', title: 'Events' },
+  { key: 'checkInCheckOut', title: 'Check in / Check out' },
 ];
 
 export const TALENT_DEFAULT_SETTINGS: Record<string, boolean> = {

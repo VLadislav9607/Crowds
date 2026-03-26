@@ -52,7 +52,7 @@ export const TalentProfileRow = ({
 
       {renderRightAction?.()}
 
-      {showMenu && (
+      {showMenu && popUpItems && popUpItems.length > 0 && (
         <IconButton
           icon={ICONS.dotsVertical()}
           iconSize={24}

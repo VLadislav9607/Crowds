@@ -82,5 +82,9 @@ export const styles = StyleSheet.create({
     borderTopRightRadius: BORDER_RADIUS_SMALL,
     borderBottomRightRadius: BORDER_RADIUS_LARGE,
   },
+  editedLabel: {
+    marginTop: 2,
+    opacity: 0.6,
+  },
 });
 

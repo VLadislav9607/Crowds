@@ -28,6 +28,9 @@ export const ChatItem = ({
   } = chat;
   const hideBottomBorder = isNextUnread && !hasUnread;
   const isConsecutiveUnread = hasUnread && isPrevUnread;
+  const hideEventLabel = type === ChatType.Group && variant === 'organization';
+
+  const timeText = lastMessageAt ? formatDistanceToNow(lastMessageAt) : '';
 
   return (
     <TouchableOpacity
@@ -41,26 +44,28 @@ export const ChatItem = ({
       onPress={onPress}
       activeOpacity={0.7}
     >
-      <View style={styles.eventRow}>
-        <View style={styles.eventLabel}>
-          <AppText typography="bold_10" color="main" numberOfLines={1}>
-            Event:{' '}
-            <AppText typography="medium_10" color="main">
-              {eventName}
+      <If condition={!hideEventLabel}>
+        <View style={styles.eventRow}>
+          <View style={styles.eventLabel}>
+            <AppText typography="bold_10" color="main" numberOfLines={1}>
+              Event:{' '}
+              <AppText typography="medium_10" color="main">
+                {eventName}
+              </AppText>
+              <AppText
+                renderIf={type === ChatType.Group}
+                typography="medium_10"
+                color="main"
+              >
+                {' - Group chat'}
+              </AppText>
             </AppText>
-            <AppText
-              renderIf={type === ChatType.Group}
-              typography="medium_10"
-              color="main"
-            >
-              {' - Group chat'}
-            </AppText>
+          </View>
+          <AppText style={styles.timeText} typography="regular_10" color="gray_primary">
+            {timeText}
           </AppText>
         </View>
-        <AppText style={styles.timeText} typography="regular_10" color="gray_primary">
-          {lastMessageAt ? formatDistanceToNow(lastMessageAt) : ''}
-        </AppText>
-      </View>
+      </If>
 
       <View style={styles.mainRow}>
         <Avatar
@@ -75,7 +80,14 @@ export const ChatItem = ({
 
         <View style={styles.content}>
           <View style={styles.topRow}>
-            <AppText typography="bold_14">{title}</AppText>
+            <AppText typography="bold_14" numberOfLines={1} style={styles.titleText}>
+              {title}
+            </AppText>
+            <If condition={hideEventLabel}>
+              <AppText typography="regular_10" color="gray_primary">
+                {timeText}
+              </AppText>
+            </If>
           </View>
 
           <View style={styles.topRow}>

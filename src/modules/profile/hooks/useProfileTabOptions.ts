@@ -14,10 +14,12 @@ interface ProfileOption {
 
 interface UseProfileTabOptionsProps {
   onLogout: () => void;
+  onDeleteAccount: () => void;
 }
 
 export const useProfileTabOptions = ({
   onLogout,
+  onDeleteAccount,
 }: UseProfileTabOptionsProps) => {
   const { isTalent, organizationMember } = useGetMe();
 
@@ -68,14 +70,15 @@ export const useProfileTabOptions = ({
       onPress: () => goToScreen(Screens.TermsAndConditions),
     },
     {
-      title: 'Delete account information',
-      icon: ICONS.circleInfo(),
-      onPress: () => {},
-    },
-    {
       title: 'Privacy policy',
       icon: ICONS.userShield(),
       onPress: () => goToScreen(Screens.PrivacyPolicy),
+    },
+    {
+      title: 'Delete account',
+      icon: ICONS.trash('red'),
+      textColor: 'red',
+      onPress: onDeleteAccount,
     },
     {
       title: 'Logout',

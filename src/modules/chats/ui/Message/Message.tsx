@@ -1,4 +1,4 @@
-import { ActivityIndicator, View } from 'react-native';
+import { ActivityIndicator, TouchableOpacity, View } from 'react-native';
 import { AppText, Avatar } from '@ui';
 import { If } from '@components';
 import { COLORS } from '@styles';
@@ -12,8 +12,9 @@ export const Message = ({
   chatType,
   isFirst,
   isLast,
+  onLongPress,
 }: IMessageProps) => {
-  const { text, time, isMe, showTime, senderName, senderAvatar, senderRole, id } =
+  const { text, time, isMe, showTime, senderName, senderAvatar, senderRole, id, isEdited } =
     message;
   const showAvatar = !isMe && chatType === ChatType.Group;
 
@@ -28,6 +29,12 @@ export const Message = ({
       if (isFirst) return [...baseStyles, styles.bubbleFirstOther];
       if (isLast) return [...baseStyles, styles.bubbleLastOther];
       return [...baseStyles, styles.bubbleMiddleOther];
+    }
+  };
+
+  const handleLongPress = () => {
+    if (isMe && onLongPress) {
+      onLongPress(message);
     }
   };
 
@@ -55,7 +62,13 @@ export const Message = ({
           </View>
         </If>
 
-        <View style={getBubbleStyle()}>
+        <TouchableOpacity
+          activeOpacity={0.7}
+          onLongPress={handleLongPress}
+          delayLongPress={300}
+          disabled={!isMe || !onLongPress}
+          style={getBubbleStyle()}
+        >
           <If condition={id.startsWith('temp-')}>
             <ActivityIndicator
               size={16}
@@ -63,10 +76,21 @@ export const Message = ({
             />
           </If>
 
-          <AppText typography="regular_12" color={isMe ? 'white' : 'black'}>
-            {text}
-          </AppText>
-        </View>
+          <View>
+            <AppText typography="regular_12" color={isMe ? 'white' : 'black'}>
+              {text}
+            </AppText>
+            <If condition={!!isEdited}>
+              <AppText
+                typography="regular_10"
+                color={isMe ? 'white' : 'black_50'}
+                style={styles.editedLabel}
+              >
+                edited
+              </AppText>
+            </If>
+          </View>
+        </TouchableOpacity>
       </View>
     </View>
   );

@@ -57,11 +57,19 @@ export const mapFormDataToApi = (
     selectedDays: isAlwaysAvailable ? [] : data.selectedDays,
     daySchedules: isAlwaysAvailable
       ? []
-      : data.daySchedules.map(s => ({
-          day: s.day,
-          timeSlot: s.timeSlot,
-          customFrom: toTimeString(s.customFrom),
-          customTo: toTimeString(s.customTo),
-        })),
+      : data.daySchedules.map(s => {
+          // If custom time slot but no from/to set, fallback to all_day
+          const timeSlot =
+            s.timeSlot === 'custom' && (!s.customFrom || !s.customTo)
+              ? 'all_day'
+              : s.timeSlot;
+
+          return {
+            day: s.day,
+            timeSlot,
+            customFrom: timeSlot === 'custom' ? toTimeString(s.customFrom) : undefined,
+            customTo: timeSlot === 'custom' ? toTimeString(s.customTo) : undefined,
+          };
+        }),
   };
 };

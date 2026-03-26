@@ -1,4 +1,4 @@
-import { goToScreen, Screens, useScreenNavigation } from '@navigation';
+import { goToScreen, resetToScreen, Screens, useScreenNavigation } from '@navigation';
 import { COLORS } from '@styles';
 import { Role } from '@modules/common';
 
@@ -12,7 +12,7 @@ export const useCongratulationsScreen = () => {
     },
     {
       title: 'No thanks, skip',
-      onPress: () => goToScreen(Screens.BottomTabs),
+      onPress: () => resetToScreen(Screens.BottomTabs),
       variant: 'withBorder',
       titleStyles: {
         color: COLORS.black,
@@ -23,7 +23,7 @@ export const useCongratulationsScreen = () => {
   const talentButtons = [
     {
       title: 'Okay, let’s begin',
-      onPress: () => goToScreen(Screens.BottomTabs),
+      onPress: () => resetToScreen(Screens.BottomTabs),
     },
   ];
 

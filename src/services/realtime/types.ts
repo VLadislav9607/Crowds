@@ -10,4 +10,3 @@ export interface SubscriptionConfig<T extends Record<string, unknown>> {
   filter?: string;
   onPayload: (payload: RealtimePostgresChangesPayload<T>) => void;
 }
-

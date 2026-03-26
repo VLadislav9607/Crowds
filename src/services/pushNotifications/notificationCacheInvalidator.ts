@@ -117,5 +117,12 @@ export function invalidateCacheForNotificationType(
         queryKey: [TANSTACK_QUERY_KEYS.GET_EVENT_TASK_COMPLETIONS],
       });
       break;
+
+    // Payout received → refresh payment history
+    case 'payout_received':
+      queryClient.refetchQueries({
+        queryKey: [TANSTACK_QUERY_KEYS.GET_TALENT_PAYMENT_HISTORY],
+      });
+      break;
   }
 }

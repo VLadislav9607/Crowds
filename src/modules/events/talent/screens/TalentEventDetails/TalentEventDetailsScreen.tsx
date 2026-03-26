@@ -196,6 +196,8 @@ export const TalentEventDetailsScreen = () => {
   const hasRejectedTask = event?.task_status === 'rejected';
   const isTaskProcessing = isUploading || isSubmitting;
 
+  console.log('event', event);
+
   return (
     <ScreenWithScrollWrapper
       headerVariant="withTitleAndImageBg"

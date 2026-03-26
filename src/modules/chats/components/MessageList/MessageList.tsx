@@ -19,6 +19,7 @@ export const MessageList = ({
   chatType,
   onEndReached,
   onEndReachedThreshold = 0.2,
+  onMessageLongPress,
 }: IMessageListProps) => {
   const sectionListRef = useRef<SectionList<
     IMessageData,
@@ -35,6 +36,7 @@ export const MessageList = ({
         chatType={chatType}
         isFirst={isFirst}
         isLast={isLast}
+        onLongPress={onMessageLongPress}
       />
     );
   };

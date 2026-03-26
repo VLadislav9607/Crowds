@@ -99,6 +99,7 @@ export type Database = {
           chat_id: string
           created_at: string | null
           id: string
+          is_edited: boolean
           sender_id: string
           text: string
         }
@@ -106,6 +107,7 @@ export type Database = {
           chat_id: string
           created_at?: string | null
           id?: string
+          is_edited?: boolean
           sender_id?: string
           text: string
         }
@@ -113,6 +115,7 @@ export type Database = {
           chat_id?: string
           created_at?: string | null
           id?: string
+          is_edited?: boolean
           sender_id?: string
           text?: string
         }
@@ -2557,6 +2560,10 @@ export type Database = {
       }
       create_new_draft_or_event: { Args: { payload: Json }; Returns: string }
       create_talent_events_folder: { Args: { p_name: string }; Returns: string }
+      delete_chat_message: {
+        Args: { p_message_id: string }
+        Returns: undefined
+      }
       delete_custom_list: {
         Args: { p_event_id: string; p_list_id: string }
         Returns: undefined
@@ -2588,6 +2595,10 @@ export type Database = {
         Returns: Json
       }
       earth: { Args: never; Returns: number }
+      edit_chat_message: {
+        Args: { p_message_id: string; p_text: string }
+        Returns: undefined
+      }
       get_active_flag_for_target: {
         Args: { target_id_input: string; target_type_input: string }
         Returns: {
@@ -2797,6 +2808,7 @@ export type Database = {
         Returns: {
           created_at: string
           id: string
+          is_edited: boolean
           sender_id: string
           text: string
         }[]

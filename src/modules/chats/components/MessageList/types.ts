@@ -12,6 +12,7 @@ export interface IMessageListProps {
   chatType: ChatType;
   onEndReached?: () => void;
   onEndReachedThreshold?: number;
+  onMessageLongPress?: (message: IMessageData) => void;
 }
 
 export interface IMessageRenderItemProps {

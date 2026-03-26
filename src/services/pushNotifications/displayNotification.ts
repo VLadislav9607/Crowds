@@ -1,8 +1,5 @@
 import { Platform } from 'react-native';
-import notifee, {
-  AndroidImportance,
-  EventType,
-} from '@notifee/react-native';
+import notifee, { AndroidImportance, EventType } from '@notifee/react-native';
 import { getApp } from '@react-native-firebase/app';
 import {
   getMessaging,
@@ -13,6 +10,7 @@ import { queryClient } from '../reactQuery';
 import { TANSTACK_QUERY_KEYS } from '@constants';
 import { navigateFromNotification } from './notificationNavigator';
 import { invalidateCacheForNotificationType } from './notificationCacheInvalidator';
+import { navigationRef, Screens } from '@navigation';
 
 const ANDROID_CHANNEL_ID = 'default';
 
@@ -66,19 +64,42 @@ export const setBackgroundMessageHandler = (): void => {
 export const setForegroundMessageHandler = (): void => {
   onMessage(getMessaging(getApp()), async remoteMessage => {
     try {
-      await displayNotification({
-        notification: remoteMessage.notification,
-        data: remoteMessage.data as Record<string, string> | undefined,
-      });
+      // Don't show push if user is viewing this chat
+      const data = remoteMessage.data as Record<string, string> | undefined;
+      let isViewingChat = false;
+
+      if (data?.type === 'chat_message' && navigationRef.isReady()) {
+        try {
+          const currentRoute = navigationRef.getCurrentRoute();
+          let pushChatId: string | undefined;
+
+          if (data.payload) {
+            const parsed = JSON.parse(data.payload);
+            pushChatId = parsed.chatId;
+          } else if (data.chatId) {
+            pushChatId = data.chatId;
+          }
+
+          isViewingChat =
+            currentRoute?.name === Screens.ChatRoom &&
+            !!pushChatId &&
+            (currentRoute.params as any)?.chatId === pushChatId;
+        } catch {}
+      }
+
+      if (!isViewingChat) {
+        await displayNotification({
+          notification: remoteMessage.notification,
+          data,
+        });
+      }
       queryClient.invalidateQueries({
         queryKey: [TANSTACK_QUERY_KEYS.GET_UNREAD_NOTIFICATIONS_COUNT],
       });
       queryClient.invalidateQueries({
         queryKey: [TANSTACK_QUERY_KEYS.GET_NOTIFICATIONS],
       });
-      invalidateCacheForNotificationType(
-        remoteMessage.data?.type,
-      );
+      invalidateCacheForNotificationType(remoteMessage.data?.type as string);
     } catch (e) {
       console.warn('[Push] Failed to display foreground notification:', e);
     }

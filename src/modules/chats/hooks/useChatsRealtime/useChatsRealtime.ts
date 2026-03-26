@@ -16,15 +16,22 @@ export const useChatsRealtime = (enabled = true) => {
         table: 'chats',
         event: 'UPDATE',
         onPayload: payload => {
-          console.log('payload', payload);
           const chat = payload.new as any;
+          const oldChat = payload.old as any;
+
+          // Only mark as unread if last_message_at is newer (new message, not edit/delete)
+          const isNewMessage =
+            chat.last_message_at &&
+            oldChat?.last_message_at &&
+            chat.last_message_at > oldChat.last_message_at;
 
           chatsCache.updateChat({
             chatId: chat.id,
-            lastMessage: chat.last_message_text || undefined,
-            lastMessageAt: chat.last_message_at || undefined,
-            hasUnread: true,
+            lastMessage: chat.last_message_text ?? null,
+            lastMessageAt: chat.last_message_at ?? null,
+            ...(isNewMessage ? { hasUnread: true } : {}),
           });
+
         },
       });
     };

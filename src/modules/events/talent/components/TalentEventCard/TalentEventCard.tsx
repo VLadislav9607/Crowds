@@ -9,7 +9,7 @@ import { useState } from 'react';
 import { formatInTimeZone } from 'date-fns-tz';
 import { AppButton, AppText, IconText } from '@ui';
 import { ICONS, IMAGES } from '@assets';
-import { If } from '@components';
+import { If, AppModal } from '@components';
 import { getTimezoneOffsetHours, getCountryNameByCode } from '@helpers';
 import { COLORS } from '@styles';
 import { goToScreen, Screens } from '@navigation';
@@ -48,6 +48,7 @@ export const TalentEventCard = ({
   const [isLoadingCancellation, setIsLoadingCancellation] = useState(false);
   const [isLoadingRemoveEventFromFolder, setIsLoadingRemoveEventFromFolder] =
     useState(false);
+  const [showHideModal, setShowHideModal] = useState(false);
 
   const getEventStatus = (): TalentEventsTabs | 'random' => {
     if (!event?.participant) {
@@ -103,7 +104,12 @@ export const TalentEventCard = ({
     onApply?.(event);
   };
 
-  const handleReject = async () => {
+  const handleHidePress = () => {
+    setShowHideModal(true);
+  };
+
+  const handleConfirmHide = async () => {
+    setShowHideModal(false);
     try {
       setIsLoadingReject(true);
       await onReject?.(event.event_id);
@@ -160,15 +166,6 @@ export const TalentEventCard = ({
 
   return (
     <View style={[styles.container, containerStyle]}>
-      <If condition={isUnavailable}>
-        <View style={styles.unavailableOverlay} pointerEvents="none" />
-        <View style={styles.unavailableBadge} pointerEvents="none">
-          <AppText typography="bold_10" color="red">
-            Unavailable
-          </AppText>
-        </View>
-      </If>
-
       <ImageBackground
         source={IMAGES.cardCrowdBg}
         style={styles.imageContainer}
@@ -184,6 +181,14 @@ export const TalentEventCard = ({
             <AppText typography="semibold_16" margin={{ bottom: 8 }}>
               {event.title}
             </AppText>
+
+            <If condition={isUnavailable}>
+              <View style={styles.unavailableBadge}>
+                <AppText typography="bold_10" color="red">
+                  Outside your schedule
+                </AppText>
+              </View>
+            </If>
 
             <View style={styles.dateTimeContainer}>
               <IconText
@@ -301,13 +306,13 @@ export const TalentEventCard = ({
           <If condition={eventCardType === 'random'}>
             <If condition={!hideRejectButton}>
               <AppButton
-                title="Reject"
+                title="Hide"
                 size="36"
                 isLoading={isLoadingReject}
                 loadingColor={COLORS.red}
                 wrapperStyles={styles.redButton}
                 titleStyles={{ color: COLORS.red }}
-                onPress={handleReject}
+                onPress={handleHidePress}
               />
             </If>
             <AppButton
@@ -435,6 +440,29 @@ export const TalentEventCard = ({
           </If>
         </View>
       </View>
+
+      <AppModal
+        isVisible={showHideModal}
+        onClose={() => setShowHideModal(false)}
+        title="Hide event"
+        subtitle="This event will no longer appear in your feed. Are you sure?"
+        subtitleProps={{ typography: 'regular_14', margin: { top: 5 } }}
+      >
+        <AppButton
+          title="Yes, hide"
+          size="60"
+          wrapperStyles={{ backgroundColor: COLORS.red_20 }}
+          titleStyles={{ color: COLORS.red }}
+          mb={10}
+          onPress={handleConfirmHide}
+        />
+        <AppButton
+          title="Cancel"
+          size="60"
+          variant="withBorder"
+          onPress={() => setShowHideModal(false)}
+        />
+      </AppModal>
     </View>
   );
 };

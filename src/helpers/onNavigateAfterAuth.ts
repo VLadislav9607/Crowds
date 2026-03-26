@@ -1,4 +1,4 @@
-import { goToScreen, Screens } from '@navigation';
+import { goToScreen, resetToScreen, Screens } from '@navigation';
 import { prefetchUseGetMe, prefetchExchangeRates } from '@actions';
 import { fetchUserKycStatus, UserKycRecord } from '@modules/kyc';
 
@@ -27,7 +27,7 @@ export const onNavigateAfterAuth = async () => {
 
       goToScreen(Screens.OnboardingAuthTalent);
     } else {
-      goToScreen(Screens.BottomTabs);
+      resetToScreen(Screens.BottomTabs);
     }
   } else if (isOrganizationMember) {
     const kycData = await fetchUserKycStatus(me?.id || '');
@@ -40,7 +40,7 @@ export const onNavigateAfterAuth = async () => {
     }
 
     if (kycData?.status === 'completed') {
-      goToScreen(Screens.BottomTabs);
+      resetToScreen(Screens.BottomTabs);
       return;
     }
 

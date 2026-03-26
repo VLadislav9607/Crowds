@@ -23,7 +23,7 @@ export const useAvailabilitySetupForm = ({
   onSuccess,
 }: UseAvailabilitySetupFormProps = {}) => {
   const { me } = useGetMe();
-  const { data: existingData, isLoading } = useGetUserAvailability();
+  const { data: existingData, isLoading, isFetched } = useGetUserAvailability();
   const { mutate: updateAvailability, isPending } = useUpdateAvailability({
     onSuccess,
   });
@@ -42,8 +42,11 @@ export const useAvailabilitySetupForm = ({
   });
 
   useEffect(() => {
+    console.log('[Availability] existingData:', JSON.stringify(existingData));
     if (existingData) {
-      reset(mapApiToFormData(existingData));
+      const formData = mapApiToFormData(existingData);
+      console.log('[Availability] formData:', JSON.stringify(formData));
+      reset(formData);
     }
   }, [existingData, reset]);
 
@@ -58,7 +61,7 @@ export const useAvailabilitySetupForm = ({
     getValues,
     errors,
     isValid,
-    isLoading,
+    isLoading: isLoading || !isFetched,
     isSubmitting: isPending,
     onSubmit,
   };
