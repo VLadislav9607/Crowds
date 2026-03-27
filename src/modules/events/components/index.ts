@@ -1,3 +1,3 @@
-export * from './EventHeaderElement';
+export * from './EventDetailHeader';
 export * from './EventDetailsView';
 export * from './SelectEventCategoryField';

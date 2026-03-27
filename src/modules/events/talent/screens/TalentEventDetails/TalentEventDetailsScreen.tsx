@@ -1,8 +1,7 @@
 import { useRef, useState } from 'react';
 import { Alert, Linking, Platform, View } from 'react-native';
-import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { BottomSheetModal } from '@gorhom/bottom-sheet';
-import { If, ScreenWithScrollWrapper, AppImage } from '@components';
+import { If, AppImage } from '@components';
 import { ActionPurpleButton, AppButton, AppText, ChatButton } from '@ui';
 import { COLORS } from '@styles';
 import { Screens, useScreenNavigation, goToScreen } from '@navigation';
@@ -33,14 +32,13 @@ import RNCalendarEvents from 'react-native-calendar-events';
 import {
   EventDetailsCardWithMap,
   EventDetailsTextBlock,
-  EventHeaderElement,
   EventGroupDetails,
 } from '../../../components';
+import { EventDetailScreenLayout } from '../../../layouts';
 import { CancelEventAttendanceModal } from '../../modals';
 import { styles } from './styles';
 
 export const TalentEventDetailsScreen = () => {
-  const insets = useSafeAreaInsets();
   const { params } = useScreenNavigation<Screens.TalentEventDetails>();
   const { me } = useGetMe();
   const [isOpenModal, setIsOpenModal] = useState(false);
@@ -196,23 +194,12 @@ export const TalentEventDetailsScreen = () => {
   const hasRejectedTask = event?.task_status === 'rejected';
   const isTaskProcessing = isUploading || isSubmitting;
 
-  console.log('event', event);
-
   return (
-    <ScreenWithScrollWrapper
-      headerVariant="withTitleAndImageBg"
-      headerStyles={styles.header}
-      contentContainerStyle={{ paddingBottom: insets.bottom || 24 }}
-      customElement={
-        <EventHeaderElement
-          showSkeleton={isLoading}
-          title={event?.title}
-          image={event?.brand_logo_path ?? undefined}
-        />
-      }
-      rightIcons={[
-        { icon: () => ICONS.bell('white'), onPress: () => {}, size: 20 },
-      ]}
+    <EventDetailScreenLayout
+      eventTitle={event?.title}
+      eventLocation={event?.event_location?.formatted_address || officeCountryName}
+      eventDate={startDateTimeFormatted}
+      logoPath={event?.brand_logo_path ?? undefined}
     >
       <View style={styles.container}>
         <If condition={showTaskBanner}>
@@ -384,6 +371,6 @@ export const TalentEventDetailsScreen = () => {
         isVisible={isOpenModal}
         onClose={() => setIsOpenModal(false)}
       />
-    </ScreenWithScrollWrapper>
+    </EventDetailScreenLayout>
   );
 };

@@ -104,7 +104,7 @@ export const HeadGlobalLocationStep = forwardRef<
             color="black"
             margin={{ bottom: 14, top: 20 }}
           >
-            Add you Logo/Brand
+            Add your Logo/Brand
           </AppText>
           <AppImage
             onPress={() =>

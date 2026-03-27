@@ -20,7 +20,13 @@ export const AppModal = ({
   ...props
 }: AppModalProps) => {
   return (
-    <Modal onBackdropPress={props.onClose} backdropOpacity={0.5} {...props}>
+    <Modal
+      onBackdropPress={props.onClose}
+      backdropOpacity={0.5}
+      statusBarTranslucent
+      style={styles.modal}
+      {...props}
+    >
       <If condition={!hideToast}>
         <AppToast removeTopOffset />
       </If>

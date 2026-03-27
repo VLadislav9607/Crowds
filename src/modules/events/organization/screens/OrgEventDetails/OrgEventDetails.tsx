@@ -1,8 +1,7 @@
 import { useState } from 'react';
 import { TouchableOpacity, View } from 'react-native';
-import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { isPast } from 'date-fns';
-import { If, ScreenWithScrollWrapper, Skeleton } from '@components';
+import { If, Skeleton } from '@components';
 import {
   ActionPurpleButton,
   AppButton,
@@ -24,9 +23,9 @@ import {
 import {
   EventDetailsCardWithMap,
   EventDetailsTextBlock,
-  EventHeaderElement,
   EventGroupDetails,
 } from '../../../components';
+import { EventDetailScreenLayout } from '../../../layouts';
 import { CancelEventModal } from '../../modals';
 import { styles } from './styles';
 import { formatInTimeZone } from 'date-fns-tz';
@@ -39,7 +38,6 @@ import {
 } from '@helpers';
 
 export const OrgEventDetails = () => {
-  const insets = useSafeAreaInsets();
   const { params } = useScreenNavigation<Screens.TalentEventDetails>();
   const { organizationMember } = useGetMe();
   const capabilitiesAccess =
@@ -89,38 +87,6 @@ export const OrgEventDetails = () => {
       imageUrl: '',
     });
   };
-
-  // const converGroupDetailsRequirements = (group: EventAgeGroupDto): EventDetailsRequirementItem[] => {
-  //   const genderOptions = []
-  //   if(!!group.male_count) genderOptions.push(`${group.male_count} Male`);
-  //   if(!!group.female_count) genderOptions.push(`${group.female_count} Female`);
-  //   if(!!group.other_count) genderOptions.push(`${group.other_count} Others`);
-
-  //   const isPreferencesPresent = !!group?.preferences
-
-  //   const ethnicityOptionsList = isPreferencesPresent ? ethnicityOptions.filter(item => group.preferences.ethnicities?.some(ethnicity => ethnicity.value === item.value)).map(item => item.label) ?? [] : [];
-  //   const accentOptionsList = isPreferencesPresent ? accentOptions.filter(item => group.preferences.accents?.some(accent => accent.value === item.value)).map(item => item.label) ?? [] : [];
-  //   const eyeColorOptionsList = isPreferencesPresent ? eyeColourOptions.filter(item => group.preferences.eye_colors?.some(eyeColor => eyeColor.value === item.value)).map(item => item.label) ?? [] : [];
-  //   const hairColourOptionsList = isPreferencesPresent ? hairColourOptions.filter(item => group.preferences.hair_colors?.some(hairColor => hairColor.value === item.value)).map(item => item.label) ?? [] : [];
-  //   const facialAttributesOptionsList = isPreferencesPresent ? facialAttributesOptions.filter(item => group.preferences.facial_attributes?.some(facialAttribute => facialAttribute.value === item.value)).map(item => item.label) ?? [] : [];
-  //   const bodyAttributesOptionsList = isPreferencesPresent ? bodyAttributesOptions.filter(item => group.preferences.body_attributes?.some(bodyAttribute => bodyAttribute.value === item.value)).map(item => item.label) ?? [] : [];
-  //   const tattooSpotOptionsList = isPreferencesPresent ? tattooSpotOptions.filter(item => group.preferences.tattoo_spots?.some(tattooSpot => tattooSpot.value === item.value)).map(item => item.label) ?? [] : [];
-  //   const skinToneOptionsList = isPreferencesPresent ? skinToneOptions.filter(item => group.preferences.skin_tones?.some(skinTone => skinTone.value === item.value)).map(item => item.label) ?? [] : [];
-
-  //   return [
-  //     {title: 'Gender Required', options: genderOptions , useRowLayout: true},
-  //     {title: 'Age Group', options: [`${group.min_age} - ${group.max_age} years of age`]},
-  //     {title: 'Ethnicity', options: ethnicityOptionsList, invisible: !ethnicityOptionsList.length, useRowLayout: true},
-  //     {title: 'Accent', options: accentOptionsList, invisible: !accentOptionsList.length, useRowLayout: true},
-  //     {title: 'Eye Color', options: eyeColorOptionsList, invisible: !eyeColorOptionsList.length, useRowLayout: true},
-  //     {title: 'Hair Colour', options: hairColourOptionsList, invisible: !hairColourOptionsList.length, useRowLayout: true},
-  //     {title: 'Facial Attributes', options: facialAttributesOptionsList, invisible: !facialAttributesOptionsList.length, useRowLayout: true},
-  //     {title: 'Body Attributes', options: bodyAttributesOptionsList, invisible: !bodyAttributesOptionsList.length, useRowLayout: true},
-  //     {title: 'Tattoo Spot', options: tattooSpotOptionsList, invisible: !tattooSpotOptionsList.length, useRowLayout: true},
-  //     {title: 'Skin Tone', options: skinToneOptionsList, invisible: !skinToneOptionsList.length, useRowLayout: true},
-  //     {title: 'Pregnancy', options: isPreferencesPresent ? (group.preferences.pregnancy_allowed ? [`Required: ${group.preferences.pregnancy_months} months`] : ['Not Allowed']) : [], invisible: typeof group?.preferences?.pregnancy_allowed !== 'boolean' },
-  //   ];
-  // }
 
   const timezone = event?.event_location?.timezone || 'UTC';
 
@@ -196,20 +162,11 @@ export const OrgEventDetails = () => {
   ];
 
   return (
-    <ScreenWithScrollWrapper
-      headerVariant="withTitleAndImageBg"
-      headerStyles={styles.header}
-      contentContainerStyle={{ paddingBottom: insets.bottom || 24 }}
-      customElement={
-        <EventHeaderElement
-          showSkeleton={isLoading}
-          title={event?.title}
-          image={organizationMember?.current_context?.brand?.logo_path}
-        />
-      }
-      rightIcons={[
-        { icon: () => ICONS.bell('white'), onPress: () => {}, size: 20 },
-      ]}
+    <EventDetailScreenLayout
+      eventTitle={event?.title}
+      eventLocation={event?.event_location?.formatted_address || officeCountryName}
+      eventDate={startDateTimeFormatted}
+      logoPath={organizationMember?.current_context?.brand?.logo_path}
     >
       <View style={styles.container}>
         <If condition={!!capabilitiesAccess?.approve_applicants}>
@@ -415,6 +372,6 @@ export const OrgEventDetails = () => {
           }, 300);
         }}
       />
-    </ScreenWithScrollWrapper>
+    </EventDetailScreenLayout>
   );
 };

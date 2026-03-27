@@ -36,6 +36,7 @@ export const InviteTalentsScreen = () => {
       headerVariant="withTitleAndImageBg"
       headerStyles={styles.headerStyles}
       contentContainerStyle={styles.contentContainer}
+      containerStyle={styles.noPaddingBottom}
       title="Invite Talents"
       goBackCallback={() => {
         goBack();
@@ -75,6 +76,9 @@ export const InviteTalentsScreen = () => {
 };
 
 const styles = StyleSheet.create({
+  noPaddingBottom: {
+    paddingBottom: 0,
+  },
   headerStyles: {
     flexDirection: 'row',
     alignItems: 'center',

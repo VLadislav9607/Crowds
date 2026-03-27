@@ -77,7 +77,7 @@ export const NotificationSettingsScreen = () => {
               <Switch
                 active={allEnabled}
                 onChange={toggleAll}
-                trackColor={{ false: COLORS.white, true: COLORS.main }}
+                activeColor="main"
               />
             </View>
 
@@ -87,7 +87,7 @@ export const NotificationSettingsScreen = () => {
                 <Switch
                   active={option.value}
                   onChange={option.onToggle}
-                  trackColor={{ false: COLORS.white, true: COLORS.main }}
+                  activeColor="main"
                 />
               </View>
             ))}

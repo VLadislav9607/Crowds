@@ -1,5 +1,6 @@
-import { useCallback, useRef } from 'react';
+import { useCallback, useMemo, useRef } from 'react';
 import { View } from 'react-native';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { ScreenWrapper, AppFlashList } from '@components';
 import { ICONS } from '@assets';
 import { AppButton } from '@ui';
@@ -21,6 +22,7 @@ import { styles } from './styles';
 import { COLORS } from '@styles';
 
 export const NotificationsListScreen = () => {
+  const { bottom } = useSafeAreaInsets();
   const { isTalent } = useGetMe();
   const { data, isLoading, refetch } = useGetNotifications();
   const { mutate: markAllAsRead, isPending: isMarkingAllAsRead } =
@@ -71,12 +73,21 @@ export const NotificationsListScreen = () => {
         ]
       : undefined;
 
+  const listStyle = useMemo(
+    () => ({
+      paddingTop: 16,
+      paddingBottom: Math.max(bottom, 16) + 80,
+    }),
+    [bottom],
+  );
+
   return (
     <ScreenWrapper
       headerVariant="withTitle"
       headerStyles={isTalent ? { backgroundColor: COLORS.black } : undefined}
       title="Notifications"
       rightIcons={rightIcons}
+      containerStyle={styles.noPaddingBottom}
     >
       <AppFlashList
         data={notifications}
@@ -93,7 +104,7 @@ export const NotificationsListScreen = () => {
         keyExtractor={item => item.id}
         onRefresh={refetch}
         refreshing={isLoading}
-        contentContainerStyle={styles.list}
+        contentContainerStyle={listStyle}
       />
       {hasUnread && (
         <View style={styles.floatingButtonContainer}>

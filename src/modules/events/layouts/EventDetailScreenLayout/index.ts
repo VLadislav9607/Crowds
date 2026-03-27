@@ -1,0 +1,1 @@
+export { EventDetailScreenLayout } from './EventDetailScreenLayout';

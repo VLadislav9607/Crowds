@@ -17,7 +17,7 @@ import {
 export const CustomTalentsListScreen = () => {
   const { params } = useScreenNavigation<Screens.CustomTalentsList>();
   const listId = params?.listId ?? '';
-  const eventId = params?.eventId;
+  const eventId = params?.eventId ?? '';
   const listName = params?.listName ?? '';
   const hasEventContext = !!eventId;
 
@@ -93,10 +93,7 @@ export const CustomTalentsListScreen = () => {
       </If>
 
       <If condition={!hasTalents && !isLoading}>
-        <CustomTalentsListEmptyState
-          listId={listId}
-          listName={listName}
-        />
+        <CustomTalentsListEmptyState listId={listId} listName={listName} />
       </If>
 
       <If condition={hasEventContext}>

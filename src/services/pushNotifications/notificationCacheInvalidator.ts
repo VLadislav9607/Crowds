@@ -124,5 +124,12 @@ export function invalidateCacheForNotificationType(
         queryKey: [TANSTACK_QUERY_KEYS.GET_TALENT_PAYMENT_HISTORY],
       });
       break;
+
+    // Chat message → refresh chat list (handles new direct chats)
+    case 'chat_message':
+      queryClient.refetchQueries({
+        queryKey: [TANSTACK_QUERY_KEYS.MY_CHATS],
+      });
+      break;
   }
 }

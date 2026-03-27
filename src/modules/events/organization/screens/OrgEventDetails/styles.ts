@@ -7,9 +7,7 @@ export const styles = StyleSheet.create({
     gap: 24,
     paddingTop: 20,
   },
-  header: {
-    paddingBottom: 30,
-  },
+
   chatButtonsContainer: {
     flexDirection: 'row',
     gap: 12,

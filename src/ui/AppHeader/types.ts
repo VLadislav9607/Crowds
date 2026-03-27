@@ -16,7 +16,7 @@ export type HeaderVariant =
 export type HeaderImageBgType = 'purple' | 'crowd';
 
 export const headerImageBgMap = {
-  purple: IMAGES.headerPurpleBg,
+  purple: IMAGES.purpleCrowds,
   crowd: IMAGES.headerCrowdBg,
 };
 
@@ -29,7 +29,7 @@ export interface HeaderContentProps {
   onBackPress?: () => void;
 }
 
-export interface  IAppHeaderProps {
+export interface IAppHeaderProps {
   title?: string;
   titleProps?: Partial<AppTextProps>;
   colorHeader?: ColorsKeys;

@@ -1,5 +1,5 @@
 import { useRef } from 'react';
-import { View, SectionList, ActivityIndicator } from 'react-native';
+import { View, SectionList, ActivityIndicator, Platform } from 'react-native';
 import { AppText } from '@ui';
 import { COLORS } from '@styles';
 
@@ -73,9 +73,9 @@ export const MessageList = ({
         styles.contentContainer,
         !sections.length && styles.centeredContainer,
       ]}
-      maintainVisibleContentPosition={{
-        minIndexForVisible: 0,
-      }}
+      maintainVisibleContentPosition={
+        Platform.OS === 'ios' ? { minIndexForVisible: 0 } : undefined
+      }
       showsVerticalScrollIndicator={false}
       stickySectionHeadersEnabled={false}
       onEndReached={onEndReached}
