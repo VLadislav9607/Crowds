@@ -4,6 +4,7 @@ import {
   TouchableOpacity,
   StyleProp,
   ViewStyle,
+  Platform,
 } from 'react-native';
 import { SvgXml } from 'react-native-svg';
 
@@ -101,6 +102,7 @@ const styles = StyleSheet.create({
   circlesContainer: {
     flexDirection: 'row',
     gap: 12,
+    paddingBottom: Platform.OS === 'android' ? 8 : 0,
   },
   dotsContainer: {
     flexDirection: 'row',

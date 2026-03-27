@@ -7,3 +7,5 @@ export * from './useGetEventsTags';
 export * from './useGetEventsCategories';
 export * from './useRemovePushDevice';
 export * from './useLocalCurrency';
+export * from './useDeleteAccount';
+export * from './useRestoreAccount';

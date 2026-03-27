@@ -75,7 +75,8 @@ export const getTeamMembersAction = async ({
     const { data: orgUsers, error: orgUsersError } = await supabase
       .from('org_users')
       .select('id, first_name, last_name, email, position, deleted_at')
-      .in('id', userIds);
+      .in('id', userIds)
+      .is('deleted_at', null);
 
     if (orgUsersError) throw orgUsersError;
 

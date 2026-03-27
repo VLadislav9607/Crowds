@@ -3,6 +3,7 @@ import { useEffect } from 'react';
 import { realtimeService } from '@services';
 import { useGetMe } from '@actions';
 import { chatsCache } from '../../cache';
+import { Platform } from 'react-native';
 
 export const useChatsRealtime = (enabled = true) => {
   const { me } = useGetMe();
@@ -10,12 +11,14 @@ export const useChatsRealtime = (enabled = true) => {
   useEffect(() => {
     if (!me?.id || !enabled) return;
 
-    const subscribe = () => {
+    const chatsUpdatesSubscription = () => {
       realtimeService.subscribe({
         channelName: `chats-updates: ${me?.id}`,
         table: 'chats',
-        event: 'UPDATE',
+        event: '*',
         onPayload: payload => {
+          console.log(`payload ${Platform.OS}`, payload);
+
           const chat = payload.new as any;
           const oldChat = payload.old as any;
 
@@ -31,12 +34,11 @@ export const useChatsRealtime = (enabled = true) => {
             lastMessageAt: chat.last_message_at ?? null,
             ...(isNewMessage ? { hasUnread: true } : {}),
           });
-
         },
       });
     };
 
-    subscribe();
+    chatsUpdatesSubscription();
 
     return () => realtimeService.unsubscribe(`chats-updates: ${me?.id}`);
   }, [me?.id, enabled]);

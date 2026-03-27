@@ -8,14 +8,9 @@ export const useSearchEventsList = ({ filters }: SearchEventsListProps) => {
     refetch,
     isLoading,
     hasNextPage,
-    error,
   } = useTalentPublicEvents({ ...filters }, { staleTime: 0, gcTime: 0 });
 
-  console.log('error', error);
-
   const events = eventsResponse?.data && !isLoading ? eventsResponse?.data : [];
-
-  console.log('events', events);
 
   return {
     isLoading,

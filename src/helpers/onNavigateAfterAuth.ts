@@ -12,6 +12,15 @@ export const onNavigateAfterAuth = async () => {
 
   const { isTalent, isOrganizationMember, talent, me } = myData;
 
+  const deletedAt = isTalent
+    ? talent?.deleted_at
+    : (me as any)?.deleted_at;
+
+  if (deletedAt) {
+    resetToScreen(Screens.AccountPendingDeletion);
+    return;
+  }
+
   if (isTalent) {
     prefetchExchangeRates(); // fire-and-forget
     const lastCompletedStep = talent?.onboarding_copleted_step || 0;

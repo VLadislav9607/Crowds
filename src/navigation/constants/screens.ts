@@ -98,4 +98,7 @@ export enum Screens {
 
   // Stripe Connect
   StripeConnectOnboarding = 'StripeConnectOnboarding',
+
+  // Account Deletion
+  AccountPendingDeletion = 'AccountPendingDeletion',
 }

@@ -12,7 +12,6 @@ import { styles } from './styles';
 import { useTalentEventsViewList } from './useTalentEventsViewList';
 import { useRefetchQuery } from '@hooks';
 import { AddEventToForderModal } from '../../../../events-folders';
-import { useGetMe } from '@actions';
 
 export const TalentEventsViewList = ({
   data = [],
@@ -25,10 +24,6 @@ export const TalentEventsViewList = ({
   ...props
 }: TalentEventsViewListProps) => {
   const { isRefetchingQuery, refetchQuery } = useRefetchQuery(refetch);
-
-  const { me } = useGetMe();
-
-  console.log('me', me);
 
   const {
     unavailableTimeModalRef,

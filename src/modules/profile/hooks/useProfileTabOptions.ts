@@ -128,11 +128,6 @@ export const useProfileTabOptions = ({
       onPress: () => goToScreen(Screens.ChangePassword),
     },
     {
-      title: 'Access your information',
-      icon: ICONS.orgDetails(),
-      onPress: () => {},
-    },
-    {
       title: 'FAQ',
       icon: ICONS.faq(),
       onPress: () => goToScreen(Screens.FAQ),
@@ -151,6 +146,12 @@ export const useProfileTabOptions = ({
       title: `App version ${DeviceInfo.getVersion()} (${DeviceInfo.getBuildNumber()})`,
       icon: ICONS.circleInfo(),
       onPress: () => {},
+    },
+    {
+      title: 'Delete account',
+      icon: ICONS.trash('red'),
+      textColor: 'red',
+      onPress: onDeleteAccount,
     },
     {
       title: 'Logout',

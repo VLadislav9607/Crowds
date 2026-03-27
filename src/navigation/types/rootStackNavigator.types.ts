@@ -142,4 +142,7 @@ export type RootStackParamList = {
 
   // Stripe Connect
   [Screens.StripeConnectOnboarding]: undefined;
+
+  // Account Deletion
+  [Screens.AccountPendingDeletion]: undefined;
 };

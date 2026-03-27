@@ -46,6 +46,7 @@ import {
   FAQScreen,
   TermsAndConditionsScreen,
   PrivacyPolicyScreen,
+  AccountPendingDeletionScreen,
 } from '@modules/profile';
 import {
   NotificationSettingsScreen,
@@ -355,6 +356,11 @@ export const RootStackNavigator = () => {
       <RootStack.Screen
         name={Screens.StripeConnectOnboarding}
         component={StripeConnectOnboardingScreen}
+      />
+      <RootStack.Screen
+        name={Screens.AccountPendingDeletion}
+        component={AccountPendingDeletionScreen}
+        options={{ gestureEnabled: false }}
       />
     </RootStack.Navigator>
   );

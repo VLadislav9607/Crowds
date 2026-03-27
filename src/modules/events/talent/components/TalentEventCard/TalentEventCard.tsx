@@ -167,7 +167,7 @@ export const TalentEventCard = ({
   return (
     <View style={[styles.container, containerStyle]}>
       <ImageBackground
-        source={IMAGES.cardCrowdBg}
+        source={IMAGES.purpleCrowds}
         style={styles.imageContainer}
       >
         <View style={styles.iconContainer}>

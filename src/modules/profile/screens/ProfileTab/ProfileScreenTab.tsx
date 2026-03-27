@@ -4,7 +4,7 @@ import { SvgXml } from 'react-native-svg';
 
 import { AppModal, If } from '@components';
 import { AppButton, AppText } from '@ui';
-import { useDeleteTalentAccount } from '@actions';
+import { useDeleteAccount, removePushDevice } from '@actions';
 import { queryClient, supabase, realtimeService } from '@services';
 import { resetToScreen, Screens } from '@navigation';
 import { showErrorToast } from '@helpers';
@@ -20,12 +20,13 @@ export const ProfileScreenTab = () => {
   const logoutModalRef = useRef<LogoutModalRef>(null);
   const [showDeleteModal, setShowDeleteModal] = useState(false);
   const { mutateAsync: deleteAccount, isPending: isDeleting } =
-    useDeleteTalentAccount();
+    useDeleteAccount();
 
   const handleDeleteAccount = async () => {
     try {
       await deleteAccount();
       setShowDeleteModal(false);
+      await removePushDevice();
       realtimeService.unsubscribeAll();
       await supabase.auth.signOut();
       queryClient.clear();
@@ -70,7 +71,7 @@ export const ProfileScreenTab = () => {
         isVisible={showDeleteModal}
         onClose={() => !isDeleting && setShowDeleteModal(false)}
         title="Delete Account"
-        subtitle="Are you sure? This action cannot be undone. All your data will be permanently deleted."
+        subtitle="Your account will be scheduled for deletion. You will have 30 days to restore it before all data is permanently removed."
         subtitleProps={{ typography: 'regular_14', margin: { top: 5 } }}
       >
         <AppButton
