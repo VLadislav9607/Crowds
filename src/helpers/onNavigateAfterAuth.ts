@@ -1,5 +1,5 @@
 import { goToScreen, Screens } from '@navigation';
-import { prefetchUseGetMe } from '@actions';
+import { prefetchUseGetMe, prefetchExchangeRates } from '@actions';
 import { fetchUserKycStatus, UserKycRecord } from '@modules/kyc';
 
 const needsProcessingScreen = (kycData: UserKycRecord | null) =>
@@ -13,6 +13,7 @@ export const onNavigateAfterAuth = async () => {
   const { isTalent, isOrganizationMember, talent, me } = myData;
 
   if (isTalent) {
+    prefetchExchangeRates(); // fire-and-forget
     const lastCompletedStep = talent?.onboarding_copleted_step || 0;
 
     if (lastCompletedStep < 6) {

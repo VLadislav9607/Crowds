@@ -6,3 +6,4 @@ export * from './useGetEventsSubCategories';
 export * from './useGetEventsTags';
 export * from './useGetEventsCategories';
 export * from './useRemovePushDevice';
+export * from './useLocalCurrency';

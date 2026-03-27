@@ -26,6 +26,17 @@ const validateStartBeforeEnd = (data: {
   return data.startAt < data.endAt;
 };
 
+const validateMinimumDuration = (data: {
+  startAt?: Date | null;
+  endAt?: Date | null;
+}) => {
+  if (!data.startAt || !data.endAt) {
+    return true;
+  }
+  const diffMs = data.endAt.getTime() - data.startAt.getTime();
+  return diffMs >= 3 * 60 * 60 * 1000; // 3 hours
+};
+
 const validateRegistrationClosingDate = (data: {
   registrationClosingAt?: Date | null;
   startAt?: Date | null;
@@ -140,6 +151,10 @@ export const createEventDraftSchema = z
   .refine(validateStartBeforeEnd, {
     message: 'Start date and time must be earlier than end date and time',
     path: ['startAt'],
+  })
+  .refine(validateMinimumDuration, {
+    message: 'The event must be at least 3 hours long',
+    path: ['endAt'],
   })
   .refine(validateRegistrationClosingDate, {
     message: 'Registration closing date cannot be after start date',

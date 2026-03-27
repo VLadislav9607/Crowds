@@ -51,4 +51,5 @@ export const TANSTACK_QUERY_KEYS = {
   GET_EVENT_TASK_COMPLETIONS: 'get_event_task_completions',
   GET_TALENT_PAYMENT_HISTORY: 'get_talent_payment_history',
   GET_EVENT_REPORT: 'get_event_report',
+  EXCHANGE_RATE: 'exchange_rate',
 } as const;

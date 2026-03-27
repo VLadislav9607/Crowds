@@ -23,6 +23,15 @@ export interface TalentEventHistoryItem {
   office_id: string | null;
   brand_name: string | null;
   brand_logo_path: string | null;
+  payout_status:
+    | 'awaiting_settlement'
+    | 'processing'
+    | 'paid'
+    | 'rejected'
+    | 'failed';
+  payout_amount_cents: number | null;
+  paid_at: string | null;
+  rejection_reason: string | null;
 }
 
 export interface GetTalentEventHistoryResDto

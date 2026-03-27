@@ -13,7 +13,7 @@ import { If } from '@components';
 import { getTimezoneOffsetHours, getCountryNameByCode } from '@helpers';
 import { COLORS } from '@styles';
 import { goToScreen, Screens } from '@navigation';
-import { ChatType } from '@actions';
+import { ChatType, useLocalCurrency } from '@actions';
 import { calculateEventDuration, getEventIcon } from '../../../helpers';
 import { TalentEventsTabs } from '../../../types';
 import { TalentEventCardProps } from './types';
@@ -121,6 +121,7 @@ export const TalentEventCard = ({
     }
   };
 
+  const { formatLocal } = useLocalCurrency();
   const timezone = event?.location?.timezone || 'UTC';
 
   const timezoneOffset = getTimezoneOffsetHours(timezone);
@@ -269,6 +270,16 @@ export const TalentEventCard = ({
           <AppText typography="medium_12" color="black_50">
             {event.payment_mode === 'fixed' ? 'Fixed price' : 'Price per hour'}
           </AppText>
+          <If
+            condition={
+              !!event.payment_amount &&
+              !!formatLocal(event.payment_amount * 100)
+            }
+          >
+            <AppText typography="medium_12" color="black_50">
+              {formatLocal(event.payment_amount * 100)}
+            </AppText>
+          </If>
         </View>
 
         <If condition={eventCardType !== 'denied'}>

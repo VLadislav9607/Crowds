@@ -13,6 +13,7 @@ import {
   useGetEventDetailsForTalent,
   useBucketUpload,
   useSubmitTaskPhoto,
+  useLocalCurrency,
 } from '@actions';
 import {
   useCreateChatAndNavigate,
@@ -50,6 +51,7 @@ export const TalentEventDetailsScreen = () => {
   const { data: event, isLoading } = useGetEventDetailsForTalent({
     event_id: params?.eventId!,
   });
+  const { formatLocal } = useLocalCurrency();
 
   const { mutate: uploadFile, isPending: isUploading } = useBucketUpload({
     onSuccess: data => {
@@ -247,13 +249,15 @@ export const TalentEventDetailsScreen = () => {
         <EventDetailsTextBlock
           showSkeleton={isLoading}
           label="Payment"
-          text={
-            event?.payment_mode === 'fixed'
-              ? `$${event?.payment_amount}`
-              : event?.payment_amount
-              ? `$${event.payment_amount} per hour`
-              : undefined
-          }
+          text={(() => {
+            if (!event?.payment_amount) return undefined;
+            const usd =
+              event.payment_mode === 'fixed'
+                ? `$${event.payment_amount}`
+                : `$${event.payment_amount} per hour`;
+            const local = formatLocal(event.payment_amount * 100);
+            return local ? `${usd} (${local})` : usd;
+          })()}
         />
 
         <If condition={!!event?.event_age_groups?.length}>

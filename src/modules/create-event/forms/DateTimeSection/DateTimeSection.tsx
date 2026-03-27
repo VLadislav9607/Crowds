@@ -1,7 +1,7 @@
 import { forwardRef } from 'react';
 import { Controller, useFormContext, useWatch } from 'react-hook-form';
 import { StyleSheet, View } from 'react-native';
-import { isBefore, isAfter, isSameDay, addHours } from 'date-fns';
+import { isBefore, isAfter, addHours, differenceInHours } from 'date-fns';
 
 import { AppText } from '@ui';
 import { AppDateInput } from '@components';
@@ -25,6 +25,9 @@ export const DateTimeSection = forwardRef<View>((_props, ref) => {
 
   const now = new Date();
   const minStartDate = addHours(now, 1); // Minimum start date is 1 hour from now
+
+  const isLessThan3HoursDuration =
+    startAt && endAt ? differenceInHours(endAt, startAt) < 3 : false;
 
   return (
     <View ref={ref} collapsable={false} style={styles.container}>
@@ -77,36 +80,42 @@ export const DateTimeSection = forwardRef<View>((_props, ref) => {
               value={value}
               mode="datetime"
               onChange={date => {
-                const minEndDate = startAt || minStartDate;
-                if (isBefore(date, minEndDate)) return;
-                if (
-                  startAt &&
-                  !isAfter(date, startAt) &&
-                  isSameDay(startAt, date)
-                ) {
-                  showErrorToast('End date cannot be the same as start date');
+                const minEndDate = startAt
+                  ? addHours(startAt, 3)
+                  : minStartDate;
+                if (isBefore(date, minEndDate)) {
+                  showErrorToast('Event must be at least 3 hours long');
                   return;
                 }
                 onChange(date);
               }}
               errorMessage={errors.endAt?.message}
               containerStyle={styles.dateInput}
-              minimumDate={startAt || minStartDate}
+              minimumDate={startAt ? addHours(startAt, 3) : minStartDate}
               valueFormat="MM/dd/yyyy h:mm a"
             />
           )}
         />
       </View>
 
-      <AppText
-        typography="medium_12"
-        color="gray_primary"
-        margin={{ top: -16 }}
-      >
-        As the selected date is less than 2 days away, we cannot ensure crowd
-        availability. We recommend choosing another date for a better
-        experience.
-      </AppText>
+      {isLessThan3HoursDuration && (
+        <AppText typography="medium_12" color="red" margin={{ top: -16 }}>
+          The event must be at least 3 hours long. Please adjust the start or
+          end time.
+        </AppText>
+      )}
+
+      {/* {isLessThan2DaysAway && (
+        <AppText
+          typography="medium_12"
+          color="gray_primary"
+          margin={{ top: isLessThan3HoursDuration ? 0 : -16 }}
+        >
+          As the selected date is less than 2 days away, we cannot ensure crowd
+          availability. We recommend choosing another date for a better
+          experience.
+        </AppText>
+      )} */}
     </View>
   );
 });

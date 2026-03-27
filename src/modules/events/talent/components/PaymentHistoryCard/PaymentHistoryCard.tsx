@@ -4,6 +4,7 @@ import { IconText, AppText, DashedLine } from '@ui';
 import { ICONS } from '@assets';
 import { If } from '@components';
 import { COLORS } from '@styles';
+import { useLocalCurrency } from '@actions';
 import { calculateEventDuration } from '../../../helpers';
 import { styles } from './styles';
 import { PaymentHistoryCardProps } from './types';
@@ -46,6 +47,7 @@ const getStatusTextColor = (status: string): string => {
 };
 
 export const PaymentHistoryCard = ({ event }: PaymentHistoryCardProps) => {
+  const { formatLocal } = useLocalCurrency();
   const timezone = event.location?.timezone || 'UTC';
 
   const startAt = event.start_at
@@ -58,6 +60,17 @@ export const PaymentHistoryCard = ({ event }: PaymentHistoryCardProps) => {
       : { formatted: '' };
 
   const payoutDollars = (event.payout_amount_cents / 100).toFixed(0);
+  const localPayout = formatLocal(event.payout_amount_cents);
+
+  const localPayment = event.payment_amount
+    ? formatLocal(event.payment_amount * 100)
+    : null;
+
+  const paymentText = event.payment_amount
+    ? `$${event.payment_amount} · ${
+        event.payment_mode === 'per_hour' ? 'Per hour' : 'Fixed price'
+      }${localPayment ? ` (${localPayment})` : ''}`
+    : null;
 
   return (
     <View style={styles.container}>
@@ -127,12 +140,10 @@ export const PaymentHistoryCard = ({ event }: PaymentHistoryCardProps) => {
             />
           </If>
 
-          <If condition={!!event.payment_amount}>
+          <If condition={!!paymentText}>
             <IconText
               icon={ICONS.moneyBag('main')}
-              text={`$${event.payment_amount} · ${
-                event.payment_mode === 'per_hour' ? 'Per hour' : 'Fixed price'
-              }`}
+              text={paymentText || ''}
               textProps={{ typography: 'medium_12', color: 'gray_primary' }}
               iconSize={14}
             />
@@ -140,7 +151,7 @@ export const PaymentHistoryCard = ({ event }: PaymentHistoryCardProps) => {
         </View>
 
         <AppText typography="bold_14" color="main">
-          {`$${payoutDollars}`}
+          {`$${payoutDollars}${localPayout ? ` (${localPayout})` : ''}`}
         </AppText>
       </View>
     </View>

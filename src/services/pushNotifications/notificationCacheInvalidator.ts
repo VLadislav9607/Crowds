@@ -74,6 +74,14 @@ export function invalidateCacheForNotificationType(
       });
       break;
 
+    // Settlement reminder or auto-completed → refresh org events
+    case 'settlement_reminder':
+    case 'settlement_auto_completed':
+      queryClient.refetchQueries({
+        queryKey: [TANSTACK_QUERY_KEYS.GET_ORG_EVENTS],
+      });
+      break;
+
     // Flag applied → refresh flag data and update profile cache
     case 'flag_applied':
       queryClient
@@ -83,15 +91,12 @@ export function invalidateCacheForNotificationType(
         .then(() => {
           const flagData =
             queryClient.getQueryData<GetActiveFlagForTargetRespDto>(
-              queryClient
-                .getQueryCache()
-                .findAll({
-                  queryKey: [TANSTACK_QUERY_KEYS.GET_MY_ACTIVE_FLAG],
-                })[0]?.queryKey ?? [],
+              queryClient.getQueryCache().findAll({
+                queryKey: [TANSTACK_QUERY_KEYS.GET_MY_ACTIVE_FLAG],
+              })[0]?.queryKey ?? [],
             );
 
-          const newFlag =
-            (flagData?.status as TalentFlag) ?? TalentFlag.GREEN;
+          const newFlag = (flagData?.status as TalentFlag) ?? TalentFlag.GREEN;
 
           queryClient.setQueryData<UseGetMeResDto>(
             [TANSTACK_QUERY_KEYS.GET_ME],

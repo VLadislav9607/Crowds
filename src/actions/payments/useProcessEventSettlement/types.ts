@@ -1,6 +1,7 @@
 export interface TalentDecision {
   talentId: string;
   approved: boolean;
+  rejectionReason?: string;
 }
 
 export interface ProcessEventSettlementBodyDto {

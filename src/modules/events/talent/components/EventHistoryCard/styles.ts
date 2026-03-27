@@ -39,4 +39,16 @@ export const styles = StyleSheet.create({
     alignItems: 'center',
     gap: 12,
   },
+  statusBadge: {
+    alignSelf: 'center',
+    paddingHorizontal: 8,
+    paddingVertical: 3,
+    borderRadius: 4,
+  },
+  payoutInfo: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 4,
+    marginTop: 5,
+  },
 });
