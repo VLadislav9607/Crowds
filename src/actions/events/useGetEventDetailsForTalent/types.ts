@@ -32,4 +32,5 @@ export interface EventDetailsForTalentDto {
   task_status: string;
   task_photo_path: string | null;
   group_chat_id: string | null;
+  custom_tasks: { id: string; text: string; is_completed: boolean }[];
 }

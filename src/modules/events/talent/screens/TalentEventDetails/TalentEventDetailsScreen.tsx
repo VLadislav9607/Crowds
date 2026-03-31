@@ -13,6 +13,7 @@ import {
   useBucketUpload,
   useSubmitTaskPhoto,
   useLocalCurrency,
+  useToggleCustomTask,
 } from '@actions';
 import {
   useCreateChatAndNavigate,
@@ -33,6 +34,7 @@ import {
   EventDetailsCardWithMap,
   EventDetailsTextBlock,
   EventGroupDetails,
+  EventTasksSection,
 } from '../../../components';
 import { EventDetailScreenLayout } from '../../../layouts';
 import { CancelEventAttendanceModal } from '../../modals';
@@ -72,6 +74,16 @@ export const TalentEventDetailsScreen = () => {
       showErrorToast(error.message || 'Failed to submit task');
     },
   });
+
+  const { mutate: toggleCustomTask } = useToggleCustomTask();
+
+  const handleToggleCustomTask = (taskId: string) => {
+    if (!event?.participation_id) return;
+    toggleCustomTask({
+      task_id: taskId,
+      participation_id: event.participation_id,
+    });
+  };
 
   const { openChat, isPending: isCreatingChat } = useCreateChatAndNavigate();
 
@@ -161,7 +173,8 @@ export const TalentEventDetailsScreen = () => {
     }
   };
 
-  const timezone = event?.event_location?.timezone || 'UTC';
+  const deviceTimezone = Intl.DateTimeFormat().resolvedOptions().timeZone;
+  const timezone = event?.event_location?.timezone || deviceTimezone;
 
   const startDateTimeFormatted = event?.start_at
     ? formatInTimeZone(event.start_at, timezone, 'd MMM yyyy, h:mm a')
@@ -220,6 +233,20 @@ export const TalentEventDetailsScreen = () => {
           showSkeleton={isLoading}
           label="Description"
           text={event?.description}
+        />
+
+        <EventTasksSection
+          variant="talent"
+          systemTaskState={{
+            checkedInAt: event?.checked_in_at ?? null,
+            checkedOutAt: event?.checked_out_at ?? null,
+            taskPhotoPath: event?.task_photo_path ?? null,
+            isMediaProduction,
+          }}
+          customTasks={event?.custom_tasks ?? []}
+          isCheckedIn={hasCheckedIn}
+          onToggleCustomTask={handleToggleCustomTask}
+          timezone={timezone}
         />
 
         <EventDetailsCardWithMap

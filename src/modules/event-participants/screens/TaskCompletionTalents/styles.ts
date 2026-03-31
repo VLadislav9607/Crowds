@@ -13,12 +13,12 @@ export const styles = StyleSheet.create({
   listContent: {
     paddingTop: 4,
     paddingBottom: 16,
-    paddingHorizontal: 4,
+    paddingHorizontal: 8,
   },
   listContentNoHeader: {
     paddingTop: 16,
     paddingBottom: 16,
-    paddingHorizontal: 4,
+    paddingHorizontal: 8,
   },
   bottomBar: {
     paddingTop: 12,

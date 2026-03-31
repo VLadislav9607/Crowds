@@ -10,6 +10,7 @@ import {
   EventBriefSection,
   OtherInfoSection,
   PaymentSection,
+  TasksSection,
   VisibilitySection,
 } from '../../forms';
 import { CreateEventFooter } from '../../components';
@@ -79,6 +80,7 @@ export const CreateEventScreen = () => {
             widgetRefs={ageGroupWidgetRefs}
           />
           <PaymentSection ref={paymentSectionRef} />
+          <TasksSection />
           <OtherInfoSection ref={otherInfoSectionRef} />
         </View>
 

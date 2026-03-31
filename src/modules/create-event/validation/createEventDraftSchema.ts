@@ -147,6 +147,7 @@ export const createEventDraftSchema = z
     ndaDocumentName: z.string().optional().nullable(),
     ndaDocumentPath: z.string().optional().nullable(),
     registrationClosingAt: z.date().optional().nullable(),
+    customTasks: z.array(z.string()).optional().nullable(),
   })
   .refine(validateStartBeforeEnd, {
     message: 'Start date and time must be earlier than end date and time',

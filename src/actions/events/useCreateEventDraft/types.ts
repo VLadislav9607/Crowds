@@ -63,6 +63,7 @@ export interface CreateEventDraftBodyDto {
   location?: EventLocationDto | null;
   ageGroups?: AgeGroupDto[];
   officeId: string;
+  customTasks?: string[];
 }
 
 export interface CreateEventDraftResDto {

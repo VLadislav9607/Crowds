@@ -19,7 +19,8 @@ export const OrganizationEventCard = ({
   headerRight,
   footer,
 }: IOrganizationEventCardProps) => {
-  const timezone = event?.event_location?.timezone || 'UTC';
+  const deviceTimezone = Intl.DateTimeFormat().resolvedOptions().timeZone;
+  const timezone = event?.event_location?.timezone || deviceTimezone;
 
   const startAt = event?.start_at
     ? formatInTimeZone(event.start_at, timezone, 'dd MMM, yyyy')

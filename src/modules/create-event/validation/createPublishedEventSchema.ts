@@ -170,6 +170,7 @@ export const createPublishedEventSchema = z
       .refine(validateEndDateNotInPast, {
         message: 'Registration closing date and time cannot be in the past',
       }),
+    customTasks: z.array(z.string()).optional(),
   })
   .refine(validateStartBeforeEnd, {
     message: 'Start date and time must be earlier than end date and time',
