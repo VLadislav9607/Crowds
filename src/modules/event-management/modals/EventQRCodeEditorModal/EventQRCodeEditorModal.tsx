@@ -173,6 +173,7 @@ export const EventQRCodeEditorModal = forwardRef<EventQRCodeEditorModalRef>(
                 minimumDate={new Date()}
                 maximumDate={eventStartAt}
                 skeleton={isLoadingQRCodeDetails}
+                timeZone={refProps.timeZone}
               />
             )}
           />

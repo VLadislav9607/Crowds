@@ -90,8 +90,9 @@ export const OrgProfileSetupScreen = () => {
           margin={{ top: 7, bottom: 36 }}
           style={styles.logoDescription}
         >
-          This will be added to any post you make and{'\n'}should fit into a
-          square shape.
+          Max 3MB, JPEG or PNG. Your logo will not be seen by anyone until you
+          have an approved event and approved talent under signed NDA. Only a
+          category icon will be seen by the public.
         </AppText>
 
         <AppImage

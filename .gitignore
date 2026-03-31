@@ -80,3 +80,5 @@ supabase/functions
 # Claude
 CLAUDE.md
 .mcp.json
+
+.env.local

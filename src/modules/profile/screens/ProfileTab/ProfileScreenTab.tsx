@@ -1,15 +1,17 @@
-import { useRef } from 'react';
-import { TouchableOpacity, View } from 'react-native';
+import { useRef, useState } from 'react';
+import { Linking, TouchableOpacity, View } from 'react-native';
 import { SvgXml } from 'react-native-svg';
+import { BottomSheetModal, BottomSheetView } from '@gorhom/bottom-sheet';
 
-import { AppModal, If } from '@components';
+import { AppBottomSheet, AppModal, If } from '@components';
 import { AppButton, AppText } from '@ui';
 import { useDeleteAccount, removePushDevice } from '@actions';
 import { queryClient, supabase, realtimeService } from '@services';
 import { resetToScreen, Screens } from '@navigation';
 import { showErrorToast } from '@helpers';
 import { COLORS } from '@styles';
-import { useState } from 'react';
+
+import { TERMS_LINKS } from '@constants';
 
 import { LogoutModal, LogoutModalRef } from '../../modals';
 import { ProfileScreenLayout } from '../../layouts';
@@ -19,12 +21,13 @@ import { useProfileTabOptions } from '../../hooks';
 export const ProfileScreenTab = () => {
   const logoutModalRef = useRef<LogoutModalRef>(null);
   const [showDeleteModal, setShowDeleteModal] = useState(false);
+  const termsSheetRef = useRef<BottomSheetModal>(null);
   const { mutateAsync: deleteAccount, isPending: isDeleting } =
     useDeleteAccount();
 
   const handleDeleteAccount = async () => {
     try {
-      await deleteAccount();
+      await deleteAccount(undefined);
       setShowDeleteModal(false);
       await removePushDevice();
       realtimeService.unsubscribeAll();
@@ -39,6 +42,7 @@ export const ProfileScreenTab = () => {
   const options = useProfileTabOptions({
     onLogout: () => logoutModalRef.current?.open({}),
     onDeleteAccount: () => setShowDeleteModal(true),
+    onTermsOfService: () => termsSheetRef.current?.present(),
   });
 
   return (
@@ -66,6 +70,25 @@ export const ProfileScreenTab = () => {
       })}
 
       <LogoutModal ref={logoutModalRef} />
+
+      <AppBottomSheet bottomSheetRef={termsSheetRef} enableDynamicSizing>
+        <BottomSheetView style={styles.termsSheetContent}>
+          <AppText typography="bold_20" color="black" style={styles.termsSheetTitle}>
+            Terms of Service
+          </AppText>
+          {TERMS_LINKS.map(link => (
+            <TouchableOpacity
+              key={link.url}
+              style={styles.termsLinkItem}
+              onPress={() => Linking.openURL(link.url)}
+            >
+              <AppText typography="regular_14" color="main">
+                {link.label}
+              </AppText>
+            </TouchableOpacity>
+          ))}
+        </BottomSheetView>
+      </AppBottomSheet>
 
       <AppModal
         isVisible={showDeleteModal}

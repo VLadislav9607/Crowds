@@ -23,6 +23,7 @@ export const OnboardingUnAuthOrganizationScreen = () => {
     networkSetupFormRef,
     headquartersSetupFormRef,
     branchManagerEmailsFormRef,
+    scrollViewRef,
     organizationNameFormRef,
     primaryLocationFormRef,
     showFullScreenLoader,
@@ -80,6 +81,7 @@ export const OnboardingUnAuthOrganizationScreen = () => {
       onBackPress={goToPreviousStep}
       onForwardPress={goToNextStep}
       showLoader={showFullScreenLoader}
+      scrollViewRef={scrollViewRef}
     >
       <If condition={step === 0}>
         <OrganizationNameStep
@@ -130,6 +132,9 @@ export const OnboardingUnAuthOrganizationScreen = () => {
           <HeadquartersSetupStep
             ref={headquartersSetupFormRef}
             defaultValues={data.headquartersSetupFormData}
+            onValidationError={() =>
+              scrollViewRef.current?.scrollToEnd({ animated: true })
+            }
           />
         </If>
 

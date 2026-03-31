@@ -23,6 +23,7 @@ export enum Screens {
   OnboardingUnAuthOrganization = 'OnboardingUnAuthOrganization',
   OrgIdentityVerification = 'OrgIdentityVerification',
   TermsAndPrivacy = 'TermsAndPrivacy',
+  TermsAgreement = 'TermsAgreement',
   Congratulations = 'Congratulations',
 
   // Bottom Tabs
@@ -90,8 +91,6 @@ export enum Screens {
 
   // Profile
   FAQ = 'FAQ',
-  TermsAndConditions = 'TermsAndConditions',
-  PrivacyPolicy = 'PrivacyPolicy',
 
   // KYC
   VerificationProcessing = 'VerificationProcessing',

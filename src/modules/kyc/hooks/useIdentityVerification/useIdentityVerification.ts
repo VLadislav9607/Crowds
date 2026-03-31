@@ -81,8 +81,10 @@ function parseSdkResult(raw: unknown): {
   return {};
 }
 
-export const useIdentityVerification = (origin: VerificationOrigin = 'profile') => {
-  const { me } = useGetMe();
+export const useIdentityVerification = (
+  origin: VerificationOrigin = 'profile',
+) => {
+  const { me, talent } = useGetMe();
   const { mutateAsync: createKycSdkToken, isPending } = useCreateKycSdkToken();
   const { mutateAsync: createKycChecks } = useCreateKycChecks();
 
@@ -106,8 +108,9 @@ export const useIdentityVerification = (origin: VerificationOrigin = 'profile') 
           'documentCapture',
           { name: 'faceCapture', options: { type: 'photo' } },
           {
-            name: 'completion',
-            options: { message: "All done! We're now reviewing your submission." },
+            name: 'outro',
+            heading: 'All Done!',
+            message: "We're now reviewing your submission. This usually takes a few moments.",
           },
         ],
       });
@@ -132,7 +135,7 @@ export const useIdentityVerification = (origin: VerificationOrigin = 'profile') 
         userId,
         firstName: me?.first_name || '',
         lastName: me?.last_name || '',
-        dob: '2000-01-01',
+        dob: talent?.birth_date || '2000-01-01',
         appId: APP_ID,
       });
 
@@ -143,7 +146,7 @@ export const useIdentityVerification = (origin: VerificationOrigin = 'profile') 
       const message = error?.message || error?.error || 'Something went wrong';
       Alert.alert('Verification Error', message);
     }
-  }, [userId, me, createKycSdkToken, launchSdk]);
+  }, [userId, me, createKycSdkToken, launchSdk, talent?.birth_date]);
 
   return {
     goToVerification,

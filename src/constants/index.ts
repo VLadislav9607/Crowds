@@ -5,3 +5,4 @@ export * from './tanstackQueryKeys';
 export * from './regex';
 export * from './countries';
 export * from './countryCurrency';
+export * from './termsLinks';

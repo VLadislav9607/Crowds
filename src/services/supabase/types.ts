@@ -1784,6 +1784,7 @@ export type Database = {
           onboarding_copleted_step: number
           personal_email: string
           position: string
+          terms_accepted_at: string | null
           username: string
         }
         Insert: {
@@ -1797,6 +1798,7 @@ export type Database = {
           onboarding_copleted_step: number
           personal_email?: string
           position: string
+          terms_accepted_at?: string | null
           username: string
         }
         Update: {
@@ -1810,6 +1812,7 @@ export type Database = {
           onboarding_copleted_step?: number
           personal_email?: string
           position?: string
+          terms_accepted_at?: string | null
           username?: string
         }
         Relationships: []
@@ -2180,6 +2183,7 @@ export type Database = {
           subcategories: string[] | null
           tags: string[] | null
           tattoo_spot: Database["public"]["Enums"]["TattooSpot"][] | null
+          terms_accepted_at: string | null
           username: string
         }
         Insert: {
@@ -2213,6 +2217,7 @@ export type Database = {
           subcategories?: string[] | null
           tags?: string[] | null
           tattoo_spot?: Database["public"]["Enums"]["TattooSpot"][] | null
+          terms_accepted_at?: string | null
           username: string
         }
         Update: {
@@ -2246,6 +2251,7 @@ export type Database = {
           subcategories?: string[] | null
           tags?: string[] | null
           tattoo_spot?: Database["public"]["Enums"]["TattooSpot"][] | null
+          terms_accepted_at?: string | null
           username?: string
         }
         Relationships: []

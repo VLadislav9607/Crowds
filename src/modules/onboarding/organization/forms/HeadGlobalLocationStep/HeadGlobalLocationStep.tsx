@@ -1,4 +1,4 @@
-import { StyleSheet, View } from 'react-native';
+import { Keyboard, StyleSheet, View } from 'react-native';
 import { Controller, useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { forwardRef, useEffect, useImperativeHandle, useRef } from 'react';
@@ -107,7 +107,8 @@ export const HeadGlobalLocationStep = forwardRef<
             Add your Logo/Brand
           </AppText>
           <AppImage
-            onPress={() =>
+            onPress={() => {
+              Keyboard.dismiss();
               imageSourcePickerModalRef.current?.present({
                 onImagePicked: logo => {
                   onPickLogo?.({
@@ -118,8 +119,8 @@ export const HeadGlobalLocationStep = forwardRef<
                   });
                   imageSourcePickerModalRef.current?.dismiss();
                 },
-              })
-            }
+              });
+            }}
             imgUri={pickedLogo?.uri}
             containerStyle={styles.imageContainer}
             bucket="brand_avatars"

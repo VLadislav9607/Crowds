@@ -16,7 +16,7 @@ import { RefObject } from 'react';
 
 import { CommonOrgRegisterParams, OnboardingOrganizationData } from './types';
 import { ParsedLocation, useCreateGlobalOrg } from '@actions';
-import { showMutationErrorToast } from '@helpers';
+import { showErrorToast, showMutationErrorToast } from '@helpers';
 
 export interface UseGlobalOrgRegisterParams extends CommonOrgRegisterParams {
   organizationNameFormRef: RefObject<OrganizationNameFormRef | null>;
@@ -101,6 +101,9 @@ export const useGlobalOrgRegister = ({
   const handleHeadGlobalLocationFormSubmit = async (
     values: HeadGlobalLocationFormData,
   ) => {
+    if (!data.image) {
+      return;
+    }
     setData((prev: OnboardingOrganizationData) => ({
       ...prev,
       headGlobalLocationFormData: values,
@@ -151,10 +154,21 @@ export const useGlobalOrgRegister = ({
     }
 
     // Step 3 + offset: Head Global Location
-    step === 3 + offset &&
+    if (step === 3 + offset) {
+      if (!data.image) {
+        showErrorToast('Please add your brand logo');
+      }
       headGlobalLocationFormRef?.current?.handleSubmit(
         handleHeadGlobalLocationFormSubmit,
+        error => {
+          if (error?.parsed_location?.city) {
+            showErrorToast(
+              'Selected location does not include a city. Please try a different address.',
+            );
+          }
+        },
       )();
+    }
 
     // Step 4 + offset: Creator Information
     step === 4 + offset &&

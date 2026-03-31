@@ -73,6 +73,7 @@ export const ForgotPasswordForm = forwardRef<
             value={field.value}
             onChangeText={text => field.onChange(text.toLowerCase())}
             errorMessage={fieldState.error?.message}
+            autoCapitalize="none"
           />
         )}
       />

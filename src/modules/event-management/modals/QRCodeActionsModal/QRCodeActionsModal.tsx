@@ -54,6 +54,7 @@ export const QRCodeActionsModal = ({
                 eventId: data?.eventId!,
                 editingQRCodeId: data?.qrCodeId!,
                 eventStartAt: data?.eventStartAt!,
+                timeZone: data?.timeZone,
               });
             }}
           />

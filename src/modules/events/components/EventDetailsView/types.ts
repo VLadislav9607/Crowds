@@ -20,6 +20,7 @@ export type EventDetailsCardWithMapProps = {
   startTimeFormatted?: string;
   endTimeFormatted?: string;
   registrationClosesFormatted?: string;
+  checkinCutoffFormatted?: string;
 };
 
 export interface EventDetailsRequirementItem {

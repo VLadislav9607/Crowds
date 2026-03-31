@@ -27,7 +27,7 @@ export const HeadquartersSetupStep = forwardRef<
   HeadquartersSetupStepRef,
   HeadquartersSetupStepProps
 >((props, ref) => {
-  const { defaultValues } = props;
+  const { defaultValues, onValidationError } = props;
 
   const [data, setData] = useState<HeadquartersSetupStepData>(
     defaultValues ?? {
@@ -144,6 +144,7 @@ export const HeadquartersSetupStep = forwardRef<
 
     if (isActiveHQ === false && !opsCountry) {
       showErrorToast('Please select operational office location');
+      onValidationError?.();
       return;
     }
 

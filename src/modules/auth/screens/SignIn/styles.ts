@@ -17,4 +17,8 @@ export const styles = StyleSheet.create({
   forgotPasswordText: {
     textDecorationLine: 'underline',
   },
+  backButton: {
+    alignSelf: 'center',
+    marginTop: 24,
+  },
 });

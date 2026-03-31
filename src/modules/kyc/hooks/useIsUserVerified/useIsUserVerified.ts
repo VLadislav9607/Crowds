@@ -14,12 +14,14 @@ export const invalidateUserKycStatus = (userId: string) => {
 export const useIsUserVerified = ({
   userId,
   enabled = true,
+  refetchInterval,
 }: UseIsUserVerifiedProps) => {
   const query = useQuery({
     queryKey: [USER_KYC_STATUS_QUERY_KEY, userId],
     queryFn: () => fetchUserKycStatus(userId!),
     enabled: enabled && !!userId,
     staleTime: 0,
+    refetchInterval,
   });
 
   const isVerified = query.data?.status === 'completed';

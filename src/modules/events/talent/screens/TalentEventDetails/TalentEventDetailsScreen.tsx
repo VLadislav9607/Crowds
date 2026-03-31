@@ -179,6 +179,10 @@ export const TalentEventDetailsScreen = () => {
       )
     : '';
 
+  const checkinCutoffFormatted = event?.checkin_cutoff
+    ? formatInTimeZone(event.checkin_cutoff, timezone, 'd MMM yyyy, h:mm a')
+    : '';
+
   const officeCountryName = event?.office_country_code
     ? getCountryNameByCode(event.office_country_code)
     : undefined;
@@ -223,6 +227,7 @@ export const TalentEventDetailsScreen = () => {
           startTimeFormatted={startDateTimeFormatted}
           endTimeFormatted={endDateTimeFormatted}
           registrationClosesFormatted={registrationClosesFormatted}
+          checkinCutoffFormatted={checkinCutoffFormatted}
           location={
             event?.event_location
               ? {
