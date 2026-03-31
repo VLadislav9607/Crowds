@@ -28,6 +28,7 @@ export const useCreateEventForm = () => {
       eventBrief: '',
       ndaDocument: undefined,
       registrationClosingAt: undefined,
+      customTasks: [],
     },
     mode: 'onChange',
   });

@@ -133,6 +133,16 @@ export const HeadGlobalLocationStep = forwardRef<
           />
         </View>
 
+        <AppText
+          typography="regular_14"
+          color="gray_primary"
+          margin={{ top: 14 }}
+        >
+          Max 3MB, JPEG or PNG. Your logo will not be seen by anyone until you
+          have an approved event and approved talent under signed NDA. Only a
+          category icon will be seen by the public.
+        </AppText>
+
         <ImageSourcePickerModal
           bottomSheetRef={imageSourcePickerModalRef}
           validateForBucket="brand_avatars"

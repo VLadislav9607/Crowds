@@ -73,7 +73,8 @@ export const useDraftControll = ({
   const mapDraftDataToFormData = (
     eventData: EventForOrgMemberDto,
   ): Partial<CreateEventFormData> => {
-    const timezone = eventData.event_location?.timezone || 'UTC';
+    const deviceTimezone = Intl.DateTimeFormat().resolvedOptions().timeZone;
+    const timezone = eventData.event_location?.timezone || deviceTimezone;
 
     const parseCoords = (coords: unknown): string | undefined => {
       if (typeof coords === 'string' && coords.startsWith('POINT(')) {
@@ -200,6 +201,8 @@ export const useDraftControll = ({
       ndaDocumentName: eventData.nda_file_name || '',
       ndaDocumentPath: eventData.nda_file_path || '',
       registrationClosingAt: parseDate(eventData.registration_closes_at),
+      customTasks:
+        (eventData as any).custom_tasks?.map((t: any) => t.text) ?? [],
     };
   };
 
@@ -230,7 +233,8 @@ export const useDraftControll = ({
   const prepareDraftDataToSave = async (
     values: CreateEventDraftFormData,
   ): Promise<CreateEventDraftBodyDto | null> => {
-    const timezone = values.location?.timezone || 'UTC';
+    const deviceTimezone = Intl.DateTimeFormat().resolvedOptions().timeZone;
+    const timezone = values.location?.timezone || deviceTimezone;
     const startAt = values.startAt
       ? fromZonedTime(values.startAt, timezone).toISOString()
       : undefined;
@@ -339,6 +343,7 @@ export const useDraftControll = ({
       ndaDocumentName,
       ndaDocumentPath,
       officeId: resolvedOfficeId!,
+      customTasks: values.customTasks?.filter(t => t.trim() !== '') ?? undefined,
     };
   };
 

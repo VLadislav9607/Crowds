@@ -65,6 +65,7 @@ export interface CreatePublishedEventBodyDto {
   ndaDocumentPath?: string;
   location?: EventLocationDto | null;
   ageGroups: AgeGroupDto[];
+  customTasks?: string[];
 }
 
 export interface CreatePublishedEventResDto {

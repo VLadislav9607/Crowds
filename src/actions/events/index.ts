@@ -21,3 +21,4 @@ export * from './useSubmitTaskPhoto';
 export * from './useGetEventTaskCompletions';
 export * from './useReviewTaskCompletion';
 export * from './useGetEventReport';
+export * from './useToggleCustomTask';

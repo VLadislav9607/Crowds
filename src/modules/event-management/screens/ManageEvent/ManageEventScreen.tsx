@@ -21,7 +21,8 @@ export const ManageEventScreen = () => {
   const { mutate: updateCheckinCutoff, isPending: isUpdatingCutoff } =
     useUpdateCheckinCutoff();
 
-  const eventTimezone = event?.event_location?.timezone || 'UTC';
+  const deviceTimezone = Intl.DateTimeFormat().resolvedOptions().timeZone;
+  const eventTimezone = event?.event_location?.timezone || deviceTimezone;
 
   const timezoneOffsetInMinutes = useMemo(
     () => getTimezoneOffset(eventTimezone) / 60000,

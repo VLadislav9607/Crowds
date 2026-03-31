@@ -88,7 +88,8 @@ export const useEventControll = ({
     values: CreateEventFormData,
   ): Promise<CreatePublishedEventBodyDto | null> => {
     let location;
-    let timezone = 'UTC';
+    const deviceTimezone = Intl.DateTimeFormat().resolvedOptions().timeZone;
+    let timezone = deviceTimezone;
 
     if (values.locationType === 'entire_country') {
       location = null;
@@ -96,7 +97,7 @@ export const useEventControll = ({
       if (!values.location) {
         return null;
       }
-      timezone = values.location.timezone || 'UTC';
+      timezone = values.location.timezone || deviceTimezone;
       location = {
         ...values.location,
         coords: `POINT(${values.location.longitude} ${values.location.latitude})`,
@@ -171,6 +172,7 @@ export const useEventControll = ({
       ageGroups: values.ageGroups,
       ndaDocumentName,
       ndaDocumentPath,
+      customTasks: values.customTasks?.filter(t => t.trim() !== ''),
     };
   };
 

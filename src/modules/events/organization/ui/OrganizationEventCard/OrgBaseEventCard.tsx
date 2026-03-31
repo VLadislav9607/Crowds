@@ -26,7 +26,8 @@ export const OrgBaseEventCard = ({
   const onPress = () => {
     goToScreen(Screens.OrgEventDetails, { eventId: event?.id ?? '' });
   };
-  const timezone = event?.event_location?.timezone || 'UTC';
+  const deviceTimezone = Intl.DateTimeFormat().resolvedOptions().timeZone;
+  const timezone = event?.event_location?.timezone || deviceTimezone;
   const { organizationMember } = useGetMe();
 
   const startAt = event?.start_at

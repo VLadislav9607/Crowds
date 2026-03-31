@@ -24,6 +24,7 @@ import {
   EventDetailsCardWithMap,
   EventDetailsTextBlock,
   EventGroupDetails,
+  EventTasksSection,
 } from '../../../components';
 import { EventDetailScreenLayout } from '../../../layouts';
 import { CancelEventModal } from '../../modals';
@@ -88,7 +89,8 @@ export const OrgEventDetails = () => {
     });
   };
 
-  const timezone = event?.event_location?.timezone || 'UTC';
+  const deviceTimezone = Intl.DateTimeFormat().resolvedOptions().timeZone;
+  const timezone = event?.event_location?.timezone || deviceTimezone;
 
   const startDateTimeFormatted = event?.start_at
     ? formatInTimeZone(event.start_at, timezone, 'd MMM yyyy, h:mm a')
@@ -297,6 +299,21 @@ export const OrgEventDetails = () => {
               : `$${event?.payment_amount} per hour`
           }
         />
+
+        <If condition={!isLoading}>
+          <EventTasksSection
+            variant="org"
+            systemTaskState={{
+              checkedInAt: null,
+              checkedOutAt: null,
+              taskPhotoPath: null,
+              isMediaProduction:
+                (event as any)?.event_type === 'media_production',
+            }}
+            customTasks={event?.custom_tasks ?? []}
+            timezone={event?.event_location?.timezone ?? 'UTC'}
+          />
+        </If>
 
         <View style={{ gap: 10 }}>
           <AppText typography="bold_16" margin={{ bottom: 8 }}>
