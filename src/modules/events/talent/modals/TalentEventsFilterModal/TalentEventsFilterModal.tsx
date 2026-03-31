@@ -16,6 +16,7 @@ import {
 } from '@components';
 import { COLORS, TYPOGRAPHY } from '@styles';
 import { useBoolean } from '@hooks';
+import { SelectEventCategoryField } from '@modules/events/components';
 
 export const TalentEventsFilterModal = ({
   bottomSheetRef,
@@ -296,6 +297,18 @@ export const TalentEventsFilterModal = ({
                 />
               </View>
             </View>
+
+            <SelectEventCategoryField
+              selectedCategoryId={filters.categoryId}
+              onChange={category =>
+                onChangeFiltersData('categoryId', category.id)
+              }
+              fieldProps={{
+                label: 'Category',
+                placeholderText: 'Select category',
+                labelProps: { typography: 'h5', color: 'black' },
+              }}
+            />
           </View>
         </View>
 

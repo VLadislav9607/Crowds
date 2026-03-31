@@ -27,7 +27,7 @@ export const primaryLocationFormSchema = z
   .object({
     parsed_location: z.object({
       autocomplete_description: z.string(),
-      city: z.string().optional(),
+      city: z.string().min(1, 'Location must include a city'),
       coords: z.string(),
       country: z.string(),
       country_code: z.string(),
@@ -44,7 +44,7 @@ export const primaryLocationFormSchema = z
     parsed_head_office_location: z
       .object({
         autocomplete_description: z.string(),
-        city: z.string().optional(),
+        city: z.string().min(1, 'Location must include a city'),
         coords: z.string(),
         country: z.string(),
         country_code: z.string(),

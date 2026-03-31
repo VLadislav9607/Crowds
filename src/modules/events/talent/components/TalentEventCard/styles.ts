@@ -20,9 +20,9 @@ export const styles = StyleSheet.create({
     alignItems: 'center',
   },
   iconContainer: {
-    width: 40,
-    height: 40,
-    borderRadius: 5,
+    width: 52,
+    height: 52,
+    borderRadius: 8,
     backgroundColor: COLORS.main,
     justifyContent: 'center',
     alignItems: 'center',

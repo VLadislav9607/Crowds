@@ -4,6 +4,7 @@ export interface EventQRCodeEditorModalRefProps {
   eventId: string;
   editingQRCodeId?: string;
   eventStartAt: string;
+  timeZone?: string;
 }
 
 export interface EventQRCodeEditorModalRef

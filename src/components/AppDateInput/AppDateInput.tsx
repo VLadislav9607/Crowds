@@ -8,6 +8,7 @@ import { useState } from 'react';
 import { If, Skeleton } from '@components';
 import DatePicker from 'react-native-date-picker';
 import { format } from 'date-fns';
+import { formatInTimeZone } from 'date-fns-tz';
 
 export const AppDateInput = ({
   label,
@@ -31,6 +32,7 @@ export const AppDateInput = ({
   locale,
   defaultIconColor = 'main',
   skeleton = false,
+  timeZone,
   ...props
 }: AppDateInputProps) => {
   const [showDatePicker, setShowDatePicker] = useState(false);
@@ -111,11 +113,17 @@ export const AppDateInput = ({
                 style={[styles.value, valueProps?.style]}
               >
                 {value &&
-                  (mode === 'time'
-                    ? format(value, valueFormat || 'h:mm a').toLowerCase()
-                    : mode === 'datetime'
-                    ? format(value, valueFormat || 'MM/dd/yyyy h:mm a')
-                    : format(value, valueFormat || 'MM/dd/yyyy'))}
+                  (() => {
+                    const fmt = timeZone ? formatInTimeZone : format;
+                    const args = timeZone
+                      ? ([value, timeZone] as const)
+                      : ([value] as const);
+                    return mode === 'time'
+                      ? fmt(...args, valueFormat || 'h:mm a').toLowerCase()
+                      : mode === 'datetime'
+                      ? fmt(...args, valueFormat || 'MM/dd/yyyy h:mm a')
+                      : fmt(...args, valueFormat || 'MM/dd/yyyy');
+                  })()}
               </AppText>
             </If>
 

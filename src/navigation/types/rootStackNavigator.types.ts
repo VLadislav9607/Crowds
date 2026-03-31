@@ -41,6 +41,9 @@ export type RootStackParamList = {
   [Screens.OnboardingAuthTalent]: undefined;
   [Screens.OrgIdentityVerification]: undefined;
   [Screens.TermsAndPrivacy]: undefined;
+  [Screens.TermsAgreement]: {
+    origin: 'talent_onboarding' | 'org_onboarding';
+  };
 
   // Organization screens
   [Screens.CopyInviteLink]: { deepLink: string; memberName: string };
@@ -132,8 +135,6 @@ export type RootStackParamList = {
   [Screens.NotificationSettings]: { role: Role };
   [Screens.Notifications]: undefined;
   [Screens.FAQ]: undefined;
-  [Screens.TermsAndConditions]: undefined;
-  [Screens.PrivacyPolicy]: undefined;
 
   // KYC
   [Screens.VerificationProcessing]: {

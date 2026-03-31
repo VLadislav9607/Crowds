@@ -137,6 +137,7 @@ export const EventQRCodesScreen = () => {
                       qrCodeId: item.id,
                       eventId: params?.eventId!,
                       eventStartAt,
+                      timeZone: timezone,
                     })
                   }
                 >
@@ -201,6 +202,7 @@ export const EventQRCodesScreen = () => {
     eventQRCodeEditorModalRef.current?.open({
       eventId: params?.eventId!,
       eventStartAt,
+      timeZone: timezone,
     });
   };
 

@@ -34,9 +34,6 @@ export const styles = StyleSheet.create({
     backgroundColor: COLORS.white,
   },
   listTitle: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
     marginBottom: 16,
     marginTop: 32,
     paddingHorizontal: 20,

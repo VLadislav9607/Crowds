@@ -72,14 +72,6 @@ export const TalentEventsHomeTab = () => {
               <AppText typography="extra_bold_18" color="black">
                 Dashboard
               </AppText>
-
-              <TouchableOpacity
-                hitSlop={{ top: 10, bottom: 10, left: 10, right: 10 }}
-              >
-                <AppText typography="regular_12" color="black">
-                  View all
-                </AppText>
-              </TouchableOpacity>
             </View>
           </>
         }

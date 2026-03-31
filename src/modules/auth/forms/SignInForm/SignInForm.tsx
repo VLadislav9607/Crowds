@@ -87,6 +87,7 @@ export const SignInForm = forwardRef<SignInFormRef, SignInFormProps>(
               value={field.value}
               onChangeText={text => field.onChange(text.toLowerCase())}
               errorMessage={fieldState.error?.message}
+              autoCapitalize="none"
             />
           )}
         />

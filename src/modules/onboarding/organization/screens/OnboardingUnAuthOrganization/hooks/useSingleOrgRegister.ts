@@ -88,14 +88,39 @@ export const useSingleOrgRegister = ({
       organizationNameFormRef.current?.handleSubmit(
         handleOrganizationNameFormSubmit,
       )();
-    step === 1 &&
+
+    console.log('data', data);
+    if (step === 1) {
+      if (!data.image) {
+        showErrorToast('Please add your brand logo');
+        return;
+      }
       primaryLocationFormRef.current?.handleSubmit(
         handlePrimaryLocationFormSubmit,
-        error =>
-          (error?.parsed_location?.street_number ||
-            error?.parsed_head_office_location?.street_number) &&
-          showErrorToast('Location must contain a full address'),
+        error => {
+          const locErr = error?.parsed_location;
+          const headErr = error?.parsed_head_office_location;
+          if (locErr?.city || headErr?.city) {
+            showErrorToast(
+              'Selected location does not include a city. Please try a different address.',
+            );
+          } else if (locErr?.street_number || headErr?.street_number) {
+            showErrorToast('Location must contain a full address');
+          } else if (
+            locErr?.country ||
+            locErr?.country_code ||
+            locErr?.region ||
+            headErr?.country ||
+            headErr?.country_code ||
+            headErr?.region
+          ) {
+            showErrorToast(
+              'Could not determine the country for this address. Please try a different address.',
+            );
+          }
+        },
       )();
+    }
     step === 2 &&
       organizationCreatorInformationFormRef.current?.handleSubmit(
         handleOrganizationCreatorInformationFormSubmit,

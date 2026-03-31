@@ -13,4 +13,5 @@ export interface UserKycRecord {
 export interface UseIsUserVerifiedProps {
   userId?: string;
   enabled?: boolean;
+  refetchInterval?: number | false;
 }

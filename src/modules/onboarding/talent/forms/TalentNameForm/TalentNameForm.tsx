@@ -57,6 +57,7 @@ export const TalentNameForm = forwardRef<
             value={field.value}
             onChangeText={text => field.onChange(text.toLowerCase())}
             errorMessage={fieldState.error?.message}
+            autoCapitalize="none"
           />
         )}
       />
@@ -71,6 +72,7 @@ export const TalentNameForm = forwardRef<
             value={field.value}
             onChangeText={field.onChange}
             errorMessage={fieldState.error?.message}
+            autoCapitalize="words"
           />
         )}
       />
@@ -85,6 +87,7 @@ export const TalentNameForm = forwardRef<
             value={field.value}
             onChangeText={field.onChange}
             errorMessage={fieldState.error?.message}
+            autoCapitalize="words"
           />
         )}
       />

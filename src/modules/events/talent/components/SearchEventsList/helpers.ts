@@ -77,5 +77,10 @@ export const convertFiltersToSearchParams = (
     params.filter_payment_type = filters.paymentType;
   }
 
+  // Фільтр за категорією
+  if (filters.categoryId) {
+    params.filter_category_id = filters.categoryId;
+  }
+
   return params;
 };

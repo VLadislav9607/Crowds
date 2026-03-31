@@ -171,7 +171,7 @@ export const TalentEventCard = ({
         style={styles.imageContainer}
       >
         <View style={styles.iconContainer}>
-          <SvgXml xml={eventIcon('white')} width={20} height={20} />
+          <SvgXml xml={eventIcon('white')} width={28} height={28} />
         </View>
       </ImageBackground>
 
@@ -379,27 +379,6 @@ export const TalentEventCard = ({
               </If>
 
               <If condition={!!event.nda_file_path && !event.nda_accepted_at}>
-                {/* <TouchableOpacity
-                  onPress={() =>
-                    goToScreen(Screens.AcceptEventNda, {
-                      eventId: event.event_id,
-                      participationId: event.participant?.id!,
-                      ndaFilePath: event.nda_file_path!,
-                      ndaFileName: event.nda_file_name || undefined,
-                    })
-                  }
-                  style={styles.ndaButton}
-                >
-                  <AppText typography="bold_12" color="red">
-                    ACCEPT NDA
-                  </AppText>
-                  <SvgXml
-                    xml={ICONS.chevronRight('red')}
-                    width={14}
-                    height={14}
-                  />
-                </TouchableOpacity> */}
-
                 <AppButton
                   onPress={() => {
                     goToScreen(Screens.AcceptEventNda, {

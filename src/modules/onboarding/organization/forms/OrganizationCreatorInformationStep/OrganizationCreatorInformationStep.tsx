@@ -61,6 +61,7 @@ export const OrganizationCreatorInformationStep = forwardRef<
               onChangeText={text => onChange(text.toLowerCase())}
               containerStyle={styles.nameInput}
               errorMessage={fieldState.error?.message}
+              autoCapitalize="none"
             />
 
             <AppText
@@ -68,7 +69,7 @@ export const OrganizationCreatorInformationStep = forwardRef<
               color="gray_primary"
               margin={{ top: 8 }}
             >
-              This will be your login username.
+              This is your personal login username.
             </AppText>
           </View>
         )}
@@ -85,6 +86,7 @@ export const OrganizationCreatorInformationStep = forwardRef<
               onChangeText={onChange}
               containerStyle={styles.nameInput}
               errorMessage={fieldState.error?.message}
+              autoCapitalize="words"
             />
           )}
         />
@@ -99,6 +101,7 @@ export const OrganizationCreatorInformationStep = forwardRef<
               onChangeText={onChange}
               containerStyle={styles.nameInput}
               errorMessage={fieldState.error?.message}
+              autoCapitalize="words"
             />
           )}
         />
@@ -129,6 +132,7 @@ export const OrganizationCreatorInformationStep = forwardRef<
             value={value}
             onChangeText={onChange}
             errorMessage={fieldState.error?.message}
+            autoCapitalize="none"
           />
         )}
       />

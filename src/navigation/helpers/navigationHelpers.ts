@@ -1,4 +1,4 @@
-import { CommonActions } from '@react-navigation/native';
+import { CommonActions, StackActions } from '@react-navigation/native';
 import { navigationRef } from '../AppNavigation';
 import { RootStackParamList } from '../types';
 
@@ -16,6 +16,15 @@ export const goBack = () => {
     navigationRef.goBack();
   }
 };
+
+export function replaceScreen<T extends keyof RootStackParamList>(
+  screen: T,
+  params?: RootStackParamList[T],
+): void {
+  if (navigationRef.isReady()) {
+    navigationRef.dispatch(StackActions.replace(screen as string, params));
+  }
+}
 
 export function resetToScreen<T extends keyof RootStackParamList>(
   screen: T,

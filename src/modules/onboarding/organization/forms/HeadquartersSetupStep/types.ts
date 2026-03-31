@@ -7,6 +7,7 @@ export interface HeadquartersSetupStepData {
 
 export interface HeadquartersSetupStepProps {
   defaultValues?: HeadquartersSetupStepData;
+  onValidationError?: () => void;
 }
 
 export interface HeadquartersSetupStepRef {

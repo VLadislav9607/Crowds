@@ -15,11 +15,13 @@ interface ProfileOption {
 interface UseProfileTabOptionsProps {
   onLogout: () => void;
   onDeleteAccount: () => void;
+  onTermsOfService: () => void;
 }
 
 export const useProfileTabOptions = ({
   onLogout,
   onDeleteAccount,
+  onTermsOfService,
 }: UseProfileTabOptionsProps) => {
   const { isTalent, organizationMember } = useGetMe();
 
@@ -65,14 +67,9 @@ export const useProfileTabOptions = ({
       onPress: () => goToScreen(Screens.FAQ),
     },
     {
-      title: 'Terms and conditions',
+      title: 'Terms of Service & Privacy',
       icon: ICONS.bookMark(),
-      onPress: () => goToScreen(Screens.TermsAndConditions),
-    },
-    {
-      title: 'Privacy policy',
-      icon: ICONS.userShield(),
-      onPress: () => goToScreen(Screens.PrivacyPolicy),
+      onPress: onTermsOfService,
     },
     {
       title: 'Delete account',
@@ -133,14 +130,9 @@ export const useProfileTabOptions = ({
       onPress: () => goToScreen(Screens.FAQ),
     },
     {
-      title: 'Terms and conditions',
+      title: 'Terms of Service & Privacy',
       icon: ICONS.bookMark(),
-      onPress: () => goToScreen(Screens.TermsAndConditions),
-    },
-    {
-      title: 'Privacy policy',
-      icon: ICONS.userShield(),
-      onPress: () => goToScreen(Screens.PrivacyPolicy),
+      onPress: onTermsOfService,
     },
     {
       title: `App version ${DeviceInfo.getVersion()} (${DeviceInfo.getBuildNumber()})`,

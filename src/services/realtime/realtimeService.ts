@@ -21,9 +21,13 @@ class RealtimeService {
     } = config;
 
     if (this.channels.has(channelName)) {
-      this.unsubscribe(channelName);
+      console.log('[RT] Channel already exists, removing:', channelName);
+      const existing = this.channels.get(channelName)!;
+      supabase.removeChannel(existing);
+      this.channels.delete(channelName);
     }
 
+    console.log('[RT] Creating channel:', channelName, 'table:', table, 'filter:', filter);
     const channel = supabase
       .channel(channelName)
       .on(
@@ -31,7 +35,9 @@ class RealtimeService {
         { event, schema, table, filter },
         (payload: RealtimePostgresChangesPayload<T>) => onPayload(payload),
       )
-      .subscribe();
+      .subscribe((status: string) => {
+        console.log('[RT] Channel status:', channelName, status);
+      });
 
     this.channels.set(channelName, channel);
     return channel;
@@ -40,13 +46,13 @@ class RealtimeService {
   unsubscribe(channelName: string): void {
     const channel = this.channels.get(channelName);
     if (channel) {
-      channel.unsubscribe();
+      supabase.removeChannel(channel);
       this.channels.delete(channelName);
     }
   }
 
   unsubscribeAll(): void {
-    this.channels.forEach(channel => channel.unsubscribe());
+    this.channels.forEach(channel => supabase.removeChannel(channel));
     this.channels.clear();
   }
 }
