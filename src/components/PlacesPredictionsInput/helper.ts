@@ -18,34 +18,47 @@ export const parseLocationAdditionalFields = (
 ): ParsedLocationAdditionalFields => {
   const result: ParsedLocationAdditionalFields = {};
 
-  console.log('addressComponents', addressComponents);
   if (Array.isArray(addressComponents)) {
     addressComponents.forEach(component => {
       const types = component.types;
 
       if (types.includes(AddressType.street_number)) {
         result.street_number = component.long_name;
-      } else if (types.includes(AddressType.route)) {
+      }
+      if (types.includes(AddressType.route)) {
         result.street_name = component.long_name;
-      } else if (types.includes(AddressType.sublocality)) {
+      }
+      if (types.includes(AddressType.sublocality)) {
         result.sublocality = component.long_name;
-      } else if (types.includes(AddressType.locality)) {
+      }
+      if (types.includes(AddressType.locality)) {
         result.city = component.long_name;
-      } else if (types.includes(AddressType.administrative_area_level_1)) {
+      }
+      if (
+        !result.city &&
+        types.includes('postal_town' as AddressType)
+      ) {
+        result.city = component.long_name;
+      }
+      if (types.includes(AddressType.administrative_area_level_1)) {
         result.region = component.long_name;
-      } else if (types.includes(AddressType.country)) {
+      }
+      if (types.includes(AddressType.country)) {
         result.country = component.long_name;
         result.country_code = component.short_name;
-      } else if (types.includes(AddressType.postal_code)) {
+      }
+      if (types.includes(AddressType.postal_code)) {
         result.postal_code = component.long_name;
-      } else if (types.includes(AddressType.route)) {
-        result.street_name = component.long_name;
-      } else if (types.includes(AddressType.street_number)) {
-        result.street_number = component.long_name;
-      } else if (types.includes(AddressType.street_address)) {
+      }
+      if (types.includes(AddressType.street_address)) {
         result.street_address = component.long_name;
       }
     });
+
+    // Fallback: use sublocality or region as city if locality was not found
+    if (!result.city) {
+      result.city = result.sublocality || result.region || '';
+    }
   }
 
   return result;

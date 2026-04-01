@@ -82,7 +82,7 @@ export const ChatRoomScreen = () => {
     if (params?.chatType === ChatType.Direct) {
       return directChatParticipant?.display_name;
     }
-    return 'Group messages';
+    return params?.title || 'Group messages';
   };
 
   const getImageHeader = () => {

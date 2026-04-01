@@ -1,4 +1,4 @@
-import { useRef, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { Alert, Linking, Platform, View } from 'react-native';
 import { BottomSheetModal } from '@gorhom/bottom-sheet';
 import { If, AppImage } from '@components';
@@ -26,6 +26,7 @@ import {
   showSuccessToast,
   showErrorToast,
   showInfoToast,
+  showWarningToast,
 } from '@helpers';
 import { formatInTimeZone } from 'date-fns-tz';
 import RNCalendarEvents from 'react-native-calendar-events';
@@ -101,7 +102,7 @@ export const TalentEventDetailsScreen = () => {
     goToScreen(Screens.ChatRoom, {
       chatId: event.group_chat_id,
       chatType: ChatType.Group,
-      title: 'Group',
+      title: event.title ? `${event.title} · Group` : 'Group messages',
       imageUrl: '',
     });
   };
@@ -203,6 +204,46 @@ export const TalentEventDetailsScreen = () => {
   const isMediaProduction = event?.event_type === 'media_production';
   const hasCheckedIn = !!event?.checked_in_at;
   const hasCheckedOut = !!event?.checked_out_at;
+
+  const [elapsed, setElapsed] = useState('');
+
+  useEffect(() => {
+    if (!hasCheckedIn || hasCheckedOut) return;
+
+    const checkedInTime = new Date(event!.checked_in_at!).getTime();
+
+    const updateElapsed = () => {
+      const diff = Math.max(0, Date.now() - checkedInTime);
+      const hours = Math.floor(diff / 3600000);
+      const minutes = Math.floor((diff % 3600000) / 60000);
+      const seconds = Math.floor((diff % 60000) / 1000);
+      setElapsed(
+        `${String(hours).padStart(2, '0')}:${String(minutes).padStart(2, '0')}:${String(seconds).padStart(2, '0')}`,
+      );
+    };
+
+    updateElapsed();
+    const interval = setInterval(updateElapsed, 1000);
+    return () => clearInterval(interval);
+  }, [hasCheckedIn, hasCheckedOut, event?.checked_in_at]);
+
+  const finalDuration = (() => {
+    if (!event?.checked_in_at || !event?.checked_out_at) return '';
+    const diff =
+      new Date(event.checked_out_at).getTime() -
+      new Date(event.checked_in_at).getTime();
+    const hours = Math.floor(diff / 3600000);
+    const minutes = Math.floor((diff % 3600000) / 60000);
+    const seconds = Math.floor((diff % 60000) / 1000);
+    return `${String(hours).padStart(2, '0')}:${String(minutes).padStart(2, '0')}:${String(seconds).padStart(2, '0')}`;
+  })();
+
+  const checkedInFormatted = event?.checked_in_at
+    ? formatInTimeZone(event.checked_in_at, timezone, 'h:mm a')
+    : '';
+  const checkedOutFormatted = event?.checked_out_at
+    ? formatInTimeZone(event.checked_out_at, timezone, 'h:mm a')
+    : '';
   const showTaskUpload = hasCheckedIn && !isMediaProduction;
   const showTaskBanner =
     hasCheckedOut && !isMediaProduction && event?.task_status === 'pending';
@@ -287,6 +328,61 @@ export const TalentEventDetailsScreen = () => {
               <EventGroupDetails group={group} key={group.id} />
             ))}
           </View>
+        </If>
+
+        <If condition={!isLoading && hasCheckedIn}>
+          <View style={styles.checkinStatusSection}>
+            <View style={styles.checkinStatusRow}>
+              <AppText typography="regular_14" color="gray">
+                Checked in at
+              </AppText>
+              <AppText typography="semibold_14" color="black">
+                {checkedInFormatted}
+              </AppText>
+            </View>
+            <If condition={hasCheckedOut}>
+              <View style={styles.checkinStatusRow}>
+                <AppText typography="regular_14" color="gray">
+                  Checked out at
+                </AppText>
+                <AppText typography="semibold_14" color="black">
+                  {checkedOutFormatted}
+                </AppText>
+              </View>
+            </If>
+            <View style={styles.checkinStatusRow}>
+              <AppText typography="regular_14" color="gray">
+                Duration
+              </AppText>
+              <AppText typography="semibold_14" color={hasCheckedOut ? 'black' : 'green'}>
+                {hasCheckedOut ? finalDuration : elapsed}
+              </AppText>
+            </View>
+          </View>
+        </If>
+
+        <If condition={!isLoading && !!event?.participation_id && !hasCheckedIn}>
+          <AppButton
+            onPress={() => goToScreen(Screens.BottomTabs, { screen: Screens.TalerQRCode })}
+            title="Check In"
+            wrapperStyles={{ backgroundColor: COLORS.green }}
+            titleStyles={{ color: COLORS.white }}
+          />
+        </If>
+
+        <If condition={!isLoading && hasCheckedIn && !hasCheckedOut}>
+          <AppButton
+            onPress={() => {
+              if (event?.end_at && new Date() < new Date(event.end_at)) {
+                showWarningToast(`The event has not ended yet. You can check out after ${endDateTimeFormatted}`);
+                return;
+              }
+              goToScreen(Screens.BottomTabs, { screen: Screens.TalerQRCode });
+            }}
+            title="Check Out"
+            wrapperStyles={{ backgroundColor: COLORS.red }}
+            titleStyles={{ color: COLORS.white }}
+          />
         </If>
 
         <If condition={!isLoading}>

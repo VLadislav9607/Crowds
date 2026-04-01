@@ -21,6 +21,17 @@ export const styles = StyleSheet.create({
       borderLeftWidth: 4,
       borderLeftColor: COLORS.main,
     },
+    checkinStatusSection: {
+      backgroundColor: COLORS.gray_200,
+      borderRadius: 12,
+      padding: 16,
+      gap: 8,
+    },
+    checkinStatusRow: {
+      flexDirection: 'row',
+      justifyContent: 'space-between',
+      alignItems: 'center',
+    },
     taskUploadSection: {
       gap: 12,
     },

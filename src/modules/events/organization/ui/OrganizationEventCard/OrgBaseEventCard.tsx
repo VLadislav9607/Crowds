@@ -67,7 +67,7 @@ export const OrgBaseEventCard = ({
     >
       {/* Header Row */}
       <View style={cardStyles.nameRow}>
-        <AppText style={cardStyles.name} numberOfLines={1} typography="bold_14">
+        <AppText style={cardStyles.name} typography="bold_14">
           {event?.title}
         </AppText>
         {headerRight}

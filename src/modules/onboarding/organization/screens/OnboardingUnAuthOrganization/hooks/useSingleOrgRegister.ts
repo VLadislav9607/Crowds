@@ -100,11 +100,7 @@ export const useSingleOrgRegister = ({
         error => {
           const locErr = error?.parsed_location;
           const headErr = error?.parsed_head_office_location;
-          if (locErr?.city || headErr?.city) {
-            showErrorToast(
-              'Selected location does not include a city. Please try a different address.',
-            );
-          } else if (locErr?.street_number || headErr?.street_number) {
+          if (locErr?.street_number || headErr?.street_number) {
             showErrorToast('Location must contain a full address');
           } else if (
             locErr?.country ||
