@@ -19,7 +19,6 @@ export const cardStyles = StyleSheet.create({
   nameRow: {
     flexDirection: 'row',
     justifyContent: 'space-between',
-    alignItems: 'center',
     gap: 10,
   },
   name: {

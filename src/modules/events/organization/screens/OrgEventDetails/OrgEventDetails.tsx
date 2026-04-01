@@ -84,7 +84,7 @@ export const OrgEventDetails = () => {
     goToScreen(Screens.ChatRoom, {
       chatId: event.group_chat_id,
       chatType: ChatType.Group,
-      title: 'Group',
+      title: event.title ? `${event.title} · Group` : 'Group messages',
       imageUrl: '',
     });
   };

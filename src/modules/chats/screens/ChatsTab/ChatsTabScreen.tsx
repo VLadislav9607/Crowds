@@ -22,10 +22,10 @@ export const ChatsTabScreen = () => {
 
   return (
     <ScreenWrapper
-      headerVariant="withLogoAndImageBg"
-      title="My Messages"
       showBackButton={false}
-      withBottomTabBar
+      headerVariant="withTitleAndImageBg"
+      withBottomTabBar={true}
+      title="My Messages"
     >
       <If condition={hasAccessToChats}>
         <ChatList

@@ -1,43 +1,31 @@
-import { AppImage, AppModal, If } from '@components';
+import { AppModal } from '@components';
 import {
   TalentEventCheckoutModalProps,
   TalentEventCheckoutModalRef,
 } from './types';
 import { AppButton, AppText } from '@ui';
-import { useBoolean, useImperativeModal } from '@hooks';
-import { forwardRef, useState } from 'react';
+import { useImperativeModal } from '@hooks';
+import { forwardRef } from 'react';
 import { styles } from './styles';
-import { ImageBackground, View } from 'react-native';
-import { IMAGES } from '@assets';
 import { useCheckoutEvent } from '@actions';
 import { Screens, goToScreen } from '@navigation';
-import { showMutationErrorToast } from '@helpers';
+import { showMutationErrorToast, showSuccessToast } from '@helpers';
 
 export const TalentEventCheckoutModal = forwardRef<TalentEventCheckoutModalRef>(
   (_, ref) => {
-    const {
-      value: isCheckedOut,
-      setTrue: setIsCheckedOutTrue,
-      setFalse: setIsCheckedOutFalse,
-    } = useBoolean();
-    const [checkoutTime, setCheckoutTime] = useState('');
-    const [participationId, setParticipationId] = useState('');
-
     const { isVisible, refProps, close } =
-      useImperativeModal<TalentEventCheckoutModalProps>(ref, {
-        onRefClose: setIsCheckedOutFalse,
-      });
+      useImperativeModal<TalentEventCheckoutModalProps>(ref);
 
     const { mutate: checkoutEvent, isPending } = useCheckoutEvent({
       onSuccess: data => {
-        const time = new Date(data.checked_out_at).toLocaleTimeString([], {
-          hour: 'numeric',
-          minute: '2-digit',
+        close();
+        goToScreen(Screens.TalentEventDetails, {
+          eventId: refProps.eventId,
+          participationId: data.participant_id,
         });
-        setCheckoutTime(time);
-        setParticipationId(data.participant_id);
-        setIsCheckedOutTrue();
-        refProps.onCheckoutSuccess?.();
+        setTimeout(() => {
+          showSuccessToast('You have successfully checked out!');
+        }, 500);
       },
       onError: error => {
         showMutationErrorToast(error);
@@ -48,77 +36,29 @@ export const TalentEventCheckoutModal = forwardRef<TalentEventCheckoutModalRef>(
       checkoutEvent({ session_id: refProps.sessionId });
     };
 
-    const title = isCheckedOut ? 'Checked Out' : undefined;
-
     return (
       <AppModal
-        title={title}
+        title="Check Out"
         isVisible={isVisible}
         onClose={close}
-        hideCloseButton={!isCheckedOut}
         contentContainerStyle={styles.modalContentContainer}
       >
-        <If condition={!isCheckedOut}>
-          <ImageBackground
-            style={styles.imageBackground}
-            source={IMAGES.headerCrowdBg}
-          >
-            <View style={styles.imageContentContainer}>
-              <View style={styles.textContainer}>
-                <AppText
-                  typography="bold_20"
-                  color="white"
-                  margin={{ bottom: 12 }}
-                >
-                  {refProps.eventTitle}
-                </AppText>
-                <AppText typography="medium_12" color="white">
-                  {refProps.venue}
-                </AppText>
-              </View>
+        <AppText
+          typography="regular_16"
+          color="black"
+          margin={{ top: 20, bottom: 20 }}
+        >
+          {`Are you ready to check out from ${refProps.eventTitle}${refProps.venue ? ` at ${refProps.venue}` : ''}?`}
+        </AppText>
 
-              <If condition={!!refProps.brandLogoPath}>
-                <AppImage
-                  imgPath={refProps.brandLogoPath}
-                  bucket="brand_avatars"
-                  containerStyle={styles.image}
-                />
-              </If>
-            </View>
-          </ImageBackground>
-
-          <AppButton
-            title="Check Out"
-            size="56"
-            wrapperStyles={styles.checkoutButton}
-            onPress={handleCheckout}
-            isLoading={isPending}
-            isDisabled={isPending}
-          />
-        </If>
-
-        <If condition={isCheckedOut}>
-          <AppText
-            typography="regular_16"
-            color="black"
-            margin={{ top: 20, bottom: 20 }}
-          >
-            {`You've successfully checked out from ${refProps.eventTitle} at ${checkoutTime}.`}
-          </AppText>
-
-          <AppButton
-            title="View Event"
-            size="56"
-            variant="withBorder"
-            onPress={() => {
-              close();
-              goToScreen(Screens.TalentEventDetails, {
-                eventId: refProps.eventId,
-                participationId,
-              });
-            }}
-          />
-        </If>
+        <AppButton
+          title="Check Out"
+          size="56"
+          wrapperStyles={styles.checkoutButton}
+          onPress={handleCheckout}
+          isLoading={isPending}
+          isDisabled={isPending}
+        />
       </AppModal>
     );
   },

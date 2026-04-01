@@ -160,13 +160,7 @@ export const useGlobalOrgRegister = ({
       }
       headGlobalLocationFormRef?.current?.handleSubmit(
         handleHeadGlobalLocationFormSubmit,
-        error => {
-          if (error?.parsed_location?.city) {
-            showErrorToast(
-              'Selected location does not include a city. Please try a different address.',
-            );
-          }
-        },
+        () => {},
       )();
     }
 

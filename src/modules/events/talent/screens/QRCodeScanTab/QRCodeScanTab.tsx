@@ -12,12 +12,7 @@ import { usePermissions, EPermissionTypes } from '@hooks';
 import { useIsFocused } from '@react-navigation/native';
 import { COLORS } from '@styles';
 import { useScanEventQRByTalent, ScanEventQRByTalentResDto } from '@actions';
-import {
-  showErrorToast,
-  showMutationErrorToast,
-  showSuccessToast,
-} from '@helpers';
-import { goToScreen, Screens } from '@navigation';
+import { showErrorToast, showMutationErrorToast } from '@helpers';
 import { format } from 'date-fns';
 import {
   TalentEventCheckinModal,
@@ -69,13 +64,9 @@ export const QRCodeScanTab = () => {
         brandLogoPath: event.brand_logo_path,
         venue: event.venue,
         qrCodeId: qr_code.id,
-        onCheckinSuccess: () => {
-          showSuccessToast('You have successfully checked in!');
-          goToScreen(Screens.TalentEventDetails, {
-            eventId: qr_code.event_id,
-            participationId: data.participation_id,
-          });
-        },
+        eventId: qr_code.event_id,
+        participationId: data.participation_id,
+        onCheckinSuccess: () => {},
       });
     } else if (data.action === 'checkout') {
       const checkOutAvailableAt = new Date(event.end_at);
