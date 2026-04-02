@@ -1,8 +1,9 @@
 import { ActivityIndicator, TouchableOpacity, View } from 'react-native';
 import { AppText, Avatar } from '@ui';
-import { If } from '@components';
+import { AppImage, If } from '@components';
 import { COLORS } from '@styles';
 import { ChatType } from '@actions';
+import { BucketsTypes } from '@configs';
 
 import { styles } from './styles';
 import { IMessageProps } from './types';
@@ -13,9 +14,11 @@ export const Message = ({
   isFirst,
   isLast,
   onLongPress,
+  onImagePress,
 }: IMessageProps) => {
-  const { text, time, isMe, showTime, senderName, senderAvatar, senderRole, id, isEdited } =
+  const { text, time, isMe, showTime, senderName, senderAvatar, senderRole, id, isEdited, imagePath, imageBucket } =
     message;
+  const hasImage = !!imagePath && !!imageBucket;
   const showAvatar = !isMe && chatType === ChatType.Group;
 
   const getBubbleStyle = () => {
@@ -35,6 +38,10 @@ export const Message = ({
   const handleLongPress = () => {
     if (isMe && onLongPress) {
       onLongPress(message);
+      return;
+    }
+    if (hasImage && onImagePress) {
+      onImagePress(message);
     }
   };
 
@@ -66,8 +73,8 @@ export const Message = ({
           activeOpacity={0.7}
           onLongPress={handleLongPress}
           delayLongPress={300}
-          disabled={!isMe || !onLongPress}
-          style={getBubbleStyle()}
+          disabled={!isMe && !hasImage}
+          style={[getBubbleStyle(), hasImage && styles.bubbleWithImage]}
         >
           <If condition={id.startsWith('temp-')}>
             <ActivityIndicator
@@ -77,9 +84,18 @@ export const Message = ({
           </If>
 
           <View>
-            <AppText typography="regular_12" color={isMe ? 'white' : 'black'}>
-              {text}
-            </AppText>
+            <If condition={hasImage}>
+              <AppImage
+                bucket={imageBucket as BucketsTypes}
+                imgPath={imagePath}
+                containerStyle={styles.messageImage}
+              />
+            </If>
+            <If condition={!!text}>
+              <AppText typography="regular_12" color={isMe ? 'white' : 'black'}>
+                {text}
+              </AppText>
+            </If>
             <If condition={!!isEdited}>
               <AppText
                 typography="regular_10"

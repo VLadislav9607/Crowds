@@ -12,6 +12,7 @@ export const ChatList = ({
   variant = 'talent',
   withBottomTab = false,
   emptyText = 'No chats found',
+  onRefresh,
 }: IChatListProps) => {
   const renderChat = ({ item, index }: { item: MyChatItem; index: number }) => {
     const isFirstChat = index === 0;
@@ -50,6 +51,7 @@ export const ChatList = ({
       withBottomTab={withBottomTab}
       extraData={chats.length}
       contentContainerStyle={styles.container}
+      onRefresh={onRefresh}
     />
   );
 };

@@ -7,4 +7,5 @@ export interface IChatListProps {
   variant?: ChatVariant;
   withBottomTab?: boolean;
   emptyText?: string;
+  onRefresh?: () => void;
 }

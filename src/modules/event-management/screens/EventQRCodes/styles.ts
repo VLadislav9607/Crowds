@@ -54,10 +54,18 @@ export const styles = StyleSheet.create({
     gap: 8,
     alignItems: 'center',
   },
-  shareButton: {
-    borderRadius: 12,
-    // borderColor: COLORS.gray_primary,
+  actionButtons: {
+    flexDirection: 'row',
+    gap: 8,
     marginTop: 16,
+  },
+  sendToTalentButton: {
+    flex: 1,
+    borderRadius: 12,
+  },
+  shareButton: {
+    flex: 1,
+    borderRadius: 12,
   },
   generateQRCodeButton: {
     marginTop: 16,

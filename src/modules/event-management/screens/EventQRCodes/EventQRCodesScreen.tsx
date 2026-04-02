@@ -8,6 +8,8 @@ import {
   EventQRCodeEditorModal,
   EventQRCodeEditorModalRef,
   QRCodeActionsModal,
+  SelectTalentForQRModal,
+  SelectTalentForQRModalData,
 } from '../../modals';
 import { useRef } from 'react';
 import { SvgXml } from 'react-native-svg';
@@ -36,6 +38,8 @@ export const EventQRCodesScreen = () => {
   const eventQRCodeEditorModalRef = useRef<EventQRCodeEditorModalRef>(null);
   const qrCodeActionsModalRef =
     useRef<BottomSheetModal<QRCodeActionsModalData>>(null);
+  const selectTalentModalRef =
+    useRef<BottomSheetModal<SelectTalentForQRModalData>>(null);
 
   const { data: eventData } = useGetEventForOrgMember({
     event_id: params?.eventId!,
@@ -186,14 +190,33 @@ export const EventQRCodesScreen = () => {
           </View>
         </View>
 
-        <AppButton
-          title="Share"
-          variant="withBorder"
-          size="40"
-          wrapperStyles={styles.shareButton}
-          icon={ICONS.upload('black')}
-          onPress={() => onShareQRCode(item)}
-        />
+        <View style={styles.actionButtons}>
+          <AppButton
+            title="Send"
+            variant="withBorder"
+            size="40"
+            wrapperStyles={styles.sendToTalentButton}
+            icon={ICONS.sendMessage('black')}
+            iconSize={16}
+            onPress={() =>
+              selectTalentModalRef.current?.present({
+                eventId: params?.eventId!,
+                qrPath: item.qr_path,
+                qrCodeName: item.name,
+                groupChatId: eventData?.group_chat_id,
+              })
+            }
+          />
+          <AppButton
+            title="Share"
+            variant="withBorder"
+            size="40"
+            wrapperStyles={styles.shareButton}
+            icon={ICONS.upload('black')}
+            iconSize={16}
+            onPress={() => onShareQRCode(item)}
+          />
+        </View>
       </View>
     );
   };
@@ -290,6 +313,7 @@ export const EventQRCodesScreen = () => {
 
       <EventQRCodeEditorModal ref={eventQRCodeEditorModalRef} />
       <QRCodeActionsModal bottomSheetRef={qrCodeActionsModalRef} />
+      <SelectTalentForQRModal bottomSheetRef={selectTalentModalRef} />
     </ScreenWrapper>
   );
 };

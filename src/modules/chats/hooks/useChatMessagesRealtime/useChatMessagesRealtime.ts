@@ -32,6 +32,8 @@ export const useChatMessagesRealtime = ({ chatId, limit = 50 }: IParams) => {
               created_at: message.created_at,
               sender_id: message.sender_id,
               is_edited: message.is_edited,
+              image_path: message.image_path,
+              image_bucket: message.image_bucket,
             },
             limit,
           });
@@ -47,7 +49,7 @@ export const useChatMessagesRealtime = ({ chatId, limit = 50 }: IParams) => {
 
           chatsCache.updateChat({
             chatId,
-            lastMessage: message.text,
+            lastMessage: message.text || (message.image_path ? 'Image' : ''),
             lastMessageAt: message.created_at,
             hasUnread: false,
           });

@@ -1,12 +1,22 @@
 import { useEffect } from 'react';
 
-import { realtimeService } from '@services';
+import { realtimeService, supabase } from '@services';
 import { useGetMe } from '@actions';
 import { chatsCache } from '../../cache';
 import { Platform } from 'react-native';
 
+let cachedAuthUid: string | null = null;
+
 export const useChatsRealtime = (enabled = true) => {
   const { me } = useGetMe();
+
+  useEffect(() => {
+    if (!cachedAuthUid) {
+      supabase.auth.getSession().then(({ data }) => {
+        cachedAuthUid = data.session?.user?.id ?? null;
+      });
+    }
+  }, []);
 
   useEffect(() => {
     if (!me?.id || !enabled) return;
@@ -28,11 +38,15 @@ export const useChatsRealtime = (enabled = true) => {
             oldChat?.last_message_at &&
             chat.last_message_at > oldChat.last_message_at;
 
+          const isMine = cachedAuthUid
+            ? chat.last_message_sender_id === cachedAuthUid
+            : true; // If auth uid unknown yet, assume mine (don't mark unread)
+
           chatsCache.updateChat({
             chatId: chat.id,
             lastMessage: chat.last_message_text ?? null,
             lastMessageAt: chat.last_message_at ?? null,
-            ...(isNewMessage ? { hasUnread: true } : {}),
+            ...(isNewMessage && !isMine ? { hasUnread: true } : {}),
           });
         },
       });
