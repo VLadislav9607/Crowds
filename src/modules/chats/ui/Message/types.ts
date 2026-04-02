@@ -10,6 +10,8 @@ export interface IMessageData {
   senderAvatar: string;
   senderRole: 'organization' | 'talent';
   isEdited?: boolean;
+  imagePath?: string | null;
+  imageBucket?: string | null;
 }
 
 export interface IMessageProps {
@@ -18,4 +20,5 @@ export interface IMessageProps {
   isFirst?: boolean;
   isLast?: boolean;
   onLongPress?: (message: IMessageData) => void;
+  onImagePress?: (message: IMessageData) => void;
 }

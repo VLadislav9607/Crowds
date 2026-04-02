@@ -29,7 +29,7 @@ export const styles = StyleSheet.create({
   },
   bubbleWrapper: {
     flexDirection: 'row',
-    alignItems: 'center',
+    alignItems: 'flex-start',
   },
   bubbleWrapperMe: {
     justifyContent: 'flex-end',
@@ -85,6 +85,18 @@ export const styles = StyleSheet.create({
   editedLabel: {
     marginTop: 2,
     opacity: 0.6,
+  },
+  bubbleWithImage: {
+    paddingHorizontal: 4,
+    paddingTop: 4,
+    paddingBottom: 8,
+  },
+  messageImage: {
+    width: 200,
+    height: 200,
+    borderRadius: 12,
+    marginBottom: 4,
+    overflow: 'hidden',
   },
 });
 

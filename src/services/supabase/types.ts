@@ -99,6 +99,8 @@ export type Database = {
           chat_id: string
           created_at: string | null
           id: string
+          image_bucket: string | null
+          image_path: string | null
           is_edited: boolean
           sender_id: string
           text: string
@@ -107,6 +109,8 @@ export type Database = {
           chat_id: string
           created_at?: string | null
           id?: string
+          image_bucket?: string | null
+          image_path?: string | null
           is_edited?: boolean
           sender_id?: string
           text: string
@@ -115,6 +119,8 @@ export type Database = {
           chat_id?: string
           created_at?: string | null
           id?: string
+          image_bucket?: string | null
+          image_path?: string | null
           is_edited?: boolean
           sender_id?: string
           text?: string
@@ -448,6 +454,74 @@ export type Database = {
           },
           {
             foreignKeyName: "event_cancellations_event_id_fkey"
+            columns: ["event_id"]
+            isOneToOne: false
+            referencedRelation: "events"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      event_custom_task_completions: {
+        Row: {
+          completed_at: string | null
+          id: string
+          participation_id: string
+          task_id: string
+        }
+        Insert: {
+          completed_at?: string | null
+          id?: string
+          participation_id: string
+          task_id: string
+        }
+        Update: {
+          completed_at?: string | null
+          id?: string
+          participation_id?: string
+          task_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "event_custom_task_completions_participation_id_fkey"
+            columns: ["participation_id"]
+            isOneToOne: false
+            referencedRelation: "event_participations"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "event_custom_task_completions_task_id_fkey"
+            columns: ["task_id"]
+            isOneToOne: false
+            referencedRelation: "event_custom_tasks"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      event_custom_tasks: {
+        Row: {
+          created_at: string | null
+          event_id: string
+          id: string
+          sort_order: number
+          text: string
+        }
+        Insert: {
+          created_at?: string | null
+          event_id: string
+          id?: string
+          sort_order?: number
+          text: string
+        }
+        Update: {
+          created_at?: string | null
+          event_id?: string
+          id?: string
+          sort_order?: number
+          text?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "event_custom_tasks_event_id_fkey"
             columns: ["event_id"]
             isOneToOne: false
             referencedRelation: "events"
@@ -1078,6 +1152,7 @@ export type Database = {
           id: string
           notes: string | null
           refund_amount_cents: number
+          reminder_sent_at: string | null
           review_deadline_at: string
           settled_at: string | null
           settled_by: string | null
@@ -1097,6 +1172,7 @@ export type Database = {
           id?: string
           notes?: string | null
           refund_amount_cents?: number
+          reminder_sent_at?: string | null
           review_deadline_at: string
           settled_at?: string | null
           settled_by?: string | null
@@ -1116,6 +1192,7 @@ export type Database = {
           id?: string
           notes?: string | null
           refund_amount_cents?: number
+          reminder_sent_at?: string | null
           review_deadline_at?: string
           settled_at?: string | null
           settled_by?: string | null
@@ -1339,6 +1416,24 @@ export type Database = {
             referencedColumns: ["id"]
           },
         ]
+      }
+      exchange_rates: {
+        Row: {
+          currency_code: string
+          rate: number
+          updated_at: string
+        }
+        Insert: {
+          currency_code: string
+          rate: number
+          updated_at?: string
+        }
+        Update: {
+          currency_code?: string
+          rate?: number
+          updated_at?: string
+        }
+        Relationships: []
       }
       flag_reports: {
         Row: {
@@ -2091,6 +2186,7 @@ export type Database = {
           hours_worked: number | null
           id: string
           participation_id: string | null
+          rejection_reason: string | null
           settlement_id: string
           status: Database["public"]["Enums"]["TalentPayoutStatus"]
           stripe_transfer_id: string | null
@@ -2106,6 +2202,7 @@ export type Database = {
           hours_worked?: number | null
           id?: string
           participation_id?: string | null
+          rejection_reason?: string | null
           settlement_id: string
           status?: Database["public"]["Enums"]["TalentPayoutStatus"]
           stripe_transfer_id?: string | null
@@ -2121,6 +2218,7 @@ export type Database = {
           hours_worked?: number | null
           id?: string
           participation_id?: string | null
+          rejection_reason?: string | null
           settlement_id?: string
           status?: Database["public"]["Enums"]["TalentPayoutStatus"]
           stripe_transfer_id?: string | null
@@ -2262,7 +2360,9 @@ export type Database = {
           id: string
           participation_id: string
           photo_path: string | null
+          rejection_reason: string | null
           reviewed_at: string | null
+          revision_reason: string | null
           status: string
           submitted_at: string | null
         }
@@ -2271,7 +2371,9 @@ export type Database = {
           id?: string
           participation_id: string
           photo_path?: string | null
+          rejection_reason?: string | null
           reviewed_at?: string | null
+          revision_reason?: string | null
           status?: string
           submitted_at?: string | null
         }
@@ -2280,7 +2382,9 @@ export type Database = {
           id?: string
           participation_id?: string
           photo_path?: string | null
+          rejection_reason?: string | null
           reviewed_at?: string | null
+          revision_reason?: string | null
           status?: string
           submitted_at?: string | null
         }
@@ -2660,6 +2764,29 @@ export type Database = {
               total: number
             }[]
           }
+      get_all_flag_reports_admin: {
+        Args: {
+          p_filters?: Json
+          p_limit?: number
+          p_offset?: number
+          p_search?: string
+        }
+        Returns: {
+          created_at: string
+          description: string
+          event_id: string
+          event_title: string
+          id: string
+          reporter_name: string
+          reporter_org_name: string
+          reporter_type: string
+          requested_flag_type: string
+          status: string
+          target_name: string
+          target_type: string
+          total: number
+        }[]
+      }
       get_all_members_admin: {
         Args: {
           p_filters?: Json
@@ -2704,8 +2831,8 @@ export type Database = {
         | {
             Args: {
               p_filters?: Json
-              p_limit?: number
-              p_offset?: number
+              p_limit: number
+              p_offset: number
               p_search?: string
             }
             Returns: {
@@ -2814,6 +2941,8 @@ export type Database = {
         Returns: {
           created_at: string
           id: string
+          image_bucket: string
+          image_path: string
           is_edited: boolean
           sender_id: string
           text: string
@@ -2969,6 +3098,26 @@ export type Database = {
             Args: { p_event_id: string; p_limit?: number; p_offset?: number }
             Returns: Json
           }
+      get_flag_report_detail_admin: {
+        Args: { p_id: string }
+        Returns: {
+          created_at: string
+          description: string
+          event_id: string
+          event_title: string
+          id: string
+          reporter_id: string
+          reporter_name: string
+          reporter_org_id: string
+          reporter_org_name: string
+          reporter_type: string
+          requested_flag_type: string
+          status: string
+          target_id: string
+          target_name: string
+          target_type: string
+        }[]
+      }
       get_invitable_talents: {
         Args: {
           p_event_id: string
@@ -3260,6 +3409,10 @@ export type Database = {
         }
         Returns: unknown
       }
+      toggle_event_custom_task: {
+        Args: { p_participation_id: string; p_task_id: string }
+        Returns: Json
+      }
       toggle_event_in_talent_events_folder: {
         Args: { p_event_id: string; p_folder_id: string }
         Returns: boolean
@@ -3286,6 +3439,10 @@ export type Database = {
       }
       update_event_qr_code: {
         Args: { p_name?: string; p_qr_id: string; p_start_at?: string }
+        Returns: undefined
+      }
+      update_flag_report_status_admin: {
+        Args: { p_id: string; p_status: string }
         Returns: undefined
       }
       update_user_availability: {
@@ -3752,3 +3909,4 @@ export const Constants = {
     },
   },
 } as const
+

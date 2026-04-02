@@ -6,3 +6,4 @@ export * from './useEditEventQRCode';
 export * from './useScanEventQRByTalent';
 export * from './useCheckinEvent';
 export * from './useCheckoutEvent';
+export * from './useSendQRToTalent';

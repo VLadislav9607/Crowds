@@ -8,7 +8,7 @@ import { ICONS } from '@assets';
 
 import { COLORS } from '@styles';
 import { styles } from './styles';
-import { messagesCache } from '../../cache';
+import { messagesCache, chatsCache } from '../../cache';
 
 interface SendMessageInputProps {
   chatId: string;
@@ -77,6 +77,9 @@ export const SendMessageInput = ({
       updates: { text: trimmedText, is_edited: true },
     });
 
+    // Update chat preview
+    chatsCache.updateChat({ chatId, lastMessage: trimmedText });
+
     setMessage('');
     setInputHeight(MIN_INPUT_HEIGHT);
     onEditSuccess?.();
@@ -93,6 +96,7 @@ export const SendMessageInput = ({
         messageId: editingMessage.id,
         updates: { text: editingMessage.text, is_edited: editingMessage.isEdited ?? false },
       });
+      chatsCache.updateChat({ chatId, lastMessage: editingMessage.text });
       showErrorToast('Failed to edit message');
     }
   }, [chatId, message, editingMessage, editMessage, onEditSuccess]);

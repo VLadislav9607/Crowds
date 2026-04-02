@@ -20,6 +20,7 @@ export const MessageList = ({
   onEndReached,
   onEndReachedThreshold = 0.2,
   onMessageLongPress,
+  onImagePress,
 }: IMessageListProps) => {
   const sectionListRef = useRef<SectionList<
     IMessageData,
@@ -37,6 +38,7 @@ export const MessageList = ({
         isFirst={isFirst}
         isLast={isLast}
         onLongPress={onMessageLongPress}
+        onImagePress={onImagePress}
       />
     );
   };

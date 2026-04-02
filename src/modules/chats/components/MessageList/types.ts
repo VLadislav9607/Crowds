@@ -13,6 +13,7 @@ export interface IMessageListProps {
   onEndReached?: () => void;
   onEndReachedThreshold?: number;
   onMessageLongPress?: (message: IMessageData) => void;
+  onImagePress?: (message: IMessageData) => void;
 }
 
 export interface IMessageRenderItemProps {
