@@ -109,6 +109,16 @@ export function invalidateCacheForNotificationType(
             },
           );
         });
+      // Also refresh org data (officeFlag in GET_ME) and org events
+      queryClient.refetchQueries({
+        queryKey: [TANSTACK_QUERY_KEYS.GET_ME],
+      });
+      queryClient.refetchQueries({
+        queryKey: [TANSTACK_QUERY_KEYS.GET_ORG_EVENTS],
+      });
+      queryClient.refetchQueries({
+        queryKey: [TANSTACK_QUERY_KEYS.GET_ORG_EVENTS_COUNTERS],
+      });
       break;
 
     // Task rejected → refresh task completions so talent sees updated status

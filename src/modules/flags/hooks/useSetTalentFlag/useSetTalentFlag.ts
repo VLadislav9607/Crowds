@@ -38,6 +38,16 @@ export const useSetTalentFlag = ({
         queryKey: [TANSTACK_QUERY_KEYS.EVENT_PARTICIPANTS_BY_STATUS],
       }),
       queryClient.invalidateQueries({
+        predicate: query =>
+          query.queryKey[0] ===
+          TANSTACK_QUERY_KEYS.GET_EVENT_CHECKED_IN_TALENTS,
+      }),
+      queryClient.invalidateQueries({
+        predicate: query =>
+          query.queryKey[0] ===
+          TANSTACK_QUERY_KEYS.GET_EVENT_CHECKED_OUT_TALENTS,
+      }),
+      queryClient.invalidateQueries({
         queryKey: [TANSTACK_QUERY_KEYS.GET_MATCHING_TALENTS],
       }),
       queryClient.invalidateQueries({

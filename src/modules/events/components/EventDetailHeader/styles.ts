@@ -11,10 +11,4 @@ export const styles = StyleSheet.create({
     flex: 1,
     gap: 2,
   },
-  image: {
-    width: 69,
-    height: 69,
-    borderRadius: 15,
-    overflow: 'hidden',
-  },
 });

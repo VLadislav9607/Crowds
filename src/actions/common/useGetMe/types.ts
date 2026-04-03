@@ -93,4 +93,5 @@ export interface CurrentOrganizationContext {
   offices: OfficeMembershipDto[];
   isSuperAdmin: boolean;
   capabilitiesAccess: Record<CapabilityCode, boolean>;
+  officeFlag?: TalentFlag;
 }
