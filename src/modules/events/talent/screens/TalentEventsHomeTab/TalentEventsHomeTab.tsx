@@ -31,7 +31,6 @@ export const TalentEventsHomeTab = () => {
         },
       ]}
     >
-      <TestBadge />
       <SearchEventsList
         contentContainerStyle={[
           styles.listContentContainer,
@@ -40,6 +39,8 @@ export const TalentEventsHomeTab = () => {
         emptyTextStyle={styles.emptyText}
         ListHeaderComponent={
           <>
+            <TestBadge />
+
             <View style={styles.searchContainer}>
               <TouchableOpacity
                 onPress={() =>
