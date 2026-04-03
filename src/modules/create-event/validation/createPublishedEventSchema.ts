@@ -158,7 +158,7 @@ export const createPublishedEventSchema = z
     paymentMode: z.enum(['perHour', 'fixed']),
     paymentAmount: z
       .number('Payment is required')
-      .min(15, 'Minimum payment is AUD $15.00'),
+      .min(15, 'Minimum payment is $15'),
     eventBrief: z.string().min(1, 'Event brief is required'),
     ndaDocument: pickedDocumentSchema.optional(),
     ndaDocumentName: z.string().optional(),

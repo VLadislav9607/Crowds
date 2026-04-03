@@ -43,10 +43,21 @@ export const TalentEventCheckoutModal = forwardRef<TalentEventCheckoutModalRef>(
         onClose={close}
         contentContainerStyle={styles.modalContentContainer}
       >
+        {refProps.isEarlyCheckout && (
+          <AppText
+            typography="semibold_14"
+            color="red"
+            margin={{ top: 20 }}
+          >
+            You are checking out before the event ends. Are you sure you want to
+            proceed?
+          </AppText>
+        )}
+
         <AppText
           typography="regular_16"
           color="black"
-          margin={{ top: 20, bottom: 20 }}
+          margin={{ top: refProps.isEarlyCheckout ? 12 : 20, bottom: 20 }}
         >
           {`Are you ready to check out from ${refProps.eventTitle}${refProps.venue ? ` at ${refProps.venue}` : ''}?`}
         </AppText>

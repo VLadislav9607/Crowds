@@ -113,13 +113,6 @@ export const useProfileTabOptions = ({
       onPress: () => goToScreen(Screens.ManageOrgTeam),
     },
     {
-      title: 'Wallet / Payment details',
-      icon: ICONS.wallet(),
-      isInvisible:
-        !organizationMember?.current_context?.capabilitiesAccess.edit_bank_info,
-      onPress: () => {},
-    },
-    {
       title: 'Manage password',
       icon: ICONS.shieldCheck(),
       onPress: () => goToScreen(Screens.ChangePassword),

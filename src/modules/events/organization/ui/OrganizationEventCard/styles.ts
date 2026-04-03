@@ -19,6 +19,7 @@ export const cardStyles = StyleSheet.create({
   nameRow: {
     flexDirection: 'row',
     justifyContent: 'space-between',
+    alignItems: 'flex-start',
     gap: 10,
   },
   name: {

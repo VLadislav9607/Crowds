@@ -139,7 +139,7 @@ export const createEventDraftSchema = z
     paymentMode: z.enum(['perHour', 'fixed']),
     paymentAmount: z
       .number()
-      .min(15, 'Minimum payment is AUD $15.00')
+      .min(15, 'Minimum payment is $15')
       .optional()
       .nullable(),
     eventBrief: z.string().optional().nullable(),

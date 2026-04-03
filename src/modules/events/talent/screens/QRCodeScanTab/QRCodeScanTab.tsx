@@ -69,14 +69,7 @@ export const QRCodeScanTab = () => {
         onCheckinSuccess: () => {},
       });
     } else if (data.action === 'checkout') {
-      const checkOutAvailableAt = new Date(event.end_at);
-      if (now < checkOutAvailableAt) {
-        const formattedTime = format(checkOutAvailableAt, 'MMM d, yyyy h:mm a');
-        showErrorToast(
-          `Check-out is not available yet. It will be available after the event ends at ${formattedTime}.`,
-        );
-        return;
-      }
+      const isEarlyCheckout = now < new Date(event.end_at);
 
       checkoutModalRef.current?.open({
         eventTitle: event.title,
@@ -84,6 +77,7 @@ export const QRCodeScanTab = () => {
         venue: event.venue,
         sessionId: session!.id,
         eventId: qr_code.event_id,
+        isEarlyCheckout,
         onCheckoutSuccess: () => {},
       });
     }

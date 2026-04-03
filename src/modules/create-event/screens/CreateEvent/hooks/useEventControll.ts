@@ -45,6 +45,7 @@ export const useEventControll = ({
     null,
   );
 
+
   // Payment flow
   const { paymentConfirmationModalRef, startPaymentFlow, processPayment } =
     usePaymentFlow();

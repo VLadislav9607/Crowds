@@ -6,6 +6,7 @@ export interface TalentEventCheckoutModalProps {
   venue: string | null;
   sessionId: string;
   eventId: string;
+  isEarlyCheckout?: boolean;
   onCheckoutSuccess: () => void;
 }
 

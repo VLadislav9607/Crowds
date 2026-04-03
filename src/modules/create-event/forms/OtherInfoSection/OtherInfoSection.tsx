@@ -83,6 +83,7 @@ export const OtherInfoSection = forwardRef<View>((_props, ref) => {
             label="Closing by Date"
             description="Set the closing date for event registrations"
             defaultIconPosition="right"
+            disabled={!startAt}
             labelProps={{
               typography: 'h5_mob',
               color: 'black',
@@ -99,7 +100,11 @@ export const OtherInfoSection = forwardRef<View>((_props, ref) => {
               }
               onChange(date);
             }}
-            errorMessage={errors.registrationClosingAt?.message}
+            errorMessage={
+              !startAt
+                ? 'Please select start date first'
+                : errors.registrationClosingAt?.message
+            }
             placeholder="Registration closing date"
             minimumDate={now}
             maximumDate={maximumDate}
