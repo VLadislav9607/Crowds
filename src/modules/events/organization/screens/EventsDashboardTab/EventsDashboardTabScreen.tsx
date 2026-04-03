@@ -3,7 +3,7 @@ import { AppText, GridBoard } from '@ui';
 import { EventsDashboardScreenLayout } from '../../layouts';
 import { useGetMe, useGetOrgEventsCounters } from '@actions';
 import { COLORS } from '@styles';
-import { If, NoAccess } from '@components';
+import { If, NoAccess, TestBadge } from '@components';
 import { styles } from './styles';
 import { OrganizationEventsList } from '../../components';
 import { useCallback, useState } from 'react';
@@ -77,6 +77,7 @@ export const EventsDashboardTabScreen = () => {
 
   return (
     <EventsDashboardScreenLayout>
+      <TestBadge />
       <If condition={hasViewEventsAccess}>
         <GridBoard items={eventDashboardConfig} />
 
