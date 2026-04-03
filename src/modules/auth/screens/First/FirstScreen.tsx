@@ -6,6 +6,7 @@ import { ICONS, IMAGES } from '@assets';
 import { AppButton, AppText } from '@ui';
 import { TYPOGRAPHY, COLORS } from '@styles';
 import { goToScreen, Screens } from '@navigation';
+import { TestBadge } from '@components';
 
 export const FirstScreen = () => {
   const { top, bottom } = useSafeAreaInsets();
@@ -16,6 +17,7 @@ export const FirstScreen = () => {
       style={[styles.container, { paddingTop: top, paddingBottom: bottom }]}
     >
       <View style={styles.overlay} />
+      <TestBadge />
 
       <SvgXml xml={ICONS.firstScreenLogo()} style={styles.appName} />
 
