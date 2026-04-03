@@ -79,17 +79,20 @@ export const DateTimeSection = forwardRef<View>((_props, ref) => {
               placeholder="End Date"
               value={value}
               mode="datetime"
+              disabled={!startAt}
               onChange={date => {
-                const minEndDate = startAt
-                  ? addHours(startAt, 3)
-                  : minStartDate;
+                const minEndDate = addHours(startAt!, 3);
                 if (isBefore(date, minEndDate)) {
                   showErrorToast('Event must be at least 3 hours long');
                   return;
                 }
                 onChange(date);
               }}
-              errorMessage={errors.endAt?.message}
+              errorMessage={
+                !startAt
+                  ? 'Please select start date first'
+                  : errors.endAt?.message
+              }
               containerStyle={styles.dateInput}
               minimumDate={startAt ? addHours(startAt, 3) : minStartDate}
               valueFormat="MM/dd/yyyy h:mm a"

@@ -279,9 +279,6 @@ export const TalentEventCard = ({
             <AppText typography="bold_14" color="main">
               ${event.payment_amount}
             </AppText>
-            <AppText typography="medium_10" color="main">
-              AUD
-            </AppText>
           </View>
           <AppText typography="medium_12" color="black_50">
             {event.payment_mode === 'fixed' ? 'Fixed price' : 'Price per hour'}

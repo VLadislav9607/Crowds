@@ -10,7 +10,7 @@ import {
 } from '@actions';
 import { Screens, useScreenNavigation } from '@navigation';
 import { fromZonedTime, toZonedTime } from 'date-fns-tz';
-import { useEffect, useRef } from 'react';
+import { useEffect } from 'react';
 import {
   CreateEventDraftFormData,
   createEventDraftSchema,
@@ -19,10 +19,10 @@ import {
 import z, { ZodError } from 'zod';
 import { FieldErrors, FieldError } from 'react-hook-form';
 import { showMutationErrorToast, showSuccessToast } from '@helpers';
-import { SavedToDraftModalRef } from '../../../modals';
 import { Enums } from '@services';
 import { UseDraftControllProps } from '../types';
 import { findOfficeByCountryCode } from '../../../helpers/officeLocationHelpers';
+import { goToScreen } from '@navigation';
 
 export const useDraftControll = ({
   formData,
@@ -35,7 +35,14 @@ export const useDraftControll = ({
   const offices = organizationMember?.current_context?.offices ?? [];
 
   const { params } = useScreenNavigation<Screens.CreateEvent>();
-  const savedToDraftModalRef = useRef<SavedToDraftModalRef>(null);
+
+  const navigateToDrafts = () => {
+    showSuccessToast('Event saved to draft');
+    goToScreen(Screens.BottomTabs, {
+      screen: Screens.UpcomingEvents,
+      params: { initialTab: 'drafts' },
+    } as any);
+  };
 
   const { mutateAsync: uploadFileMutateAsync } = useBucketUpload({
     onError: e => {
@@ -49,7 +56,7 @@ export const useDraftControll = ({
       showMutationErrorToast(e);
       setShowFullScreenLoader(false);
     },
-    onSuccess: () => savedToDraftModalRef.current?.open({}),
+    onSuccess: navigateToDrafts,
   });
 
   const { mutateAsync: copyDraftMutateAsync } = useCreateEventDraft({
@@ -64,7 +71,7 @@ export const useDraftControll = ({
       showMutationErrorToast(e);
       setShowFullScreenLoader(false);
     },
-    onSuccess: () => savedToDraftModalRef.current?.open({}),
+    onSuccess: navigateToDrafts,
   });
 
   const { data: draftData, isLoading: isLoadingDraft } =
@@ -457,8 +464,7 @@ export const useDraftControll = ({
 
   return {
     isLoadingDraft,
-    savedToDraftModalRef,
-    isDraftEditing: !!(params?.draftId || createdDraftId),
+    isDraftEditing: !!params?.draftId,
     handleCreateDraft,
     handleCopyToDraft,
     organizationMember,

@@ -52,7 +52,7 @@ export const EventReportScreen = () => {
                     color="gray"
                     style={styles.escrowCurrency}
                   >
-                    AUD
+                    $
                   </AppText>
                 </View>
               </View>

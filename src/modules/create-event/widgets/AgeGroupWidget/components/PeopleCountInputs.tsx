@@ -53,8 +53,9 @@ export const PeopleCountInputs = ({
                     value !== undefined && value !== null ? String(value) : ''
                   }
                   onChangeText={async text => {
+                    const cleaned = text.replace(/[^0-9]/g, '');
                     const numValue =
-                      text === '' ? undefined : Number(text) || 0;
+                      cleaned === '' ? undefined : parseInt(cleaned, 10);
                     onChange(numValue);
                     await handleChange();
                   }}
@@ -77,8 +78,9 @@ export const PeopleCountInputs = ({
                     value !== undefined && value !== null ? String(value) : ''
                   }
                   onChangeText={async text => {
+                    const cleaned = text.replace(/[^0-9]/g, '');
                     const numValue =
-                      text === '' ? undefined : Number(text) || 0;
+                      cleaned === '' ? undefined : parseInt(cleaned, 10);
                     onChange(numValue);
                     await handleChange();
                   }}
@@ -101,8 +103,9 @@ export const PeopleCountInputs = ({
                     value !== undefined && value !== null ? String(value) : ''
                   }
                   onChangeText={async text => {
+                    const cleaned = text.replace(/[^0-9]/g, '');
                     const numValue =
-                      text === '' ? undefined : Number(text) || 0;
+                      cleaned === '' ? undefined : parseInt(cleaned, 10);
                     onChange(numValue);
                     await handleChange();
                   }}

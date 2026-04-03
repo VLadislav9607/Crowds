@@ -54,7 +54,7 @@ export const CheckedOutTalentsScreen = () => {
   return (
     <ScreenWrapper
       headerVariant="withTitleAndImageBg"
-      title="Checked-Out Talents"
+      title="Checked-out Talents"
       showLoader={isLoading && hasAccess}
       contentContainerStyle={styles.contentContainer}
     >

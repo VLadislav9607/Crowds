@@ -1,5 +1,5 @@
 import { AppText, FlagIndicator } from '@ui';
-import { View } from 'react-native';
+import { Keyboard, View } from 'react-native';
 import { styles } from './styles';
 import { ProfileSetupHeaderProps } from './types';
 import { AppImage, If } from '@components';
@@ -48,6 +48,7 @@ export const ProfileSetupHeader = ({
   const talent = me?.talent;
 
   const pickImage = () => {
+    Keyboard.dismiss();
     imageSourcePickerModalRef.current?.present({
       onImagePicked: (image: PickedImage) => {
         upsertTalentAvatarMutate({ bucket: 'talents_avatars', file: image });

@@ -5,7 +5,7 @@ import { Role } from '@modules/common';
 
 export type OrgTabParams = {
   [Screens.EventsDashboard]: undefined;
-  [Screens.UpcomingEvents]: undefined;
+  [Screens.UpcomingEvents]: { initialTab?: string } | undefined;
   [Screens.TalentsTab]: undefined;
   [Screens.Chats]: undefined;
   [Screens.ProfileTab]: undefined;

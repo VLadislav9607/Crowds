@@ -71,17 +71,12 @@ export const useTalentProfileSetupForm = ({
     handleSubmit,
     watch,
     control,
-    reset,
     formState: { errors },
   } = useForm<TalentProfileSetupFormData>({
     resolver: zodResolver(talentProfileSetupSchema),
     defaultValues,
     mode: 'onBlur',
   });
-
-  useEffect(() => {
-    if (talent) reset(defaultValues);
-  }, [talent, reset, defaultValues]);
 
   const avatarPath = talent?.avatar_path;
   const [photoError, setPhotoError] = useState<string | undefined>();

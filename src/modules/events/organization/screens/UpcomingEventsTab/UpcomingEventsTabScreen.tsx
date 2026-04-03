@@ -1,4 +1,4 @@
-import { useState, useMemo } from 'react';
+import { useState, useMemo, useEffect } from 'react';
 import { StyleSheet } from 'react-native';
 
 import { AppTabSelector, If, NoAccess, ScreenWrapper } from '@components';
@@ -6,9 +6,18 @@ import { AppTabSelector, If, NoAccess, ScreenWrapper } from '@components';
 import { OrganizationEventsList } from '../../components';
 import { useGetMe, useGetOrgEventsCounters } from '@actions';
 import { AppText } from '@ui';
+import { useRoute } from '@react-navigation/native';
 
 export const UpcomingEventsTabScreen = () => {
-  const [mainTab, setMainTab] = useState('active');
+  const route = useRoute();
+  const initialTab = (route.params as any)?.initialTab;
+  const [mainTab, setMainTab] = useState(initialTab || 'active');
+
+  useEffect(() => {
+    if (initialTab) {
+      setMainTab(initialTab);
+    }
+  }, [initialTab]);
   const [activeSubTab, setActiveSubTab] = useState('job_board');
   const { organizationMember } = useGetMe();
   const now = useMemo(() => new Date().toISOString(), []);
