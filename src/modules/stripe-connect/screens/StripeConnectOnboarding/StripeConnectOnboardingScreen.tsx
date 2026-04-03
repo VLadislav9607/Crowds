@@ -29,9 +29,9 @@ import {
 } from '../../helpers/getConnectStatus';
 import { styles } from './styles';
 import { COLORS } from '@styles';
+import { SUPABASE_URL } from '@env';
 
-const REDIRECT_URL_PREFIX =
-  'https://mznllzlcwtonsjqvzpux.supabase.co/functions/v1/stripe-connect-redirect';
+const REDIRECT_URL_PREFIX = `${SUPABASE_URL}/functions/v1/stripe-connect-redirect`;
 
 const STATUS_CONFIG: Record<
   ConnectStatus,

@@ -37,7 +37,7 @@ module.exports = {
       "module:react-native-dotenv",
       {
         moduleName: "@env",
-        path: ".env.local",
+        path: ".env.staging",
         safe: false,
         allowUndefined: true,
         verbose: false
