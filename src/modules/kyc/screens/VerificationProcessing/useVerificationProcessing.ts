@@ -13,9 +13,10 @@ type VerificationProcessingRoute = RouteProp<
   Screens.VerificationProcessing
 >;
 
-type VerificationState = 'pending' | 'completed' | 'failed';
+type VerificationState = 'pending' | 'completed' | 'failed' | 'expired_document';
+type FailureReason = 'underage' | 'dob_not_found' | null;
 
-const TOTAL_CHECKS = 3;
+const TOTAL_CHECKS = 2;
 const ANIMATION_STEP_MS = 300;
 
 export const useVerificationProcessing = () => {
@@ -27,11 +28,12 @@ export const useVerificationProcessing = () => {
   const userId = me?.id || '';
 
   const [state, setState] = useState<VerificationState>('pending');
+  const [failureReason, setFailureReason] = useState<FailureReason>(null);
   const [displayedChecks, setDisplayedChecks] = useState(0);
   const hasNavigatedRef = useRef(false);
   const animatingRef = useRef(false);
 
-  const { kycStatus, checksPassed } = useIsUserVerified({
+  const { kycStatus, checksPassed, failureReason: kycFailureReason } = useIsUserVerified({
     userId,
     refetchInterval: state === 'pending' ? 3000 : false,
   });
@@ -88,8 +90,11 @@ export const useVerificationProcessing = () => {
   useEffect(() => {
     if (kycStatus === 'completed' && state !== 'completed') {
       setState('completed');
+    } else if (kycStatus === 'expired_document' && state !== 'expired_document') {
+      setState('expired_document');
     } else if (kycStatus === 'failed' && state !== 'failed') {
       setState('failed');
+      setFailureReason(kycFailureReason);
     }
   }, [kycStatus, state]);
 
@@ -154,5 +159,8 @@ export const useVerificationProcessing = () => {
     totalChecks: TOTAL_CHECKS,
     handleRetry,
     isFailed: state === 'failed',
+    isUnderage: state === 'failed' && failureReason === 'underage',
+    isDobNotFound: state === 'failed' && failureReason === 'dob_not_found',
+    isExpiredDocument: state === 'expired_document',
   };
 };

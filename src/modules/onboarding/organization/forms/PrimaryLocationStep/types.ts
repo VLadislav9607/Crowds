@@ -60,6 +60,7 @@ export const primaryLocationFormSchema = z
       })
       .optional(),
     isHeadOffice: z.boolean(),
+    vat_number: z.string().min(1, 'GST/VAT number is required'),
   })
   .refine(
     data => {

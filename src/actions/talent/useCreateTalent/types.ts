@@ -2,10 +2,11 @@ import { Database } from "@services";
 
 export interface CreateTalentBodyDto {
     first_name: string;
+    middle_name?: string;
     last_name: string;
     username: string;
     gender: Database["public"]["Enums"]["Gender"];
-    birth_date: string;
+    birth_date?: string;
     password: string;
 }
 

@@ -1,4 +1,5 @@
 import { useRef, useState, useCallback } from 'react';
+import { Alert } from 'react-native';
 import {
   EventCreatedModalRef,
   EventCreatedModalRefProps,
@@ -26,6 +27,7 @@ import { Screens, useScreenNavigation } from '@navigation';
 import { findOfficeByCountryCode } from '../../../helpers/officeLocationHelpers';
 import { usePaymentFlow } from './usePaymentFlow';
 import { PaymentConfirmationData } from '../../../modals';
+import { supabase } from '@services';
 
 export const useEventControll = ({
   formData,
@@ -304,7 +306,54 @@ export const useEventControll = ({
         setCreatedDraftId(eventId);
       }
 
-      // 2. Create payment intent on server
+      // 2. AML pre-check — verify compliance before payment
+      const officeId = pendingDto.officeId;
+      if (officeId) {
+        // Quick check — is AML already clear?
+        const { data: currentKyc } = await (supabase as any)
+          .from('office_kyc')
+          .select('status')
+          .eq('office_id', officeId)
+          .maybeSingle();
+
+        if (currentKyc?.status !== 'clear') {
+          const { data: amlResult, error: amlError } =
+            await supabase.functions.invoke('check-office-aml', {
+              body: { officeId },
+            });
+
+          if (amlError) {
+            showErrorToast('Compliance check failed. Please try again.');
+            return;
+          }
+
+          const amlStatus = amlResult?.status;
+
+          if (amlStatus === 'attention' || amlStatus === 'failed') {
+            paymentConfirmationModalRef.current?.close();
+            Alert.alert(
+              'Compliance Review in Progress',
+              'Your organization is currently undergoing a compliance review. This is a standard procedure to ensure regulatory requirements are met. You will be able to publish events once the review is complete. We appreciate your patience.',
+              [{ text: 'OK' }],
+            );
+            return;
+          }
+
+          if (amlStatus === 'pending') {
+            paymentConfirmationModalRef.current?.close();
+            Alert.alert(
+              'Compliance Check in Progress',
+              'We are currently verifying your organization\'s compliance status. This usually takes just a moment. Please try again shortly.',
+              [{ text: 'OK' }],
+            );
+            return;
+          }
+        }
+
+        // amlStatus === 'clear' — proceed to payment
+      }
+
+      // 3. Create payment intent on server
       const paymentData = await startPaymentFlow(eventId);
 
       // 3. Process Stripe payment
@@ -320,6 +369,15 @@ export const useEventControll = ({
         clientSecret: paymentData.clientSecret,
         paymentIntentId: paymentData.paymentIntentId,
       });
+
+      if ((result as any).amlStatus) {
+        showErrorToast(
+          (result as any).message ||
+            'We are reviewing your compliance status. We will get back to you.',
+          { visibilityTime: 5000 },
+        );
+        return;
+      }
 
       if (result.success) {
         setPendingDto(null);

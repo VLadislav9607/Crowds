@@ -18,6 +18,9 @@ export const talentLocationSetupSchema = z.object({
     },
     { message: 'Location is required' },
   ),
+  tax_identification_number: z
+    .string()
+    .min(1, 'Tax identification number is required'),
 });
 
 export interface TalentLocationSetupFormData

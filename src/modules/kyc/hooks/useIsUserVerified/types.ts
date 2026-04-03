@@ -1,4 +1,6 @@
-export type KycStatus = 'pending' | 'in_progress' | 'completed' | 'failed';
+export type KycStatus = 'pending' | 'in_progress' | 'completed' | 'failed' | 'expired_document';
+
+export type KycFailureReason = 'underage' | 'dob_not_found' | null;
 
 export interface UserKycRecord {
   id: string;
@@ -6,6 +8,7 @@ export interface UserKycRecord {
   status: KycStatus;
   checks_total: number;
   checks_passed: number;
+  failure_reason: KycFailureReason;
   created_at: string;
   updated_at: string;
 }

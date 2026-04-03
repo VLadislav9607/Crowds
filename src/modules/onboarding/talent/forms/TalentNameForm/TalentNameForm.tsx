@@ -1,5 +1,5 @@
-import { AppInput, AppText } from '@ui';
-import { AppDateInput, CheckboxList } from '@components';
+import { AppInput } from '@ui';
+import { CheckboxList } from '@components';
 import { View } from 'react-native';
 import { Controller, useForm } from 'react-hook-form';
 import { Gender } from '@modules/profile';
@@ -12,8 +12,6 @@ import {
 } from './types';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { forwardRef, useEffect, useImperativeHandle } from 'react';
-import { differenceInYears } from 'date-fns';
-import { showErrorToast } from '@helpers';
 
 export const TalentNameForm = forwardRef<
   TalentNameFormRef,
@@ -54,6 +52,7 @@ export const TalentNameForm = forwardRef<
           <AppInput
             label="Username"
             placeholder="Enter your username"
+            description="Please enter your name exactly as it appears on your government-issued ID. This helps us verify your identity quickly."
             value={field.value}
             onChangeText={text => field.onChange(text.toLowerCase())}
             errorMessage={fieldState.error?.message}
@@ -69,6 +68,21 @@ export const TalentNameForm = forwardRef<
           <AppInput
             label="First Name"
             placeholder="Enter your first name"
+            value={field.value}
+            onChangeText={field.onChange}
+            errorMessage={fieldState.error?.message}
+            autoCapitalize="words"
+          />
+        )}
+      />
+
+      <Controller
+        control={control}
+        name="middleName"
+        render={({ field, fieldState }) => (
+          <AppInput
+            label="Middle Name"
+            placeholder="Enter your middle name (optional)"
             value={field.value}
             onChangeText={field.onChange}
             errorMessage={fieldState.error?.message}
@@ -109,42 +123,6 @@ export const TalentNameForm = forwardRef<
           />
         )}
       />
-
-      <View>
-        <Controller
-          control={control}
-          name="dateOfBirth"
-          render={({ field, fieldState }) => {
-            const handleChange = (date: Date) => {
-              const age = differenceInYears(new Date(), date);
-              age < 18
-                ? showErrorToast(
-                    'Sorry, but you must be over 18 to use this platform',
-                  )
-                : field.onChange(date);
-            };
-
-            return (
-              <AppDateInput
-                useDefaultIcon
-                placeholder="Select your date of birth"
-                label="Date of birth"
-                containerStyle={styles.dateInputContainer}
-                value={field.value}
-                onChange={handleChange}
-                errorMessage={fieldState.error?.message}
-                maximumDate={new Date()}
-              />
-            );
-          }}
-        />
-
-        <AppText color="main" typography="medium_12">
-          Biometric ID verification will be required. If the birthdate you
-          provide does not match your photo ID, your account may be permanently
-          banned from the platform.
-        </AppText>
-      </View>
     </View>
   );
 });

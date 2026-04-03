@@ -82,15 +82,42 @@ export const usePaymentFlow = () => {
         }
 
         // Confirm event publication on the server
-        await confirmPublication({
+        const result = await confirmPublication({
           eventId: data.eventId,
           paymentIntentId: paymentIntentId!,
         });
 
         setIsProcessing(false);
+
+        if (
+          result.status === 'aml_pending' ||
+          result.status === 'aml_blocked'
+        ) {
+          return {
+            success: false,
+            amlStatus: result.status,
+            message:
+              result.message ||
+              'We are reviewing your compliance status. We will get back to you.',
+          };
+        }
+
         return { success: true };
-      } catch {
+      } catch (error: any) {
         setIsProcessing(false);
+        const errorMessage =
+          error?.message || error?.error || 'Payment processing failed.';
+        if (
+          errorMessage.includes('compliance') ||
+          errorMessage.includes('aml')
+        ) {
+          return {
+            success: false,
+            amlStatus: 'aml_blocked',
+            message:
+              'We are reviewing your compliance status. We will get back to you.',
+          };
+        }
         showErrorToast('Payment processing failed. Please try again.');
         return { success: false };
       }

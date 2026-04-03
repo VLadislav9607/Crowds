@@ -3,7 +3,7 @@ import { Controller, useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { forwardRef, useEffect, useImperativeHandle, useRef } from 'react';
 
-import { AppText } from '@ui';
+import { AppInput, AppText } from '@ui';
 import { COLORS, TYPOGRAPHY } from '@styles';
 import {
   AppImage,
@@ -195,11 +195,26 @@ export const PrimaryLocationStep = forwardRef<
                 defaultValue={
                   parsedHeadOfficeLocation?.autocomplete_description
                 }
-                containerStyle={styles.headOfficeLocationInput}
+                containerStyle={styles.checkboxListContainer}
               />
             )}
           />
         </If>
+
+        <Controller
+          control={control}
+          name="vat_number"
+          render={({ field, fieldState }) => (
+            <AppInput
+              label="GST/VAT Number"
+              placeholder="Enter your GST/VAT number"
+              value={field.value}
+              onChangeText={field.onChange}
+              errorMessage={fieldState.error?.message}
+              containerStyle={styles.checkboxListContainer}
+            />
+          )}
+        />
 
         <View>
           <AppText
@@ -262,10 +277,6 @@ const styles = StyleSheet.create({
   checkboxListContainer: {
     marginTop: 24,
   },
-  headOfficeLocationInput: {
-    marginTop: 24,
-  },
-
   imageContainer: {
     width: 148,
     height: 148,

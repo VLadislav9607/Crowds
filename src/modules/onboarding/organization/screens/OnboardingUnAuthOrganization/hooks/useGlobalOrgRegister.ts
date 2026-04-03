@@ -125,6 +125,7 @@ export const useGlobalOrgRegister = ({
       creator: data.organizationCreatorInformationFormData!,
       branchManagerEmails:
         data.branchManagerEmailsFormData?.branchManagerEmails,
+      vat_number: data.headGlobalLocationFormData?.vat_number,
     });
   };
 

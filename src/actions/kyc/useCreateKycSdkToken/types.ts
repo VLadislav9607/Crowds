@@ -7,7 +7,9 @@ export interface CreateKycSdkTokenRespDto {
 export interface CreateKycSdkTokenBodyDto {
   userId: string;
   firstName: string;
+  middleName?: string;
   lastName: string;
-  dob: string;
+  dob?: string;
   appId: string;
+  taxIdentificationNumber?: string;
 }

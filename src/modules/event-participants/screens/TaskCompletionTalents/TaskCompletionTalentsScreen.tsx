@@ -1,5 +1,6 @@
 import { useCallback, useMemo, useState } from 'react';
-import { Pressable, View } from 'react-native';
+import { Alert, Pressable, View } from 'react-native';
+
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { useQueryClient } from '@tanstack/react-query';
 import {
@@ -52,8 +53,18 @@ export const TaskCompletionTalentsScreen = () => {
         showSuccessToast('Settlement completed successfully');
         setShowSettlementModal(false);
       },
-      onError: () => {
-        showErrorToast('Settlement failed');
+      onError: (error: any) => {
+        setShowSettlementModal(false);
+        const message = error?.message || '';
+        if (message.includes('aml_blocked')) {
+          Alert.alert(
+            'Compliance Review in Progress',
+            'Your organization is currently undergoing a compliance review. This is a standard procedure to ensure regulatory requirements are met. You will be able to process payments once the review is complete. We appreciate your patience.',
+            [{ text: 'OK' }],
+          );
+        } else {
+          showErrorToast('Settlement failed');
+        }
       },
     });
   const { mutate: reviewTask } = useReviewTaskCompletion({

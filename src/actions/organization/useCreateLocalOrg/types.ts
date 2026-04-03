@@ -31,6 +31,7 @@ export interface CreateLocalOrgBodyDto {
   headOfficeLocation: ParsedLocation;
   location: ParsedLocation;
   creator: OrganizationCreatorInformationFormData;
+  vat_number?: string;
 }
 
 export interface CreateLocalOrgResDto {

@@ -33,12 +33,10 @@ export const talentNameFormSchema = z.object({
       message: 'Username must start with a letter or underscore',
     }),
   firstName: z.string().min(1, 'First name is required'),
+  middleName: z.string().optional(),
   lastName: z.string().min(1, 'Last name is required'),
   gender: z.enum([Gender.MALE, Gender.FEMALE, Gender.OTHER], {
     message: 'Gender is required',
-  }),
-  dateOfBirth: z.date({
-    message: 'Date of birth is required',
   }),
 });
 

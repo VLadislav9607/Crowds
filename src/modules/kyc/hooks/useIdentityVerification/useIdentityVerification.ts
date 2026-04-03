@@ -134,8 +134,9 @@ export const useIdentityVerification = (
       const response = await createKycSdkToken({
         userId,
         firstName: me?.first_name || '',
+        middleName: (talent as Record<string, unknown>)?.middle_name as string || undefined,
         lastName: me?.last_name || '',
-        dob: talent?.birth_date || '2000-01-01',
+        dob: talent?.birth_date || undefined,
         appId: APP_ID,
       });
 

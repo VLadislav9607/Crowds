@@ -80,6 +80,7 @@ export const useSingleOrgRegister = ({
       headOfficeLocation: headOfficeLocation as ParsedLocation,
       location: location as ParsedLocation,
       creator: data.organizationCreatorInformationFormData!,
+      vat_number: data.primaryLocationFormData?.vat_number,
     });
   };
 

@@ -38,6 +38,7 @@ export const useIsUserVerified = ({
     isKycPending,
     isKycFailed,
     kycStatus: query.data?.status ?? null,
+    failureReason: query.data?.failure_reason ?? null,
     checksTotal,
     checksPassed,
     isKycInProgress,

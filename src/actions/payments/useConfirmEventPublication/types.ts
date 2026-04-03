@@ -5,5 +5,6 @@ export interface ConfirmEventPublicationBodyDto {
 
 export interface ConfirmEventPublicationResDto {
   eventId: string;
-  status: 'published' | 'already_published';
+  status: 'published' | 'already_published' | 'aml_pending' | 'aml_blocked';
+  message?: string;
 }

@@ -54,7 +54,7 @@ export const OnboardingAuthTalentScreen = () => {
     2: '',
     3: 'Please set up your current\navailability',
     4: '',
-    // 5: 'Set Up Secure Banking\nwith Stripe',
+    5: 'Set Up Secure Banking\nwith Stripe',
   };
 
   const renderForwardButton = () => {

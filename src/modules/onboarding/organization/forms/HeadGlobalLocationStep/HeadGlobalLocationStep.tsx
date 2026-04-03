@@ -3,7 +3,7 @@ import { Controller, useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { forwardRef, useEffect, useImperativeHandle, useRef } from 'react';
 
-import { AppText } from '@ui';
+import { AppInput, AppText } from '@ui';
 import { COLORS, TYPOGRAPHY } from '@styles';
 import { AppImage, PlacesPredictionsInput } from '@components';
 import { PlaceAutocompleteType } from '@googlemaps/google-maps-services-js';
@@ -94,6 +94,21 @@ export const HeadGlobalLocationStep = forwardRef<
               }}
               onSelectPlace={res => field.onChange(res.parsed_details)}
               defaultValue={parsedLocation?.autocomplete_description}
+            />
+          )}
+        />
+
+        <Controller
+          control={control}
+          name="vat_number"
+          render={({ field, fieldState }) => (
+            <AppInput
+              label="GST/VAT Number"
+              placeholder="Enter your GST/VAT number"
+              value={field.value}
+              onChangeText={field.onChange}
+              errorMessage={fieldState.error?.message}
+              containerStyle={{ marginTop: 12 }}
             />
           )}
         />
