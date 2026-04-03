@@ -1,5 +1,5 @@
 import { JSX } from 'react';
-import { StyleProp, ViewStyle } from 'react-native';
+import { StyleProp, TextStyle, ViewStyle } from 'react-native';
 import { FlashListProps } from '@shopify/flash-list';
 import { ButtonProps } from '@ui';
 
@@ -10,6 +10,7 @@ export interface AppFlashListProps<T>
   > {
   gap?: number;
   emptyText?: string;
+  emptyTextStyle?: StyleProp<TextStyle>;
   withBottomTab?: boolean;
   contentContainerStyle?: StyleProp<ViewStyle>;
   floatingButtonProps?: ButtonProps;

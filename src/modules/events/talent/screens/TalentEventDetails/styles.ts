@@ -7,9 +7,6 @@ export const styles = StyleSheet.create({
       gap: 24,
       paddingTop: 20,
     },
-    header:{
-      paddingBottom: 30
-    },
     chatButtonsContainer: {
       flexDirection: 'row',
       gap: 12,
@@ -23,6 +20,17 @@ export const styles = StyleSheet.create({
       padding: 16,
       borderLeftWidth: 4,
       borderLeftColor: COLORS.main,
+    },
+    checkinStatusSection: {
+      backgroundColor: COLORS.gray_200,
+      borderRadius: 12,
+      padding: 16,
+      gap: 8,
+    },
+    checkinStatusRow: {
+      flexDirection: 'row',
+      justifyContent: 'space-between',
+      alignItems: 'center',
     },
     taskUploadSection: {
       gap: 12,

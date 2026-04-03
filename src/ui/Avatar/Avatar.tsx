@@ -1,7 +1,9 @@
 import { View, Image } from 'react-native';
+import { SvgXml } from 'react-native-svg';
 
 import { AppImage, If } from '@components';
 import { COLORS } from '@styles';
+import { ICONS } from '@assets';
 
 import { AppText } from '../AppText';
 import {
@@ -11,6 +13,8 @@ import {
   AVATAR_FLAG_SIZE,
 } from './styles';
 import { IAvatarProps } from './types';
+
+const DELETED_USER_NAME = 'Deleted User';
 
 const getInitials = (name?: string): string => {
   if (!name) return '';
@@ -39,12 +43,18 @@ export const Avatar = ({
 
   const flagSize = AVATAR_FLAG_SIZE[size];
 
+  const isDeleted = name === DELETED_USER_NAME;
   const hasImage = !!uri || (!!imgPath && !!bucket);
 
   return (
     <View style={[styles.avatar, sizeStyle, style]}>
+      {/* Deleted user icon */}
+      <If condition={isDeleted}>
+        <SvgXml xml={ICONS.deletedUser()} width={size} height={size} />
+      </If>
+
       {/* AppImage with bucket path */}
-      <If condition={!!imgPath && !!bucket}>
+      <If condition={!isDeleted && !!imgPath && !!bucket}>
         <AppImage
           bucket={bucket!}
           imgPath={imgPath}
@@ -53,12 +63,12 @@ export const Avatar = ({
       </If>
 
       {/* Legacy direct URI */}
-      <If condition={!!uri && !imgPath}>
+      <If condition={!isDeleted && !!uri && !imgPath}>
         <Image source={{ uri }} style={styles.image} />
       </If>
 
       {/* Placeholder with initials */}
-      <If condition={!hasImage}>
+      <If condition={!isDeleted && !hasImage}>
         <View style={[styles.placeholder, sizeStyle]}>
           <AppText typography={AVATAR_TYPOGRAPHY[size]} style={styles.initials}>
             {getInitials(name)}

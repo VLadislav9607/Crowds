@@ -37,25 +37,20 @@ export const useNotificationSettings = () => {
 
   const toggleAll = (value: boolean) => {
     const newSettings = { ...settings };
-    notificationOptions.forEach(({ key, enabled }) => {
-      if (enabled) {
-        newSettings[key] = value;
-      }
+    notificationOptions.forEach(({ key }) => {
+      newSettings[key] = value;
     });
     upsertSettings({ settings: newSettings });
   };
 
-  const options = notificationOptions.map(({ key, title, enabled }) => ({
+  const options = notificationOptions.map(({ key, title }) => ({
     key,
     title,
-    enabled,
     value: settings[key] ?? false,
     onToggle: toggleSetting(key),
   }));
 
-  const allEnabled = options
-    .filter(option => option.enabled)
-    .every(option => option.value);
+  const allEnabled = options.every(option => option.value);
 
   return {
     options,

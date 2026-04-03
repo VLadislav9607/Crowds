@@ -1,13 +1,12 @@
 import { StyleSheet } from 'react-native';
 
 export const styles = StyleSheet.create({
-  list: {
-    paddingTop: 16,
-    paddingBottom: 80,
+  noPaddingBottom: {
+    paddingBottom: 0,
   },
   floatingButtonContainer: {
     position: 'absolute',
-    bottom: 16,
+    bottom: 32,
     left: 20,
     right: 20,
   },

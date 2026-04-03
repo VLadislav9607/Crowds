@@ -6,15 +6,19 @@ import { COLORS } from '@styles';
 import { If, NoAccess, TestBadge } from '@components';
 import { styles } from './styles';
 import { OrganizationEventsList } from '../../components';
-import { useCallback, useState } from 'react';
+import { useCallback, useMemo, useState } from 'react';
+import { startOfDay, endOfDay } from 'date-fns';
 
 export const EventsDashboardTabScreen = () => {
   const { organizationMember } = useGetMe();
 
-  const [now, setNow] = useState(() => new Date().toISOString());
+  const [today, setToday] = useState(() => new Date());
+
+  const todayStart = useMemo(() => startOfDay(today).toISOString(), [today]);
+  const todayEnd = useMemo(() => endOfDay(today).toISOString(), [today]);
 
   const handleRefreshNow = useCallback(() => {
-    setNow(new Date().toISOString());
+    setToday(new Date());
   }, []);
 
   const hasViewEventsAccess =
@@ -89,8 +93,8 @@ export const EventsDashboardTabScreen = () => {
           filters={{
             brand_id: organizationMember?.current_context?.brand?.id!,
             status_filter: 'published',
-            start_before: now,
-            end_after: now,
+            start_before: todayEnd,
+            end_after: todayStart,
           }}
           onRefresh={handleRefreshNow}
         />

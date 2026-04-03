@@ -26,7 +26,8 @@ export const OrgBaseEventCard = ({
   const onPress = () => {
     goToScreen(Screens.OrgEventDetails, { eventId: event?.id ?? '' });
   };
-  const timezone = event?.event_location?.timezone || 'UTC';
+  const deviceTimezone = Intl.DateTimeFormat().resolvedOptions().timeZone;
+  const timezone = event?.event_location?.timezone || deviceTimezone;
   const { organizationMember } = useGetMe();
 
   const startAt = event?.start_at
@@ -66,7 +67,7 @@ export const OrgBaseEventCard = ({
     >
       {/* Header Row */}
       <View style={cardStyles.nameRow}>
-        <AppText style={cardStyles.name} numberOfLines={1} typography="bold_14">
+        <AppText style={cardStyles.name} typography="bold_14">
           {event?.title}
         </AppText>
         {headerRight}

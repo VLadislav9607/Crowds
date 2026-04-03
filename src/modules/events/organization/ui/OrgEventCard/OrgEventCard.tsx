@@ -19,7 +19,8 @@ export const OrganizationEventCard = ({
   headerRight,
   footer,
 }: IOrganizationEventCardProps) => {
-  const timezone = event?.event_location?.timezone || 'UTC';
+  const deviceTimezone = Intl.DateTimeFormat().resolvedOptions().timeZone;
+  const timezone = event?.event_location?.timezone || deviceTimezone;
 
   const startAt = event?.start_at
     ? formatInTimeZone(event.start_at, timezone, 'dd MMM, yyyy')
@@ -40,7 +41,7 @@ export const OrganizationEventCard = ({
     <View style={cardStyles.container}>
       {/* Header Row */}
       <View style={cardStyles.nameRow}>
-        <AppText style={cardStyles.name} numberOfLines={1} typography="bold_14">
+        <AppText style={cardStyles.name} typography="bold_14">
           {event?.title}
         </AppText>
         {headerRight}

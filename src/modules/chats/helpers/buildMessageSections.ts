@@ -72,6 +72,9 @@ export const buildMessageSections = ({
       senderName: foundParticipant?.display_name ?? '',
       senderAvatar: foundParticipant?.avatar_url ?? '',
       senderRole: foundParticipant?.role ?? 'talent',
+      isEdited: message.is_edited,
+      imagePath: message.image_path,
+      imageBucket: message.image_bucket,
     };
 
     sections[sections.length - 1].data.push(messageData);

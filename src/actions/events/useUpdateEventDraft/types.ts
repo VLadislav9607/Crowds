@@ -63,6 +63,7 @@ export interface UpdateDraftEventBodyDto {
   ndaDocumentPath?: string;
   location?: EventLocationDto | null;
   ageGroups?: AgeGroupDto[];
+  customTasks?: string[];
 }
 
 export interface UpdateDraftEventResDto {

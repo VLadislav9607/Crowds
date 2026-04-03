@@ -6,7 +6,6 @@ import { Screens, useScreenNavigation } from '@navigation';
 import {
   useGetEventForOrgMember,
   useUpdateCheckinCutoff,
-  useGetMe,
 } from '@actions';
 
 import { ManageEventScreenLayout } from '../../layouts';
@@ -19,14 +18,11 @@ export const ManageEventScreen = () => {
   const eventId = params?.eventId ?? '';
 
   const { data: event } = useGetEventForOrgMember({ event_id: eventId });
-  const { data: meData } = useGetMe();
-  const brandLogoPath =
-    meData?.organizationMember?.current_context?.brand?.logo_path;
-
   const { mutate: updateCheckinCutoff, isPending: isUpdatingCutoff } =
     useUpdateCheckinCutoff();
 
-  const eventTimezone = event?.event_location?.timezone || 'UTC';
+  const deviceTimezone = Intl.DateTimeFormat().resolvedOptions().timeZone;
+  const eventTimezone = event?.event_location?.timezone || deviceTimezone;
 
   const timezoneOffsetInMinutes = useMemo(
     () => getTimezoneOffset(eventTimezone) / 60000,
@@ -70,8 +66,6 @@ export const ManageEventScreen = () => {
   return (
     <ManageEventScreenLayout
       eventTitle={event?.title ?? ''}
-      eventLocation={event?.event_location?.formatted_address ?? ''}
-      eventImage={brandLogoPath}
     >
       <EventManageBoard
         checkinCutoff={checkinCutoff}

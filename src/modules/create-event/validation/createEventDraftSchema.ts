@@ -139,7 +139,7 @@ export const createEventDraftSchema = z
     paymentMode: z.enum(['perHour', 'fixed']),
     paymentAmount: z
       .number()
-      .min(15, 'Minimum payment is AUD $15.00')
+      .min(15, 'Minimum payment is $15')
       .optional()
       .nullable(),
     eventBrief: z.string().optional().nullable(),
@@ -147,6 +147,7 @@ export const createEventDraftSchema = z
     ndaDocumentName: z.string().optional().nullable(),
     ndaDocumentPath: z.string().optional().nullable(),
     registrationClosingAt: z.date().optional().nullable(),
+    customTasks: z.array(z.string()).optional().nullable(),
   })
   .refine(validateStartBeforeEnd, {
     message: 'Start date and time must be earlier than end date and time',

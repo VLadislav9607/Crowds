@@ -7,4 +7,5 @@ export * from './EventBriefSection';
 export * from './OtherInfoSection';
 export * from './PaymentSection';
 export * from './TagsSection';
+export * from './TasksSection';
 export * from './VisibilitySection';

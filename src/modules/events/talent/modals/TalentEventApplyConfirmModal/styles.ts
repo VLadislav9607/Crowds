@@ -19,5 +19,11 @@ export const styles = StyleSheet.create({
     },
     cancelButton: {
         marginBottom: 10
+    },
+    scheduleWarning: {
+        backgroundColor: '#FFF0F0',
+        borderRadius: 8,
+        padding: 12,
+        marginBottom: 14,
     }
 });

@@ -1,6 +1,6 @@
 import { ICONS } from '@assets';
 import { Role } from '@modules/common';
-import { withRedFlagGuard } from '../../modules/flags';
+import { withRedFlagGuard, withOrgFlagGuard } from '../../modules/flags';
 
 import {
   EventsDashboardTabScreen,
@@ -20,7 +20,7 @@ export const BottomTabsConfig: BottomTabsConfigType = {
   [Role.ORGANIZATION]: [
     {
       name: Screens.EventsDashboard,
-      component: EventsDashboardTabScreen,
+      component: withOrgFlagGuard(EventsDashboardTabScreen),
       icon: (opacity: number) => ICONS.BOTTOM_TABS.home(opacity),
     },
     {
@@ -30,12 +30,12 @@ export const BottomTabsConfig: BottomTabsConfigType = {
     },
     {
       name: Screens.TalentsTab,
-      component: TalentsTabScreen,
+      component: withOrgFlagGuard(TalentsTabScreen),
       icon: (opacity: number) => ICONS.BOTTOM_TABS.profiles(opacity),
     },
     {
       name: Screens.Chats,
-      component: ChatsTabScreen,
+      component: withOrgFlagGuard(ChatsTabScreen),
       icon: (opacity: number) => ICONS.BOTTOM_TABS.chats(opacity),
     },
     {

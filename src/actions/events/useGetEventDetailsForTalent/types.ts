@@ -14,6 +14,7 @@ export interface EventDetailsForTalentDto {
   start_at: string;
   end_at: string;
   registration_closes_at: string | null;
+  checkin_cutoff: string | null;
   visibility: string;
   payment_mode: string;
   payment_amount: number;
@@ -31,4 +32,5 @@ export interface EventDetailsForTalentDto {
   task_status: string;
   task_photo_path: string | null;
   group_chat_id: string | null;
+  custom_tasks: { id: string; text: string; is_completed: boolean }[];
 }

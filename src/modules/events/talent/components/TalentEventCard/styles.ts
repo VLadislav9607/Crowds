@@ -20,9 +20,9 @@ export const styles = StyleSheet.create({
     alignItems: 'center',
   },
   iconContainer: {
-    width: 40,
-    height: 40,
-    borderRadius: 5,
+    width: 52,
+    height: 52,
+    borderRadius: 8,
     backgroundColor: COLORS.main,
     justifyContent: 'center',
     alignItems: 'center',
@@ -110,5 +110,13 @@ export const styles = StyleSheet.create({
     height: 18,
     justifyContent: 'center',
     alignItems: 'center',
+  },
+  unavailableBadge: {
+    alignSelf: 'flex-start',
+    backgroundColor: COLORS.red_20,
+    paddingHorizontal: 8,
+    paddingVertical: 4,
+    borderRadius: 100,
+    marginBottom: 8,
   },
 });

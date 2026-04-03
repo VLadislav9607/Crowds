@@ -13,6 +13,24 @@ type VerificationOrigin = 'talent_onboarding' | 'org_onboarding' | 'profile';
  * Android returns: { livePhotoId: "...", ids: { documentIds: ["..."], poaIds: [] } }
  * iOS returns:     { livePhotoId: null, ids: ["document(id: \"...\")", "livePhoto(id: \"...\")"] }
  */
+/**
+ * Extract a bare hex/alphanumeric ID from strings like:
+ *   "69bba7dbbd034e0002259ee0"          → as-is
+ *   "document(id: \"69bba7dbbd034e0002259ee0\")" → extracted
+ */
+function extractId(value: unknown): string | undefined {
+  if (!value || value === null) return undefined;
+  const str = String(value);
+  // Already a bare ID (hex, 10+ chars)?
+  if (/^[a-f0-9]{10,}$/i.test(str)) return str;
+  // Wrapped format: something(id: "...")
+  const wrapped = str.match(/id:\s*"([a-f0-9]{10,})"/i);
+  if (wrapped) return wrapped[1];
+  // Fallback: find any long hex sequence
+  const hex = str.match(/([a-f0-9]{10,})/i);
+  return hex ? hex[1] : undefined;
+}
+
 function parseSdkResult(raw: unknown): {
   documentId?: string;
   livePhotoId?: string;
@@ -22,8 +40,8 @@ function parseSdkResult(raw: unknown): {
   // Android format
   if (parsed?.ids?.documentIds) {
     return {
-      documentId: parsed.ids.documentIds[0],
-      livePhotoId: parsed.livePhotoId || undefined,
+      documentId: extractId(parsed.ids.documentIds[0]),
+      livePhotoId: extractId(parsed.livePhotoId),
     };
   }
 
@@ -34,30 +52,39 @@ function parseSdkResult(raw: unknown): {
 
     for (const item of parsed.ids) {
       const str = typeof item === 'string' ? item : String(item);
-      // Extract hex ID from patterns like: document(id: "abc123") or livePhoto(id: "abc123")
-      const idMatch = str.match(/([a-f0-9]{10,})/i);
-      if (!idMatch) continue;
+      const id = extractId(str);
+      if (!id) continue;
 
       if (/document/i.test(str)) {
-        documentId = idMatch[1];
+        documentId = id;
       } else if (/livePhoto/i.test(str)) {
-        livePhotoId = idMatch[1];
+        livePhotoId = id;
       }
     }
 
     // iOS also has livePhotoId at top level (may be null/NSNull)
-    if (!livePhotoId && parsed?.livePhotoId && parsed.livePhotoId !== null) {
-      livePhotoId = String(parsed.livePhotoId);
+    if (!livePhotoId) {
+      livePhotoId = extractId(parsed?.livePhotoId);
     }
 
     return { documentId, livePhotoId };
   }
 
+  // Fallback: try top-level documentId / livePhotoId fields
+  if (parsed?.documentId || parsed?.livePhotoId) {
+    return {
+      documentId: extractId(parsed.documentId),
+      livePhotoId: extractId(parsed.livePhotoId),
+    };
+  }
+
   return {};
 }
 
-export const useIdentityVerification = (origin: VerificationOrigin = 'profile') => {
-  const { me } = useGetMe();
+export const useIdentityVerification = (
+  origin: VerificationOrigin = 'profile',
+) => {
+  const { me, talent } = useGetMe();
   const { mutateAsync: createKycSdkToken, isPending } = useCreateKycSdkToken();
   const { mutateAsync: createKycChecks } = useCreateKycChecks();
 
@@ -81,24 +108,22 @@ export const useIdentityVerification = (origin: VerificationOrigin = 'profile') 
           'documentCapture',
           { name: 'faceCapture', options: { type: 'photo' } },
           {
-            name: 'completion',
-            options: { message: "All done! We're now reviewing your submission." },
+            name: 'outro',
+            heading: 'All Done!',
+            message: "We're now reviewing your submission. This usually takes a few moments.",
           },
         ],
       });
 
       if (outcome.status === 'success') {
-        try {
-          const { documentId, livePhotoId } = parseSdkResult(outcome.result);
-          await createKycChecks({ clientId, documentId, livePhotoId });
-          goToScreen(Screens.VerificationProcessing, { origin });
-        } catch (error) {
+        const { documentId, livePhotoId } = parseSdkResult(outcome.result);
+
+        // Navigate immediately, create checks in background
+        goToScreen(Screens.VerificationProcessing, { origin });
+
+        createKycChecks({ clientId, documentId, livePhotoId }).catch(error => {
           console.error('[KYC] Failed to create checks:', error);
-          Alert.alert(
-            'Verification Error',
-            'Failed to submit verification. Please try again.',
-          );
-        }
+        });
       }
     },
     [createKycChecks, origin],
@@ -110,7 +135,7 @@ export const useIdentityVerification = (origin: VerificationOrigin = 'profile') 
         userId,
         firstName: me?.first_name || '',
         lastName: me?.last_name || '',
-        dob: '2000-01-01',
+        dob: talent?.birth_date || '2000-01-01',
         appId: APP_ID,
       });
 
@@ -121,7 +146,7 @@ export const useIdentityVerification = (origin: VerificationOrigin = 'profile') 
       const message = error?.message || error?.error || 'Something went wrong';
       Alert.alert('Verification Error', message);
     }
-  }, [userId, me, createKycSdkToken, launchSdk]);
+  }, [userId, me, createKycSdkToken, launchSdk, talent?.birth_date]);
 
   return {
     goToVerification,

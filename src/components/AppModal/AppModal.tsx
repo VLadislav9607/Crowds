@@ -1,4 +1,4 @@
-import { TouchableOpacity, View } from 'react-native';
+import { Keyboard, Pressable, TouchableOpacity } from 'react-native';
 import { AppModalProps } from './types';
 import Modal from 'react-native-modal';
 import { styles } from './styles';
@@ -20,11 +20,18 @@ export const AppModal = ({
   ...props
 }: AppModalProps) => {
   return (
-    <Modal onBackdropPress={props.onClose} backdropOpacity={0.5} {...props}>
+    <Modal
+      onBackdropPress={props.onClose}
+      backdropOpacity={0.5}
+      statusBarTranslucent
+      style={styles.modal}
+      {...props}
+    >
       <If condition={!hideToast}>
         <AppToast removeTopOffset />
       </If>
-      <View
+      <Pressable
+        onPress={Keyboard.dismiss}
         style={[
           styles.container,
           hideCloseButton && styles.containerWithoutCloseButton,
@@ -59,7 +66,7 @@ export const AppModal = ({
         )}
 
         {children}
-      </View>
+      </Pressable>
     </Modal>
   );
 };

@@ -1,4 +1,4 @@
-import { StyleSheet, View } from 'react-native';
+import { Keyboard, StyleSheet, View } from 'react-native';
 import { Controller, useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { forwardRef, useEffect, useImperativeHandle, useRef } from 'react';
@@ -104,10 +104,11 @@ export const HeadGlobalLocationStep = forwardRef<
             color="black"
             margin={{ bottom: 14, top: 20 }}
           >
-            Add you Logo/Brand
+            Add your Logo/Brand
           </AppText>
           <AppImage
-            onPress={() =>
+            onPress={() => {
+              Keyboard.dismiss();
               imageSourcePickerModalRef.current?.present({
                 onImagePicked: logo => {
                   onPickLogo?.({
@@ -118,8 +119,8 @@ export const HeadGlobalLocationStep = forwardRef<
                   });
                   imageSourcePickerModalRef.current?.dismiss();
                 },
-              })
-            }
+              });
+            }}
             imgUri={pickedLogo?.uri}
             containerStyle={styles.imageContainer}
             bucket="brand_avatars"
@@ -131,6 +132,16 @@ export const HeadGlobalLocationStep = forwardRef<
             }
           />
         </View>
+
+        <AppText
+          typography="regular_14"
+          color="gray_primary"
+          margin={{ top: 14 }}
+        >
+          Max 3MB, JPEG or PNG. Your logo will not be seen by anyone until you
+          have an approved event and approved talent under signed NDA. Only a
+          category icon will be seen by the public.
+        </AppText>
 
         <ImageSourcePickerModal
           bottomSheetRef={imageSourcePickerModalRef}

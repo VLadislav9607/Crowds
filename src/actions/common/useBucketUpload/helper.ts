@@ -1,7 +1,7 @@
 import { BUCKETS_CONFIG, BucketsTypes } from '@configs';
-import { encode } from 'base64-arraybuffer';
 import { decode } from 'base64-arraybuffer';
 import { REGEX } from '@constants';
+import RNFS from 'react-native-fs';
 
 export const generateFilePathForBucket = async (
   fileName: string,
@@ -67,12 +67,6 @@ export const convertFileToArrayBuffer = async (
     return decode(base64Data);
   }
 
-  const response = await fetch(fileUri);
-  const arrayBuffer = await response.arrayBuffer();
-
-  const base64String = encode(arrayBuffer);
-  const base64Data = `data:${type || 'image/jpeg'};base64,${base64String}`;
-
-  const base64Only = base64Data.replace(/^data:.*,/, '');
-  return decode(base64Only);
+  const base64 = await RNFS.readFile(fileUri, 'base64');
+  return decode(base64);
 };

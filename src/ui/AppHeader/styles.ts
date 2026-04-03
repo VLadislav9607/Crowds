@@ -15,6 +15,7 @@ export const styles = StyleSheet.create({
   logoHeaderInner: {
     width: '100%',
     alignItems: 'center',
+    overflow: 'visible',
   },
   titleHeaderInner: {
     width: '100%',
@@ -49,6 +50,7 @@ export const styles = StyleSheet.create({
     flexDirection: 'column',
     minHeight: 120,
     gap: 14,
+    overflow: 'hidden',
   },
   backButton: {
     marginTop: -2,
@@ -84,9 +86,8 @@ export const styles = StyleSheet.create({
   rightIconsWrapper: {
     position: 'absolute',
     right: 0,
-    top: 0,
+    top: 5,
     bottom: 0,
-    justifyContent: 'center',
     flexDirection: 'row',
     gap: 14,
     alignItems: 'center',

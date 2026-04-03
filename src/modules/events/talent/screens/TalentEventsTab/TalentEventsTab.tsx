@@ -57,14 +57,15 @@ export const TalentEventsTab = () => {
 
   const {
     data: historyData,
-    isLoading: historyLoading,
     hasNextPage: historyHasNextPage,
     fetchNextPage: historyFetchNextPage,
     refetch: historyRefetch,
   } = useGetTalentEventHistory({ enabled: isHistoryTab });
 
-  const { isRefetchingQuery: isHistoryRefetching, refetchQuery: refetchHistoryQuery } =
-    useRefetchQuery(historyRefetch);
+  const {
+    isRefetchingQuery: isHistoryRefetching,
+    refetchQuery: refetchHistoryQuery,
+  } = useRefetchQuery(historyRefetch);
 
   const {
     proposals,

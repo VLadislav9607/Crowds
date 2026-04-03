@@ -1,4 +1,5 @@
 import { useRef } from 'react';
+import { Keyboard } from 'react-native';
 import { BottomSheetModal } from '@gorhom/bottom-sheet';
 import { useGetMe } from '@actions';
 import { ImageSourcePickerModalData, PickedImage } from '@modules/common';
@@ -14,6 +15,7 @@ export const useTalentPhoto = () => {
   const currentPhoto = me?.talent?.avatar_full_path;
 
   const openPhotoPicker = () => {
+    Keyboard.dismiss();
     imageSourcePickerModalRef.current?.present({
       onImagePicked: (image: PickedImage) => {
         uploadFullBodyPhoto(image);

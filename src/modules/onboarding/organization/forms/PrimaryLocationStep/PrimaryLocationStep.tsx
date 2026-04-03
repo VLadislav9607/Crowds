@@ -1,4 +1,4 @@
-import { StyleSheet, View } from 'react-native';
+import { Keyboard, StyleSheet, View } from 'react-native';
 import { Controller, useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { forwardRef, useEffect, useImperativeHandle, useRef } from 'react';
@@ -117,7 +117,23 @@ export const PrimaryLocationStep = forwardRef<
                 }}
                 types={PlaceAutocompleteType.address}
                 onChangeText={() => {
-                  resetField('parsed_location');
+                  resetField('parsed_location', {
+                    defaultValue: {
+                      autocomplete_description: '',
+                      city: '',
+                      coords: '',
+                      country: '',
+                      country_code: '',
+                      formatted_address: '',
+                      latitude: 0,
+                      longitude: 0,
+                      place_id: '',
+                      region: '',
+                      street_name: '',
+                      street_number: '',
+                      street_address: '',
+                    },
+                  });
                   onChangeText?.();
                 }}
                 onSelectPlace={res => field.onChange(res.parsed_details)}
@@ -156,7 +172,23 @@ export const PrimaryLocationStep = forwardRef<
                 }}
                 types={PlaceAutocompleteType.address}
                 onChangeText={() => {
-                  resetField('parsed_head_office_location');
+                  resetField('parsed_head_office_location', {
+                    defaultValue: {
+                      autocomplete_description: '',
+                      city: '',
+                      coords: '',
+                      country: '',
+                      country_code: '',
+                      formatted_address: '',
+                      latitude: 0,
+                      longitude: 0,
+                      place_id: '',
+                      region: '',
+                      street_name: '',
+                      street_number: '',
+                      street_address: '',
+                    },
+                  });
                   onChangeText?.();
                 }}
                 onSelectPlace={res => field.onChange(res.parsed_details)}
@@ -175,11 +207,12 @@ export const PrimaryLocationStep = forwardRef<
             color="black"
             margin={{ bottom: 14, top: 20 }}
           >
-            Add you Logo/Brand
+            Add your Logo/Brand
           </AppText>
           <AppImage
             imgUri={pickedLogo?.uri}
-            onPress={() =>
+            onPress={() => {
+              Keyboard.dismiss();
               imageSourcePickerModalRef.current?.present({
                 onImagePicked: logo => {
                   onPickLogo?.({
@@ -189,8 +222,8 @@ export const PrimaryLocationStep = forwardRef<
                     name: logo.name,
                   });
                 },
-              })
-            }
+              });
+            }}
             containerStyle={styles.imageContainer}
             bucket="brand_avatars"
             placeholderIcon={ICONS.orgAvatarLogo('lihgt_gray4')}
@@ -206,8 +239,9 @@ export const PrimaryLocationStep = forwardRef<
             color="gray_primary"
             margin={{ top: 14 }}
           >
-            This will be added to any post you make and should fit into a square
-            shape. You can change this any time from the settings page.
+            Max 3MB, JPEG or PNG. Your logo will not be seen by anyone until you
+            have an approved event and approved talent under signed NDA. Only a
+            category icon will be seen by the public.
           </AppText>
         </View>
 

@@ -109,12 +109,36 @@ export function invalidateCacheForNotificationType(
             },
           );
         });
+      // Also refresh org data (officeFlag in GET_ME) and org events
+      queryClient.refetchQueries({
+        queryKey: [TANSTACK_QUERY_KEYS.GET_ME],
+      });
+      queryClient.refetchQueries({
+        queryKey: [TANSTACK_QUERY_KEYS.GET_ORG_EVENTS],
+      });
+      queryClient.refetchQueries({
+        queryKey: [TANSTACK_QUERY_KEYS.GET_ORG_EVENTS_COUNTERS],
+      });
       break;
 
     // Task rejected → refresh task completions so talent sees updated status
     case 'task_rejected':
       queryClient.refetchQueries({
         queryKey: [TANSTACK_QUERY_KEYS.GET_EVENT_TASK_COMPLETIONS],
+      });
+      break;
+
+    // Payout received → refresh payment history
+    case 'payout_received':
+      queryClient.refetchQueries({
+        queryKey: [TANSTACK_QUERY_KEYS.GET_TALENT_PAYMENT_HISTORY],
+      });
+      break;
+
+    // Chat message → refresh chat list (handles new direct chats)
+    case 'chat_message':
+      queryClient.refetchQueries({
+        queryKey: [TANSTACK_QUERY_KEYS.MY_CHATS],
       });
       break;
   }

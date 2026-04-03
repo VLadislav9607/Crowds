@@ -16,13 +16,14 @@ export const TestBadge = () => {
 
 const styles = StyleSheet.create({
   badge: {
-    position: 'absolute',
-    top: 0,
-    left: 0,
-    right: 0,
     backgroundColor: '#E00252',
     paddingVertical: 2,
-    alignItems: 'center',
     zIndex: 999,
+    width: 100,
+    height: 30,
+    justifyContent: 'center',
+    alignItems: 'center',
+    borderRadius: 10,
+    alignSelf: 'center',
   },
 });

@@ -1,8 +1,7 @@
 import { useState } from 'react';
 import { TouchableOpacity, View } from 'react-native';
-import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { isPast } from 'date-fns';
-import { If, ScreenWithScrollWrapper, Skeleton } from '@components';
+import { If, Skeleton } from '@components';
 import {
   ActionPurpleButton,
   AppButton,
@@ -24,9 +23,10 @@ import {
 import {
   EventDetailsCardWithMap,
   EventDetailsTextBlock,
-  EventHeaderElement,
   EventGroupDetails,
+  EventTasksSection,
 } from '../../../components';
+import { EventDetailScreenLayout } from '../../../layouts';
 import { CancelEventModal } from '../../modals';
 import { styles } from './styles';
 import { formatInTimeZone } from 'date-fns-tz';
@@ -39,7 +39,6 @@ import {
 } from '@helpers';
 
 export const OrgEventDetails = () => {
-  const insets = useSafeAreaInsets();
   const { params } = useScreenNavigation<Screens.TalentEventDetails>();
   const { organizationMember } = useGetMe();
   const capabilitiesAccess =
@@ -85,44 +84,13 @@ export const OrgEventDetails = () => {
     goToScreen(Screens.ChatRoom, {
       chatId: event.group_chat_id,
       chatType: ChatType.Group,
-      title: 'Group',
+      title: event.title ? `${event.title} · Group` : 'Group messages',
       imageUrl: '',
     });
   };
 
-  // const converGroupDetailsRequirements = (group: EventAgeGroupDto): EventDetailsRequirementItem[] => {
-  //   const genderOptions = []
-  //   if(!!group.male_count) genderOptions.push(`${group.male_count} Male`);
-  //   if(!!group.female_count) genderOptions.push(`${group.female_count} Female`);
-  //   if(!!group.other_count) genderOptions.push(`${group.other_count} Others`);
-
-  //   const isPreferencesPresent = !!group?.preferences
-
-  //   const ethnicityOptionsList = isPreferencesPresent ? ethnicityOptions.filter(item => group.preferences.ethnicities?.some(ethnicity => ethnicity.value === item.value)).map(item => item.label) ?? [] : [];
-  //   const accentOptionsList = isPreferencesPresent ? accentOptions.filter(item => group.preferences.accents?.some(accent => accent.value === item.value)).map(item => item.label) ?? [] : [];
-  //   const eyeColorOptionsList = isPreferencesPresent ? eyeColourOptions.filter(item => group.preferences.eye_colors?.some(eyeColor => eyeColor.value === item.value)).map(item => item.label) ?? [] : [];
-  //   const hairColourOptionsList = isPreferencesPresent ? hairColourOptions.filter(item => group.preferences.hair_colors?.some(hairColor => hairColor.value === item.value)).map(item => item.label) ?? [] : [];
-  //   const facialAttributesOptionsList = isPreferencesPresent ? facialAttributesOptions.filter(item => group.preferences.facial_attributes?.some(facialAttribute => facialAttribute.value === item.value)).map(item => item.label) ?? [] : [];
-  //   const bodyAttributesOptionsList = isPreferencesPresent ? bodyAttributesOptions.filter(item => group.preferences.body_attributes?.some(bodyAttribute => bodyAttribute.value === item.value)).map(item => item.label) ?? [] : [];
-  //   const tattooSpotOptionsList = isPreferencesPresent ? tattooSpotOptions.filter(item => group.preferences.tattoo_spots?.some(tattooSpot => tattooSpot.value === item.value)).map(item => item.label) ?? [] : [];
-  //   const skinToneOptionsList = isPreferencesPresent ? skinToneOptions.filter(item => group.preferences.skin_tones?.some(skinTone => skinTone.value === item.value)).map(item => item.label) ?? [] : [];
-
-  //   return [
-  //     {title: 'Gender Required', options: genderOptions , useRowLayout: true},
-  //     {title: 'Age Group', options: [`${group.min_age} - ${group.max_age} years of age`]},
-  //     {title: 'Ethnicity', options: ethnicityOptionsList, invisible: !ethnicityOptionsList.length, useRowLayout: true},
-  //     {title: 'Accent', options: accentOptionsList, invisible: !accentOptionsList.length, useRowLayout: true},
-  //     {title: 'Eye Color', options: eyeColorOptionsList, invisible: !eyeColorOptionsList.length, useRowLayout: true},
-  //     {title: 'Hair Colour', options: hairColourOptionsList, invisible: !hairColourOptionsList.length, useRowLayout: true},
-  //     {title: 'Facial Attributes', options: facialAttributesOptionsList, invisible: !facialAttributesOptionsList.length, useRowLayout: true},
-  //     {title: 'Body Attributes', options: bodyAttributesOptionsList, invisible: !bodyAttributesOptionsList.length, useRowLayout: true},
-  //     {title: 'Tattoo Spot', options: tattooSpotOptionsList, invisible: !tattooSpotOptionsList.length, useRowLayout: true},
-  //     {title: 'Skin Tone', options: skinToneOptionsList, invisible: !skinToneOptionsList.length, useRowLayout: true},
-  //     {title: 'Pregnancy', options: isPreferencesPresent ? (group.preferences.pregnancy_allowed ? [`Required: ${group.preferences.pregnancy_months} months`] : ['Not Allowed']) : [], invisible: typeof group?.preferences?.pregnancy_allowed !== 'boolean' },
-  //   ];
-  // }
-
-  const timezone = event?.event_location?.timezone || 'UTC';
+  const deviceTimezone = Intl.DateTimeFormat().resolvedOptions().timeZone;
+  const timezone = event?.event_location?.timezone || deviceTimezone;
 
   const startDateTimeFormatted = event?.start_at
     ? formatInTimeZone(event.start_at, timezone, 'd MMM yyyy, h:mm a')
@@ -138,6 +106,10 @@ export const OrgEventDetails = () => {
         timezone,
         'd MMM yyyy, h:mm a',
       )
+    : '';
+
+  const checkinCutoffFormatted = event?.checkin_cutoff
+    ? formatInTimeZone(event.checkin_cutoff, timezone, 'd MMM yyyy, h:mm a')
     : '';
 
   const officeCountryName = event?.office_country_code
@@ -196,20 +168,11 @@ export const OrgEventDetails = () => {
   ];
 
   return (
-    <ScreenWithScrollWrapper
-      headerVariant="withTitleAndImageBg"
-      headerStyles={styles.header}
-      contentContainerStyle={{ paddingBottom: insets.bottom || 24 }}
-      customElement={
-        <EventHeaderElement
-          showSkeleton={isLoading}
-          title={event?.title}
-          image={organizationMember?.current_context?.brand?.logo_path}
-        />
-      }
-      rightIcons={[
-        { icon: () => ICONS.bell('white'), onPress: () => {}, size: 20 },
-      ]}
+    <EventDetailScreenLayout
+      eventTitle={event?.title}
+      eventLocation={event?.event_location?.formatted_address || officeCountryName}
+      eventDate={startDateTimeFormatted}
+      logoPath={organizationMember?.current_context?.brand?.logo_path}
     >
       <View style={styles.container}>
         <If condition={!!capabilitiesAccess?.approve_applicants}>
@@ -296,6 +259,7 @@ export const OrgEventDetails = () => {
           startTimeFormatted={startDateTimeFormatted}
           endTimeFormatted={endDateTimeFormatted}
           registrationClosesFormatted={registrationClosesFormatted}
+          checkinCutoffFormatted={checkinCutoffFormatted}
           location={
             event?.event_location
               ? {
@@ -335,6 +299,21 @@ export const OrgEventDetails = () => {
               : `$${event?.payment_amount} per hour`
           }
         />
+
+        <If condition={!isLoading}>
+          <EventTasksSection
+            variant="org"
+            systemTaskState={{
+              checkedInAt: null,
+              checkedOutAt: null,
+              taskPhotoPath: null,
+              isMediaProduction:
+                (event as any)?.event_type === 'media_production',
+            }}
+            customTasks={event?.custom_tasks ?? []}
+            timezone={event?.event_location?.timezone ?? 'UTC'}
+          />
+        </If>
 
         <View style={{ gap: 10 }}>
           <AppText typography="bold_16" margin={{ bottom: 8 }}>
@@ -415,6 +394,6 @@ export const OrgEventDetails = () => {
           }, 300);
         }}
       />
-    </ScreenWithScrollWrapper>
+    </EventDetailScreenLayout>
   );
 };

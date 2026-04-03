@@ -17,8 +17,8 @@ export const styles = StyleSheet.create({
     flexGrow: 1,
     ...TYPOGRAPHY.regular_12,
     height: 20,
-    overflow: 'hidden',
-    paddingTop: 3,
+    includeFontPadding: false,
+    paddingVertical: 0,
   },
   icon: {
     marginHorizontal: 17,

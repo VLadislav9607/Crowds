@@ -53,7 +53,9 @@ export const NotificationSettingsScreen = () => {
       title="Notification Settings"
       headerStyles={{ backgroundColor: COLORS.black }}
     >
-      <View style={[styles.container, !showSettings && styles.containerCentered]}>
+      <View
+        style={[styles.container, !showSettings && styles.containerCentered]}
+      >
         {hasPermission === false && (
           <View style={styles.permissionBlock}>
             <AppText typography="regular_14" style={styles.permissionText}>
@@ -75,7 +77,7 @@ export const NotificationSettingsScreen = () => {
               <Switch
                 active={allEnabled}
                 onChange={toggleAll}
-                trackColor={{ false: COLORS.white, true: COLORS.main }}
+                activeColor="main"
               />
             </View>
 
@@ -85,8 +87,7 @@ export const NotificationSettingsScreen = () => {
                 <Switch
                   active={option.value}
                   onChange={option.onToggle}
-                  disabled={!option.enabled}
-                  trackColor={{ false: COLORS.white, true: COLORS.main }}
+                  activeColor="main"
                 />
               </View>
             ))}

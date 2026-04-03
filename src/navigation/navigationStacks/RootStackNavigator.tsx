@@ -21,6 +21,7 @@ import {
   OrgIdentityVerificationScreen,
   OnboardingUnAuthOrganizationScreen,
   TermsAndPrivacyScreen,
+  TermsAgreementScreen,
 } from '../../modules/onboarding';
 import { OnboardingUnAuthTeamMemberScreen } from '../../modules/onboarding/team-member/screens';
 
@@ -44,8 +45,7 @@ import {
   ChangePasswordScreen,
   OrgProfileSetupScreen,
   FAQScreen,
-  TermsAndConditionsScreen,
-  PrivacyPolicyScreen,
+  AccountPendingDeletionScreen,
 } from '@modules/profile';
 import {
   NotificationSettingsScreen,
@@ -149,6 +149,14 @@ export const RootStackNavigator = () => {
       />
 
       <RootStack.Screen
+        name={Screens.TermsAgreement}
+        component={TermsAgreementScreen}
+        options={{
+          gestureEnabled: false,
+        }}
+      />
+
+      <RootStack.Screen
         name={Screens.Congratulations}
         component={CongratulationsScreen}
       />
@@ -200,14 +208,6 @@ export const RootStackNavigator = () => {
         component={ChangePasswordScreen}
       />
       <RootStack.Screen name={Screens.FAQ} component={FAQScreen} />
-      <RootStack.Screen
-        name={Screens.TermsAndConditions}
-        component={TermsAndConditionsScreen}
-      />
-      <RootStack.Screen
-        name={Screens.PrivacyPolicy}
-        component={PrivacyPolicyScreen}
-      />
 
       <RootStack.Screen
         name={Screens.ManageEvent}
@@ -355,6 +355,11 @@ export const RootStackNavigator = () => {
       <RootStack.Screen
         name={Screens.StripeConnectOnboarding}
         component={StripeConnectOnboardingScreen}
+      />
+      <RootStack.Screen
+        name={Screens.AccountPendingDeletion}
+        component={AccountPendingDeletionScreen}
+        options={{ gestureEnabled: false }}
       />
     </RootStack.Navigator>
   );

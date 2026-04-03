@@ -5,6 +5,7 @@ import { EventParticipantsByStatusBodyDto } from './types';
 
 export const useEventParticipantsByStatus = (
   params: Omit<EventParticipantsByStatusBodyDto, 'offset'>,
+  options?: { enabled?: boolean },
 ) => {
   return useInfiniteQuery({
     queryKey: [
@@ -12,6 +13,7 @@ export const useEventParticipantsByStatus = (
       JSON.stringify(params),
     ],
     staleTime: 0,
+    enabled: options?.enabled ?? true,
     initialPageParam: 1,
     queryFn: async ({ pageParam }) => {
       const offset = ((pageParam as number) - 1) * 20;

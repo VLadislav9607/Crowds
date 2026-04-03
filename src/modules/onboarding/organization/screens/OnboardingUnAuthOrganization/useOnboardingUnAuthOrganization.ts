@@ -1,4 +1,4 @@
-import { Keyboard } from 'react-native';
+import { Keyboard, ScrollView } from 'react-native';
 import { goBack, goToScreen, Screens } from '@navigation';
 import { useRef, useState } from 'react';
 
@@ -49,6 +49,7 @@ export const useOnboardingUnAuthOrganization = () => {
   const branchManagerEmailsFormRef = useRef<BranchManagerEmailsStepRef>(null);
 
   const branchesSetupFormRef = useRef<BranchesSetupStepRef>(null);
+  const scrollViewRef = useRef<ScrollView>(null);
 
   const organizationCreatorInformationFormRef =
     useRef<OrganizationCreatorInformationFormRef>(null);
@@ -240,6 +241,7 @@ export const useOnboardingUnAuthOrganization = () => {
     branchesSetupFormRef,
     headquartersSetupFormRef,
     needsBranchManagerEmails,
+    scrollViewRef,
     setData,
     onResendOtpCode,
     goToNextStep,

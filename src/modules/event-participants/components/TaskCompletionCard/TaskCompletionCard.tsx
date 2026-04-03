@@ -50,13 +50,15 @@ export const TaskCompletionCard = memo(
         disabled={isSettled}
       >
         {!isSettled && (
-          <AppCheckbox
-            checked={isSelected}
-            type="circle"
-            color="main"
-            disabled={isRejected}
-            style={isRejected ? styles.disabledCheckbox : undefined}
-          />
+          <View pointerEvents="none">
+            <AppCheckbox
+              checked={isSelected}
+              type="circle"
+              color="main"
+              disabled={isRejected}
+              style={isRejected ? styles.disabledCheckbox : undefined}
+            />
+          </View>
         )}
 
         <Avatar

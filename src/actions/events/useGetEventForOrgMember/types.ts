@@ -36,4 +36,5 @@ export interface EventForOrgMemberDto
   qr_codes_count: number;
   office_country_code: string | null;
   group_chat_id: string | null;
+  custom_tasks: { id: string; text: string }[];
 }

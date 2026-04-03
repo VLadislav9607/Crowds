@@ -31,6 +31,7 @@ export const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
+    gap: 4,
   },
   mainRow: {
     flexDirection: 'row',
@@ -55,13 +56,16 @@ export const styles = StyleSheet.create({
     borderRadius: 4,
   },
   timeText: {
-    marginLeft: 8,
+    marginLeft: 'auto',
   },
   unreadDot: {
     width: 9,
     height: 9,
     borderRadius: 50,
     backgroundColor: COLORS.main,
+  },
+  titleText: {
+    flex: 1,
   },
   messageText: {
     flex: 1,

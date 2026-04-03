@@ -5,24 +5,21 @@ import { AppButton, AppText } from '@ui';
 import { AppDateInput, If } from '@components';
 import { ICONS } from '@assets';
 
-import { IDaySchedule, IDateSchedule, TimeSlot } from '../../types';
+import { IDaySchedule, TimeSlot } from '../../types';
 import { TimeSlotSelector } from '../TimeSlotSelector';
 import { styles } from './styles';
 import { DayTimeScheduleProps } from './types';
 import { formatCustomTime, getScheduleKey, getScheduleLabel } from './helpers';
 
 export const DayTimeSchedule = (props: DayTimeScheduleProps) => {
-  const { mode, schedules, onChange, label = 'Set times:' } = props;
+  const { schedules, onChange, label = 'Set times:' } = props;
 
   const [expandedIndex, setExpandedIndex] = useState<number | null>(null);
   const [tempFrom, setTempFrom] = useState<Date | null>(null);
   const [tempTo, setTempTo] = useState<Date | null>(null);
 
-  const updateSchedule = <T extends IDaySchedule | IDateSchedule>(
-    index: number,
-    updates: Partial<T>,
-  ) => {
-    const updated: any = schedules.map((s, i) =>
+  const updateSchedule = (index: number, updates: Partial<IDaySchedule>) => {
+    const updated = schedules.map((s, i) =>
       i === index ? { ...s, ...updates } : s,
     );
     onChange(updated);
@@ -60,7 +57,7 @@ export const DayTimeSchedule = (props: DayTimeScheduleProps) => {
           const isExpanded = expandedIndex === index;
 
           return (
-            <View key={getScheduleKey(schedule, mode)}>
+            <View key={getScheduleKey(schedule)}>
               <View
                 style={[
                   styles.dayRow,
@@ -69,7 +66,7 @@ export const DayTimeSchedule = (props: DayTimeScheduleProps) => {
               >
                 <View style={styles.dayName}>
                   <AppText typography="semibold_14" color="typography_black">
-                    {getScheduleLabel(schedule, mode)}
+                    {getScheduleLabel(schedule)}
                   </AppText>
                 </View>
                 <View style={styles.selector}>

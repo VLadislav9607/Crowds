@@ -32,8 +32,6 @@ export const useMatchingTalentsForInvite = (
     distance: filters.distance,
   });
 
-  console.log('matchingTalentsResponse', matchingTalentsResponse);
-
   const talentsForInviteList = useMemo<IEventParticipant[]>(() => {
     if (!matchingTalentsResponse?.data) return [];
     return matchingTalentsResponse.data.map(talent =>

@@ -2,6 +2,11 @@ import { COLORS } from '@styles';
 import { StyleSheet } from 'react-native';
 
 export const styles = StyleSheet.create({
+  modal: {
+    margin: 0,
+    justifyContent: 'center',
+    paddingHorizontal: 16,
+  },
   container: {
     backgroundColor: COLORS.white,
     borderRadius: 30,

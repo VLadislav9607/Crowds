@@ -7,6 +7,7 @@ export interface TalentEventsViewListProps
     Omit<FlashListProps<any>, 'data' | 'onRefresh' | 'refreshing'>
   > {
   data?: ITalentEventCard[];
+
   isLoading?: boolean;
   hasMoreItems?: boolean;
   withBottomTab?: boolean;

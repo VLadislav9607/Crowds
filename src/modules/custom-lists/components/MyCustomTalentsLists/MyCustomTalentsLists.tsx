@@ -26,7 +26,6 @@ interface MyCustomTalentsListsProps {
 export const MyCustomTalentsLists = ({
   eventId = '',
 }: MyCustomTalentsListsProps) => {
-
   const [isCreateListModalVisible, setIsCreateListModalVisible] =
     useState(false);
   const [editingList, setEditingList] = useState<{
@@ -76,20 +75,17 @@ export const MyCustomTalentsLists = ({
   };
 
   const handleDeleteList = (listId: string) => {
-    deleteList(
-      {
-        listId,
-        eventId,
-      },
-      {
-        onSuccess: () => {
-          // Modal will close automatically
-        },
-      },
-    );
+    deleteList({
+      listId,
+      eventId,
+    });
   };
 
-  const handleMenuSelect = (value: string, listId: string, listName: string) => {
+  const handleMenuSelect = (
+    value: string,
+    listId: string,
+    listName: string,
+  ) => {
     if (value === 'edit_name') {
       setEditingList({ id: listId, name: listName });
     } else if (value === 'delete_list') {
@@ -139,7 +135,9 @@ export const MyCustomTalentsLists = ({
                 eventId,
               })
             }
-            onMenuSelect={(value) => handleMenuSelect(value, item.id, item.listName)}
+            onMenuSelect={value =>
+              handleMenuSelect(value, item.id, item.listName)
+            }
           />
         )}
         emptyText="No talents lists found"

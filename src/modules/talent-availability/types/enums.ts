@@ -28,11 +28,3 @@ export enum AvailabilityType {
   SetSchedule = 'schedule',
 }
 
-/**
- * Trip availability type
- */
-export enum TripAvailability {
-  SameAsRegular = 'regular',
-  CustomSchedule = 'custom',
-  NotAvailable = 'not_available',
-}

@@ -11,7 +11,7 @@ export const withRedFlagGuard = <P extends object>(
   const GuardedComponent = (props: P) => {
     const { talent } = useGetMe();
 
-    if (talent?.flag === TalentFlag.RED) {
+    if (talent?.flag === TalentFlag.RED || talent?.flag === TalentFlag.BLACK) {
       return (
         <ScreenWrapper
           headerVariant="withLogo"

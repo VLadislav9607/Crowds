@@ -131,6 +131,20 @@ export const getMeAction = async (): Promise<UseGetMeResDto> => {
       ? buildCurrentContext(organizationMember, capabilitiesData ?? [])
       : undefined;
 
+    // ---- load office flag ----
+    const officeId = current_context?.offices?.[0]?.office_id;
+    if (current_context && officeId) {
+      const { data: flagRow } = await supabase
+        .from('current_flags')
+        .select('status')
+        .eq('target_type', 'organization')
+        .eq('target_id', officeId)
+        .maybeSingle();
+
+      current_context.officeFlag =
+        (flagRow?.status as TalentFlag) ?? TalentFlag.GREEN;
+    }
+
     return {
       isTalent: false,
       isOrganizationMember: true,

@@ -1,8 +1,7 @@
-import { useRef, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { Alert, Linking, Platform, View } from 'react-native';
-import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { BottomSheetModal } from '@gorhom/bottom-sheet';
-import { If, ScreenWithScrollWrapper, AppImage } from '@components';
+import { If, AppImage } from '@components';
 import { ActionPurpleButton, AppButton, AppText, ChatButton } from '@ui';
 import { COLORS } from '@styles';
 import { Screens, useScreenNavigation, goToScreen } from '@navigation';
@@ -14,7 +13,12 @@ import {
   useBucketUpload,
   useSubmitTaskPhoto,
   useLocalCurrency,
+  useToggleCustomTask,
+  getActiveFlagForTargetAction,
 } from '@actions';
+import { TalentFlag } from '@modules/common';
+import { useQuery } from '@tanstack/react-query';
+import { TANSTACK_QUERY_KEYS } from '@constants';
 import {
   useCreateChatAndNavigate,
   ImageSourcePickerModalData,
@@ -26,6 +30,7 @@ import {
   showSuccessToast,
   showErrorToast,
   showInfoToast,
+  showWarningToast,
 } from '@helpers';
 import { formatInTimeZone } from 'date-fns-tz';
 import RNCalendarEvents from 'react-native-calendar-events';
@@ -33,14 +38,14 @@ import RNCalendarEvents from 'react-native-calendar-events';
 import {
   EventDetailsCardWithMap,
   EventDetailsTextBlock,
-  EventHeaderElement,
   EventGroupDetails,
+  EventTasksSection,
 } from '../../../components';
+import { EventDetailScreenLayout } from '../../../layouts';
 import { CancelEventAttendanceModal } from '../../modals';
 import { styles } from './styles';
 
 export const TalentEventDetailsScreen = () => {
-  const insets = useSafeAreaInsets();
   const { params } = useScreenNavigation<Screens.TalentEventDetails>();
   const { me } = useGetMe();
   const [isOpenModal, setIsOpenModal] = useState(false);
@@ -52,6 +57,20 @@ export const TalentEventDetailsScreen = () => {
     event_id: params?.eventId!,
   });
   const { formatLocal } = useLocalCurrency();
+
+  const officeId = event?.office_id;
+  const { data: officeFlag } = useQuery({
+    queryKey: [TANSTACK_QUERY_KEYS.GET_MY_ACTIVE_FLAG, 'office', officeId],
+    queryFn: () =>
+      getActiveFlagForTargetAction({
+        targetType: 'organization',
+        targetId: officeId!,
+      }),
+    enabled: !!officeId,
+    staleTime: Infinity,
+  });
+  const officeFlagStatus =
+    (officeFlag?.status as TalentFlag) ?? TalentFlag.GREEN;
 
   const { mutate: uploadFile, isPending: isUploading } = useBucketUpload({
     onSuccess: data => {
@@ -75,6 +94,16 @@ export const TalentEventDetailsScreen = () => {
     },
   });
 
+  const { mutate: toggleCustomTask } = useToggleCustomTask();
+
+  const handleToggleCustomTask = (taskId: string) => {
+    if (!event?.participation_id) return;
+    toggleCustomTask({
+      task_id: taskId,
+      participation_id: event.participation_id,
+    });
+  };
+
   const { openChat, isPending: isCreatingChat } = useCreateChatAndNavigate();
 
   const handleChatWithOrganizer = () => {
@@ -91,7 +120,7 @@ export const TalentEventDetailsScreen = () => {
     goToScreen(Screens.ChatRoom, {
       chatId: event.group_chat_id,
       chatType: ChatType.Group,
-      title: 'Group',
+      title: event.title ? `${event.title} · Group` : 'Group messages',
       imageUrl: '',
     });
   };
@@ -163,7 +192,8 @@ export const TalentEventDetailsScreen = () => {
     }
   };
 
-  const timezone = event?.event_location?.timezone || 'UTC';
+  const deviceTimezone = Intl.DateTimeFormat().resolvedOptions().timeZone;
+  const timezone = event?.event_location?.timezone || deviceTimezone;
 
   const startDateTimeFormatted = event?.start_at
     ? formatInTimeZone(event.start_at, timezone, 'd MMM yyyy, h:mm a')
@@ -181,6 +211,10 @@ export const TalentEventDetailsScreen = () => {
       )
     : '';
 
+  const checkinCutoffFormatted = event?.checkin_cutoff
+    ? formatInTimeZone(event.checkin_cutoff, timezone, 'd MMM yyyy, h:mm a')
+    : '';
+
   const officeCountryName = event?.office_country_code
     ? getCountryNameByCode(event.office_country_code)
     : undefined;
@@ -188,6 +222,52 @@ export const TalentEventDetailsScreen = () => {
   const isMediaProduction = event?.event_type === 'media_production';
   const hasCheckedIn = !!event?.checked_in_at;
   const hasCheckedOut = !!event?.checked_out_at;
+
+  const [elapsed, setElapsed] = useState('');
+
+  useEffect(() => {
+    if (!hasCheckedIn || hasCheckedOut) return;
+
+    const checkedInTime = new Date(event!.checked_in_at!).getTime();
+
+    const updateElapsed = () => {
+      const diff = Math.max(0, Date.now() - checkedInTime);
+      const hours = Math.floor(diff / 3600000);
+      const minutes = Math.floor((diff % 3600000) / 60000);
+      const seconds = Math.floor((diff % 60000) / 1000);
+      setElapsed(
+        `${String(hours).padStart(2, '0')}:${String(minutes).padStart(
+          2,
+          '0',
+        )}:${String(seconds).padStart(2, '0')}`,
+      );
+    };
+
+    updateElapsed();
+    const interval = setInterval(updateElapsed, 1000);
+    return () => clearInterval(interval);
+  }, [hasCheckedIn, hasCheckedOut, event?.checked_in_at]);
+
+  const finalDuration = (() => {
+    if (!event?.checked_in_at || !event?.checked_out_at) return '';
+    const diff =
+      new Date(event.checked_out_at).getTime() -
+      new Date(event.checked_in_at).getTime();
+    const hours = Math.floor(diff / 3600000);
+    const minutes = Math.floor((diff % 3600000) / 60000);
+    const seconds = Math.floor((diff % 60000) / 1000);
+    return `${String(hours).padStart(2, '0')}:${String(minutes).padStart(
+      2,
+      '0',
+    )}:${String(seconds).padStart(2, '0')}`;
+  })();
+
+  const checkedInFormatted = event?.checked_in_at
+    ? formatInTimeZone(event.checked_in_at, timezone, 'h:mm a')
+    : '';
+  const checkedOutFormatted = event?.checked_out_at
+    ? formatInTimeZone(event.checked_out_at, timezone, 'h:mm a')
+    : '';
   const showTaskUpload = hasCheckedIn && !isMediaProduction;
   const showTaskBanner =
     hasCheckedOut && !isMediaProduction && event?.task_status === 'pending';
@@ -197,20 +277,14 @@ export const TalentEventDetailsScreen = () => {
   const isTaskProcessing = isUploading || isSubmitting;
 
   return (
-    <ScreenWithScrollWrapper
-      headerVariant="withTitleAndImageBg"
-      headerStyles={styles.header}
-      contentContainerStyle={{ paddingBottom: insets.bottom || 24 }}
-      customElement={
-        <EventHeaderElement
-          showSkeleton={isLoading}
-          title={event?.title}
-          image={event?.brand_logo_path ?? undefined}
-        />
+    <EventDetailScreenLayout
+      eventTitle={event?.title}
+      eventLocation={
+        event?.event_location?.formatted_address || officeCountryName
       }
-      rightIcons={[
-        { icon: () => ICONS.bell('white'), onPress: () => {}, size: 20 },
-      ]}
+      eventDate={startDateTimeFormatted}
+      logoPath={event?.brand_logo_path ?? undefined}
+      officeFlag={officeFlagStatus}
     >
       <View style={styles.container}>
         <If condition={showTaskBanner}>
@@ -229,11 +303,26 @@ export const TalentEventDetailsScreen = () => {
           text={event?.description}
         />
 
+        <EventTasksSection
+          variant="talent"
+          systemTaskState={{
+            checkedInAt: event?.checked_in_at ?? null,
+            checkedOutAt: event?.checked_out_at ?? null,
+            taskPhotoPath: event?.task_photo_path ?? null,
+            isMediaProduction,
+          }}
+          customTasks={event?.custom_tasks ?? []}
+          isCheckedIn={hasCheckedIn}
+          onToggleCustomTask={handleToggleCustomTask}
+          timezone={timezone}
+        />
+
         <EventDetailsCardWithMap
           showSkeleton={isLoading}
           startTimeFormatted={startDateTimeFormatted}
           endTimeFormatted={endDateTimeFormatted}
           registrationClosesFormatted={registrationClosesFormatted}
+          checkinCutoffFormatted={checkinCutoffFormatted}
           location={
             event?.event_location
               ? {
@@ -266,6 +355,70 @@ export const TalentEventDetailsScreen = () => {
               <EventGroupDetails group={group} key={group.id} />
             ))}
           </View>
+        </If>
+
+        <If condition={!isLoading && hasCheckedIn}>
+          <View style={styles.checkinStatusSection}>
+            <View style={styles.checkinStatusRow}>
+              <AppText typography="regular_14" color="gray">
+                Checked in at
+              </AppText>
+              <AppText typography="semibold_14" color="black">
+                {checkedInFormatted}
+              </AppText>
+            </View>
+            <If condition={hasCheckedOut}>
+              <View style={styles.checkinStatusRow}>
+                <AppText typography="regular_14" color="gray">
+                  Checked out at
+                </AppText>
+                <AppText typography="semibold_14" color="black">
+                  {checkedOutFormatted}
+                </AppText>
+              </View>
+            </If>
+            <View style={styles.checkinStatusRow}>
+              <AppText typography="regular_14" color="gray">
+                Duration
+              </AppText>
+              <AppText
+                typography="semibold_14"
+                color={hasCheckedOut ? 'black' : 'green'}
+              >
+                {hasCheckedOut ? finalDuration : elapsed}
+              </AppText>
+            </View>
+          </View>
+        </If>
+
+        <If
+          condition={!isLoading && !!event?.participation_id && !hasCheckedIn}
+        >
+          <AppButton
+            onPress={() =>
+              goToScreen(Screens.BottomTabs, { screen: Screens.TalerQRCode })
+            }
+            title="Check In"
+            wrapperStyles={{ backgroundColor: COLORS.green }}
+            titleStyles={{ color: COLORS.white }}
+          />
+        </If>
+
+        <If condition={!isLoading && hasCheckedIn && !hasCheckedOut}>
+          <AppButton
+            onPress={() => {
+              if (event?.end_at && new Date() < new Date(event.end_at)) {
+                showWarningToast(
+                  `The event has not ended yet. You can check out after ${endDateTimeFormatted}`,
+                );
+                return;
+              }
+              goToScreen(Screens.BottomTabs, { screen: Screens.TalerQRCode });
+            }}
+            title="Check Out"
+            wrapperStyles={{ backgroundColor: COLORS.red }}
+            titleStyles={{ color: COLORS.white }}
+          />
         </If>
 
         <If condition={!isLoading}>
@@ -382,6 +535,6 @@ export const TalentEventDetailsScreen = () => {
         isVisible={isOpenModal}
         onClose={() => setIsOpenModal(false)}
       />
-    </ScreenWithScrollWrapper>
+    </EventDetailScreenLayout>
   );
 };

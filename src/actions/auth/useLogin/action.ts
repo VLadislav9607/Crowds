@@ -5,10 +5,17 @@ import { supabase } from "@services";
 export const loginAction = async (body: LoginBodyDto): Promise<LoginRespDto> => {
     const { data, error } = await supabase.functions.invoke('login', {body})
 
-    if (error && error instanceof FunctionsHttpError) {
-        const errorMessage = await error.context.json();
-        throw errorMessage;
+    if (error) {
+        if (error instanceof FunctionsHttpError) {
+            const errorMessage = await error.context.json();
+            throw errorMessage;
+        }
+        throw error;
     }
-    
+
+    if (!data?.session) {
+        throw new Error('Login failed: no session returned');
+    }
+
     return data as LoginRespDto;
 };

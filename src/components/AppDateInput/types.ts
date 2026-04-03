@@ -26,4 +26,5 @@ export interface AppDateInputProps {
   locale?: string;
   defaultIconColor?: ColorsKeys;
   skeleton?: boolean;
+  timeZone?: string;
 }

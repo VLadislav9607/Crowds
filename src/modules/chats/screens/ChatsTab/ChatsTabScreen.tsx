@@ -16,16 +16,16 @@ export const ChatsTabScreen = () => {
     currentContext?.capabilitiesAccess.one_on_one_message
   );
 
-  const { data, isLoading } = useMyChats({ enabled: hasAccessToChats });
+  const { data, isLoading, refetch } = useMyChats({ enabled: hasAccessToChats });
 
   useChatsRealtime(hasAccessToChats);
 
   return (
     <ScreenWrapper
-      headerVariant="withLogoAndImageBg"
-      title="My Messages"
       showBackButton={false}
-      withBottomTabBar
+      headerVariant="withTitleAndImageBg"
+      withBottomTabBar={true}
+      title="Messages"
     >
       <If condition={hasAccessToChats}>
         <ChatList
@@ -33,6 +33,7 @@ export const ChatsTabScreen = () => {
           isLoading={isLoading}
           variant={isTalent ? 'talent' : 'organization'}
           withBottomTab
+          onRefresh={refetch}
         />
       </If>
       <If condition={!hasAccessToChats}>

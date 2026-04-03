@@ -15,16 +15,15 @@ export const useChatMessagesRealtime = ({ chatId, limit = 50 }: IParams) => {
   const { isTalent } = useGetMe();
 
   useEffect(() => {
-    const subscribe = async () => {
-      realtimeService.subscribe({
-        channelName: `chat:${chatId}`,
-        table: 'chat_messages',
-        event: 'INSERT',
-        filter: `chat_id=eq.${chatId}`,
-        onPayload: payload => {
-          const message = payload.new as ChatMessage;
-          if (!message) return;
+    realtimeService.subscribe({
+      channelName: `chat:${chatId}`,
+      table: 'chat_messages',
+      filter: `chat_id=eq.${chatId}`,
+      onPayload: payload => {
+        const message = payload.new as ChatMessage;
+        if (!message) return;
 
+        if (payload.eventType === 'INSERT') {
           messagesCache.addOrReplaceMessage({
             chatId,
             message: {
@@ -32,11 +31,13 @@ export const useChatMessagesRealtime = ({ chatId, limit = 50 }: IParams) => {
               text: message.text,
               created_at: message.created_at,
               sender_id: message.sender_id,
+              is_edited: message.is_edited,
+              image_path: message.image_path,
+              image_bucket: message.image_bucket,
             },
             limit,
           });
 
-          // Refetch participants if sender is unknown (e.g. new talent in group chat)
           const participantsKey = [TANSTACK_QUERY_KEYS.GET_CHAT_PARTICIPANTS, chatId];
           const participants = queryClient.getQueryData<IChatParticipant[]>(participantsKey);
           const senderKnown = participants?.some(p => p.user_id === message.sender_id);
@@ -44,21 +45,33 @@ export const useChatMessagesRealtime = ({ chatId, limit = 50 }: IParams) => {
             queryClient.refetchQueries({ queryKey: participantsKey });
           }
 
-          // User is on this chat screen — mark as seen
           updateLastSeenChatAction(chatId);
 
-          // Update chat cache with last message info
           chatsCache.updateChat({
             chatId,
-            lastMessage: message.text,
+            lastMessage: message.text || (message.image_path ? 'Image' : ''),
             lastMessageAt: message.created_at,
             hasUnread: false,
           });
-        },
-      });
-    };
+        }
 
-    subscribe();
+        if (payload.eventType === 'UPDATE') {
+          messagesCache.updateMessage({
+            chatId,
+            messageId: message.id,
+            updates: { text: message.text, is_edited: message.is_edited },
+            limit,
+          });
+        }
+
+        if (payload.eventType === 'DELETE') {
+          const deleted = payload.old as { id?: string };
+          if (deleted?.id) {
+            messagesCache.removeMessage({ chatId, messageId: deleted.id, limit });
+          }
+        }
+      },
+    });
 
     return () => realtimeService.unsubscribe(`chat:${chatId}`);
   }, [chatId, limit, isTalent]);

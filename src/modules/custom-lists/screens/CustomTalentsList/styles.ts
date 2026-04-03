@@ -18,7 +18,7 @@ export const styles = StyleSheet.create({
   addPlusButton: {
     position: 'absolute',
     right: 16,
-    top: '160%',
+    bottom: 28,
     backgroundColor: COLORS.main,
     borderRadius: 100,
     width: 36,

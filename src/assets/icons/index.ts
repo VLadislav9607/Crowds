@@ -59,6 +59,7 @@ import { sendMessage } from './sendMessage';
 import { heart } from './heart';
 import { arrowLeftInCircle } from './arrowLeftInCircle';
 import { arrowRightInCircle } from './arrowRightInCircle';
+import { deletedUser } from './deletedUser';
 
 import { customList } from './customList';
 import { faq } from './faq';
@@ -134,4 +135,5 @@ export const ICONS = {
   faq,
   arrowLeftInCircle,
   arrowRightInCircle,
+  deletedUser,
 };

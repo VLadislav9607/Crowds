@@ -21,8 +21,10 @@ const BannerSkeleton = () => (
 export const RedFlagBanner = () => {
   const { data: flag, isLoading } = useMyActiveFlag();
 
-  const reasonLabel = flag
-    ? getReasonLabel(flag.reason, flag.description)
+  const isBlack = flag?.status === 'black';
+  const hasReason = !!(flag?.reason || flag?.description);
+  const reasonLabel = hasReason
+    ? getReasonLabel(flag!.reason, flag!.description)
     : null;
   const expiresFormatted = flag?.expires_on
     ? formatDate(flag.expires_on, 'MMM dd, yyyy')
@@ -35,19 +37,25 @@ export const RedFlagBanner = () => {
       ) : (
         <View style={styles.noticeCard}>
           <AppText typography="regular_14" style={styles.message}>
-            Your account has been banned. Access to the platform is restricted.
+            {isBlack
+              ? 'Your account has been suspended by an administrator. Access to the platform is restricted.'
+              : 'Your account has been banned. Access to the platform is restricted.'}
           </AppText>
 
-          <AppText
-            typography="semibold_12"
-            color="black_60"
-            style={styles.label}
-          >
-            Reason
-          </AppText>
-          <AppText typography="regular_14" style={styles.value}>
-            {reasonLabel}
-          </AppText>
+          {reasonLabel ? (
+            <>
+              <AppText
+                typography="semibold_12"
+                color="black_60"
+                style={styles.label}
+              >
+                Reason
+              </AppText>
+              <AppText typography="regular_14" style={styles.value}>
+                {reasonLabel}
+              </AppText>
+            </>
+          ) : null}
 
           {expiresFormatted ? (
             <View style={styles.expiresRow}>

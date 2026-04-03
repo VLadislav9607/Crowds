@@ -141,6 +141,15 @@ export const TalentEventApplyConfirmModal =
         </View>
 
         <If condition={!isSubmitted}>
+          <If condition={refProps?.isAvailable === false}>
+            <View style={styles.scheduleWarning}>
+              <AppText typography="medium_12" color="red">
+                This event falls outside your availability schedule. You can
+                still apply, but make sure you'll be available.
+              </AppText>
+            </View>
+          </If>
+
           <AppButton
             title="Cancel"
             variant="withBorder"

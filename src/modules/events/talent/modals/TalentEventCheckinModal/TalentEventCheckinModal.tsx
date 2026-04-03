@@ -1,4 +1,4 @@
-import { AppImage, AppModal, If } from '@components';
+import { AppModal } from '@components';
 import {
   TalentEventCheckinModalProps,
   TalentEventCheckinModalRef,
@@ -7,9 +7,8 @@ import { AppButton, AppText } from '@ui';
 import { useImperativeModal } from '@hooks';
 import { forwardRef } from 'react';
 import { styles } from './styles';
-import { ImageBackground, View } from 'react-native';
-import { IMAGES } from '@assets';
 import { useCheckinEvent } from '@actions';
+import { Screens, goToScreen } from '@navigation';
 import { showMutationErrorToast, showSuccessToast } from '@helpers';
 
 export const TalentEventCheckinModal = forwardRef<TalentEventCheckinModalRef>(
@@ -20,8 +19,13 @@ export const TalentEventCheckinModal = forwardRef<TalentEventCheckinModalRef>(
     const { mutate: checkinEvent, isPending } = useCheckinEvent({
       onSuccess: () => {
         close();
-        showSuccessToast('Successfully checked in!');
-        refProps.onCheckinSuccess?.();
+        goToScreen(Screens.TalentEventDetails, {
+          eventId: refProps.eventId,
+          participationId: refProps.participationId,
+        });
+        setTimeout(() => {
+          showSuccessToast('You have successfully checked in!');
+        }, 500);
       },
       onError: error => {
         showMutationErrorToast(error);
@@ -34,38 +38,18 @@ export const TalentEventCheckinModal = forwardRef<TalentEventCheckinModalRef>(
 
     return (
       <AppModal
+        title="Check In"
         isVisible={isVisible}
         onClose={close}
-        hideCloseButton
         contentContainerStyle={styles.modalContentContainer}
       >
-        <ImageBackground
-          style={styles.imageBackground}
-          source={IMAGES.headerCrowdBg}
+        <AppText
+          typography="regular_16"
+          color="black"
+          margin={{ top: 20, bottom: 20 }}
         >
-          <View style={styles.imageContentContainer}>
-            <View style={styles.textContainer}>
-              <AppText
-                typography="bold_20"
-                color="white"
-                margin={{ bottom: 12 }}
-              >
-                {refProps.eventTitle}
-              </AppText>
-              <AppText typography="medium_12" color="white">
-                {refProps.venue}
-              </AppText>
-            </View>
-
-            <If condition={!!refProps.brandLogoPath}>
-              <AppImage
-                imgPath={refProps.brandLogoPath}
-                bucket="brand_avatars"
-                containerStyle={styles.image}
-              />
-            </If>
-          </View>
-        </ImageBackground>
+          {`Are you ready to check in to ${refProps.eventTitle}${refProps.venue ? ` at ${refProps.venue}` : ''}?`}
+        </AppText>
 
         <AppButton
           title="Check In"

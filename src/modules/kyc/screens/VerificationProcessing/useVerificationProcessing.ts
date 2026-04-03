@@ -1,15 +1,12 @@
 import { useState, useEffect, useCallback, useRef } from 'react';
-import { BackHandler } from 'react-native';
+import { AppState, BackHandler } from 'react-native';
 import { useRoute, RouteProp } from '@react-navigation/native';
 import { useGetMe, useUpdateTalent } from '@actions';
 import { goToScreen, goBack, Screens, RootStackParamList } from '@navigation';
 import {
   useIsUserVerified,
   invalidateUserKycStatus,
-  USER_KYC_STATUS_QUERY_KEY,
 } from '../../hooks/useIsUserVerified';
-import { useKycStatusSubscription } from '../../hooks/useKycStatusSubscription';
-import { queryClient } from '@services';
 
 type VerificationProcessingRoute = RouteProp<
   RootStackParamList,
@@ -19,6 +16,7 @@ type VerificationProcessingRoute = RouteProp<
 type VerificationState = 'pending' | 'completed' | 'failed';
 
 const TOTAL_CHECKS = 3;
+const ANIMATION_STEP_MS = 300;
 
 export const useVerificationProcessing = () => {
   const route = useRoute<VerificationProcessingRoute>();
@@ -28,40 +26,15 @@ export const useVerificationProcessing = () => {
   const { mutateAsync: updateTalent } = useUpdateTalent();
   const userId = me?.id || '';
 
-  // Invalidate cache on mount so we always get fresh data (handles re-entry)
-  useEffect(() => {
-    if (userId) {
-      queryClient.invalidateQueries({
-        queryKey: [USER_KYC_STATUS_QUERY_KEY, userId],
-      });
-    }
-  }, [userId]);
-
-  const {
-    kycStatus,
-    checksPassed,
-    isLoading: isLoadingInitial,
-    isFetching,
-  } = useIsUserVerified({ userId });
-
   const [state, setState] = useState<VerificationState>('pending');
-  const [currentChecksPassed, setCurrentChecksPassed] = useState(0);
+  const [displayedChecks, setDisplayedChecks] = useState(0);
   const hasNavigatedRef = useRef(false);
+  const animatingRef = useRef(false);
 
-  // Handle initial state on mount / re-entry (wait for fresh fetch)
-  useEffect(() => {
-    if (isLoadingInitial || isFetching) return;
-
-    if (kycStatus === 'completed') {
-      setCurrentChecksPassed(TOTAL_CHECKS);
-      setState('completed');
-    } else if (kycStatus === 'failed') {
-      setCurrentChecksPassed(checksPassed);
-      setState('failed');
-    } else {
-      setCurrentChecksPassed(checksPassed);
-    }
-  }, [isLoadingInitial, isFetching, kycStatus, checksPassed]);
+  const { kycStatus, checksPassed } = useIsUserVerified({
+    userId,
+    refetchInterval: state === 'pending' ? 3000 : false,
+  });
 
   const handleVerificationSuccess = useCallback(async () => {
     if (hasNavigatedRef.current) return;
@@ -81,37 +54,76 @@ export const useVerificationProcessing = () => {
     }
 
     if (origin === 'talent_onboarding') {
-      goToScreen(Screens.OnboardingAuthTalent);
+      goToScreen(Screens.TermsAgreement, { origin: 'talent_onboarding' });
     } else if (origin === 'org_onboarding') {
-      goToScreen(Screens.OrgIdentityVerification);
+      goToScreen(Screens.TermsAgreement, { origin: 'org_onboarding' });
     } else {
       goBack();
     }
   }, [userId, isTalent, talent, updateTalent, origin]);
 
-  // Subscribe to realtime updates
-  useKycStatusSubscription({
-    userId,
-    enabled: !!userId && !hasNavigatedRef.current,
-    onStatusChange: data => {
-      setCurrentChecksPassed(data.checksPassed);
-
-      if (data.status === 'completed') {
-        setState('completed');
-        setCurrentChecksPassed(TOTAL_CHECKS);
-        handleVerificationSuccess();
-      } else if (data.status === 'failed') {
-        setState('failed');
-      }
-    },
-  });
-
-  // Handle completed state from initial load
+  // Animate checks stepping up one by one toward the server value
   useEffect(() => {
-    if (state === 'completed' && !hasNavigatedRef.current) {
+    const serverChecks = checksPassed ?? 0;
+    if (serverChecks <= displayedChecks || animatingRef.current) return;
+
+    animatingRef.current = true;
+
+    const step = () => {
+      setDisplayedChecks(prev => {
+        const next = prev + 1;
+        if (next < serverChecks) {
+          setTimeout(step, ANIMATION_STEP_MS);
+        } else {
+          animatingRef.current = false;
+        }
+        return next;
+      });
+    };
+
+    setTimeout(step, ANIMATION_STEP_MS);
+  }, [checksPassed, displayedChecks]);
+
+  // React to status changes from polling
+  useEffect(() => {
+    if (kycStatus === 'completed' && state !== 'completed') {
+      setState('completed');
+    } else if (kycStatus === 'failed' && state !== 'failed') {
+      setState('failed');
+    }
+  }, [kycStatus, state]);
+
+  // Navigate after animation finishes and state is completed
+  useEffect(() => {
+    if (
+      state === 'completed' &&
+      displayedChecks >= TOTAL_CHECKS &&
+      !hasNavigatedRef.current
+    ) {
       handleVerificationSuccess();
     }
-  }, [state, handleVerificationSuccess]);
+  }, [state, displayedChecks, handleVerificationSuccess]);
+
+  // Timeout: if still pending after 60s, treat as failed
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      if (state === 'pending' && !hasNavigatedRef.current) {
+        setState('failed');
+      }
+    }, 60000);
+
+    return () => clearTimeout(timer);
+  }, [state]);
+
+  // Re-fetch KYC status when app returns from background
+  useEffect(() => {
+    const subscription = AppState.addEventListener('change', nextState => {
+      if (nextState === 'active' && userId && !hasNavigatedRef.current) {
+        invalidateUserKycStatus(userId);
+      }
+    });
+    return () => subscription.remove();
+  }, [userId]);
 
   // Block back button on Android
   useEffect(() => {
@@ -124,8 +136,9 @@ export const useVerificationProcessing = () => {
 
   const handleRetry = useCallback(() => {
     hasNavigatedRef.current = false;
+    animatingRef.current = false;
     setState('pending');
-    setCurrentChecksPassed(0);
+    setDisplayedChecks(0);
 
     if (origin === 'talent_onboarding') {
       goToScreen(Screens.OnboardingAuthTalent);
@@ -137,7 +150,7 @@ export const useVerificationProcessing = () => {
   }, [origin]);
 
   return {
-    currentChecksPassed,
+    currentChecksPassed: displayedChecks,
     totalChecks: TOTAL_CHECKS,
     handleRetry,
     isFailed: state === 'failed',

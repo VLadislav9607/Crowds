@@ -34,7 +34,6 @@ export const Switch: React.FC<IProps> = ({
         }}
         thumbColor={COLORS.white}
         ios_backgroundColor={COLORS.light_gray}
-        style={styles.switch}
         {...props}
       />
     </View>
@@ -46,9 +45,7 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
   },
-  switch: {
-    transform: [{ scaleX: 1.0 }, { scaleY: 1.0 }],
-  },
+
   disabled: {
     opacity: 0.5,
   },

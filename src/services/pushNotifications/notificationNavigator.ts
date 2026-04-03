@@ -24,6 +24,7 @@ export function navigateFromNotification(
       }
       break;
     case 'task_rejected':
+    case 'payout_received':
       if (data.eventId) {
         goToScreen(Screens.TalentEventDetails, { eventId: data.eventId });
       } else {

@@ -8,7 +8,9 @@ export const sendMessageAction = async (
     .from('chat_messages')
     .insert({
       chat_id: body.chatId,
-      text: body.text.trim(),
+      text: body.text?.trim() ?? '',
+      ...(body.imagePath && { image_path: body.imagePath }),
+      ...(body.imageBucket && { image_bucket: body.imageBucket }),
     })
     .select()
     .single();

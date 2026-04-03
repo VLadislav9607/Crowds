@@ -14,10 +14,14 @@ interface ProfileOption {
 
 interface UseProfileTabOptionsProps {
   onLogout: () => void;
+  onDeleteAccount: () => void;
+  onTermsOfService: () => void;
 }
 
 export const useProfileTabOptions = ({
   onLogout,
+  onDeleteAccount,
+  onTermsOfService,
 }: UseProfileTabOptionsProps) => {
   const { isTalent, organizationMember } = useGetMe();
 
@@ -63,19 +67,15 @@ export const useProfileTabOptions = ({
       onPress: () => goToScreen(Screens.FAQ),
     },
     {
-      title: 'Terms and conditions',
+      title: 'Terms of Service & Privacy',
       icon: ICONS.bookMark(),
-      onPress: () => goToScreen(Screens.TermsAndConditions),
+      onPress: onTermsOfService,
     },
     {
-      title: 'Delete account information',
-      icon: ICONS.circleInfo(),
-      onPress: () => {},
-    },
-    {
-      title: 'Privacy policy',
-      icon: ICONS.userShield(),
-      onPress: () => goToScreen(Screens.PrivacyPolicy),
+      title: 'Delete account',
+      icon: ICONS.trash('red'),
+      textColor: 'red',
+      onPress: onDeleteAccount,
     },
     {
       title: 'Logout',
@@ -113,21 +113,9 @@ export const useProfileTabOptions = ({
       onPress: () => goToScreen(Screens.ManageOrgTeam),
     },
     {
-      title: 'Wallet / Payment details',
-      icon: ICONS.wallet(),
-      isInvisible:
-        !organizationMember?.current_context?.capabilitiesAccess.edit_bank_info,
-      onPress: () => {},
-    },
-    {
       title: 'Manage password',
       icon: ICONS.shieldCheck(),
       onPress: () => goToScreen(Screens.ChangePassword),
-    },
-    {
-      title: 'Access your information',
-      icon: ICONS.orgDetails(),
-      onPress: () => {},
     },
     {
       title: 'FAQ',
@@ -135,19 +123,20 @@ export const useProfileTabOptions = ({
       onPress: () => goToScreen(Screens.FAQ),
     },
     {
-      title: 'Terms and conditions',
+      title: 'Terms of Service & Privacy',
       icon: ICONS.bookMark(),
-      onPress: () => goToScreen(Screens.TermsAndConditions),
-    },
-    {
-      title: 'Privacy policy',
-      icon: ICONS.userShield(),
-      onPress: () => goToScreen(Screens.PrivacyPolicy),
+      onPress: onTermsOfService,
     },
     {
       title: `App version ${DeviceInfo.getVersion()} (${DeviceInfo.getBuildNumber()})`,
       icon: ICONS.circleInfo(),
       onPress: () => {},
+    },
+    {
+      title: 'Delete account',
+      icon: ICONS.trash('red'),
+      textColor: 'red',
+      onPress: onDeleteAccount,
     },
     {
       title: 'Logout',

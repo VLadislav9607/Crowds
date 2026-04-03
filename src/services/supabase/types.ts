@@ -38,73 +38,6 @@ export type Database = {
         }
         Relationships: []
       }
-      black_flag_reports: {
-        Row: {
-          created_at: string
-          description: string
-          event_id: string | null
-          id: string
-          reporter_org_id: string | null
-          reporter_talent_id: string | null
-          reporter_type: string
-          reporter_user_id: string
-          status: string
-          target_org_id: string | null
-          target_talent_id: string | null
-          target_type: string
-        }
-        Insert: {
-          created_at?: string
-          description: string
-          event_id?: string | null
-          id?: string
-          reporter_org_id?: string | null
-          reporter_talent_id?: string | null
-          reporter_type: string
-          reporter_user_id: string
-          status?: string
-          target_org_id?: string | null
-          target_talent_id?: string | null
-          target_type: string
-        }
-        Update: {
-          created_at?: string
-          description?: string
-          event_id?: string | null
-          id?: string
-          reporter_org_id?: string | null
-          reporter_talent_id?: string | null
-          reporter_type?: string
-          reporter_user_id?: string
-          status?: string
-          target_org_id?: string | null
-          target_talent_id?: string | null
-          target_type?: string
-        }
-        Relationships: [
-          {
-            foreignKeyName: "black_flag_reports_event_id_fkey"
-            columns: ["event_id"]
-            isOneToOne: false
-            referencedRelation: "events"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "black_flag_reports_reporter_talent_id_fkey"
-            columns: ["reporter_talent_id"]
-            isOneToOne: false
-            referencedRelation: "talents"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "black_flag_reports_target_talent_id_fkey"
-            columns: ["target_talent_id"]
-            isOneToOne: false
-            referencedRelation: "talents"
-            referencedColumns: ["id"]
-          },
-        ]
-      }
       brands: {
         Row: {
           created_at: string
@@ -166,6 +99,9 @@ export type Database = {
           chat_id: string
           created_at: string | null
           id: string
+          image_bucket: string | null
+          image_path: string | null
+          is_edited: boolean
           sender_id: string
           text: string
         }
@@ -173,6 +109,9 @@ export type Database = {
           chat_id: string
           created_at?: string | null
           id?: string
+          image_bucket?: string | null
+          image_path?: string | null
+          is_edited?: boolean
           sender_id?: string
           text: string
         }
@@ -180,6 +119,9 @@ export type Database = {
           chat_id?: string
           created_at?: string | null
           id?: string
+          image_bucket?: string | null
+          image_path?: string | null
+          is_edited?: boolean
           sender_id?: string
           text?: string
         }
@@ -512,6 +454,74 @@ export type Database = {
           },
           {
             foreignKeyName: "event_cancellations_event_id_fkey"
+            columns: ["event_id"]
+            isOneToOne: false
+            referencedRelation: "events"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      event_custom_task_completions: {
+        Row: {
+          completed_at: string | null
+          id: string
+          participation_id: string
+          task_id: string
+        }
+        Insert: {
+          completed_at?: string | null
+          id?: string
+          participation_id: string
+          task_id: string
+        }
+        Update: {
+          completed_at?: string | null
+          id?: string
+          participation_id?: string
+          task_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "event_custom_task_completions_participation_id_fkey"
+            columns: ["participation_id"]
+            isOneToOne: false
+            referencedRelation: "event_participations"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "event_custom_task_completions_task_id_fkey"
+            columns: ["task_id"]
+            isOneToOne: false
+            referencedRelation: "event_custom_tasks"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      event_custom_tasks: {
+        Row: {
+          created_at: string | null
+          event_id: string
+          id: string
+          sort_order: number
+          text: string
+        }
+        Insert: {
+          created_at?: string | null
+          event_id: string
+          id?: string
+          sort_order?: number
+          text: string
+        }
+        Update: {
+          created_at?: string | null
+          event_id?: string
+          id?: string
+          sort_order?: number
+          text?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "event_custom_tasks_event_id_fkey"
             columns: ["event_id"]
             isOneToOne: false
             referencedRelation: "events"
@@ -1092,7 +1102,7 @@ export type Database = {
       event_qr_codes: {
         Row: {
           created_at: string
-          end_at: string
+          deleted_at: string | null
           event_id: string
           id: string
           name: string
@@ -1102,7 +1112,7 @@ export type Database = {
         }
         Insert: {
           created_at?: string
-          end_at: string
+          deleted_at?: string | null
           event_id: string
           id?: string
           name: string
@@ -1112,7 +1122,7 @@ export type Database = {
         }
         Update: {
           created_at?: string
-          end_at?: string
+          deleted_at?: string | null
           event_id?: string
           id?: string
           name?: string
@@ -1142,6 +1152,7 @@ export type Database = {
           id: string
           notes: string | null
           refund_amount_cents: number
+          reminder_sent_at: string | null
           review_deadline_at: string
           settled_at: string | null
           settled_by: string | null
@@ -1161,6 +1172,7 @@ export type Database = {
           id?: string
           notes?: string | null
           refund_amount_cents?: number
+          reminder_sent_at?: string | null
           review_deadline_at: string
           settled_at?: string | null
           settled_by?: string | null
@@ -1180,6 +1192,7 @@ export type Database = {
           id?: string
           notes?: string | null
           refund_amount_cents?: number
+          reminder_sent_at?: string | null
           review_deadline_at?: string
           settled_at?: string | null
           settled_by?: string | null
@@ -1400,6 +1413,104 @@ export type Database = {
             columns: ["subcategory_id"]
             isOneToOne: false
             referencedRelation: "events_subcategories"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      exchange_rates: {
+        Row: {
+          currency_code: string
+          rate: number
+          updated_at: string
+        }
+        Insert: {
+          currency_code: string
+          rate: number
+          updated_at?: string
+        }
+        Update: {
+          currency_code?: string
+          rate?: number
+          updated_at?: string
+        }
+        Relationships: []
+      }
+      flag_reports: {
+        Row: {
+          created_at: string
+          description: string
+          event_id: string | null
+          id: string
+          reporter_org_id: string | null
+          reporter_talent_id: string | null
+          reporter_type: string
+          reporter_user_id: string
+          requested_flag_type: string
+          status: string
+          target_office_id: string | null
+          target_org_id: string | null
+          target_talent_id: string | null
+          target_type: string
+        }
+        Insert: {
+          created_at?: string
+          description: string
+          event_id?: string | null
+          id?: string
+          reporter_org_id?: string | null
+          reporter_talent_id?: string | null
+          reporter_type: string
+          reporter_user_id: string
+          requested_flag_type?: string
+          status?: string
+          target_office_id?: string | null
+          target_org_id?: string | null
+          target_talent_id?: string | null
+          target_type: string
+        }
+        Update: {
+          created_at?: string
+          description?: string
+          event_id?: string | null
+          id?: string
+          reporter_org_id?: string | null
+          reporter_talent_id?: string | null
+          reporter_type?: string
+          reporter_user_id?: string
+          requested_flag_type?: string
+          status?: string
+          target_office_id?: string | null
+          target_org_id?: string | null
+          target_talent_id?: string | null
+          target_type?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "flag_reports_event_id_fkey"
+            columns: ["event_id"]
+            isOneToOne: false
+            referencedRelation: "events"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "flag_reports_reporter_talent_id_fkey"
+            columns: ["reporter_talent_id"]
+            isOneToOne: false
+            referencedRelation: "talents"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "flag_reports_target_office_id_fkey"
+            columns: ["target_office_id"]
+            isOneToOne: false
+            referencedRelation: "offices"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "flag_reports_target_talent_id_fkey"
+            columns: ["target_talent_id"]
+            isOneToOne: false
+            referencedRelation: "talents"
             referencedColumns: ["id"]
           },
         ]
@@ -1768,6 +1879,7 @@ export type Database = {
           onboarding_copleted_step: number
           personal_email: string
           position: string
+          terms_accepted_at: string | null
           username: string
         }
         Insert: {
@@ -1781,6 +1893,7 @@ export type Database = {
           onboarding_copleted_step: number
           personal_email?: string
           position: string
+          terms_accepted_at?: string | null
           username: string
         }
         Update: {
@@ -1794,6 +1907,7 @@ export type Database = {
           onboarding_copleted_step?: number
           personal_email?: string
           position?: string
+          terms_accepted_at?: string | null
           username?: string
         }
         Relationships: []
@@ -1810,6 +1924,36 @@ export type Database = {
         Update: {
           created_at?: string
           id?: string
+        }
+        Relationships: []
+      }
+      platform_withdrawals: {
+        Row: {
+          amount_cents: number
+          created_at: string | null
+          id: string
+          note: string | null
+          status: string
+          stripe_payout_id: string | null
+          withdrawn_by: string | null
+        }
+        Insert: {
+          amount_cents: number
+          created_at?: string | null
+          id?: string
+          note?: string | null
+          status?: string
+          stripe_payout_id?: string | null
+          withdrawn_by?: string | null
+        }
+        Update: {
+          amount_cents?: number
+          created_at?: string | null
+          id?: string
+          note?: string | null
+          status?: string
+          stripe_payout_id?: string | null
+          withdrawn_by?: string | null
         }
         Relationships: []
       }
@@ -1986,6 +2130,7 @@ export type Database = {
           postal_code: string | null
           region: string
           talent_id: string
+          timezone: string | null
         }
         Insert: {
           autocomplete_description: string
@@ -2002,6 +2147,7 @@ export type Database = {
           postal_code?: string | null
           region: string
           talent_id: string
+          timezone?: string | null
         }
         Update: {
           autocomplete_description?: string
@@ -2018,6 +2164,7 @@ export type Database = {
           postal_code?: string | null
           region?: string
           talent_id?: string
+          timezone?: string | null
         }
         Relationships: [
           {
@@ -2039,6 +2186,7 @@ export type Database = {
           hours_worked: number | null
           id: string
           participation_id: string | null
+          rejection_reason: string | null
           settlement_id: string
           status: Database["public"]["Enums"]["TalentPayoutStatus"]
           stripe_transfer_id: string | null
@@ -2054,6 +2202,7 @@ export type Database = {
           hours_worked?: number | null
           id?: string
           participation_id?: string | null
+          rejection_reason?: string | null
           settlement_id: string
           status?: Database["public"]["Enums"]["TalentPayoutStatus"]
           stripe_transfer_id?: string | null
@@ -2069,6 +2218,7 @@ export type Database = {
           hours_worked?: number | null
           id?: string
           participation_id?: string | null
+          rejection_reason?: string | null
           settlement_id?: string
           status?: Database["public"]["Enums"]["TalentPayoutStatus"]
           stripe_transfer_id?: string | null
@@ -2131,6 +2281,7 @@ export type Database = {
           subcategories: string[] | null
           tags: string[] | null
           tattoo_spot: Database["public"]["Enums"]["TattooSpot"][] | null
+          terms_accepted_at: string | null
           username: string
         }
         Insert: {
@@ -2164,6 +2315,7 @@ export type Database = {
           subcategories?: string[] | null
           tags?: string[] | null
           tattoo_spot?: Database["public"]["Enums"]["TattooSpot"][] | null
+          terms_accepted_at?: string | null
           username: string
         }
         Update: {
@@ -2197,6 +2349,7 @@ export type Database = {
           subcategories?: string[] | null
           tags?: string[] | null
           tattoo_spot?: Database["public"]["Enums"]["TattooSpot"][] | null
+          terms_accepted_at?: string | null
           username?: string
         }
         Relationships: []
@@ -2207,7 +2360,9 @@ export type Database = {
           id: string
           participation_id: string
           photo_path: string | null
+          rejection_reason: string | null
           reviewed_at: string | null
+          revision_reason: string | null
           status: string
           submitted_at: string | null
         }
@@ -2216,7 +2371,9 @@ export type Database = {
           id?: string
           participation_id: string
           photo_path?: string | null
+          rejection_reason?: string | null
           reviewed_at?: string | null
+          revision_reason?: string | null
           status?: string
           submitted_at?: string | null
         }
@@ -2225,7 +2382,9 @@ export type Database = {
           id?: string
           participation_id?: string
           photo_path?: string | null
+          rejection_reason?: string | null
           reviewed_at?: string | null
+          revision_reason?: string | null
           status?: string
           submitted_at?: string | null
         }
@@ -2327,33 +2486,18 @@ export type Database = {
         Row: {
           availability: Database["public"]["Enums"]["availability_type"]
           created_at: string | null
-          end_date: string | null
-          is_traveling: boolean
-          location: string | null
-          start_date: string | null
-          trip_availability: Database["public"]["Enums"]["trip_availability_type"]
           updated_at: string | null
           user_id: string
         }
         Insert: {
           availability: Database["public"]["Enums"]["availability_type"]
           created_at?: string | null
-          end_date?: string | null
-          is_traveling?: boolean
-          location?: string | null
-          start_date?: string | null
-          trip_availability: Database["public"]["Enums"]["trip_availability_type"]
           updated_at?: string | null
           user_id: string
         }
         Update: {
           availability?: Database["public"]["Enums"]["availability_type"]
           created_at?: string | null
-          end_date?: string | null
-          is_traveling?: boolean
-          location?: string | null
-          start_date?: string | null
-          trip_availability?: Database["public"]["Enums"]["trip_availability_type"]
           updated_at?: string | null
           user_id?: string
         }
@@ -2361,51 +2505,27 @@ export type Database = {
       }
       user_kyc: {
         Row: {
+          checks_passed: number
+          checks_total: number
           complycube_client_id: string | null
           status: string
           updated_at: string | null
           user_id: string
         }
         Insert: {
+          checks_passed?: number
+          checks_total?: number
           complycube_client_id?: string | null
           status?: string
           updated_at?: string | null
           user_id: string
         }
         Update: {
+          checks_passed?: number
+          checks_total?: number
           complycube_client_id?: string | null
           status?: string
           updated_at?: string | null
-          user_id?: string
-        }
-        Relationships: []
-      }
-      user_travel_availability: {
-        Row: {
-          created_at: string | null
-          custom_from: string | null
-          custom_to: string | null
-          date: string
-          id: string
-          time_slot: Database["public"]["Enums"]["time_slot"]
-          user_id: string
-        }
-        Insert: {
-          created_at?: string | null
-          custom_from?: string | null
-          custom_to?: string | null
-          date: string
-          id?: string
-          time_slot: Database["public"]["Enums"]["time_slot"]
-          user_id: string
-        }
-        Update: {
-          created_at?: string | null
-          custom_from?: string | null
-          custom_to?: string | null
-          date?: string
-          id?: string
-          time_slot?: Database["public"]["Enums"]["time_slot"]
           user_id?: string
         }
         Relationships: []
@@ -2447,14 +2567,6 @@ export type Database = {
           availability: Database["public"]["Enums"]["availability_type"] | null
           created_at: string | null
           dayschedules: Json | null
-          end_date: string | null
-          is_traveling: boolean | null
-          location: string | null
-          start_date: string | null
-          traveldays: Json | null
-          trip_availability:
-            | Database["public"]["Enums"]["trip_availability_type"]
-            | null
           updated_at: string | null
           user_id: string | null
         }
@@ -2462,14 +2574,6 @@ export type Database = {
           availability?: Database["public"]["Enums"]["availability_type"] | null
           created_at?: string | null
           dayschedules?: never
-          end_date?: string | null
-          is_traveling?: boolean | null
-          location?: string | null
-          start_date?: string | null
-          traveldays?: never
-          trip_availability?:
-            | Database["public"]["Enums"]["trip_availability_type"]
-            | null
           updated_at?: string | null
           user_id?: string | null
         }
@@ -2477,14 +2581,6 @@ export type Database = {
           availability?: Database["public"]["Enums"]["availability_type"] | null
           created_at?: string | null
           dayschedules?: never
-          end_date?: string | null
-          is_traveling?: boolean | null
-          location?: string | null
-          start_date?: string | null
-          traveldays?: never
-          trip_availability?:
-            | Database["public"]["Enums"]["trip_availability_type"]
-            | null
           updated_at?: string | null
           user_id?: string | null
         }
@@ -2506,6 +2602,10 @@ export type Database = {
         Returns: {
           user_id: string
         }[]
+      }
+      check_user_available_at: {
+        Args: { p_at_utc: string; p_user_id: string }
+        Returns: boolean
       }
       check_user_exists_by_username: {
         Args: { username_param: string }
@@ -2570,6 +2670,10 @@ export type Database = {
       }
       create_new_draft_or_event: { Args: { payload: Json }; Returns: string }
       create_talent_events_folder: { Args: { p_name: string }; Returns: string }
+      delete_chat_message: {
+        Args: { p_message_id: string }
+        Returns: undefined
+      }
       delete_custom_list: {
         Args: { p_event_id: string; p_list_id: string }
         Returns: undefined
@@ -2601,6 +2705,10 @@ export type Database = {
         Returns: Json
       }
       earth: { Args: never; Returns: number }
+      edit_chat_message: {
+        Args: { p_message_id: string; p_text: string }
+        Returns: undefined
+      }
       get_active_flag_for_target: {
         Args: { target_id_input: string; target_type_input: string }
         Returns: {
@@ -2612,6 +2720,135 @@ export type Database = {
           status: string
         }[]
       }
+      get_all_events_admin:
+        | {
+            Args: { p_limit?: number; p_offset?: number; p_search?: string }
+            Returns: {
+              brand_name: string
+              country: string
+              created_at: string
+              creator_name: string
+              end_at: string
+              id: string
+              location: string
+              participants_count: number
+              payment_amount: number
+              payment_mode: string
+              start_at: string
+              status: string
+              title: string
+              total: number
+            }[]
+          }
+        | {
+            Args: {
+              p_filters?: Json
+              p_limit?: number
+              p_offset?: number
+              p_search?: string
+            }
+            Returns: {
+              brand_name: string
+              country: string
+              created_at: string
+              creator_name: string
+              end_at: string
+              id: string
+              location: string
+              participants_count: number
+              payment_amount: number
+              payment_mode: string
+              start_at: string
+              status: string
+              title: string
+              total: number
+            }[]
+          }
+      get_all_flag_reports_admin: {
+        Args: {
+          p_filters?: Json
+          p_limit?: number
+          p_offset?: number
+          p_search?: string
+        }
+        Returns: {
+          created_at: string
+          description: string
+          event_id: string
+          event_title: string
+          id: string
+          reporter_name: string
+          reporter_org_name: string
+          reporter_type: string
+          requested_flag_type: string
+          status: string
+          target_name: string
+          target_type: string
+          total: number
+        }[]
+      }
+      get_all_members_admin: {
+        Args: {
+          p_filters?: Json
+          p_limit?: number
+          p_offset?: number
+          p_search?: string
+        }
+        Returns: {
+          brand_id: string
+          brand_name: string
+          country: string
+          created_at: string
+          email: string
+          first_name: string
+          gender: string
+          id: string
+          is_super_admin: boolean
+          last_name: string
+          personal_email: string
+          position: string
+          total: number
+          username: string
+        }[]
+      }
+      get_all_organisers_admin:
+        | {
+            Args: { p_limit?: number; p_offset?: number; p_search?: string }
+            Returns: {
+              country: string
+              created_at: string
+              events_created: number
+              flag: string
+              id: string
+              location: string
+              logo_path: string
+              members_count: number
+              name: string
+              primary_contact_name: string
+              total: number
+            }[]
+          }
+        | {
+            Args: {
+              p_filters?: Json
+              p_limit: number
+              p_offset: number
+              p_search?: string
+            }
+            Returns: {
+              country: string
+              created_at: string
+              events_created: number
+              flag: string
+              id: string
+              location: string
+              logo_path: string
+              members_count: number
+              name: string
+              primary_contact_name: string
+              total: number
+            }[]
+          }
       get_all_talents: {
         Args: {
           p_event_id?: string
@@ -2632,6 +2869,47 @@ export type Database = {
           total: number
         }[]
       }
+      get_all_talents_admin: {
+        Args: {
+          p_filters?: Json
+          p_limit: number
+          p_offset: number
+          p_search?: string
+        }
+        Returns: {
+          accent: Database["public"]["Enums"]["Accent"]
+          additional_skills: string
+          avatar_full_path: string
+          avatar_path: string
+          birth_date: string
+          body_attributes: Database["public"]["Enums"]["BodyAttributes"][]
+          build: number
+          categories: string[]
+          city: string
+          country: string
+          created_at: string
+          ethnicity: Database["public"]["Enums"]["Ethnicity"]
+          eye_color: Database["public"]["Enums"]["EyeColour"]
+          facial_attributes: Database["public"]["Enums"]["FacialAttributes"][]
+          first_name: string
+          flag: string
+          gender: Database["public"]["Enums"]["Gender"]
+          hair_color: Database["public"]["Enums"]["HairColour"]
+          height: number
+          id: string
+          is_pregnant: boolean
+          last_name: string
+          onboarding_completed_step: number
+          pregnancy_months: number
+          skin_tone: Database["public"]["Enums"]["SkinTone"]
+          subcategories: string[]
+          tags: string[]
+          tattoo_spot: Database["public"]["Enums"]["TattooSpot"][]
+          total: number
+          username: string
+        }[]
+      }
+      get_brand_detail_admin: { Args: { p_brand_id: string }; Returns: Json }
       get_brand_events: {
         Args: {
           end_after?: string
@@ -2647,6 +2925,15 @@ export type Database = {
         }
         Returns: Json
       }
+      get_brand_events_admin: {
+        Args: {
+          p_brand_id: string
+          p_limit?: number
+          p_offset?: number
+          p_tab: string
+        }
+        Returns: Json
+      }
       get_brand_events_counts: { Args: { p_brand_id: string }; Returns: Json }
       get_cancellation_info: { Args: { p_event_id: string }; Returns: Json }
       get_chat_messages: {
@@ -2654,6 +2941,9 @@ export type Database = {
         Returns: {
           created_at: string
           id: string
+          image_bucket: string
+          image_path: string
+          is_edited: boolean
           sender_id: string
           text: string
         }[]
@@ -2696,6 +2986,35 @@ export type Database = {
           owner_id: string
         }[]
       }
+      get_dashboard_stats_admin:
+        | {
+            Args: never
+            Returns: {
+              new_talent_this_month: number
+              total_companies: number
+              total_events: number
+              total_talent: number
+            }[]
+          }
+        | {
+            Args: { p_period?: string }
+            Returns: {
+              new_talent_this_month: number
+              total_companies: number
+              total_events: number
+              total_talent: number
+            }[]
+          }
+      get_event_applicants_admin: {
+        Args: {
+          p_event_id: string
+          p_limit?: number
+          p_offset?: number
+          p_search?: string
+          p_status?: string
+        }
+        Returns: Json
+      }
       get_event_checked_in_talents: {
         Args: { p_event_id: string }
         Returns: {
@@ -2720,6 +3039,7 @@ export type Database = {
           talentId: string
         }[]
       }
+      get_event_detail_admin: { Args: { p_event_id: string }; Returns: Json }
       get_event_details_for_brand_member: {
         Args: { p_event_id: string }
         Returns: Json
@@ -2765,14 +3085,38 @@ export type Database = {
           rejected: number
         }[]
       }
+      get_event_payment: { Args: { p_event_id: string }; Returns: Json }
       get_event_qr_code: { Args: { p_qr_id: string }; Returns: Json }
       get_event_qr_codes: {
         Args: { p_event_id: string; p_limit?: number; p_offset?: number }
         Returns: Json
       }
-      get_event_task_completions: {
-        Args: { p_event_id: string }
-        Returns: Json
+      get_event_report: { Args: { p_event_id: string }; Returns: Json }
+      get_event_task_completions:
+        | { Args: { p_event_id: string }; Returns: Json }
+        | {
+            Args: { p_event_id: string; p_limit?: number; p_offset?: number }
+            Returns: Json
+          }
+      get_flag_report_detail_admin: {
+        Args: { p_id: string }
+        Returns: {
+          created_at: string
+          description: string
+          event_id: string
+          event_title: string
+          id: string
+          reporter_id: string
+          reporter_name: string
+          reporter_org_id: string
+          reporter_org_name: string
+          reporter_type: string
+          requested_flag_type: string
+          status: string
+          target_id: string
+          target_name: string
+          target_type: string
+        }[]
       }
       get_invitable_talents: {
         Args: {
@@ -2803,6 +3147,7 @@ export type Database = {
         }
         Returns: Json
       }
+      get_member_detail_admin: { Args: { p_member_id: string }; Returns: Json }
       get_my_org_user: { Args: never; Returns: Json }
       get_notifications: {
         Args: never
@@ -2883,6 +3228,11 @@ export type Database = {
         }
         Returns: Json
       }
+      get_single_dashboard_stat_admin: {
+        Args: { p_period?: string; p_stat: string }
+        Returns: number
+      }
+      get_talent_detail_admin: { Args: { p_talent_id: string }; Returns: Json }
       get_talent_event_counters: {
         Args: never
         Returns: {
@@ -2895,6 +3245,15 @@ export type Database = {
       }
       get_talent_event_history: {
         Args: { p_limit?: number; p_offset?: number }
+        Returns: Json
+      }
+      get_talent_events_admin: {
+        Args: {
+          p_limit?: number
+          p_offset?: number
+          p_tab: string
+          p_talent_id: string
+        }
         Returns: Json
       }
       get_talent_events_by_status: {
@@ -2991,6 +3350,10 @@ export type Database = {
         Returns: undefined
       }
       hide_event: { Args: { p_event_id: string }; Returns: undefined }
+      increment_kyc_checks_passed: {
+        Args: { p_client_id: string }
+        Returns: Json
+      }
       is_chat_participant: { Args: { p_chat_id: string }; Returns: boolean }
       is_superadmin: { Args: never; Returns: boolean }
       is_user_available: {
@@ -3035,7 +3398,9 @@ export type Database = {
         Returns: Json
       }
       talent_checkin_event: { Args: { p_qr_code_id: string }; Returns: Json }
-      talent_checkout_event: { Args: { p_session_id: string }; Returns: Json }
+      talent_checkout_event:
+        | { Args: { p_session_id: string }; Returns: Json }
+        | { Args: { p_event_id: string; p_session_id: string }; Returns: Json }
       timeslot_range: {
         Args: {
           p_custom_from: string
@@ -3043,6 +3408,10 @@ export type Database = {
           p_slot: Database["public"]["Enums"]["time_slot"]
         }
         Returns: unknown
+      }
+      toggle_event_custom_task: {
+        Args: { p_participation_id: string; p_task_id: string }
+        Returns: Json
       }
       toggle_event_in_talent_events_folder: {
         Args: { p_event_id: string; p_folder_id: string }
@@ -3069,38 +3438,17 @@ export type Database = {
         Returns: string
       }
       update_event_qr_code: {
-        Args: {
-          p_end_at?: string
-          p_name?: string
-          p_qr_id: string
-          p_start_at?: string
-        }
+        Args: { p_name?: string; p_qr_id: string; p_start_at?: string }
         Returns: undefined
       }
-      update_talent_availability: {
-        Args: {
-          p_availability: Database["public"]["Enums"]["availability_type"]
-          p_day_schedules: Json
-          p_end_date: string
-          p_is_traveling: boolean
-          p_location: string
-          p_start_date: string
-          p_talent_id: string
-          p_travel_days: Json
-          p_trip_availability: Database["public"]["Enums"]["trip_availability_type"]
-        }
+      update_flag_report_status_admin: {
+        Args: { p_id: string; p_status: string }
         Returns: undefined
       }
       update_user_availability: {
         Args: {
           p_availability: Database["public"]["Enums"]["availability_type"]
           p_day_schedules: Json
-          p_end_date: string
-          p_is_traveling: boolean
-          p_location: string
-          p_start_date: string
-          p_travel_days: Json
-          p_trip_availability: Database["public"]["Enums"]["trip_availability_type"]
         }
         Returns: undefined
       }
@@ -3267,7 +3615,6 @@ export type Database = {
         | "evening"
         | "custom"
         | "not_available"
-      trip_availability_type: "regular" | "custom" | "not_available"
       СapabilityСategory:
         | "talent"
         | "events"
@@ -3551,7 +3898,6 @@ export const Constants = {
         "custom",
         "not_available",
       ],
-      trip_availability_type: ["regular", "custom", "not_available"],
       СapabilityСategory: [
         "talent",
         "events",
@@ -3563,3 +3909,4 @@ export const Constants = {
     },
   },
 } as const
+

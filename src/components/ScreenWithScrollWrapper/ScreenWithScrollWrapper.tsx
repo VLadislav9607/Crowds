@@ -48,6 +48,7 @@ export const ScreenWithScrollWrapper = ({
   const ScrollViewComponent = useAnimatedScrollView
     ? Animated.ScrollView
     : ScrollView;
+
   const scrollProps =
     useAnimatedScrollView && animatedScrollHandler
       ? { onScroll: animatedScrollHandler, scrollEventThrottle: 16 }
@@ -56,8 +57,8 @@ export const ScreenWithScrollWrapper = ({
   return (
     <KeyboardAvoidingView
       style={styles.wrapper}
-      behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
-      enabled={keyboardAvoidingEnabled}
+      behavior={Platform.OS === 'ios' ? 'padding' : undefined}
+      enabled={Platform.OS === 'ios' && keyboardAvoidingEnabled}
       keyboardVerticalOffset={
         Platform.OS === 'ios' ? (resetKeyboardOffset ? -bottom : 0) : 0
       }

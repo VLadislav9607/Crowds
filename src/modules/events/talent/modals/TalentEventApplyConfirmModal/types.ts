@@ -5,6 +5,7 @@ export interface TalentEventApplyConfirmModalProps {
   formattedAddress: string;
   startAt: string;
   endAt: string;
+  isAvailable?: boolean;
   onConfirm: () => void;
 }
 

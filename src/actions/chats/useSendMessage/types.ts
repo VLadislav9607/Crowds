@@ -1,6 +1,8 @@
 export interface SendMessageBodyDto {
   chatId: string;
-  text: string;
+  text?: string;
+  imagePath?: string;
+  imageBucket?: string;
 }
 
 export interface SendMessageRespDto {
@@ -9,4 +11,6 @@ export interface SendMessageRespDto {
   id: string;
   sender_id: string;
   text: string;
+  image_path?: string | null;
+  image_bucket?: string | null;
 }

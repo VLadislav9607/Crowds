@@ -40,7 +40,6 @@ export const useCreateEventScreen = () => {
   } = useErrorsScroll();
 
   const {
-    savedToDraftModalRef,
     isLoadingDraft,
     isDraftEditing,
     handleCreateDraft,
@@ -68,8 +67,10 @@ export const useCreateEventScreen = () => {
 
   const handleCancel = async () => {
     actionConfirmationModalRef.current?.open({
-      title: 'Cancel Event Creation',
-      subtitle: 'Are you sure you want to cancel event creation?',
+      title: isDraftEditing ? 'Cancel Draft Editing' : 'Cancel Event Creation',
+      subtitle: isDraftEditing
+        ? 'Are you sure you want to cancel draft editing?'
+        : 'Are you sure you want to cancel event creation?',
       onConfirm: goBack,
     });
   };
@@ -79,7 +80,6 @@ export const useCreateEventScreen = () => {
     formData,
     eventCreatedModalRef,
     paymentConfirmationModalRef,
-    savedToDraftModalRef,
     scrollViewRef,
     basicInfoSectionRef,
     descriptionSectionRef,

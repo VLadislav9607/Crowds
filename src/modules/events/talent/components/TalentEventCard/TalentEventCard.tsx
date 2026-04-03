@@ -9,7 +9,7 @@ import { useState } from 'react';
 import { formatInTimeZone } from 'date-fns-tz';
 import { AppButton, AppText, IconText } from '@ui';
 import { ICONS, IMAGES } from '@assets';
-import { If } from '@components';
+import { If, AppModal } from '@components';
 import { getTimezoneOffsetHours, getCountryNameByCode } from '@helpers';
 import { COLORS } from '@styles';
 import { goToScreen, Screens } from '@navigation';
@@ -37,7 +37,7 @@ export const TalentEventCard = ({
     goToScreen(Screens.ChatRoom, {
       chatId: event.group_chat_id,
       chatType: ChatType.Group,
-      title: 'Group',
+      title: event.title ? `${event.title} · Group` : 'Group messages',
       imageUrl: '',
     });
   };
@@ -48,6 +48,7 @@ export const TalentEventCard = ({
   const [isLoadingCancellation, setIsLoadingCancellation] = useState(false);
   const [isLoadingRemoveEventFromFolder, setIsLoadingRemoveEventFromFolder] =
     useState(false);
+  const [showHideModal, setShowHideModal] = useState(false);
 
   const getEventStatus = (): TalentEventsTabs | 'random' => {
     if (!event?.participant) {
@@ -103,7 +104,12 @@ export const TalentEventCard = ({
     onApply?.(event);
   };
 
-  const handleReject = async () => {
+  const handleHidePress = () => {
+    setShowHideModal(true);
+  };
+
+  const handleConfirmHide = async () => {
+    setShowHideModal(false);
     try {
       setIsLoadingReject(true);
       await onReject?.(event.event_id);
@@ -156,14 +162,16 @@ export const TalentEventCard = ({
     }
   };
 
+  const isUnavailable = event.is_available === false;
+
   return (
     <View style={[styles.container, containerStyle]}>
       <ImageBackground
-        source={IMAGES.cardCrowdBg}
+        source={IMAGES.purpleCrowds}
         style={styles.imageContainer}
       >
         <View style={styles.iconContainer}>
-          <SvgXml xml={eventIcon('white')} width={20} height={20} />
+          <SvgXml xml={eventIcon('white')} width={28} height={28} />
         </View>
       </ImageBackground>
 
@@ -173,6 +181,14 @@ export const TalentEventCard = ({
             <AppText typography="semibold_16" margin={{ bottom: 8 }}>
               {event.title}
             </AppText>
+
+            <If condition={isUnavailable}>
+              <View style={styles.unavailableBadge}>
+                <AppText typography="bold_10" color="red">
+                  Outside your schedule
+                </AppText>
+              </View>
+            </If>
 
             <View style={styles.dateTimeContainer}>
               <IconText
@@ -263,9 +279,6 @@ export const TalentEventCard = ({
             <AppText typography="bold_14" color="main">
               ${event.payment_amount}
             </AppText>
-            <AppText typography="medium_10" color="main">
-              AUD
-            </AppText>
           </View>
           <AppText typography="medium_12" color="black_50">
             {event.payment_mode === 'fixed' ? 'Fixed price' : 'Price per hour'}
@@ -290,13 +303,13 @@ export const TalentEventCard = ({
           <If condition={eventCardType === 'random'}>
             <If condition={!hideRejectButton}>
               <AppButton
-                title="Reject"
+                title="Hide"
                 size="36"
                 isLoading={isLoadingReject}
                 loadingColor={COLORS.red}
                 wrapperStyles={styles.redButton}
                 titleStyles={{ color: COLORS.red }}
-                onPress={handleReject}
+                onPress={handleHidePress}
               />
             </If>
             <AppButton
@@ -363,27 +376,6 @@ export const TalentEventCard = ({
               </If>
 
               <If condition={!!event.nda_file_path && !event.nda_accepted_at}>
-                {/* <TouchableOpacity
-                  onPress={() =>
-                    goToScreen(Screens.AcceptEventNda, {
-                      eventId: event.event_id,
-                      participationId: event.participant?.id!,
-                      ndaFilePath: event.nda_file_path!,
-                      ndaFileName: event.nda_file_name || undefined,
-                    })
-                  }
-                  style={styles.ndaButton}
-                >
-                  <AppText typography="bold_12" color="red">
-                    ACCEPT NDA
-                  </AppText>
-                  <SvgXml
-                    xml={ICONS.chevronRight('red')}
-                    width={14}
-                    height={14}
-                  />
-                </TouchableOpacity> */}
-
                 <AppButton
                   onPress={() => {
                     goToScreen(Screens.AcceptEventNda, {
@@ -424,6 +416,29 @@ export const TalentEventCard = ({
           </If>
         </View>
       </View>
+
+      <AppModal
+        isVisible={showHideModal}
+        onClose={() => setShowHideModal(false)}
+        title="Hide event"
+        subtitle="This event will no longer appear in your feed. Are you sure?"
+        subtitleProps={{ typography: 'regular_14', margin: { top: 5 } }}
+      >
+        <AppButton
+          title="Yes, hide"
+          size="60"
+          wrapperStyles={{ backgroundColor: COLORS.red_20 }}
+          titleStyles={{ color: COLORS.red }}
+          mb={10}
+          onPress={handleConfirmHide}
+        />
+        <AppButton
+          title="Cancel"
+          size="60"
+          variant="withBorder"
+          onPress={() => setShowHideModal(false)}
+        />
+      </AppModal>
     </View>
   );
 };

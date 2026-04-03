@@ -32,4 +32,8 @@ export const styles = StyleSheet.create({
   activeSendButton: {
     borderColor: COLORS.main,
   },
+  cancelEditButton: {
+    paddingHorizontal: 4,
+    paddingVertical: 8,
+  },
 });

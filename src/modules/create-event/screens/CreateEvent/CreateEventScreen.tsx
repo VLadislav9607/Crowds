@@ -10,13 +10,13 @@ import {
   EventBriefSection,
   OtherInfoSection,
   PaymentSection,
+  TasksSection,
   VisibilitySection,
 } from '../../forms';
 import { CreateEventFooter } from '../../components';
 import {
   EventCreatedModal,
   PaymentConfirmationModal,
-  SavedToDraftModal,
 } from '../../modals';
 import { useCreateEventScreen } from './hooks/useCreateEventScreen';
 import { ActionConfirmationModal } from '@modules/common';
@@ -29,7 +29,6 @@ export const CreateEventScreen = () => {
     actionConfirmationModalRef,
     eventCreatedModalRef,
     paymentConfirmationModalRef,
-    savedToDraftModalRef,
     scrollViewRef,
     basicInfoSectionRef,
     descriptionSectionRef,
@@ -79,6 +78,7 @@ export const CreateEventScreen = () => {
             widgetRefs={ageGroupWidgetRefs}
           />
           <PaymentSection ref={paymentSectionRef} />
+          <TasksSection />
           <OtherInfoSection ref={otherInfoSectionRef} />
         </View>
 
@@ -88,7 +88,6 @@ export const CreateEventScreen = () => {
           ref={paymentConfirmationModalRef}
           onModalHide={onPaymentModalHide}
         />
-        <SavedToDraftModal ref={savedToDraftModalRef} />
       </ScreenWithScrollWrapper>
     </FormProvider>
   );

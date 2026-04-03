@@ -5,6 +5,8 @@ export interface TalentEventCheckinModalProps {
   brandLogoPath: string | null;
   venue: string | null;
   qrCodeId: string;
+  eventId: string;
+  participationId: string;
   onCheckinSuccess: () => void;
 }
 

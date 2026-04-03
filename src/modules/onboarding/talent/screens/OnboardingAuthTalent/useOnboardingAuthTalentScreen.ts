@@ -8,7 +8,7 @@ import { TalentAvailabilityFormRef } from '@modules/talent-availability';
 import { useUpdateTalent } from '@actions';
 import { useGetMe } from '@actions';
 import { LogoutModalRef } from '../../../../profile/modals';
-import { goToScreen, Screens } from '@navigation';
+import { resetToScreen, Screens } from '@navigation';
 import { IdentityVerificationRef } from '@modules/kyc';
 import { useIsUserVerified } from '@modules/kyc';
 
@@ -74,7 +74,7 @@ export const useOnboardingAuthTalentScreen = () => {
         id: me?.talent?.id!,
         data: { onboarding_copleted_step: 6 },
       });
-    goToScreen(Screens.BottomTabs);
+    resetToScreen(Screens.BottomTabs);
   };
 
   const onStripeSetupSkip = () => {
@@ -84,7 +84,7 @@ export const useOnboardingAuthTalentScreen = () => {
         id: me?.talent?.id!,
         data: { onboarding_copleted_step: 6 },
       });
-    goToScreen(Screens.BottomTabs);
+    resetToScreen(Screens.BottomTabs);
   };
 
   const onAvailabilitySetupSuccess = () => {

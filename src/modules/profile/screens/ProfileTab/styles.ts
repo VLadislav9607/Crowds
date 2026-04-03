@@ -12,4 +12,14 @@ export const styles = StyleSheet.create({
     height: 1,
     backgroundColor: COLORS.gray,
   },
+  termsSheetContent: {
+    paddingHorizontal: 20,
+    paddingBottom: 32,
+  },
+  termsSheetTitle: {
+    marginBottom: 12,
+  },
+  termsLinkItem: {
+    paddingVertical: 10,
+  },
 });

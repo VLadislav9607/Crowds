@@ -1,5 +1,5 @@
 import { useEffect, useRef } from 'react';
-import { InteractionManager, SectionList } from 'react-native';
+import { Platform, SectionList } from 'react-native';
 
 import type { IMessageSection } from './types';
 import type { IMessageData } from '../../ui';
@@ -22,16 +22,17 @@ export const useAutoScrollOnNewMessage = ({
     );
 
     if (prevCountRef.current !== null && nextCount > prevCountRef.current) {
-      const task = InteractionManager.runAfterInteractions(() => {
+      const delay = Platform.OS === 'android' ? 100 : 0;
+      const timer = setTimeout(() => {
         listRef.current?.scrollToLocation({
           sectionIndex: 0,
           itemIndex: 0,
           viewOffset: 0,
           animated: true,
         });
-      });
+      }, delay);
 
-      return () => task.cancel();
+      return () => clearTimeout(timer);
     }
 
     prevCountRef.current = nextCount;
