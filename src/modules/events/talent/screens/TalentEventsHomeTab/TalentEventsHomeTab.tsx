@@ -1,4 +1,4 @@
-import { ScreenWrapper } from '@components';
+import { ScreenWrapper, TestBadge } from '@components';
 import { TouchableOpacity, View, ScrollView } from 'react-native';
 import { ICONS } from '@assets';
 import { COLORS } from '@styles';
@@ -52,6 +52,7 @@ export const TalentEventsHomeTab = () => {
         },
       ]}
     >
+      <TestBadge />
       <SearchEventsList
         contentContainerStyle={[
           styles.listContentContainer,
