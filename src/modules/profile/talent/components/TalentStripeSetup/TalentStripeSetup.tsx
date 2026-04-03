@@ -8,9 +8,9 @@ import { WebView } from 'react-native-webview';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useCreateConnectAccount, useSyncConnectAccountStatus } from '@actions';
 import { showErrorToast } from '@helpers';
+import { SUPABASE_URL } from '@env';
 
-const REDIRECT_URL_PREFIX =
-  'https://mznllzlcwtonsjqvzpux.supabase.co/functions/v1/stripe-connect-redirect';
+const REDIRECT_URL_PREFIX = `${SUPABASE_URL}/functions/v1/stripe-connect-redirect`;
 
 export const TalentStripeSetup = forwardRef<
   TalentStripeSetupRef,
