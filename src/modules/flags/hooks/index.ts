@@ -5,3 +5,4 @@ export * from './useSetOrgFlag';
 export * from './useTalentFlagsNotes';
 export * from './useOrgFlagsNotes';
 export * from './useMyActiveFlag';
+export * from './useMyOfficeFlag';

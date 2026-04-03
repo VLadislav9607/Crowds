@@ -1,18 +1,20 @@
 import { View } from 'react-native';
-import { AppText } from '@ui';
-import { AppImage } from '@components';
+import { AppText, Avatar } from '@ui';
+import { TalentFlag } from '@modules/common';
 import { styles } from './styles';
 
 interface EventDetailHeaderProps {
   location?: string;
   date?: string;
   logoPath?: string;
+  officeFlag?: TalentFlag;
 }
 
 export const EventDetailHeader = ({
   location,
   date,
   logoPath,
+  officeFlag,
 }: EventDetailHeaderProps) => {
   return (
     <View style={styles.container}>
@@ -35,10 +37,11 @@ export const EventDetailHeader = ({
           {date}
         </AppText>
       </View>
-      <AppImage
+      <Avatar
+        size={64}
         imgPath={logoPath}
         bucket="brand_avatars"
-        containerStyle={styles.image}
+        flag={officeFlag}
       />
     </View>
   );

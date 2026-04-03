@@ -3,15 +3,17 @@ import { useGetMe } from '@actions';
 import { TalentFlag } from '@modules/common';
 import { ScreenWrapper } from '@components';
 import { COLORS } from '@styles';
-import { RedFlagBanner } from '../RedFlagBanner';
+import { OrgRedFlagBanner } from '../OrgRedFlagBanner';
 
-export const withRedFlagGuard = <P extends object>(
+export const withOrgFlagGuard = <P extends object>(
   WrappedComponent: React.ComponentType<P>,
 ) => {
   const GuardedComponent = (props: P) => {
-    const { talent } = useGetMe();
+    const { organizationMember } = useGetMe();
+    const officeFlag =
+      organizationMember?.current_context?.officeFlag ?? TalentFlag.GREEN;
 
-    if (talent?.flag === TalentFlag.RED || talent?.flag === TalentFlag.BLACK) {
+    if (officeFlag === TalentFlag.RED || officeFlag === TalentFlag.BLACK) {
       return (
         <ScreenWrapper
           headerVariant="withLogo"
@@ -19,7 +21,7 @@ export const withRedFlagGuard = <P extends object>(
           headerStyles={{ backgroundColor: COLORS.black }}
           withBottomTabBar={true}
         >
-          <RedFlagBanner />
+          <OrgRedFlagBanner />
         </ScreenWrapper>
       );
     }

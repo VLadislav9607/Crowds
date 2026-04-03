@@ -14,7 +14,11 @@ import {
   useSubmitTaskPhoto,
   useLocalCurrency,
   useToggleCustomTask,
+  getActiveFlagForTargetAction,
 } from '@actions';
+import { TalentFlag } from '@modules/common';
+import { useQuery } from '@tanstack/react-query';
+import { TANSTACK_QUERY_KEYS } from '@constants';
 import {
   useCreateChatAndNavigate,
   ImageSourcePickerModalData,
@@ -53,6 +57,20 @@ export const TalentEventDetailsScreen = () => {
     event_id: params?.eventId!,
   });
   const { formatLocal } = useLocalCurrency();
+
+  const officeId = event?.office_id;
+  const { data: officeFlag } = useQuery({
+    queryKey: [TANSTACK_QUERY_KEYS.GET_MY_ACTIVE_FLAG, 'office', officeId],
+    queryFn: () =>
+      getActiveFlagForTargetAction({
+        targetType: 'organization',
+        targetId: officeId!,
+      }),
+    enabled: !!officeId,
+    staleTime: Infinity,
+  });
+  const officeFlagStatus =
+    (officeFlag?.status as TalentFlag) ?? TalentFlag.GREEN;
 
   const { mutate: uploadFile, isPending: isUploading } = useBucketUpload({
     onSuccess: data => {
@@ -218,7 +236,10 @@ export const TalentEventDetailsScreen = () => {
       const minutes = Math.floor((diff % 3600000) / 60000);
       const seconds = Math.floor((diff % 60000) / 1000);
       setElapsed(
-        `${String(hours).padStart(2, '0')}:${String(minutes).padStart(2, '0')}:${String(seconds).padStart(2, '0')}`,
+        `${String(hours).padStart(2, '0')}:${String(minutes).padStart(
+          2,
+          '0',
+        )}:${String(seconds).padStart(2, '0')}`,
       );
     };
 
@@ -235,7 +256,10 @@ export const TalentEventDetailsScreen = () => {
     const hours = Math.floor(diff / 3600000);
     const minutes = Math.floor((diff % 3600000) / 60000);
     const seconds = Math.floor((diff % 60000) / 1000);
-    return `${String(hours).padStart(2, '0')}:${String(minutes).padStart(2, '0')}:${String(seconds).padStart(2, '0')}`;
+    return `${String(hours).padStart(2, '0')}:${String(minutes).padStart(
+      2,
+      '0',
+    )}:${String(seconds).padStart(2, '0')}`;
   })();
 
   const checkedInFormatted = event?.checked_in_at
@@ -255,9 +279,12 @@ export const TalentEventDetailsScreen = () => {
   return (
     <EventDetailScreenLayout
       eventTitle={event?.title}
-      eventLocation={event?.event_location?.formatted_address || officeCountryName}
+      eventLocation={
+        event?.event_location?.formatted_address || officeCountryName
+      }
       eventDate={startDateTimeFormatted}
       logoPath={event?.brand_logo_path ?? undefined}
+      officeFlag={officeFlagStatus}
     >
       <View style={styles.container}>
         <If condition={showTaskBanner}>
@@ -354,16 +381,23 @@ export const TalentEventDetailsScreen = () => {
               <AppText typography="regular_14" color="gray">
                 Duration
               </AppText>
-              <AppText typography="semibold_14" color={hasCheckedOut ? 'black' : 'green'}>
+              <AppText
+                typography="semibold_14"
+                color={hasCheckedOut ? 'black' : 'green'}
+              >
                 {hasCheckedOut ? finalDuration : elapsed}
               </AppText>
             </View>
           </View>
         </If>
 
-        <If condition={!isLoading && !!event?.participation_id && !hasCheckedIn}>
+        <If
+          condition={!isLoading && !!event?.participation_id && !hasCheckedIn}
+        >
           <AppButton
-            onPress={() => goToScreen(Screens.BottomTabs, { screen: Screens.TalerQRCode })}
+            onPress={() =>
+              goToScreen(Screens.BottomTabs, { screen: Screens.TalerQRCode })
+            }
             title="Check In"
             wrapperStyles={{ backgroundColor: COLORS.green }}
             titleStyles={{ color: COLORS.white }}
@@ -374,7 +408,9 @@ export const TalentEventDetailsScreen = () => {
           <AppButton
             onPress={() => {
               if (event?.end_at && new Date() < new Date(event.end_at)) {
-                showWarningToast(`The event has not ended yet. You can check out after ${endDateTimeFormatted}`);
+                showWarningToast(
+                  `The event has not ended yet. You can check out after ${endDateTimeFormatted}`,
+                );
                 return;
               }
               goToScreen(Screens.BottomTabs, { screen: Screens.TalerQRCode });

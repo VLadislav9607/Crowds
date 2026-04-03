@@ -12,6 +12,7 @@ export const FLAG_REASONS = {
   terms_violation: 'Terms violation',
   talent_complaint: 'Talent Complaint',
   auto_escalation: 'Auto-escalation from yellow flag',
+  flag_report_resolved: 'Suspended by administrator',
   yellow_flag_auto_expiration: 'Yellow flag automatically expired',
   red_flag_auto_expiration: 'Red flag automatically expired',
 };

@@ -4,6 +4,7 @@ import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { ScreenWithScrollWrapper } from '@components';
 import { EventDetailHeader } from '../../components/EventDetailHeader';
 import { IAppHeaderProps } from '@ui';
+import { TalentFlag } from '@modules/common';
 
 interface EventDetailScreenLayoutProps extends Omit<IAppHeaderProps, 'headerVariant'> {
   children: ReactNode;
@@ -11,6 +12,7 @@ interface EventDetailScreenLayoutProps extends Omit<IAppHeaderProps, 'headerVari
   eventLocation?: string;
   eventDate?: string;
   logoPath?: string;
+  officeFlag?: TalentFlag;
 }
 
 export const EventDetailScreenLayout = ({
@@ -19,6 +21,7 @@ export const EventDetailScreenLayout = ({
   eventLocation,
   eventDate,
   logoPath,
+  officeFlag,
   ...headerProps
 }: EventDetailScreenLayoutProps) => {
   const { bottom } = useSafeAreaInsets();
@@ -33,6 +36,7 @@ export const EventDetailScreenLayout = ({
           location={eventLocation}
           date={eventDate}
           logoPath={logoPath}
+          officeFlag={officeFlag}
         />
       }
       {...headerProps}
