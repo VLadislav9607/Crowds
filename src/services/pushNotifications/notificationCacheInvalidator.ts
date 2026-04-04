@@ -89,30 +89,38 @@ export function invalidateCacheForNotificationType(
           queryKey: [TANSTACK_QUERY_KEYS.GET_MY_ACTIVE_FLAG],
         })
         .then(() => {
-          const flagData =
-            queryClient.getQueryData<GetActiveFlagForTargetRespDto>(
-              queryClient.getQueryCache().findAll({
-                queryKey: [TANSTACK_QUERY_KEYS.GET_MY_ACTIVE_FLAG],
-              })[0]?.queryKey ?? [],
+          const flagQueries = queryClient.getQueryCache().findAll({
+            queryKey: [TANSTACK_QUERY_KEYS.GET_MY_ACTIVE_FLAG],
+          });
+
+          if (flagQueries.length > 0) {
+            const flagData =
+              queryClient.getQueryData<GetActiveFlagForTargetRespDto>(
+                flagQueries[0].queryKey,
+              );
+
+            const newFlag =
+              (flagData?.status as TalentFlag) ?? TalentFlag.GREEN;
+
+            queryClient.setQueryData<UseGetMeResDto>(
+              [TANSTACK_QUERY_KEYS.GET_ME],
+              old => {
+                if (!old?.talent) return old;
+                return {
+                  ...old,
+                  talent: { ...old.talent, flag: newFlag },
+                };
+              },
             );
-
-          const newFlag = (flagData?.status as TalentFlag) ?? TalentFlag.GREEN;
-
-          queryClient.setQueryData<UseGetMeResDto>(
-            [TANSTACK_QUERY_KEYS.GET_ME],
-            old => {
-              if (!old?.talent) return old;
-              return {
-                ...old,
-                talent: { ...old.talent, flag: newFlag },
-              };
-            },
-          );
+          }
+        })
+        .then(() => {
+          // Refresh GET_ME after flag data is applied to avoid race condition
+          queryClient.refetchQueries({
+            queryKey: [TANSTACK_QUERY_KEYS.GET_ME],
+          });
         });
-      // Also refresh org data (officeFlag in GET_ME) and org events
-      queryClient.refetchQueries({
-        queryKey: [TANSTACK_QUERY_KEYS.GET_ME],
-      });
+      // Also refresh org events
       queryClient.refetchQueries({
         queryKey: [TANSTACK_QUERY_KEYS.GET_ORG_EVENTS],
       });

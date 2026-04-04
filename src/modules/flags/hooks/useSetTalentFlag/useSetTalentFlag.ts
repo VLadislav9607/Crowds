@@ -16,7 +16,7 @@ export const useSetTalentFlag = ({
   resetForm,
   closeNoteModal,
 }: UseSetTalentFlagProps) => {
-  const onSuccess = (response: any) => {
+  const onSuccess = async (response: any) => {
     resetForm();
     closeNoteModal();
 
@@ -24,7 +24,7 @@ export const useSetTalentFlag = ({
       showSuccessToast('Flag submitted successfully');
     }, 500);
 
-    Promise.allSettled([
+    await Promise.allSettled([
       queryClient.invalidateQueries({
         queryKey: [TANSTACK_QUERY_KEYS.GET_TALENT_FLAGS, response.talentId],
       }),

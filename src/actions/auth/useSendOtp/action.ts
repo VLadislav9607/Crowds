@@ -4,9 +4,12 @@ import { supabase } from "@services";
 
 export const sendOtpAction = async (body: SendOtpBodyDto): Promise<SendOtpRespDto> => {
     const { data, error } = await supabase.functions.invoke('send-email-otp', {body});
-    if (error && error instanceof FunctionsHttpError) {
-        const errorMessage = await error.context.json();
-        throw errorMessage;
+    if (error) {
+        if (error instanceof FunctionsHttpError) {
+            const errorMessage = await error.context.json();
+            throw errorMessage;
+        }
+        throw error;
     }
     return data;
 };

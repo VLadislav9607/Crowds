@@ -9,9 +9,12 @@ export const verifyOtpAction = async (
         "verify-email-otp",
         { body },
     );
-    if (error && error instanceof FunctionsHttpError) {
-        const errorMessage = await error.context.json();
-        throw errorMessage;
+    if (error) {
+        if (error instanceof FunctionsHttpError) {
+            const errorMessage = await error.context.json();
+            throw errorMessage;
+        }
+        throw error;
     }
     return data;
 };

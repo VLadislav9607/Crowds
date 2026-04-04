@@ -78,7 +78,7 @@ export const TalentLocationSetupForm = forwardRef<
   const onFormReset = () => parsedLocation?.autocomplete_description && reset();
 
   const upsertLocationHandler = useCallback(
-    (data: TalentLocationSetupFormData) => {
+    async (data: TalentLocationSetupFormData) => {
       const isLocationChanged =
         !defaultValues?.parsed_location.place_id ||
         defaultValues?.parsed_location?.place_id !==
@@ -93,13 +93,16 @@ export const TalentLocationSetupForm = forwardRef<
       }
 
       if (data.tax_identification_number) {
-        supabase
+        const { error: tinError } = await supabase
           .from('user_kyc')
           .update({
             tax_identification_number: data.tax_identification_number,
           } as Record<string, unknown>)
-          .eq('user_id', me?.talent?.id ?? '')
-          .then();
+          .eq('user_id', me?.talent?.id ?? '');
+
+        if (tinError) {
+          console.error('Failed to update tax identification number', tinError);
+        }
       }
 
       upsertTalentLocationMutate({
