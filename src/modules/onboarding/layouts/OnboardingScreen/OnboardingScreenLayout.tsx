@@ -24,7 +24,7 @@ interface IOnboardingScreenLayoutProps {
   onForwardPress: () => void;
   footerProps?: Pick<
     IForwardBackArrowsProps,
-    'containerStyle' | 'ForwardButton' | 'hideBack'
+    'containerStyle' | 'ForwardButton' | 'hideBack' | 'hideDots'
   >;
 }
 

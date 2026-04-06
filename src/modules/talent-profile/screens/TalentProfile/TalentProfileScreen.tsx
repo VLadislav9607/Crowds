@@ -65,7 +65,7 @@ export const TalentProfileScreen = () => {
       headerStyles={styles.headerStyles}
       animatedScrollHandler={scrollHandler}
       useAnimatedScrollView
-      customElement={
+      customElementOutside={
         <Animated.View style={[styles.headerContainer, animatedHeaderStyle]}>
           <HeaderTalentProfile
             flag={profile.flag as TalentFlag}

@@ -100,7 +100,7 @@ export const styles = StyleSheet.create({
     flex: 1,
   },
   messageButtonWrapper: {
-    width: 117,
+    width: 90,
   },
   acceptNdaButtonWrapper: {
     backgroundColor: COLORS.red,

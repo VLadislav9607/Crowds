@@ -18,9 +18,7 @@ export const talentLocationSetupSchema = z.object({
     },
     { message: 'Location is required' },
   ),
-  tax_identification_number: z
-    .string()
-    .min(1, 'Tax identification number is required'),
+  tax_identification_number: z.string().optional(),
 });
 
 export interface TalentLocationSetupFormData
@@ -37,4 +35,5 @@ export interface TalentLocationSetupFormState {
 export interface TalentLocationSetupFormProps {
   onFormStateChange?: (state: TalentLocationSetupFormState) => void;
   onSuccess?: () => void;
+  showTaxField?: boolean;
 }

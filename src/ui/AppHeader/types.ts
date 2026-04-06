@@ -38,6 +38,7 @@ export interface IAppHeaderProps {
   headerVariant?: HeaderVariant;
   headerImageBg?: HeaderImageBgType;
   customElement?: React.ReactNode;
+  customElementOutside?: React.ReactNode;
   logoProps?: Partial<SvgProps>;
   headerStyles?: StyleProp<ViewStyle>;
   rightIcons?: {

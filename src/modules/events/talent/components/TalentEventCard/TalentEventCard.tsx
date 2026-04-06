@@ -369,7 +369,7 @@ export const TalentEventCard = ({
                   size="37"
                   icon={ICONS.chats('white')}
                   iconSize={20}
-                  title="Message"
+                  title="Chat"
                   wrapperStyles={styles.messageButtonWrapper}
                   onPress={handleOpenGroupChat}
                 />

@@ -380,6 +380,7 @@ export const useEventControll = ({
       }
 
       if (result.success) {
+        Alert.alert('Успіх', 'Оплата пройшла успішно, альо!', [{ text: 'OK' }]);
         setPendingDto(null);
 
         // Prefetch event data and queue it for display after modal closes

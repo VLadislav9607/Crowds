@@ -1,6 +1,6 @@
 import { OnboardingScreenLayout } from '../../../layouts';
 import { COLORS } from '@styles';
-import { View } from 'react-native';
+import { View, StyleSheet } from 'react-native';
 import { styles } from './styles';
 import { If } from '@components';
 import { useOnboardingAuthTalentScreen } from './useOnboardingAuthTalentScreen';
@@ -71,12 +71,19 @@ export const OnboardingAuthTalentScreen = () => {
 
     if (step === 5) {
       return (
-        <AppButton
-          title="Skip"
-          variant="withBorder"
-          onPress={onStripeSetupSkip}
-          wrapperStyles={styles.flexOne}
-        />
+        <View style={stripeStepStyles.buttonsRow}>
+          <AppButton
+            title="Skip"
+            variant="withBorder"
+            onPress={onStripeSetupSkip}
+            wrapperStyles={stripeStepStyles.buttonFlex}
+          />
+          <AppButton
+            title="Proceed"
+            onPress={() => talentStripeSetupRef.current?.onSetup()}
+            wrapperStyles={stripeStepStyles.buttonFlex}
+          />
+        </View>
       );
     }
     return undefined;
@@ -122,7 +129,8 @@ export const OnboardingAuthTalentScreen = () => {
       footerProps={{
         containerStyle: { paddingHorizontal: 35, paddingTop: 20 },
         ForwardButton: renderForwardButton(),
-        hideBack: step === 6,
+        hideBack: step === 6 || step === 5,
+        hideDots: step === 5,
       }}
       headerProps={
         isProfileSetupStep ? setupProfileHeaderProps : defaultHeaderProps
@@ -142,6 +150,7 @@ export const OnboardingAuthTalentScreen = () => {
             }
             ref={talentLocationSetupFormRef}
             onSuccess={onLocationSetupSuccess}
+            showTaxField
           />
         </If>
 
@@ -188,3 +197,14 @@ export const OnboardingAuthTalentScreen = () => {
     </OnboardingScreenLayout>
   );
 };
+
+const stripeStepStyles = StyleSheet.create({
+  buttonsRow: {
+    flexDirection: 'row',
+    flex: 1,
+    gap: 12,
+  },
+  buttonFlex: {
+    flex: 1,
+  },
+});

@@ -56,7 +56,7 @@ export const ActiveUpcomingEventCard = ({
       <AppButton
         title="VIEW APPLICANTS"
         size="28"
-        width={93}
+        width={120}
         onPress={goToEventApplicants}
         wrapperStyles={cardStyles.transparentButton}
         titleStyles={cardStyles.transparentButtonText}

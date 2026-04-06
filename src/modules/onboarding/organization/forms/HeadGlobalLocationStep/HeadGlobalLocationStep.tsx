@@ -104,11 +104,12 @@ export const HeadGlobalLocationStep = forwardRef<
           render={({ field, fieldState }) => (
             <AppInput
               label="GST/VAT Number"
+              labelProps={{ color: 'black', style: { marginBottom: 0 } }}
               placeholder="Enter your GST/VAT number"
               value={field.value}
               onChangeText={field.onChange}
               errorMessage={fieldState.error?.message}
-              containerStyle={{ marginTop: 12 }}
+              containerStyle={{ marginTop: 24 }}
             />
           )}
         />

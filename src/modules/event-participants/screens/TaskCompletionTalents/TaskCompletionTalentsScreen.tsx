@@ -55,7 +55,7 @@ export const TaskCompletionTalentsScreen = () => {
       },
       onError: (error: any) => {
         setShowSettlementModal(false);
-        const message = error?.message || '';
+        const message = error?.message || 'Settlement failed';
         if (message.includes('aml_blocked')) {
           Alert.alert(
             'Compliance Review in Progress',
@@ -63,7 +63,7 @@ export const TaskCompletionTalentsScreen = () => {
             [{ text: 'OK' }],
           );
         } else {
-          showErrorToast('Settlement failed');
+          Alert.alert('Settlement Error', message, [{ text: 'OK' }]);
         }
       },
     });

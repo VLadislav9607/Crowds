@@ -1,5 +1,5 @@
 import { Modal, StyleSheet, TouchableOpacity, View } from 'react-native';
-import { AppButton, AppText } from '@ui';
+import { AppText } from '@ui';
 import { TalentStripeSetupProps, TalentStripeSetupRef } from './types';
 import { IMAGES } from '@assets';
 import { Image } from 'react-native';
@@ -76,16 +76,6 @@ export const TalentStripeSetup = forwardRef<
           />
         </View>
 
-        <View style={styles.bottomSection}>
-          <AppButton
-            title="Proceed to Add Details"
-            size="60"
-            onPress={() => createAccount({})}
-            isLoading={isCreating}
-            isDisabled={isCreating}
-            wrapperStyles={styles.buttonWrapper}
-          />
-        </View>
       </View>
 
       <Modal

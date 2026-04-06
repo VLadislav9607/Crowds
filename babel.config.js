@@ -37,7 +37,7 @@ module.exports = {
       "module:react-native-dotenv",
       {
         moduleName: "@env",
-        path: ".env.staging",
+        path: process.env.APP_ENV === 'production' ? '.env.prod' : '.env.staging',
         safe: false,
         allowUndefined: true,
         verbose: false

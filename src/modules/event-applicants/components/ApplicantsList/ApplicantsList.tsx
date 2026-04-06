@@ -59,7 +59,7 @@ export const ApplicantsList = ({
         return (
           <AppButton
             icon={ICONS.chats('black')}
-            title="Message"
+            title="Chat"
             isLoading={isSelected && isCreatingChat}
             onPress={() => handlePressMessage(talent)}
             size="28"

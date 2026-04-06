@@ -74,7 +74,7 @@ export const MessageTalentsScreen = () => {
                 renderRightAction={() => (
                   <AppButton
                     icon={ICONS.chats('black')}
-                    title="Message"
+                    title="Chat"
                     isLoading={isSelected && isCreatingChat}
                     onPress={() => chatWithTalent(item)}
                     size="28"

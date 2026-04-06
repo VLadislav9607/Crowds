@@ -11,7 +11,6 @@ export const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
     paddingVertical: 20,
-    paddingHorizontal: 16,
     borderRadius: 16,
     borderWidth: 2,
     borderColor: COLORS.light_gray3,

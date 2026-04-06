@@ -70,7 +70,7 @@ export const PrimaryLocationStep = forwardRef<
 
     const {
       control,
-      formState: { isValid, errors },
+      formState: { isValid },
       handleSubmit,
       getValues,
       resetField,
@@ -80,8 +80,6 @@ export const PrimaryLocationStep = forwardRef<
       mode: 'onBlur',
       defaultValues,
     });
-
-    console.log('errors', errors);
 
     const parsedLocation = watch('parsed_location');
     const isHeadOffice = watch('isHeadOffice');
@@ -108,7 +106,6 @@ export const PrimaryLocationStep = forwardRef<
           control={control}
           name="parsed_location"
           render={({ field, fieldState }) => {
-            console.log('fieldState', field);
             return (
               <PlacesPredictionsInput
                 inputProps={{
@@ -207,6 +204,7 @@ export const PrimaryLocationStep = forwardRef<
           render={({ field, fieldState }) => (
             <AppInput
               label="GST/VAT Number"
+              labelProps={{ color: 'black', style: { marginBottom: 0 } }}
               placeholder="Enter your GST/VAT number"
               value={field.value}
               onChangeText={field.onChange}

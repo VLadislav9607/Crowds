@@ -9,7 +9,7 @@ import {
   useMemo,
 } from 'react';
 import { PlacesPredictionsInput } from '@components';
-import { AppInput, AppText } from '@ui';
+import { AppInput } from '@ui';
 import {
   TalentLocationSetupFormData,
   TalentLocationSetupFormProps,
@@ -20,12 +20,13 @@ import { PlaceAutocompleteType } from '@googlemaps/google-maps-services-js';
 import { useGetMe, useUpsertTalentLocation } from '@actions';
 import { styles } from './styles';
 import { queryClient, supabase } from '@services';
+import { If } from '@components';
 import { TANSTACK_QUERY_KEYS } from '@constants';
 
 export const TalentLocationSetupForm = forwardRef<
   TalentLocationSetupFormRef,
   TalentLocationSetupFormProps
->(({ onFormStateChange, onSuccess }, ref) => {
+>(({ onFormStateChange, onSuccess, showTaxField = false }, ref) => {
   const { data: me } = useGetMe();
 
   const onUpsertLocationSuccess = async () => {
@@ -84,15 +85,15 @@ export const TalentLocationSetupForm = forwardRef<
         defaultValues?.parsed_location?.place_id !==
           data.parsed_location.place_id;
       const isTinChanged =
-        defaultValues?.tax_identification_number !==
-        data.tax_identification_number;
+        showTaxField &&
+        defaultValues?.tax_identification_number !== data.tax_identification_number;
 
       if (!isLocationChanged && !isTinChanged) {
         onSuccess?.();
         return;
       }
 
-      if (data.tax_identification_number) {
+      if (showTaxField && data.tax_identification_number) {
         supabase
           .from('user_kyc')
           .update({
@@ -112,6 +113,7 @@ export const TalentLocationSetupForm = forwardRef<
     [
       defaultValues?.parsed_location.place_id,
       defaultValues?.tax_identification_number,
+      showTaxField,
       onSuccess,
       upsertTalentLocationMutate,
       talentLocation?.id,
@@ -157,28 +159,22 @@ export const TalentLocationSetupForm = forwardRef<
         }}
       />
 
-      <AppText
-        color="main"
-        typography="medium_12"
-        margin={{ top: 24, bottom: 8 }}
-      >
-        We collect this to meet tax requirements so you can get paid without any
-        hiccups. Your information is kept safe and only used where required.
-      </AppText>
-
-      <Controller
-        control={control}
-        name="tax_identification_number"
-        render={({ field, fieldState }) => (
-          <AppInput
-            label="Tax Identification Number"
-            placeholder="Enter your tax identification number"
-            value={field.value}
-            onChangeText={field.onChange}
-            errorMessage={fieldState.error?.message}
-          />
-        )}
-      />
+      <If condition={showTaxField}>
+        <Controller
+          control={control}
+          name="tax_identification_number"
+          render={({ field, fieldState }) => (
+            <AppInput
+              label="Tax Identification Number"
+              placeholder="Enter your tax identification number"
+              description="We collect this to meet tax requirements so you can get paid without any hiccups. Your information is kept safe and only used where required."
+              value={field.value}
+              onChangeText={field.onChange}
+              errorMessage={fieldState.error?.message}
+            />
+          )}
+        />
+      </If>
     </View>
   );
 });
