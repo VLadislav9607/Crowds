@@ -146,6 +146,7 @@ export const TalentLocationSetupForm = forwardRef<
               onChangeText={onFormReset}
               inputProps={{
                 errorMessage: fieldState?.error?.message,
+                placeholder: 'e.g. Melbourne, Australia',
               }}
               onSelectPlace={res =>
                 field.onChange({

@@ -109,7 +109,7 @@ export const PrimaryLocationStep = forwardRef<
             return (
               <PlacesPredictionsInput
                 inputProps={{
-                  placeholder: 'Search primary location',
+                  placeholder: 'e.g. 127 Main Street, New York, USA',
                   errorMessage: fieldState.error?.message,
                 }}
                 types={PlaceAutocompleteType.address}
@@ -164,7 +164,7 @@ export const PrimaryLocationStep = forwardRef<
             render={({ field, fieldState }) => (
               <PlacesPredictionsInput
                 inputProps={{
-                  placeholder: 'Search head office location',
+                  placeholder: 'e.g. 127 Main Street, New York, USA',
                   errorMessage: fieldState.error?.message,
                 }}
                 types={PlaceAutocompleteType.address}

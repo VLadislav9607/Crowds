@@ -213,6 +213,9 @@ export const BasicInfoSection = forwardRef<View>((_props, ref) => {
                 includeTimezone
                 containerStyle={{ marginTop: isMediaProduction ? 0 : 10 }}
                 types={PlaceAutocompleteType.address}
+                inputProps={{
+                  placeholder: 'e.g. 127 Main Street, New York, USA',
+                }}
                 components={
                   countryRestrictions
                     ? [countryRestrictions.join('|')]
