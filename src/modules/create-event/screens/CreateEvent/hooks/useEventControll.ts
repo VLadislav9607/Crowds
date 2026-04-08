@@ -288,8 +288,25 @@ export const useEventControll = ({
     if (!pendingDto) return;
 
     try {
-      // 1. Save event to DB (create draft or update existing)
       const existingDraftId = params?.draftId || createdDraftId;
+
+      // 0. Check if event is already published (retry scenario after race condition)
+      if (existingDraftId) {
+        const { data: eventRow } = await supabase
+          .from('events')
+          .select('status')
+          .eq('id', existingDraftId)
+          .single();
+
+        if (eventRow?.status === 'published') {
+          setPendingDto(null);
+          paymentConfirmationModalRef.current?.close();
+          showSuccessToast('Event published successfully!');
+          return;
+        }
+      }
+
+      // 1. Save event to DB (create draft or update existing)
       let eventId: string;
 
       if (existingDraftId) {
@@ -380,7 +397,6 @@ export const useEventControll = ({
       }
 
       if (result.success) {
-        Alert.alert('Успіх', 'Оплата пройшла успішно, альо!', [{ text: 'OK' }]);
         setPendingDto(null);
 
         // Prefetch event data and queue it for display after modal closes

@@ -76,6 +76,7 @@ export const useErrorsScroll = () => {
       ageGroups: onScrollToAgeGroupsErrorSection,
       paymentMode: paymentSectionRef,
       paymentAmount: paymentSectionRef,
+      fixedRateTotalHours: paymentSectionRef,
       tags: basicInfoSectionRef,
       ndaDocument: otherInfoSectionRef,
     },

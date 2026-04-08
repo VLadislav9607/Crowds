@@ -11,8 +11,11 @@ import { CreateEventFormData } from '../../validation';
 export const PaymentSection = forwardRef<View>((_props, ref) => {
   const {
     control,
+    watch,
     formState: { errors },
   } = useFormContext<CreateEventFormData>();
+
+  const paymentMode = watch('paymentMode');
 
   return (
     <View ref={ref} collapsable={false} style={styles.container}>
@@ -43,12 +46,10 @@ export const PaymentSection = forwardRef<View>((_props, ref) => {
             <AppInput
               value={value ? String(value) : ''}
               onChangeText={text => {
-                // Якщо текст порожній або "0" - передаємо undefined
                 if (!text || text.trim() === '' || text.trim() === '0') {
                   onChange(undefined);
                 } else {
                   const numValue = Number(text);
-                  // Якщо число валідне і більше 0 - передаємо його
                   if (!isNaN(numValue) && numValue > 0) {
                     onChange(numValue);
                   } else {
@@ -58,13 +59,41 @@ export const PaymentSection = forwardRef<View>((_props, ref) => {
               }}
               keyboardType="numeric"
               errorMessage={errors.paymentAmount?.message}
-              placeholder="$15 minimum"
+              placeholder={paymentMode === 'fixed' ? 'Total fixed amount (USD)' : '$15.00 minimum (USD)'}
               description="Minimum 3-hour payment applies, even for 1-hour shifts (legal requirement)."
               containerStyle={styles.paymentAmountInput}
             />
           );
         }}
       />
+
+      {paymentMode === 'fixed' && (
+        <Controller
+          control={control}
+          name="fixedRateTotalHours"
+          render={({ field: { value, onChange } }) => (
+            <AppInput
+              value={value ? String(value) : ''}
+              onChangeText={text => {
+                if (!text || text.trim() === '' || text.trim() === '0') {
+                  onChange(undefined);
+                } else {
+                  const numValue = Number(text);
+                  if (!isNaN(numValue) && numValue > 0) {
+                    onChange(numValue);
+                  } else {
+                    onChange(undefined);
+                  }
+                }
+              }}
+              keyboardType="numeric"
+              errorMessage={errors.fixedRateTotalHours?.message}
+              placeholder="Total hours of work"
+              description="Total planned hours across the full engagement period. Minimum $9.50 USD per hour applies."
+            />
+          )}
+        />
+      )}
     </View>
   );
 });

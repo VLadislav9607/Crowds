@@ -52,6 +52,7 @@ const CustomTaskRow = ({
         placeholder="E.g., Please wear a white t-shirt"
         placeholderTextColor={COLORS.gray}
         maxLength={MAX_CHARACTERS}
+        allowFontScaling={false}
       />
       <IconButton
         icon={ICONS.trash('red')}
