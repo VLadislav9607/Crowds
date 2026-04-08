@@ -35,21 +35,26 @@ export const TaskCompletionCard = memo(
     onReject,
   }: TaskCompletionCardProps) => {
     const isRejected = item.task_status === 'rejected';
+    const isLocked = isSettled && item.payout_status !== 'failed';
     const duration = formatDuration(item.checked_in_at, item.checked_out_at);
     const statusConfig =
       STATUS_CONFIG[item.task_status] ?? STATUS_CONFIG.submitted;
 
-    const payoutConfig = item.payout_status
-      ? PAYOUT_STATUS_CONFIG[item.payout_status]
+    const effectivePayoutKey =
+      isSettled && !item.stripe_payouts_enabled
+        ? 'no_stripe'
+        : item.payout_status ?? undefined;
+    const payoutConfig = effectivePayoutKey
+      ? PAYOUT_STATUS_CONFIG[effectivePayoutKey]
       : null;
 
     return (
       <Pressable
         style={[styles.card, isRejected && styles.cardRejected]}
-        onPress={isSettled ? undefined : onToggleSelect}
-        disabled={isSettled}
+        onPress={isLocked ? undefined : onToggleSelect}
+        disabled={isLocked}
       >
-        {!isSettled && (
+        {!isLocked && (
           <View pointerEvents="none">
             <AppCheckbox
               checked={isSelected}
@@ -130,7 +135,7 @@ export const TaskCompletionCard = memo(
           </Pressable>
         )}
 
-        {!isSettled && !isRejected && (
+        {!isLocked && !isRejected && (
           <Pressable
             style={styles.rejectBtn}
             hitSlop={8}

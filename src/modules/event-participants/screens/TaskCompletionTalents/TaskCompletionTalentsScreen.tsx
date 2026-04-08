@@ -1,5 +1,5 @@
 import { useCallback, useMemo, useState } from 'react';
-import { Alert, Pressable, View } from 'react-native';
+import { Pressable, View } from 'react-native';
 
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { useQueryClient } from '@tanstack/react-query';
@@ -18,11 +18,17 @@ import {
   useGetEventPayment,
   useProcessEventSettlement,
   TaskCompletionTalentDto,
+  ProcessEventSettlementBodyDto,
 } from '@actions';
 import { TANSTACK_QUERY_KEYS } from '@constants';
 import { Screens, useScreenNavigation } from '@navigation';
 import { TaskCompletionCard } from '../../components';
-import { RejectTaskModal, SettlementConfirmModal } from '../../modals';
+import {
+  RejectTaskModal,
+  SettlementConfirmModal,
+  SettlementIssuesModal,
+  FailedPayoutItem,
+} from '../../modals';
 import { showSuccessToast, showErrorToast } from '@helpers';
 import { AppButton, AppText } from '@ui';
 import { styles } from './styles';
@@ -49,22 +55,35 @@ export const TaskCompletionTalentsScreen = () => {
   const { data: eventPayment } = useGetEventPayment(eventId);
   const { mutate: processSettlement, isPending: isSettling } =
     useProcessEventSettlement({
-      onSuccess: () => {
-        showSuccessToast('Settlement completed successfully');
+      onSuccess: (data, _variables) => {
+        const variables = _variables as ProcessEventSettlementBodyDto;
         setShowSettlementModal(false);
+        if (data.failedPayouts?.length > 0) {
+          const items: FailedPayoutItem[] = data.failedPayouts.map(fp => {
+            const talent = talents.find(t => t.talentId === fp.talentId);
+            return {
+              name: talent?.name ?? 'Unknown talent',
+              reason: fp.reason,
+            };
+          });
+          const approvedCount = (variables?.talentDecisions ?? []).filter(
+            d => d.approved,
+          ).length;
+          setTimeout(() => {
+            setSettlementIssues(items);
+            setSettlementSuccessCount(Math.max(0, approvedCount - data.failedPayouts.length));
+          }, 400);
+        } else {
+          showSuccessToast('Settlement completed successfully');
+        }
       },
       onError: (error: any) => {
         setShowSettlementModal(false);
-        const message = error?.message || 'Settlement failed';
-        if (message.includes('aml_blocked')) {
-          Alert.alert(
-            'Compliance Review in Progress',
-            'Your organization is currently undergoing a compliance review. This is a standard procedure to ensure regulatory requirements are met. You will be able to process payments once the review is complete. We appreciate your patience.',
-            [{ text: 'OK' }],
-          );
-        } else {
-          Alert.alert('Settlement Error', message, [{ text: 'OK' }]);
-        }
+        showErrorToast(
+          error?.message?.includes('aml_blocked')
+            ? 'Compliance review in progress. Payments will be available once the review is complete.'
+            : error?.message || 'Settlement failed',
+        );
       },
     });
   const { mutate: reviewTask } = useReviewTaskCompletion({
@@ -80,6 +99,8 @@ export const TaskCompletionTalentsScreen = () => {
   const [rejectId, setRejectId] = useState<string | null>(null);
   const [selectedIds, setSelectedIds] = useState<Set<string>>(new Set());
   const [showSettlementModal, setShowSettlementModal] = useState(false);
+  const [settlementIssues, setSettlementIssues] = useState<FailedPayoutItem[]>([]);
+  const [settlementSuccessCount, setSettlementSuccessCount] = useState(0);
 
   const talents = useMemo(
     () => data?.pages.flatMap(page => page.data) ?? [],
@@ -90,7 +111,11 @@ export const TaskCompletionTalentsScreen = () => {
     talents.length > 0 && talents[0].settlement_status === 'completed';
 
   const selectableIds = talents
-    .filter(t => t.task_status !== 'rejected')
+    .filter(
+      t =>
+        t.task_status !== 'rejected' &&
+        !(isSettled && t.payout_status !== 'failed'),
+    )
     .map(t => t.taskCompletionId);
   const allSelected =
     selectableIds.length > 0 && selectableIds.every(id => selectedIds.has(id));
@@ -231,7 +256,7 @@ export const TaskCompletionTalentsScreen = () => {
       contentContainerStyle={styles.contentContainer}
     >
       <If condition={hasAccess}>
-        {!isSettled && talents.length > 0 && (
+        {selectableIds.length > 0 && (
           <Pressable onPress={toggleSelectAll} style={styles.selectAllRow}>
             <AppText typography="bold_14" color="main">
               {allSelected ? 'Deselect All' : 'Select All'}
@@ -257,7 +282,7 @@ export const TaskCompletionTalentsScreen = () => {
           showBottomLoader={isFetchingNextPage}
         />
 
-        {!isSettled && selectedIds.size > 0 && (
+        {selectedIds.size > 0 && (
           <View
             style={[styles.bottomBar, { paddingBottom: insets.bottom || 24 }]}
           >
@@ -297,10 +322,18 @@ export const TaskCompletionTalentsScreen = () => {
           isLoading={isSettling}
           preview={settlementPreview}
         />
+
       </If>
       <If condition={!hasAccess}>
         <NoAccess />
       </If>
+
+      <SettlementIssuesModal
+        isVisible={settlementIssues.length > 0}
+        onClose={() => setSettlementIssues([])}
+        failedPayouts={settlementIssues}
+        successCount={settlementSuccessCount}
+      />
     </ScreenWrapper>
   );
 };

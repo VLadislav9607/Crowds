@@ -9,7 +9,13 @@ export interface ProcessEventSettlementBodyDto {
   talentDecisions: TalentDecision[];
 }
 
+export interface FailedPayout {
+  talentId: string;
+  reason: 'no_connect_account' | 'transfer_failed';
+}
+
 export interface ProcessEventSettlementResDto {
   eventId: string;
   status: 'settled' | 'already_settled';
+  failedPayouts: FailedPayout[];
 }
