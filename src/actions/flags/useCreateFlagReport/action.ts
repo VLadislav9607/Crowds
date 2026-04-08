@@ -9,7 +9,7 @@ export const createFlagReportAction = async (
   body: CreateFlagReportBodyDto,
 ): Promise<CreateFlagReportRespDto> => {
   const { data, error } = await supabase.functions.invoke(
-    'create-flag-report',
+    'create-black-flag-report',
     {
       body,
     },

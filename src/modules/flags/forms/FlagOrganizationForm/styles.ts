@@ -9,7 +9,7 @@ export const styles = StyleSheet.create({
   flagOptions: {
     flexDirection: 'row',
     justifyContent: 'space-between',
-    marginTop: 12,
+    paddingTop: 12,
     paddingHorizontal: 24,
   },
   flagCircle: {
