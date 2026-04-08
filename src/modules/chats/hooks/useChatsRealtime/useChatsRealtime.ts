@@ -3,7 +3,6 @@ import { useEffect } from 'react';
 import { realtimeService, supabase } from '@services';
 import { useGetMe } from '@actions';
 import { chatsCache } from '../../cache';
-import { Platform } from 'react-native';
 
 let cachedAuthUid: string | null = null;
 
@@ -27,8 +26,6 @@ export const useChatsRealtime = (enabled = true) => {
         table: 'chats',
         event: '*',
         onPayload: payload => {
-          console.log(`payload ${Platform.OS}`, payload);
-
           const chat = payload.new as any;
           const oldChat = payload.old as any;
 

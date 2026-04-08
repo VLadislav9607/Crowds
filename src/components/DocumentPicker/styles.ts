@@ -17,7 +17,7 @@ export const styles = StyleSheet.create({
   textWrapper: {
     flexDirection: 'row',
     alignItems: 'center',
-    gap: 8,
     flex: 1,
+    paddingRight: 16,
   },
 });

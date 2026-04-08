@@ -62,6 +62,7 @@ export const AppInput = ({
             editable={!props.disabled}
             {...props}
             secureTextEntry={isHidden}
+            allowFontScaling={false}
           />
 
           {props.secureTextEntry && (

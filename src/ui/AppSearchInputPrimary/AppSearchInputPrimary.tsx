@@ -26,6 +26,7 @@ export const AppSearchInputPrimary = ({
         numberOfLines={1}
         multiline={false}
         {...props}
+        allowFontScaling={false}
       />
 
       <SvgXml

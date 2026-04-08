@@ -15,6 +15,7 @@ export const AppText = ({
 
   return (
     <Text
+      allowFontScaling={false}
       {...props}
       style={[
         {

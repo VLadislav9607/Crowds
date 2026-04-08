@@ -50,6 +50,7 @@ export const AppTextarea = ({
           textAlignVertical="top"
           multiline={true}
           {...props}
+          allowFontScaling={false}
         />
       </View>
 
