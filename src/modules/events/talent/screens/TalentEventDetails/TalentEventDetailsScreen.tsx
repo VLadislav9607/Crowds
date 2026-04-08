@@ -30,7 +30,6 @@ import {
   showSuccessToast,
   showErrorToast,
   showInfoToast,
-  showWarningToast,
 } from '@helpers';
 import { formatInTimeZone } from 'date-fns-tz';
 import RNCalendarEvents from 'react-native-calendar-events';
@@ -391,6 +390,17 @@ export const TalentEventDetailsScreen = () => {
           </View>
         </If>
 
+        <EventDetailsTextBlock
+          label="How To Check In and Out"
+          text={
+            'Talent can check in for events using the green check in button.\n\n' +
+            'If your event is on premise (on site) your event organiser will have a printed QR for you to scan in and out.\n\n' +
+            'If you are being sent product, your event organiser may elect to post your QR code to you with your product. QR codes may also arrive digitally in your messages to be downloaded and printed and or sent to your email.\n\n' +
+            'Please make sure you read the full description and follow the tasks exactly; and contact your organiser if unsure.\n\n' +
+            'QR codes are unique to your biometric ID and cannot be recognised and or scanned by any other person and or device. If you attempt to scan with another device that does not have your CrowdsNow ID attached you may be permanently banned from the platform.'
+          }
+        />
+
         <If
           condition={!isLoading && !!event?.participation_id && !hasCheckedIn}
         >
@@ -406,15 +416,9 @@ export const TalentEventDetailsScreen = () => {
 
         <If condition={!isLoading && hasCheckedIn && !hasCheckedOut}>
           <AppButton
-            onPress={() => {
-              if (event?.end_at && new Date() < new Date(event.end_at)) {
-                showWarningToast(
-                  `The event has not ended yet. You can check out after ${endDateTimeFormatted}`,
-                );
-                return;
-              }
-              goToScreen(Screens.BottomTabs, { screen: Screens.TalerQRCode });
-            }}
+            onPress={() =>
+              goToScreen(Screens.BottomTabs, { screen: Screens.TalerQRCode })
+            }
             title="Check Out"
             wrapperStyles={{ backgroundColor: COLORS.red }}
             titleStyles={{ color: COLORS.white }}

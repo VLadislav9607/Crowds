@@ -92,9 +92,6 @@ export const QRCodeScanTab = () => {
     },
     onSuccess: data => {
       handleScanSuccess(data);
-      setTimeout(() => {
-        scanLockRef.current = false;
-      }, SCAN_QR_CODE_LOCK_TIME);
     },
   });
 

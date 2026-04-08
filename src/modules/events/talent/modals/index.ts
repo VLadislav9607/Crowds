@@ -5,3 +5,4 @@ export * from './TalentEventApplyConfirmModal';
 export * from './CancelEventAttendanceModal';
 export * from './TalentEventCheckinModal';
 export * from './TalentEventCheckoutModal';
+export * from './DeclineProposalModal';

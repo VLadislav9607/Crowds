@@ -82,5 +82,15 @@ export const convertFiltersToSearchParams = (
     params.filter_category_id = filters.categoryId;
   }
 
+  // Фільтр за субкатегоріями
+  if (filters.subcategoryIds?.length) {
+    params.filter_subcategory_ids = filters.subcategoryIds;
+  }
+
+  // Фільтр за тегами
+  if (filters.tagIds?.length) {
+    params.filter_tag_ids = filters.tagIds;
+  }
+
   return params;
 };

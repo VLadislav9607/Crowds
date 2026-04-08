@@ -17,6 +17,7 @@ import {
 import { COLORS, TYPOGRAPHY } from '@styles';
 import { useBoolean } from '@hooks';
 import { SelectEventCategoryField } from '@modules/events/components';
+import { SubcategoriesPicker, TagsPicker } from '@modules/common';
 
 export const TalentEventsFilterModal = ({
   bottomSheetRef,
@@ -300,13 +301,38 @@ export const TalentEventsFilterModal = ({
 
             <SelectEventCategoryField
               selectedCategoryId={filters.categoryId}
-              onChange={category =>
-                onChangeFiltersData('categoryId', category.id)
-              }
+              onChange={category => {
+                setFilters(prev => ({
+                  ...prev,
+                  categoryId: category.id,
+                  subcategoryIds: undefined,
+                  tagIds: undefined,
+                }));
+              }}
               fieldProps={{
                 label: 'Category',
                 placeholderText: 'Select category',
                 labelProps: { typography: 'h5', color: 'black' },
+              }}
+            />
+
+            <SubcategoriesPicker
+              selectedCategoryIds={filters.categoryId ? [filters.categoryId] : []}
+              selectedSubcategories={filters.subcategoryIds ?? []}
+              onSubcategoriesChange={subcategoryIds => {
+                setFilters(prev => ({
+                  ...prev,
+                  subcategoryIds: subcategoryIds.length ? subcategoryIds : undefined,
+                  tagIds: undefined,
+                }));
+              }}
+            />
+
+            <TagsPicker
+              selectedSubcategoryIds={filters.subcategoryIds ?? []}
+              selectedTags={filters.tagIds ?? []}
+              onTagsChange={tagIds => {
+                onChangeFiltersData('tagIds', tagIds.length ? tagIds : undefined);
               }}
             />
           </View>

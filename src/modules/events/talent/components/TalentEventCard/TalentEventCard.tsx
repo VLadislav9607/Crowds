@@ -333,12 +333,7 @@ export const TalentEventCard = ({
               onPress={handleDecline}
             />
           </If>
-          <If
-            condition={
-              eventCardType === 'proposed' ||
-              (eventCardType === 'denied' && !!event?.can_reaccept)
-            }
-          >
+          <If condition={eventCardType === 'proposed'}>
             <AppButton
               title="Accept"
               size="36"

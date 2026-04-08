@@ -19,6 +19,10 @@ const getStatusLabel = (status: string): string => {
       return 'Approved';
     case 'paid':
       return 'Paid';
+    case 'rejected':
+      return 'Rejected';
+    case 'failed':
+      return 'Failed';
     default:
       return status;
   }
@@ -30,6 +34,9 @@ const getStatusColor = (status: string): string => {
       return COLORS.green;
     case 'approved':
       return COLORS.main;
+    case 'rejected':
+    case 'failed':
+      return COLORS.red;
     default:
       return COLORS.yellow;
   }
@@ -41,6 +48,9 @@ const getStatusTextColor = (status: string): string => {
       return COLORS.green;
     case 'approved':
       return COLORS.main;
+    case 'rejected':
+    case 'failed':
+      return COLORS.red;
     default:
       return COLORS.orange;
   }
@@ -107,6 +117,17 @@ export const PaymentHistoryCard = ({ event }: PaymentHistoryCardProps) => {
       <DashedLine strokeDasharray="3 3" />
       <View style={styles.footer}>
         <View style={styles.footerContent}>
+          <If
+            condition={
+              (event.payout_status === 'rejected' ||
+                event.payout_status === 'failed') &&
+              !!event.rejection_reason
+            }
+          >
+            <AppText typography="medium_12" style={{ color: COLORS.red }}>
+              {event.rejection_reason}
+            </AppText>
+          </If>
           <View style={styles.detailsRow}>
             <If condition={!!startAt}>
               <IconText
