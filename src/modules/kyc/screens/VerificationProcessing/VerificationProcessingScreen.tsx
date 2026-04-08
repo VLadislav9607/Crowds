@@ -12,6 +12,7 @@ export const VerificationProcessingScreen = () => {
     isFailed,
     isUnderage,
     isDobNotFound,
+    isClientDataConsistency,
     isExpiredDocument,
   } = useVerificationProcessing();
 
@@ -64,6 +65,25 @@ export const VerificationProcessingScreen = () => {
           >
             We couldn't extract your date of birth from the document. Please try
             again with a clearer photo of your ID.
+          </AppText>
+          <AppButton
+            title="Try Again"
+            onPress={handleRetry}
+            wrapperStyles={styles.retryButton}
+          />
+        </>
+      ) : isClientDataConsistency ? (
+        <>
+          <AppText typography="bold_20" color="black" style={styles.title}>
+            Information Mismatch
+          </AppText>
+          <AppText
+            typography="medium_16"
+            color="gray_primary"
+            style={styles.description}
+          >
+            The details on your document don't match the information you
+            provided. Please try again and ensure your details are accurate.
           </AppText>
           <AppButton
             title="Try Again"

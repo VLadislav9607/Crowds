@@ -40,7 +40,8 @@ export const headGlobalLocationFormSchema = z.object({
     },
     { message: 'Head office location is required' },
   ),
-  vat_number: z.string().min(1, 'GST/VAT number is required'),
+  vat_number: z.string().min(1, 'Company business number is required'),
+  is_tax_registered: z.boolean().optional(),
 });
 
 export interface HeadGlobalLocationFormData

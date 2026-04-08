@@ -6,6 +6,7 @@ import { goToScreen, goBack, Screens, RootStackParamList } from '@navigation';
 import {
   useIsUserVerified,
   invalidateUserKycStatus,
+  removeUserKycStatus,
 } from '../../hooks/useIsUserVerified';
 
 type VerificationProcessingRoute = RouteProp<
@@ -14,7 +15,7 @@ type VerificationProcessingRoute = RouteProp<
 >;
 
 type VerificationState = 'pending' | 'completed' | 'failed' | 'expired_document';
-type FailureReason = 'underage' | 'dob_not_found' | null;
+type FailureReason = 'underage' | 'dob_not_found' | 'client_data_consistency' | null;
 
 const TOTAL_CHECKS = 2;
 const ANIMATION_STEP_MS = 300;
@@ -27,13 +28,21 @@ export const useVerificationProcessing = () => {
   const { mutateAsync: updateTalent } = useUpdateTalent();
   const userId = me?.id || '';
 
+  // Clear stale KYC cache on mount so we always start from a fresh pending state
+  useEffect(() => {
+    if (userId) {
+      removeUserKycStatus(userId);
+    }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
   const [state, setState] = useState<VerificationState>('pending');
   const [failureReason, setFailureReason] = useState<FailureReason>(null);
   const [displayedChecks, setDisplayedChecks] = useState(0);
   const hasNavigatedRef = useRef(false);
   const animatingRef = useRef(false);
 
-  const { kycStatus, checksPassed, failureReason: kycFailureReason } = useIsUserVerified({
+  const { kycStatus, checksPassed, failureReason: kycFailureReason, isFetching } = useIsUserVerified({
     userId,
     refetchInterval: state === 'pending' ? 3000 : false,
   });
@@ -92,11 +101,11 @@ export const useVerificationProcessing = () => {
       setState('completed');
     } else if (kycStatus === 'expired_document' && state !== 'expired_document') {
       setState('expired_document');
-    } else if (kycStatus === 'failed' && state !== 'failed') {
+    } else if (kycStatus === 'failed' && state !== 'failed' && !isFetching) {
       setState('failed');
       setFailureReason(kycFailureReason);
     }
-  }, [kycStatus, state]);
+  }, [kycStatus, state, isFetching, kycFailureReason]);
 
   // Navigate after animation finishes and state is completed
   useEffect(() => {
@@ -161,6 +170,7 @@ export const useVerificationProcessing = () => {
     isFailed: state === 'failed',
     isUnderage: state === 'failed' && failureReason === 'underage',
     isDobNotFound: state === 'failed' && failureReason === 'dob_not_found',
+    isClientDataConsistency: state === 'failed' && failureReason === 'client_data_consistency',
     isExpiredDocument: state === 'expired_document',
   };
 };

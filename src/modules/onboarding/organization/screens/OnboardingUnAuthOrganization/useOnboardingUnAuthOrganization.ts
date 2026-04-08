@@ -28,7 +28,8 @@ import {
 } from '@actions';
 import { showErrorToast, showMutationErrorToast } from '@helpers';
 import { CreatePasswordFormRef } from '../../../forms';
-import { supabase } from '@services';
+import { supabase, queryClient } from '@services';
+import { TANSTACK_QUERY_KEYS } from '@constants';
 import { UINSaveConfirmationModalRef } from '../../../modals';
 import { NetworkSetupStepRef } from '../../forms/NetworkSetupStep';
 
@@ -69,6 +70,7 @@ export const useOnboardingUnAuthOrganization = () => {
       access_token: responseData.session.access_token,
       refresh_token: responseData.session.refresh_token,
     });
+    queryClient.removeQueries({ queryKey: [TANSTACK_QUERY_KEYS.GET_ME] });
     const userData = await prefetchUseGetMe();
     if (data.image) {
       const uploadResult = await bucketUploadMutateAsync({
@@ -80,6 +82,7 @@ export const useOnboardingUnAuthOrganization = () => {
         brand_id: userData.organizationMember?.current_context?.brand?.id!,
         logo_path: uploadResult.uploadedFile.path,
       });
+      queryClient.removeQueries({ queryKey: [TANSTACK_QUERY_KEYS.GET_ME] });
     }
 
     uinSaveConfirmationModalRef.current?.open({

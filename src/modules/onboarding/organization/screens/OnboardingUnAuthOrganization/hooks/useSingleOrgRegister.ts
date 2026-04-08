@@ -92,10 +92,6 @@ export const useSingleOrgRegister = ({
 
     console.log('data', data);
     if (step === 1) {
-      if (!data.image) {
-        showErrorToast('Please add your brand logo');
-        return;
-      }
       primaryLocationFormRef.current?.handleSubmit(
         handlePrimaryLocationFormSubmit,
         error => {

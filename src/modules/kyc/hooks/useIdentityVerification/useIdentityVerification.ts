@@ -4,6 +4,7 @@ import { useCreateKycSdkToken, useCreateKycChecks, useGetMe } from '@actions';
 import { startSafe } from '@complycube/react-native';
 import { APP_ID } from '@constants';
 import { goToScreen, Screens } from '@navigation';
+import { removeUserKycStatus } from '../../hooks/useIsUserVerified';
 
 type VerificationOrigin = 'talent_onboarding' | 'org_onboarding' | 'profile';
 
@@ -118,12 +119,16 @@ export const useIdentityVerification = (
       if (outcome.status === 'success') {
         const { documentId, livePhotoId } = parseSdkResult(outcome.result);
 
-        // Navigate immediately, create checks in background
-        goToScreen(Screens.VerificationProcessing, { origin });
+        // Clear stale KYC cache
+        removeUserKycStatus(userId);
 
-        createKycChecks({ clientId, documentId, livePhotoId }).catch(error => {
+        // Wait for checks to be created — this resets status to 'pending' in DB
+        // before we navigate, so VerificationProcessing never sees stale 'failed'
+        await createKycChecks({ clientId, documentId, livePhotoId }).catch(error => {
           console.error('[KYC] Failed to create checks:', error);
         });
+
+        goToScreen(Screens.VerificationProcessing, { origin });
       }
     },
     [createKycChecks, origin],

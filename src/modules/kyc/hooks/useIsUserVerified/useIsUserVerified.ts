@@ -11,6 +11,12 @@ export const invalidateUserKycStatus = (userId: string) => {
   });
 };
 
+export const removeUserKycStatus = (userId: string) => {
+  queryClient.removeQueries({
+    queryKey: [USER_KYC_STATUS_QUERY_KEY, userId],
+  });
+};
+
 export const useIsUserVerified = ({
   userId,
   enabled = true,

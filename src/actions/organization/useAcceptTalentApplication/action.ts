@@ -16,8 +16,12 @@ export const acceptTalentApplicationAction = async (
   );
 
   if (error && error instanceof FunctionsHttpError) {
-    const errorMessage = await error.context.json();
-    console.log('errorMessage', errorMessage);
+    let errorMessage: any;
+    try {
+      errorMessage = await error.context.json();
+    } catch {
+      throw { message: 'Failed to accept application' };
+    }
     throw errorMessage;
   }
 

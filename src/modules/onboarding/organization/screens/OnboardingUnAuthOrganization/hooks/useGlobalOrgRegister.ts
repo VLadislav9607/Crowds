@@ -101,9 +101,6 @@ export const useGlobalOrgRegister = ({
   const handleHeadGlobalLocationFormSubmit = async (
     values: HeadGlobalLocationFormData,
   ) => {
-    if (!data.image) {
-      return;
-    }
     setData((prev: OnboardingOrganizationData) => ({
       ...prev,
       headGlobalLocationFormData: values,
@@ -156,9 +153,6 @@ export const useGlobalOrgRegister = ({
 
     // Step 3 + offset: Head Global Location
     if (step === 3 + offset) {
-      if (!data.image) {
-        showErrorToast('Please add your brand logo');
-      }
       headGlobalLocationFormRef?.current?.handleSubmit(
         handleHeadGlobalLocationFormSubmit,
         () => {},

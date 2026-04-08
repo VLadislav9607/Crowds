@@ -50,6 +50,7 @@ export const PrimaryLocationStep = forwardRef<
         ? defaultValuesExternal
         : {
             isHeadOffice: true,
+            is_tax_registered: false,
             parsed_location: {
               autocomplete_description: '',
               city: '',
@@ -203,13 +204,30 @@ export const PrimaryLocationStep = forwardRef<
           name="vat_number"
           render={({ field, fieldState }) => (
             <AppInput
-              label="GST/VAT Number"
+              label="Company Business Number / Company Identification Number"
               labelProps={{ color: 'black', style: { marginBottom: 0 } }}
-              placeholder="Enter your GST/VAT number"
+              placeholder="Enter your company business or identification number"
               value={field.value}
               onChangeText={field.onChange}
               errorMessage={fieldState.error?.message}
               containerStyle={styles.checkboxListContainer}
+            />
+          )}
+        />
+
+        <Controller
+          control={control}
+          name="is_tax_registered"
+          render={({ field }) => (
+            <CheckboxList
+              label="Are you registered for tax (goods and/or services) relevant to your business in your respective state or country?"
+              containerStyle={styles.checkboxListContainer}
+              items={[
+                { label: 'Yes', value: 'yes' },
+                { label: 'No', value: 'no' },
+              ]}
+              checkedValues={field.value === true ? 'yes' : field.value === false && field.value !== undefined ? 'no' : undefined}
+              onCheckboxPress={item => field.onChange(item.value === 'yes')}
             />
           )}
         />

@@ -5,7 +5,7 @@ import { forwardRef, useEffect, useImperativeHandle, useRef } from 'react';
 
 import { AppInput, AppText } from '@ui';
 import { COLORS, TYPOGRAPHY } from '@styles';
-import { AppImage, PlacesPredictionsInput } from '@components';
+import { AppImage, CheckboxList, PlacesPredictionsInput } from '@components';
 import { PlaceAutocompleteType } from '@googlemaps/google-maps-services-js';
 
 import {
@@ -40,8 +40,8 @@ export const HeadGlobalLocationStep = forwardRef<
     const imageSourcePickerModalRef =
       useRef<BottomSheetModal<ImageSourcePickerModalData>>(null);
 
-    const defaultValues: HeadGlobalLocationFormData | undefined =
-      defaultValuesExternal ? defaultValuesExternal : undefined;
+    const defaultValues: Partial<HeadGlobalLocationFormData> =
+      defaultValuesExternal ?? { is_tax_registered: false };
 
     const {
       control,
@@ -53,7 +53,7 @@ export const HeadGlobalLocationStep = forwardRef<
     } = useForm<HeadGlobalLocationFormData>({
       resolver: zodResolver(headGlobalLocationFormSchema),
       mode: 'onBlur',
-      defaultValues: defaultValues,
+      defaultValues,
     });
 
     const parsedLocation = watch('parsed_location');
@@ -103,13 +103,30 @@ export const HeadGlobalLocationStep = forwardRef<
           name="vat_number"
           render={({ field, fieldState }) => (
             <AppInput
-              label="GST/VAT Number"
+              label="Company Business Number / Company Identification Number"
               labelProps={{ color: 'black', style: { marginBottom: 0 } }}
-              placeholder="Enter your GST/VAT number"
+              placeholder="Enter your company business or identification number"
               value={field.value}
               onChangeText={field.onChange}
               errorMessage={fieldState.error?.message}
               containerStyle={{ marginTop: 24 }}
+            />
+          )}
+        />
+
+        <Controller
+          control={control}
+          name="is_tax_registered"
+          render={({ field }) => (
+            <CheckboxList
+              label="Are you registered for tax (goods and/or services) relevant to your business in your respective state or country?"
+              containerStyle={{ marginTop: 24 }}
+              items={[
+                { label: 'Yes', value: 'yes' },
+                { label: 'No', value: 'no' },
+              ]}
+              checkedValues={field.value === true ? 'yes' : field.value === false && field.value !== undefined ? 'no' : undefined}
+              onCheckboxPress={item => field.onChange(item.value === 'yes')}
             />
           )}
         />
