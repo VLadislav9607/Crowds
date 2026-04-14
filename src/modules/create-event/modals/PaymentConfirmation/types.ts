@@ -4,6 +4,7 @@ export interface PaymentConfirmationData {
   eventId: string;
   talentBudgetCents: number;
   commissionCents: number;
+  surchargeCents: number;
   totalChargeCents: number;
   totalHeadcount: number;
   eventDurationHours: number | null;

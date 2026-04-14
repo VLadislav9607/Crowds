@@ -91,10 +91,19 @@ export const PaymentConfirmationModal = forwardRef<
 
         <View style={styles.row}>
           <AppText typography="regular_14" color="black_60">
-            Crowds commission (20%)
+            Platform fee (20%)
           </AppText>
           <AppText typography="bold_14" color="black">
             {formatCents(refProps.commissionCents)}
+          </AppText>
+        </View>
+
+        <View style={styles.row}>
+          <AppText typography="regular_14" color="black_60">
+            Card processing fee (5%)
+          </AppText>
+          <AppText typography="bold_14" color="black">
+            {formatCents(refProps.surchargeCents)}
           </AppText>
         </View>
 

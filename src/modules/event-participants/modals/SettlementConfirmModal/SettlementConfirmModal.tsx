@@ -34,10 +34,10 @@ export const SettlementConfirmModal = ({
 
         <View style={styles.row}>
           <AppText typography="regular_14" color="black_60">
-            Stripe processing fee
+            Card processing fee (non-refundable)
           </AppText>
           <AppText typography="bold_14" color="black">
-            -{formatCents(preview.stripeFeeCents)}
+            -{formatCents(preview.surchargeCents)}
           </AppText>
         </View>
 
@@ -55,7 +55,7 @@ export const SettlementConfirmModal = ({
 
         <View style={styles.row}>
           <AppText typography="regular_14" color="black_60">
-            Platform commission (Crowds)
+            Platform fee (Crowds)
           </AppText>
           <AppText typography="bold_14" color="black">
             -{formatCents(preview.crowdsEarnings)}

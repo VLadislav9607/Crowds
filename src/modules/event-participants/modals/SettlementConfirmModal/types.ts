@@ -1,6 +1,6 @@
 export interface SettlementPreview {
   totalChargeCents: number;
-  stripeFeeCents: number;
+  surchargeCents: number;
   talentPayoutCents: number;
   selectedCount: number;
   refundCents: number;

@@ -91,7 +91,7 @@ export const TaskCompletionTalentsScreen = () => {
     if (!eventPayment || selectedCount === 0) {
       return {
         totalChargeCents: 0,
-        stripeFeeCents: 0,
+        surchargeCents: 0,
         talentPayoutCents: 0,
         selectedCount: 0,
         refundCents: 0,
@@ -108,18 +108,17 @@ export const TaskCompletionTalentsScreen = () => {
 
     const talentPayoutCents = perTalentPayout * selectedCount;
     const unusedBudget = eventPayment.talent_budget_cents - talentPayoutCents;
-    const netCommission =
-      eventPayment.commission_cents - eventPayment.stripe_fee_cents;
+    const commissionCents = eventPayment.commission_cents;
     const totalHeadcount = eventPayment.total_headcount ?? totalApproved;
     const perTalentCommission =
-      totalHeadcount > 0 ? netCommission / totalHeadcount : 0;
+      totalHeadcount > 0 ? commissionCents / totalHeadcount : 0;
     const crowdsEarnings = Math.round(perTalentCommission * selectedCount);
-    const commissionRefund = Math.round(netCommission - crowdsEarnings);
+    const commissionRefund = Math.round(commissionCents - crowdsEarnings);
     const refundCents = unusedBudget + commissionRefund;
 
     return {
       totalChargeCents: eventPayment.total_charge_cents,
-      stripeFeeCents: eventPayment.stripe_fee_cents,
+      surchargeCents: eventPayment.surcharge_cents,
       talentPayoutCents,
       selectedCount,
       refundCents,

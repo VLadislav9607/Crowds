@@ -7,6 +7,7 @@ export interface EventPaymentDto {
   currency: string;
   talent_budget_cents: number;
   commission_cents: number;
+  surcharge_cents: number;
   total_charge_cents: number;
   stripe_fee_cents: number;
   payment_mode: string | null;

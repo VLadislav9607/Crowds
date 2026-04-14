@@ -45,7 +45,6 @@ export const useEventControll = ({
     null,
   );
 
-
   // Payment flow
   const { paymentConfirmationModalRef, startPaymentFlow, processPayment } =
     usePaymentFlow();
@@ -207,6 +206,7 @@ export const useEventControll = ({
   };
 
   const COMMISSION_RATE = 0.2;
+  const SURCHARGE_RATE = 0.05;
 
   const handleCreatePublishedEvent = () => {
     formData.handleSubmit(
@@ -254,7 +254,11 @@ export const useEventControll = ({
         }
 
         const commissionCents = Math.round(talentBudgetCents * COMMISSION_RATE);
-        const totalChargeCents = talentBudgetCents + commissionCents;
+        const surchargeCents = Math.round(
+          (talentBudgetCents + commissionCents) * SURCHARGE_RATE,
+        );
+        const totalChargeCents =
+          talentBudgetCents + commissionCents + surchargeCents;
 
         setShowFullScreenLoader(false);
 
@@ -266,6 +270,7 @@ export const useEventControll = ({
           eventId: params?.draftId ?? '',
           talentBudgetCents,
           commissionCents,
+          surchargeCents,
           totalChargeCents,
           totalHeadcount,
           eventDurationHours,
@@ -312,6 +317,7 @@ export const useEventControll = ({
         eventId,
         talentBudgetCents: paymentData.talentBudgetCents,
         commissionCents: paymentData.commissionCents,
+        surchargeCents: paymentData.surchargeCents,
         totalChargeCents: paymentData.totalChargeCents,
         totalHeadcount: paymentData.totalHeadcount,
         eventDurationHours: paymentData.eventDurationHours,

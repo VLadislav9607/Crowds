@@ -8,6 +8,7 @@ export interface CreatePaymentIntentResDto {
   totalChargeCents: number;
   talentBudgetCents: number;
   commissionCents: number;
+  surchargeCents: number;
   totalHeadcount: number;
   eventDurationHours: number | null;
 }
