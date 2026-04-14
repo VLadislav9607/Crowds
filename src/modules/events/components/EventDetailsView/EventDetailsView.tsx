@@ -23,7 +23,8 @@ export const EventDetailsCardWithMap = ({
   startTimeFormatted,
   endTimeFormatted,
   registrationClosesFormatted,
-  checkinCutoffFormatted,
+  checkinOpensAtFormatted,
+  checkinClosesAtFormatted,
 }: EventDetailsCardWithMapProps) => {
   if (showSkeleton)
     return (
@@ -73,11 +74,21 @@ export const EventDetailsCardWithMap = ({
           />
         </If>
 
-        <If condition={!!checkinCutoffFormatted}>
+        <If condition={!!checkinOpensAtFormatted}>
           <IconText
             gap={6}
             icon={ICONS.clockIcon('main')}
-            text={`Check-in cutoff: ${checkinCutoffFormatted}`}
+            text={`Check-in opens: ${checkinOpensAtFormatted}`}
+            iconSize={20}
+            textProps={{ typography: 'medium_12', color: 'black_60' }}
+          />
+        </If>
+
+        <If condition={!!checkinClosesAtFormatted}>
+          <IconText
+            gap={6}
+            icon={ICONS.clockIcon('main')}
+            text={`Check-in closes: ${checkinClosesAtFormatted}`}
             iconSize={20}
             textProps={{ typography: 'medium_12', color: 'black_60' }}
           />

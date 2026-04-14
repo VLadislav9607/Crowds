@@ -1,7 +1,7 @@
 import { forwardRef } from 'react';
 import { Controller, useFormContext, useWatch } from 'react-hook-form';
 import { StyleSheet, View } from 'react-native';
-import { isBefore, isAfter, addHours, differenceInHours } from 'date-fns';
+import { isBefore, isAfter, addHours, differenceInHours, startOfDay } from 'date-fns';
 
 import { AppText } from '@ui';
 import { AppDateInput } from '@components';
@@ -18,6 +18,7 @@ export const DateTimeSection = forwardRef<View>((_props, ref) => {
 
   const startAt = useWatch({ control, name: 'startAt' });
   const endAt = useWatch({ control, name: 'endAt' });
+  const checkinOpensAt = useWatch({ control, name: 'checkinOpensAt' });
   const registrationClosingAt = useWatch({
     control,
     name: 'registrationClosingAt',
@@ -28,6 +29,10 @@ export const DateTimeSection = forwardRef<View>((_props, ref) => {
 
   const isLessThan3HoursDuration =
     startAt && endAt ? differenceInHours(endAt, startAt) < 3 : false;
+
+  // Bump-in time constraints: same day as startAt, before startAt
+  const bumpInMinDate = startAt ? startOfDay(startAt) : now;
+  const bumpInMaxDate = startAt || now;
 
   return (
     <View ref={ref} collapsable={false} style={styles.container}>
@@ -57,6 +62,12 @@ export const DateTimeSection = forwardRef<View>((_props, ref) => {
                   isAfter(registrationClosingAt, date)
                 ) {
                   setValue('registrationClosingAt', undefined as any, {
+                    shouldValidate: true,
+                  });
+                }
+                // If checkinOpensAt is set and is after or equal to the new startAt, clear it
+                if (checkinOpensAt && !isBefore(checkinOpensAt, date)) {
+                  setValue('checkinOpensAt', undefined as any, {
                     shouldValidate: true,
                   });
                 }
@@ -108,17 +119,45 @@ export const DateTimeSection = forwardRef<View>((_props, ref) => {
         </AppText>
       )}
 
-      {/* {isLessThan2DaysAway && (
-        <AppText
-          typography="medium_12"
-          color="gray_primary"
-          margin={{ top: isLessThan3HoursDuration ? 0 : -16 }}
-        >
-          As the selected date is less than 2 days away, we cannot ensure crowd
-          availability. We recommend choosing another date for a better
-          experience.
-        </AppText>
-      )} */}
+      <Controller
+        control={control}
+        name="checkinOpensAt"
+        render={({ field: { value, onChange } }) => (
+          <AppDateInput
+            mode="datetime"
+            label="Bump-in Time"
+            description="Set the earliest time talents can check in (before event start)"
+            defaultIconPosition="right"
+            disabled={!startAt}
+            labelProps={{
+              typography: 'h5_mob',
+              color: 'black',
+              style: styles.bumpInLabel,
+            }}
+            value={value}
+            onChange={date => {
+              if (!date) {
+                onChange(date);
+                return;
+              }
+              if (startAt && !isBefore(date, startAt)) {
+                showErrorToast('Bump-in time must be before event start');
+                return;
+              }
+              onChange(date);
+            }}
+            errorMessage={
+              !startAt
+                ? 'Please select start date first'
+                : errors.checkinOpensAt?.message
+            }
+            placeholder="Check-in opens at"
+            minimumDate={bumpInMinDate}
+            maximumDate={bumpInMaxDate}
+            valueFormat="MM/dd/yyyy h:mm a"
+          />
+        )}
+      />
     </View>
   );
 });
@@ -133,5 +172,8 @@ const styles = StyleSheet.create({
   },
   dateInput: {
     flex: 1,
+  },
+  bumpInLabel: {
+    marginBottom: -8,
   },
 });

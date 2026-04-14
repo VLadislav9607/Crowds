@@ -37,12 +37,14 @@ export const EventDetailHeader = ({
           {date}
         </AppText>
       </View>
-      <Avatar
-        size={64}
-        imgPath={logoPath}
-        bucket="brand_avatars"
-        flag={officeFlag}
-      />
+      {!!logoPath && (
+        <Avatar
+          size={64}
+          imgPath={logoPath}
+          bucket="brand_avatars"
+          flag={officeFlag}
+        />
+      )}
     </View>
   );
 };

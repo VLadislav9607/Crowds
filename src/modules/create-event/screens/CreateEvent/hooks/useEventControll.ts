@@ -21,7 +21,7 @@ import {
 import { CreateEventFormData } from '../../../validation';
 import { FieldErrors } from 'react-hook-form';
 import { Enums } from '@services';
-import { fromZonedTime } from 'date-fns-tz';
+
 import { UseEventControllProps } from '../types';
 import { Screens, useScreenNavigation } from '@navigation';
 import { findOfficeByCountryCode } from '../../../helpers/officeLocationHelpers';
@@ -91,8 +91,6 @@ export const useEventControll = ({
     values: CreateEventFormData,
   ): Promise<CreatePublishedEventBodyDto | null> => {
     let location;
-    const deviceTimezone = Intl.DateTimeFormat().resolvedOptions().timeZone;
-    let timezone = deviceTimezone;
 
     if (values.locationType === 'entire_country') {
       location = null;
@@ -100,7 +98,6 @@ export const useEventControll = ({
       if (!values.location) {
         return null;
       }
-      timezone = values.location.timezone || deviceTimezone;
       location = {
         ...values.location,
         coords: `POINT(${values.location.longitude} ${values.location.latitude})`,
@@ -143,10 +140,10 @@ export const useEventControll = ({
     delete values.ndaDocument;
 
     const campaignStartAt = values.campaignStartAt
-      ? fromZonedTime(values.campaignStartAt, timezone).toISOString()
+      ? values.campaignStartAt.toISOString()
       : undefined;
     const campaignEndAt = values.campaignEndAt
-      ? fromZonedTime(values.campaignEndAt, timezone).toISOString()
+      ? values.campaignEndAt.toISOString()
       : undefined;
 
     return {
@@ -161,12 +158,10 @@ export const useEventControll = ({
       visibility: values.visibility as Enums<'EventVisibility'>,
       campaignStartAt,
       campaignEndAt,
-      startAt: fromZonedTime(values.startAt, timezone).toISOString(),
-      endAt: fromZonedTime(values.endAt, timezone).toISOString(),
-      registrationClosingAt: fromZonedTime(
-        values.registrationClosingAt,
-        timezone,
-      ).toISOString(),
+      startAt: values.startAt.toISOString(),
+      endAt: values.endAt.toISOString(),
+      registrationClosingAt: values.registrationClosingAt.toISOString(),
+      checkinOpensAt: values.checkinOpensAt.toISOString(),
       payment_mode: (values.paymentMode === 'perHour'
         ? 'per_hour'
         : 'fixed') as Enums<'EventPaymentMode'>,

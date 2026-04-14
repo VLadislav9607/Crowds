@@ -13,7 +13,7 @@ export const loginAction = async (body: LoginBodyDto): Promise<LoginRespDto> => 
         throw error;
     }
 
-    if (!data?.session) {
+    if (!data?.session && !data?.requires_account_selection) {
         throw new Error('Login failed: no session returned');
     }
 

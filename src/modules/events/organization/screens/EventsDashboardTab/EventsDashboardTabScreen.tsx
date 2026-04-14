@@ -8,6 +8,7 @@ import { styles } from './styles';
 import { OrganizationEventsList } from '../../components';
 import { useCallback, useMemo, useState } from 'react';
 import { startOfDay, endOfDay } from 'date-fns';
+import { goToScreen, Screens } from '@navigation';
 
 export const EventsDashboardTabScreen = () => {
   const { organizationMember } = useGetMe();
@@ -42,6 +43,13 @@ export const EventsDashboardTabScreen = () => {
     ? eventsCountersResp?.upcoming_private
     : 0;
 
+  const navigateToEvents = (initialTab: string, initialSubTab?: string) => {
+    goToScreen(Screens.BottomTabs, {
+      screen: Screens.UpcomingEvents,
+      params: { initialTab, initialSubTab },
+    } as any);
+  };
+
   const eventDashboardConfig = [
     {
       title: 'Active Posted Events',
@@ -49,8 +57,8 @@ export const EventsDashboardTabScreen = () => {
       count: activePublicCount + upcomingPublicCount,
       bgColor: COLORS.light_purple,
       textColor: COLORS.main,
-      // label: 'View',
       showSkeleton: isLoading,
+      onPress: () => navigateToEvents('active', 'job_board'),
     },
     {
       title: 'Active Private Events',
@@ -58,24 +66,24 @@ export const EventsDashboardTabScreen = () => {
       count: activePrivateCount + upcomingPrivateCount,
       bgColor: COLORS.light_purple,
       textColor: COLORS.main,
-      // label: 'View',
       showSkeleton: isLoading,
+      onPress: () => navigateToEvents('active', 'private'),
     },
     {
       title: 'Past Events',
       count: eventsCountersResp?.past || 0,
       bgColor: '#E0025214',
       textColor: COLORS.red,
-      // label: 'View',
       showSkeleton: isLoading,
+      onPress: () => navigateToEvents('past'),
     },
     {
       title: 'Drafts',
       count: eventsCountersResp?.draft || 0,
       bgColor: '#F5F5F5',
       textColor: COLORS.main,
-      // label: 'View',
       showSkeleton: isLoading,
+      onPress: () => navigateToEvents('drafts'),
     },
   ];
 

@@ -49,6 +49,7 @@ export const EventQRCodesScreen = () => {
   const timezone =
     eventData?.event_location?.timezone || params?.timezone || deviceTimezone;
   const eventStartAt = eventData?.start_at || '';
+  const checkinOpensAt = (eventData as any)?.checkin_opens_at || undefined;
   const isEventStarted = eventStartAt ? isPast(new Date(eventStartAt)) : false;
 
   const {
@@ -141,6 +142,7 @@ export const EventQRCodesScreen = () => {
                       qrCodeId: item.id,
                       eventId: params?.eventId!,
                       eventStartAt,
+                      checkinOpensAt,
                       timeZone: timezone,
                     })
                   }
@@ -183,7 +185,7 @@ export const EventQRCodesScreen = () => {
                   Check-out
                 </AppText>
                 <AppText typography="regular_14" color="black">
-                  After event ends
+                  Available after check-in
                 </AppText>
               </View>
             </View>
@@ -225,6 +227,7 @@ export const EventQRCodesScreen = () => {
     eventQRCodeEditorModalRef.current?.open({
       eventId: params?.eventId!,
       eventStartAt,
+      checkinOpensAt,
       timeZone: timezone,
     });
   };

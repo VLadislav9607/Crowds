@@ -52,6 +52,16 @@ const validateRegistrationClosingDate = (data: {
   return true;
 };
 
+const validateCheckinOpensAt = (data: {
+  checkinOpensAt: Date;
+  startAt: Date;
+}) => {
+  if (data.checkinOpensAt && data.startAt) {
+    return data.checkinOpensAt < data.startAt;
+  }
+  return true;
+};
+
 const pickedDocumentSchema = z.object({
   uri: z.string(),
   name: z.string(),
@@ -171,6 +181,13 @@ export const createPublishedEventSchema = z
       .refine(validateEndDateNotInPast, {
         message: 'Registration closing date and time cannot be in the past',
       }),
+    checkinOpensAt: z
+      .date({
+        message: 'Bump-in time is required',
+      })
+      .refine(validateEndDateNotInPast, {
+        message: 'Bump-in time cannot be in the past',
+      }),
     customTasks: z.array(z.string()).optional(),
   })
   .refine(validateStartBeforeEnd, {
@@ -184,6 +201,10 @@ export const createPublishedEventSchema = z
   .refine(validateRegistrationClosingDate, {
     message: 'Registration closing date cannot be after start date',
     path: ['registrationClosingAt'],
+  })
+  .refine(validateCheckinOpensAt, {
+    message: 'Bump-in time must be before event start time',
+    path: ['checkinOpensAt'],
   })
   .superRefine((data, ctx) => {
     if (data.locationType === 'specific_location' && !data.location) {
@@ -265,7 +286,7 @@ export const createPublishedEventSchema = z
         if (diffHours < 24) {
           ctx.addIssue({
             code: z.ZodIssueCode.custom,
-            message: 'Fixed rate is only available for engagements longer than 1 day',
+            message: 'Fixed rate requires event duration longer than 1 day. Please adjust your Start and End dates, or switch to Per Hour.',
             path: ['paymentMode'],
           });
         }

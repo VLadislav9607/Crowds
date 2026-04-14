@@ -1,4 +1,4 @@
-import { useCallback } from 'react';
+import { useCallback, useState } from 'react';
 import { Alert } from 'react-native';
 import { useCreateKycSdkToken, useCreateKycChecks, useGetMe } from '@actions';
 import { startSafe } from '@complycube/react-native';
@@ -86,8 +86,9 @@ export const useIdentityVerification = (
   origin: VerificationOrigin = 'profile',
 ) => {
   const { me, talent } = useGetMe();
-  const { mutateAsync: createKycSdkToken, isPending } = useCreateKycSdkToken();
+  const { mutateAsync: createKycSdkToken, isPending: isCreatingToken } = useCreateKycSdkToken();
   const { mutateAsync: createKycChecks } = useCreateKycChecks();
+  const [isProcessingSdk, setIsProcessingSdk] = useState(false);
 
   const userId = me?.id || '';
 
@@ -119,6 +120,9 @@ export const useIdentityVerification = (
       if (outcome.status === 'success') {
         const { documentId, livePhotoId } = parseSdkResult(outcome.result);
 
+        // Show loader immediately after SDK closes
+        setIsProcessingSdk(true);
+
         // Clear stale KYC cache
         removeUserKycStatus(userId);
 
@@ -129,6 +133,7 @@ export const useIdentityVerification = (
         });
 
         goToScreen(Screens.VerificationProcessing, { origin });
+        setIsProcessingSdk(false);
       }
     },
     [createKycChecks, origin],
@@ -156,6 +161,6 @@ export const useIdentityVerification = (
 
   return {
     goToVerification,
-    isPending,
+    isPending: isCreatingToken || isProcessingSdk,
   };
 };

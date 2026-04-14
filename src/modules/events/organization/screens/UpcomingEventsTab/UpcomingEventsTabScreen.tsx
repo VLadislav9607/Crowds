@@ -11,6 +11,7 @@ import { useRoute } from '@react-navigation/native';
 export const UpcomingEventsTabScreen = () => {
   const route = useRoute();
   const initialTab = (route.params as any)?.initialTab;
+  const initialSubTab = (route.params as any)?.initialSubTab;
   const [mainTab, setMainTab] = useState(initialTab || 'active');
 
   useEffect(() => {
@@ -18,7 +19,13 @@ export const UpcomingEventsTabScreen = () => {
       setMainTab(initialTab);
     }
   }, [initialTab]);
-  const [activeSubTab, setActiveSubTab] = useState('job_board');
+  const [activeSubTab, setActiveSubTab] = useState(initialSubTab || 'job_board');
+
+  useEffect(() => {
+    if (initialSubTab) {
+      setActiveSubTab(initialSubTab);
+    }
+  }, [initialSubTab]);
   const { organizationMember } = useGetMe();
   const now = useMemo(() => new Date().toISOString(), []);
 

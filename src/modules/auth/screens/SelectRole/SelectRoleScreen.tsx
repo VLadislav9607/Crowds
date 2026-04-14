@@ -48,6 +48,13 @@ export const SelectRoleScreen = () => {
         cardTextStyles={styles.cardText}
       />
 
+      <AppText style={styles.infoBanner}>
+        Sign up as "Find a crowd" to get both profiles — a talent one is
+        created automatically.
+        {'\n\n'}
+        "Be the crowd" only — you can't add "Find a crowd" later.
+      </AppText>
+
       <AppButton
         title="Log In"
         variant="withBorder"
@@ -74,6 +81,14 @@ const styles = StyleSheet.create({
     textAlign: 'center',
     marginTop: 39,
     marginBottom: 76,
+  },
+  infoBanner: {
+    ...TYPOGRAPHY.regular_14,
+    color: COLORS.white,
+    textAlign: 'center',
+    marginTop: 24,
+    opacity: 0.7,
+    paddingHorizontal: 10,
   },
   loginButton: {
     marginTop: 'auto',

@@ -58,6 +58,7 @@ export interface CreatePublishedEventBodyDto {
   endAt: string;
   endTime?: string;
   registrationClosingAt: string;
+  checkinOpensAt: string;
   payment_mode: Enums<'EventPaymentMode'>;
   payment_amount: number;
   eventBrief: string;

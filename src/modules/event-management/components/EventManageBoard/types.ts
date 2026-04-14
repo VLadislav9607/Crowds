@@ -1,9 +1,11 @@
 export interface IEventManageBoardProps {
-  checkinCutoff: string | null;
+  checkinOpensAt: string | null;
+  checkinClosesAt: string | null;
   timezone: string;
-  isCutoffPassed: boolean;
+  isBumpInPassed: boolean;
+  hasAnyCheckins: boolean;
   isUpdating: boolean;
-  onOpenEditCheckIn: () => void;
+  onOpenEditBumpIn: () => void;
 }
 
 export interface IBoardConfig {
@@ -18,7 +20,8 @@ export interface IBoardConfig {
 
 export enum BoardItemType {
   CURRENT_TIME = 'current_time',
-  CHECK_IN_CUTOFF = 'check_in_cutoff',
+  CHECKIN_OPENS = 'checkin_opens',
+  CHECKIN_CLOSES = 'checkin_closes',
   CHECKED_IN = 'checked_in',
   MISSING = 'missing',
 }

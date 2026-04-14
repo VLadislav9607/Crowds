@@ -27,8 +27,8 @@ export const InviteTalentsScreen = () => {
 
   const tabOptions = [
     { label: 'My lists', value: 'my_lists' },
-    { label: 'Matching talents', value: 'matching_talent' },
-    { label: 'All talents', value: 'all_talent' },
+    { label: 'Matching', value: 'matching_talent' },
+    { label: 'All', value: 'all_talent' },
   ];
 
   return (

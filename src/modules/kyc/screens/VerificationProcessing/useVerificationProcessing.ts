@@ -14,8 +14,16 @@ type VerificationProcessingRoute = RouteProp<
   Screens.VerificationProcessing
 >;
 
-type VerificationState = 'pending' | 'completed' | 'failed' | 'expired_document';
-type FailureReason = 'underage' | 'dob_not_found' | 'client_data_consistency' | null;
+type VerificationState =
+  | 'pending'
+  | 'completed'
+  | 'failed'
+  | 'expired_document';
+type FailureReason =
+  | 'underage'
+  | 'dob_not_found'
+  | 'client_data_consistency'
+  | null;
 
 const TOTAL_CHECKS = 2;
 const ANIMATION_STEP_MS = 300;
@@ -33,7 +41,7 @@ export const useVerificationProcessing = () => {
     if (userId) {
       removeUserKycStatus(userId);
     }
-  // eslint-disable-next-line react-hooks/exhaustive-deps
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const [state, setState] = useState<VerificationState>('pending');
@@ -42,7 +50,12 @@ export const useVerificationProcessing = () => {
   const hasNavigatedRef = useRef(false);
   const animatingRef = useRef(false);
 
-  const { kycStatus, checksPassed, failureReason: kycFailureReason, isFetching } = useIsUserVerified({
+  const {
+    kycStatus,
+    checksPassed,
+    failureReason: kycFailureReason,
+    isFetching,
+  } = useIsUserVerified({
     userId,
     refetchInterval: state === 'pending' ? 3000 : false,
   });
@@ -99,7 +112,10 @@ export const useVerificationProcessing = () => {
   useEffect(() => {
     if (kycStatus === 'completed' && state !== 'completed') {
       setState('completed');
-    } else if (kycStatus === 'expired_document' && state !== 'expired_document') {
+    } else if (
+      kycStatus === 'expired_document' &&
+      state !== 'expired_document'
+    ) {
       setState('expired_document');
     } else if (kycStatus === 'failed' && state !== 'failed' && !isFetching) {
       setState('failed');
@@ -163,6 +179,8 @@ export const useVerificationProcessing = () => {
     }
   }, [origin]);
 
+  console.log('state', state, failureReason);
+
   return {
     currentChecksPassed: displayedChecks,
     totalChecks: TOTAL_CHECKS,
@@ -170,7 +188,8 @@ export const useVerificationProcessing = () => {
     isFailed: state === 'failed',
     isUnderage: state === 'failed' && failureReason === 'underage',
     isDobNotFound: state === 'failed' && failureReason === 'dob_not_found',
-    isClientDataConsistency: state === 'failed' && failureReason === 'client_data_consistency',
+    isClientDataConsistency:
+      state === 'failed' && failureReason === 'client_data_consistency',
     isExpiredDocument: state === 'expired_document',
   };
 };

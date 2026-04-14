@@ -1225,6 +1225,7 @@ export type Database = {
           campaign_start_at: string | null
           category_id: string | null
           checkin_cutoff: string | null
+          checkin_opens_at: string | null
           created_at: string
           creator_id: string
           deleted_at: string | null
@@ -1253,6 +1254,7 @@ export type Database = {
           campaign_start_at?: string | null
           category_id?: string | null
           checkin_cutoff?: string | null
+          checkin_opens_at?: string | null
           created_at?: string
           creator_id: string
           deleted_at?: string | null
@@ -1281,6 +1283,7 @@ export type Database = {
           campaign_start_at?: string | null
           category_id?: string | null
           checkin_cutoff?: string | null
+          checkin_opens_at?: string | null
           created_at?: string
           creator_id?: string
           deleted_at?: string | null
@@ -2620,6 +2623,7 @@ export type Database = {
           campaign_start_at: string | null
           category_id: string | null
           checkin_cutoff: string | null
+          checkin_opens_at: string | null
           created_at: string
           creator_id: string
           deleted_at: string | null
@@ -3431,6 +3435,10 @@ export type Database = {
       }
       update_event_checkin_cutoff: {
         Args: { p_checkin_cutoff: string; p_event_id: string }
+        Returns: Json
+      }
+      update_event_checkin_opens_at: {
+        Args: { p_checkin_opens_at: string; p_event_id: string }
         Returns: Json
       }
       update_event_draft: {

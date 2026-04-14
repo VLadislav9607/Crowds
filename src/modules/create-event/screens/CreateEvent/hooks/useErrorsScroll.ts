@@ -71,6 +71,7 @@ export const useErrorsScroll = () => {
       campaignEndAt: campaignTimeSectionRef,
       startAt: dateTimeSectionRef,
       endAt: dateTimeSectionRef,
+      checkinOpensAt: dateTimeSectionRef,
       eventBrief: eventBriefSectionRef,
       visibility: visibilitySectionRef,
       ageGroups: onScrollToAgeGroupsErrorSection,

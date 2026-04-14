@@ -3,25 +3,28 @@ import { BoardItemType, IBoardConfig } from './types';
 import { formatInTimeZone } from 'date-fns-tz';
 
 export const getBoardConfig = (
-  checkinCutoff: string | null,
+  checkinOpensAt: string | null,
+  checkinClosesAt: string | null,
   eventTimezone: string,
 ): IBoardConfig[] => [
   {
-    type: BoardItemType.CURRENT_TIME,
-    label: 'Current time',
-    bgColor: COLORS.gray_bg,
-    textColor: COLORS.main,
-    borderColor: COLORS.main,
-    borderWidth: 1,
-    value: formatInTimeZone(new Date(), eventTimezone, 'HH:mm'),
-  },
-  {
-    type: BoardItemType.CHECK_IN_CUTOFF,
-    label: 'Check in cutoff',
+    type: BoardItemType.CHECKIN_OPENS,
+    label: 'Check-in opens',
     bgColor: COLORS.main,
     textColor: COLORS.white,
-    value: checkinCutoff
-      ? formatInTimeZone(checkinCutoff, eventTimezone, 'HH:mm')
+    value: checkinOpensAt
+      ? formatInTimeZone(checkinOpensAt, eventTimezone, 'HH:mm')
+      : '--:--',
+  },
+  {
+    type: BoardItemType.CHECKIN_CLOSES,
+    label: 'Check-in closes',
+    bgColor: COLORS.gray_bg,
+    textColor: COLORS.black,
+    borderColor: COLORS.main,
+    borderWidth: 1,
+    value: checkinClosesAt
+      ? formatInTimeZone(checkinClosesAt, eventTimezone, 'HH:mm')
       : '--:--',
   },
 ];

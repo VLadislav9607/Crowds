@@ -31,6 +31,7 @@ export const ProfileScreenLayout = ({ children }: ProfileScreenLayoutProps) => {
         isTalent ? (
           <TalentProfileHeader
             fullName={talent?.first_name ?? '' + ' ' + talent?.last_name}
+            username={talent?.username}
             gender={talent?.gender || ''}
             age={calculateAge(talent?.birth_date)}
             avatarUri={talent?.avatar_path || undefined}

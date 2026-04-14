@@ -5,7 +5,7 @@ import { getTimezoneOffset } from 'date-fns-tz';
 import { Screens, useScreenNavigation } from '@navigation';
 import {
   useGetEventForOrgMember,
-  useUpdateCheckinCutoff,
+  useUpdateCheckinOpensAt,
 } from '@actions';
 
 import { ManageEventScreenLayout } from '../../layouts';
@@ -18,8 +18,8 @@ export const ManageEventScreen = () => {
   const eventId = params?.eventId ?? '';
 
   const { data: event } = useGetEventForOrgMember({ event_id: eventId });
-  const { mutate: updateCheckinCutoff, isPending: isUpdatingCutoff } =
-    useUpdateCheckinCutoff();
+  const { mutate: updateCheckinOpensAt, isPending: isUpdating } =
+    useUpdateCheckinOpensAt();
 
   const deviceTimezone = Intl.DateTimeFormat().resolvedOptions().timeZone;
   const eventTimezone = event?.event_location?.timezone || deviceTimezone;
@@ -29,37 +29,39 @@ export const ManageEventScreen = () => {
     [eventTimezone],
   );
 
-  const endAt = event?.end_at ?? null;
+  const checkinOpensAt = event?.checkin_opens_at ?? null;
+  const checkinClosesAt = event?.start_at ?? null;
 
-  const defaultCutoff = useMemo(() => {
-    if (!event?.start_at) return null;
-    const date = new Date(event.start_at);
-    date.setMinutes(date.getMinutes() + 15);
-    return date.toISOString();
-  }, [event?.start_at]);
+  const isBumpInPassed = useMemo(() => {
+    if (!checkinOpensAt) return false;
+    return new Date(checkinOpensAt) < new Date();
+  }, [checkinOpensAt]);
 
-  const checkinCutoff = event?.checkin_cutoff ?? defaultCutoff;
-
-  const isCutoffPassed = useMemo(() => {
-    if (!checkinCutoff) return false;
-    return new Date(checkinCutoff) < new Date();
-  }, [checkinCutoff]);
+  // TODO: ideally check from DB if any talent has checked in
+  // For now, use bump-in passed as proxy (if bump-in time has passed, check-in may have started)
+  const hasAnyCheckins = false;
 
   const datePickerDate = useMemo(() => {
-    if (checkinCutoff) return new Date(checkinCutoff);
+    if (checkinOpensAt) return new Date(checkinOpensAt);
+    if (event?.start_at) {
+      // Default to 1 hour before start
+      const d = new Date(event.start_at);
+      d.setHours(d.getHours() - 1);
+      return d;
+    }
     return new Date();
-  }, [checkinCutoff]);
+  }, [checkinOpensAt, event?.start_at]);
 
-  const onOpenEditCheckIn = () => {
-    if (isCutoffPassed) return;
+  const onOpenEditBumpIn = () => {
+    if (isBumpInPassed || hasAnyCheckins) return;
     setShowDatePicker(true);
   };
 
-  const onConfirmCutoff = (date: Date) => {
+  const onConfirmBumpIn = (date: Date) => {
     setShowDatePicker(false);
-    updateCheckinCutoff({
+    updateCheckinOpensAt({
       event_id: eventId,
-      checkin_cutoff: date.toISOString(),
+      checkin_opens_at: date.toISOString(),
     });
   };
 
@@ -68,11 +70,13 @@ export const ManageEventScreen = () => {
       eventTitle={event?.title ?? ''}
     >
       <EventManageBoard
-        checkinCutoff={checkinCutoff}
+        checkinOpensAt={checkinOpensAt}
+        checkinClosesAt={checkinClosesAt}
         timezone={eventTimezone}
-        isCutoffPassed={isCutoffPassed}
-        isUpdating={isUpdatingCutoff}
-        onOpenEditCheckIn={onOpenEditCheckIn}
+        isBumpInPassed={isBumpInPassed}
+        hasAnyCheckins={hasAnyCheckins}
+        isUpdating={isUpdating}
+        onOpenEditBumpIn={onOpenEditBumpIn}
       />
 
       <ManageActionsList eventId={eventId} eventStartAt={event?.start_at} />
@@ -82,10 +86,9 @@ export const ManageEventScreen = () => {
         mode="datetime"
         open={showDatePicker}
         date={datePickerDate}
-        minimumDate={event?.start_at ? new Date(event.start_at) : new Date()}
-        maximumDate={endAt ? new Date(endAt) : undefined}
+        maximumDate={event?.start_at ? new Date(event.start_at) : undefined}
         timeZoneOffsetInMinutes={timezoneOffsetInMinutes}
-        onConfirm={onConfirmCutoff}
+        onConfirm={onConfirmBumpIn}
         onCancel={() => setShowDatePicker(false)}
       />
     </ManageEventScreenLayout>

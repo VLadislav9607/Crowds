@@ -47,6 +47,16 @@ const validateRegistrationClosingDate = (data: {
   return true;
 };
 
+const validateCheckinOpensAt = (data: {
+  checkinOpensAt?: Date | null;
+  startAt?: Date | null;
+}) => {
+  if (data.checkinOpensAt && data.startAt) {
+    return data.checkinOpensAt < data.startAt;
+  }
+  return true;
+};
+
 const parsedLocationSchema = z.object(
   {
     autocomplete_description: z.string(),
@@ -148,6 +158,7 @@ export const createEventDraftSchema = z
     ndaDocumentName: z.string().optional().nullable(),
     ndaDocumentPath: z.string().optional().nullable(),
     registrationClosingAt: z.date().optional().nullable(),
+    checkinOpensAt: z.date().optional().nullable(),
     customTasks: z.array(z.string()).optional().nullable(),
   })
   .refine(validateStartBeforeEnd, {
@@ -161,6 +172,10 @@ export const createEventDraftSchema = z
   .refine(validateRegistrationClosingDate, {
     message: 'Registration closing date cannot be after start date',
     path: ['registrationClosingAt'],
+  })
+  .refine(validateCheckinOpensAt, {
+    message: 'Bump-in time must be before event start time',
+    path: ['checkinOpensAt'],
   })
   .superRefine((data, ctx) => {
     if (data.locationType === 'specific_location' && !data.location) {

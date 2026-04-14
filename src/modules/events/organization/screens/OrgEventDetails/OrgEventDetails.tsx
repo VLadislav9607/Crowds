@@ -108,8 +108,12 @@ export const OrgEventDetails = () => {
       )
     : '';
 
-  const checkinCutoffFormatted = event?.checkin_cutoff
-    ? formatInTimeZone(event.checkin_cutoff, timezone, 'd MMM yyyy, h:mm a')
+  const checkinOpensAtFormatted = event?.checkin_opens_at
+    ? formatInTimeZone(event.checkin_opens_at, timezone, 'd MMM yyyy, h:mm a')
+    : '';
+
+  const checkinClosesAtFormatted = event?.start_at
+    ? formatInTimeZone(event.start_at, timezone, 'd MMM yyyy, h:mm a')
     : '';
 
   const officeCountryName = event?.office_country_code
@@ -259,7 +263,8 @@ export const OrgEventDetails = () => {
           startTimeFormatted={startDateTimeFormatted}
           endTimeFormatted={endDateTimeFormatted}
           registrationClosesFormatted={registrationClosesFormatted}
-          checkinCutoffFormatted={checkinCutoffFormatted}
+          checkinOpensAtFormatted={checkinOpensAtFormatted}
+          checkinClosesAtFormatted={checkinClosesAtFormatted}
           location={
             event?.event_location
               ? {

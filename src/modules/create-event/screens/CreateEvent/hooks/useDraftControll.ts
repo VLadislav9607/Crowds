@@ -9,7 +9,7 @@ import {
   useUpdateEventDraft,
 } from '@actions';
 import { Screens, useScreenNavigation } from '@navigation';
-import { fromZonedTime, toZonedTime } from 'date-fns-tz';
+
 import { useEffect } from 'react';
 import {
   CreateEventDraftFormData,
@@ -80,9 +80,6 @@ export const useDraftControll = ({
   const mapDraftDataToFormData = (
     eventData: EventForOrgMemberDto,
   ): Partial<CreateEventFormData> => {
-    const deviceTimezone = Intl.DateTimeFormat().resolvedOptions().timeZone;
-    const timezone = eventData.event_location?.timezone || deviceTimezone;
-
     const parseCoords = (coords: unknown): string | undefined => {
       if (typeof coords === 'string' && coords.startsWith('POINT(')) {
         return coords;
@@ -95,8 +92,7 @@ export const useDraftControll = ({
     ): Date | undefined => {
       if (!dateString) return undefined;
       try {
-        const utcDate = new Date(dateString);
-        return toZonedTime(utcDate, timezone);
+        return new Date(dateString);
       } catch {
         return undefined;
       }
@@ -208,6 +204,7 @@ export const useDraftControll = ({
       ndaDocumentName: eventData.nda_file_name || '',
       ndaDocumentPath: eventData.nda_file_path || '',
       registrationClosingAt: parseDate(eventData.registration_closes_at),
+      checkinOpensAt: parseDate((eventData as any).checkin_opens_at),
       customTasks:
         (eventData as any).custom_tasks?.map((t: any) => t.text) ?? [],
     };
@@ -240,16 +237,17 @@ export const useDraftControll = ({
   const prepareDraftDataToSave = async (
     values: CreateEventDraftFormData,
   ): Promise<CreateEventDraftBodyDto | null> => {
-    const deviceTimezone = Intl.DateTimeFormat().resolvedOptions().timeZone;
-    const timezone = values.location?.timezone || deviceTimezone;
     const startAt = values.startAt
-      ? fromZonedTime(values.startAt, timezone).toISOString()
+      ? values.startAt.toISOString()
       : undefined;
     const endAt = values.endAt
-      ? fromZonedTime(values.endAt, timezone).toISOString()
+      ? values.endAt.toISOString()
       : undefined;
     const registrationClosingAt = values.registrationClosingAt
-      ? fromZonedTime(values.registrationClosingAt, timezone).toISOString()
+      ? values.registrationClosingAt.toISOString()
+      : undefined;
+    const checkinOpensAt = values.checkinOpensAt
+      ? values.checkinOpensAt.toISOString()
       : undefined;
     const payment_amount =
       values.paymentAmount && values.paymentAmount > 0
@@ -316,10 +314,10 @@ export const useDraftControll = ({
     const eventType = values.eventType;
     const description = values.description || undefined;
     const campaignStartAt = values.campaignStartAt
-      ? fromZonedTime(values.campaignStartAt, timezone).toISOString()
+      ? values.campaignStartAt.toISOString()
       : undefined;
     const campaignEndAt = values.campaignEndAt
-      ? fromZonedTime(values.campaignEndAt, timezone).toISOString()
+      ? values.campaignEndAt.toISOString()
       : undefined;
 
     const subcategoryIds = values.subcategoryIds?.length
@@ -340,6 +338,7 @@ export const useDraftControll = ({
       startAt,
       endAt,
       registrationClosingAt,
+      checkinOpensAt,
       payment_mode: (values.paymentMode === 'perHour'
         ? 'per_hour'
         : 'fixed') as Enums<'EventPaymentMode'>,

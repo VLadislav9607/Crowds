@@ -4,11 +4,13 @@ export type CreateFlagReportBodyDto =
       targetId: string;
       eventId?: string;
       description: string;
+      requestedFlagType: 'yellow' | 'red' | 'black';
     }
   | {
       targetType: 'organization';
       eventId: string;
       description: string;
+      requestedFlagType: 'yellow' | 'red' | 'black';
     };
 
 export interface CreateFlagReportRespDto {

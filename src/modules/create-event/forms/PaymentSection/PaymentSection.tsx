@@ -60,7 +60,7 @@ export const PaymentSection = forwardRef<View>((_props, ref) => {
               keyboardType="numeric"
               errorMessage={errors.paymentAmount?.message}
               placeholder={paymentMode === 'fixed' ? 'Total fixed amount (USD)' : '$15.00 minimum (USD)'}
-              description="Minimum 3-hour payment applies, even for 1-hour shifts (legal requirement)."
+              description={paymentMode === 'fixed' ? 'A job can only have a fixed rate if it is more than one day.' : 'Minimum 3-hour payment applies, even for 1-hour shifts (legal requirement).'}
               containerStyle={styles.paymentAmountInput}
             />
           );

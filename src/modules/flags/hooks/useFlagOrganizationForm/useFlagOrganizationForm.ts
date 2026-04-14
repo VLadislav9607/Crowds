@@ -64,6 +64,7 @@ export const useFlagOrganizationForm = ({
         targetType: 'organization',
         eventId,
         description: trimmedReason,
+        requestedFlagType: data.selectedFlag as 'yellow' | 'red' | 'black',
       });
     },
     [createFlagReport, eventId],

@@ -2,7 +2,7 @@ import { View, Platform } from 'react-native';
 import { AppInput } from '@ui';
 import { Controller, useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { forwardRef, useCallback, useEffect, useImperativeHandle } from 'react';
+import { forwardRef, useCallback, useEffect, useImperativeHandle, useRef } from 'react';
 import { styles } from './styles';
 import {
   SignInFormData,
@@ -14,41 +14,71 @@ import { useLogin, upsertPushDeviceAction } from '@actions';
 import { onNavigateAfterAuth, showMutationErrorToast } from '@helpers';
 import { supabase, getDeviceId } from '@services';
 import { usePermissions, EPermissionTypes } from '@hooks';
+import {
+  AccountSelectionModal,
+  AccountSelectionModalRef,
+} from '../../modals/AccountSelectionModal';
 
 export const SignInForm = forwardRef<SignInFormRef, SignInFormProps>(
   (props, ref) => {
     const { containerStyle, onFormStateChange } = props;
 
-    const { control, handleSubmit } = useForm<SignInFormData>({
+    const { control, handleSubmit, getValues } = useForm<SignInFormData>({
       resolver: zodResolver(signInFormSchema),
     });
+
+    const accountSelectionModalRef = useRef<AccountSelectionModalRef>(null);
+    const credentialsRef = useRef<{ username: string; password: string } | null>(null);
 
     const { askNotificationPermissionAndGetTokens } = usePermissions(
       EPermissionTypes.NOTIFICATIONS,
     );
 
+    const completeLogin = useCallback(async (session: { access_token: string; refresh_token: string }) => {
+      await supabase.auth.setSession({
+        access_token: session.access_token,
+        refresh_token: session.refresh_token,
+      });
+
+      await onNavigateAfterAuth();
+
+      const tokens = await askNotificationPermissionAndGetTokens();
+
+      if (tokens?.fcmToken) {
+        try {
+          const deviceId = await getDeviceId();
+          await upsertPushDeviceAction({
+            deviceId,
+            platform: Platform.OS,
+            fcmToken: tokens.fcmToken,
+          });
+        } catch (error) {
+          console.log('error', error);
+        }
+      }
+    }, [askNotificationPermissionAndGetTokens]);
+
     const { mutate: loginMutate, isPending: isLoggingIn } = useLogin({
       onSuccess: async data => {
-        await supabase.auth.setSession({
-          access_token: data.session.access_token,
-          refresh_token: data.session.refresh_token,
-        });
+        if (data.requires_account_selection && data.accounts) {
+          credentialsRef.current = getValues();
+          accountSelectionModalRef.current?.open({
+            accounts: data.accounts,
+            onSelect: (accountType) => {
+              if (credentialsRef.current) {
+                loginMutate({
+                  username: credentialsRef.current.username.toLowerCase(),
+                  password: credentialsRef.current.password,
+                  account_type: accountType,
+                });
+              }
+            },
+          });
+          return;
+        }
 
-        await onNavigateAfterAuth();
-
-        const tokens = await askNotificationPermissionAndGetTokens();
-
-        if (tokens?.fcmToken) {
-          try {
-            const deviceId = await getDeviceId();
-            await upsertPushDeviceAction({
-              deviceId,
-              platform: Platform.OS,
-              fcmToken: tokens.fcmToken,
-            });
-          } catch (error) {
-            console.log('error', error);
-          }
+        if (data.session) {
+          await completeLogin(data.session);
         }
       },
       onError: showMutationErrorToast,
@@ -106,6 +136,8 @@ export const SignInForm = forwardRef<SignInFormRef, SignInFormProps>(
             />
           )}
         />
+
+        <AccountSelectionModal ref={accountSelectionModalRef} />
       </View>
     );
   },

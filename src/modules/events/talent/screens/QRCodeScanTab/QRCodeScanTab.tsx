@@ -39,7 +39,10 @@ export const QRCodeScanTab = () => {
     const now = new Date();
 
     if (data.action === 'checkin') {
-      const checkInAvailableAt = new Date(qr_code.start_at);
+      // Check-in opens at event's checkin_opens_at, falling back to QR code start_at
+      const checkInAvailableAt = new Date(
+        event.checkin_opens_at ?? qr_code.start_at,
+      );
       if (now < checkInAvailableAt) {
         const formattedTime = format(checkInAvailableAt, 'MMM d, yyyy h:mm a');
         showErrorToast(
@@ -48,15 +51,14 @@ export const QRCodeScanTab = () => {
         return;
       }
 
-      if (event.checkin_cutoff) {
-        const cutoff = new Date(event.checkin_cutoff);
-        if (now > cutoff) {
-          const formattedTime = format(cutoff, 'MMM d, yyyy h:mm a');
-          showErrorToast(
-            `Check-in is no longer available. The cutoff was at ${formattedTime}.`,
-          );
-          return;
-        }
+      // Check-in closes at event start time
+      const checkinCloses = new Date(event.start_at);
+      if (now > checkinCloses) {
+        const formattedTime = format(checkinCloses, 'MMM d, yyyy h:mm a');
+        showErrorToast(
+          `Check-in is no longer available. It closed at ${formattedTime}.`,
+        );
+        return;
       }
 
       checkinModalRef.current?.open({
