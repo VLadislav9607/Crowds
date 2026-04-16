@@ -3,6 +3,7 @@ import { goToScreen, Screens } from '@navigation';
 import { ColorsKeys } from '@styles';
 import { useGetMe } from '@actions';
 import DeviceInfo from 'react-native-device-info';
+import { Linking } from 'react-native';
 
 interface ProfileOption {
   title: string;
@@ -67,6 +68,11 @@ export const useProfileTabOptions = ({
       onPress: () => goToScreen(Screens.FAQ),
     },
     {
+      title: 'Contact Us',
+      icon: ICONS.chatSquare(),
+      onPress: () => Linking.openURL('https://crowdsnow.com/contact-us/'),
+    },
+    {
       title: 'Terms of Service & Privacy',
       icon: ICONS.bookMark(),
       onPress: onTermsOfService,
@@ -121,6 +127,11 @@ export const useProfileTabOptions = ({
       title: 'FAQ',
       icon: ICONS.faq(),
       onPress: () => goToScreen(Screens.FAQ),
+    },
+    {
+      title: 'Contact Us',
+      icon: ICONS.chatSquare(),
+      onPress: () => Linking.openURL('https://crowdsnow.com/contact-us/'),
     },
     {
       title: 'Terms of Service & Privacy',

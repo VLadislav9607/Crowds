@@ -1,6 +1,6 @@
 import { IWithPaginationResponse } from '@services';
 
-export type PaymentHistoryTab = 'pending' | 'paid';
+export type PaymentHistoryTab = 'pending' | 'paid' | 'rejected';
 
 export interface GetTalentPaymentHistoryBodyDto {
   tab: PaymentHistoryTab;
@@ -25,6 +25,7 @@ export interface TalentPaymentHistoryItem {
   payout_status: string;
   payout_amount_cents: number;
   payout_id: string;
+  rejection_reason: string | null;
 }
 
 export interface GetTalentPaymentHistoryResDto

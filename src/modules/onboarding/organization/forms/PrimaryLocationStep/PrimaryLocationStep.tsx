@@ -3,7 +3,7 @@ import { Controller, useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { forwardRef, useEffect, useImperativeHandle, useRef } from 'react';
 
-import { AppText } from '@ui';
+import { AppInput, AppText } from '@ui';
 import { COLORS, TYPOGRAPHY } from '@styles';
 import {
   AppImage,
@@ -50,6 +50,7 @@ export const PrimaryLocationStep = forwardRef<
         ? defaultValuesExternal
         : {
             isHeadOffice: true,
+            is_tax_registered: false,
             parsed_location: {
               autocomplete_description: '',
               city: '',
@@ -70,7 +71,7 @@ export const PrimaryLocationStep = forwardRef<
 
     const {
       control,
-      formState: { isValid, errors },
+      formState: { isValid },
       handleSubmit,
       getValues,
       resetField,
@@ -80,8 +81,6 @@ export const PrimaryLocationStep = forwardRef<
       mode: 'onBlur',
       defaultValues,
     });
-
-    console.log('errors', errors);
 
     const parsedLocation = watch('parsed_location');
     const isHeadOffice = watch('isHeadOffice');
@@ -108,11 +107,10 @@ export const PrimaryLocationStep = forwardRef<
           control={control}
           name="parsed_location"
           render={({ field, fieldState }) => {
-            console.log('fieldState', field);
             return (
               <PlacesPredictionsInput
                 inputProps={{
-                  placeholder: 'Search primary location',
+                  placeholder: 'e.g. 127 Main Street, New York, USA',
                   errorMessage: fieldState.error?.message,
                 }}
                 types={PlaceAutocompleteType.address}
@@ -167,7 +165,7 @@ export const PrimaryLocationStep = forwardRef<
             render={({ field, fieldState }) => (
               <PlacesPredictionsInput
                 inputProps={{
-                  placeholder: 'Search head office location',
+                  placeholder: 'e.g. 127 Main Street, New York, USA',
                   errorMessage: fieldState.error?.message,
                 }}
                 types={PlaceAutocompleteType.address}
@@ -195,11 +193,44 @@ export const PrimaryLocationStep = forwardRef<
                 defaultValue={
                   parsedHeadOfficeLocation?.autocomplete_description
                 }
-                containerStyle={styles.headOfficeLocationInput}
+                containerStyle={styles.checkboxListContainer}
               />
             )}
           />
         </If>
+
+        <Controller
+          control={control}
+          name="vat_number"
+          render={({ field, fieldState }) => (
+            <AppInput
+              label="Company Business Number / Company Identification Number"
+              labelProps={{ color: 'black', style: { marginBottom: 0 } }}
+              placeholder="Enter your company business or identification number"
+              value={field.value}
+              onChangeText={field.onChange}
+              errorMessage={fieldState.error?.message}
+              containerStyle={styles.checkboxListContainer}
+            />
+          )}
+        />
+
+        <Controller
+          control={control}
+          name="is_tax_registered"
+          render={({ field }) => (
+            <CheckboxList
+              label="Are you registered for tax (goods and/or services) relevant to your business in your respective state or country?"
+              containerStyle={styles.checkboxListContainer}
+              items={[
+                { label: 'Yes', value: 'yes' },
+                { label: 'No', value: 'no' },
+              ]}
+              checkedValues={field.value === true ? 'yes' : field.value === false && field.value !== undefined ? 'no' : undefined}
+              onCheckboxPress={item => field.onChange(item.value === 'yes')}
+            />
+          )}
+        />
 
         <View>
           <AppText
@@ -262,10 +293,6 @@ const styles = StyleSheet.create({
   checkboxListContainer: {
     marginTop: 24,
   },
-  headOfficeLocationInput: {
-    marginTop: 24,
-  },
-
   imageContainer: {
     width: 148,
     height: 148,

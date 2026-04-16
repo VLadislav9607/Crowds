@@ -60,6 +60,8 @@ export const primaryLocationFormSchema = z
       })
       .optional(),
     isHeadOffice: z.boolean(),
+    vat_number: z.string().min(1, 'Company business number is required'),
+    is_tax_registered: z.boolean().optional(),
   })
   .refine(
     data => {

@@ -36,6 +36,7 @@ export interface CreateGlobalOrgBodyDto {
   location: ParsedLocation;
   creator: OrganizationCreatorInformationFormData;
   branchManagerEmails?: Record<string, string>;
+  vat_number?: string;
 }
 
 export interface CreateGlobalOrgResDto {

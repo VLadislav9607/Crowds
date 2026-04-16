@@ -8,12 +8,10 @@ import { useSetOrgFlag } from '../useSetOrgFlag';
 
 type UseFlagOrganizationFormParams = {
   eventId: string;
-  brandId: string;
 };
 
 export const useFlagOrganizationForm = ({
   eventId,
-  brandId,
 }: UseFlagOrganizationFormParams) => {
   const [isNoteModalVisible, setIsNoteModalVisible] = useState(false);
   const [pendingData, setPendingData] =
@@ -64,13 +62,12 @@ export const useFlagOrganizationForm = ({
 
       await createFlagReport.mutateAsync({
         targetType: 'organization',
-        targetId: brandId,
         eventId,
-        requestedFlagType: data.selectedFlag as 'yellow' | 'red' | 'black',
         description: trimmedReason,
+        requestedFlagType: data.selectedFlag as 'yellow' | 'red' | 'black',
       });
     },
-    [createFlagReport, eventId, brandId],
+    [createFlagReport, eventId],
   );
 
   const confirmNoteModal = useCallback(async () => {

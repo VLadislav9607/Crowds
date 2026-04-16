@@ -22,6 +22,7 @@ export interface UseGetMeResDto {
     last_name: string;
     username: string;
     email: string;
+    birth_date?: string;
     onboarding_completed_step: number;
     organization_networks: OrganizationNetworkDto[];
     /** MVP: flat structure — 1 network, 1 brand, N offices. Avoid traversing arrays. */

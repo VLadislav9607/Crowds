@@ -154,6 +154,7 @@ export const OtpInput = ({
               selectTextOnFocus
               caretHidden={false}
               selectionColor={COLORS.main}
+              allowFontScaling={false}
             />
           </View>
         ))}

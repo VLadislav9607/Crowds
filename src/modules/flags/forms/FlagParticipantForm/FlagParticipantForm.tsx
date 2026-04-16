@@ -35,10 +35,11 @@ export const FlagParticipantForm = ({
   return (
     <>
       <View style={styles.selectFlagSection}>
-        <AppText typography="bold_16">Select flag</AppText>
+        <AppText typography="bold_16">Select coloured flag</AppText>
         <View style={styles.flagOptions}>
           {FLAG_COLORS.slice(1, FLAG_COLORS.length).map(flag => (
             <Pressable
+              hitSlop={10}
               key={flag.value}
               onPress={() => setSelectedFlag(flag.value)}
               style={[
@@ -84,6 +85,7 @@ export const FlagParticipantForm = ({
               multiline
               scrollEnabled
               textAlignVertical="top"
+              allowFontScaling={false}
             />
           )}
         />

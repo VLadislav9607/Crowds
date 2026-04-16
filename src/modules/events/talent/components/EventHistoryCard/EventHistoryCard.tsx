@@ -1,10 +1,11 @@
-import { View, GestureResponderEvent } from 'react-native';
+import { View, GestureResponderEvent, TouchableOpacity } from 'react-native';
 import { formatInTimeZone } from 'date-fns-tz';
 import { IconText, AppText, DashedLine, IconButton } from '@ui';
 import { ICONS } from '@assets';
 import { AppImage, If, usePopupMenu, IPopupMenuItem } from '@components';
 import { COLORS } from '@styles';
 import { useLocalCurrency } from '@actions';
+import { goToScreen, Screens } from '@navigation';
 import { calculateEventDuration } from '../../../helpers';
 import { styles } from './styles';
 import { EventHistoryCardProps } from './types';
@@ -132,13 +133,41 @@ export const EventHistoryCard = ({
             </AppText>
           </If>
         </View>
-        <View
+        <TouchableOpacity
           style={[styles.statusBadge, { backgroundColor: statusColor + '1A' }]}
+          onPress={
+            payoutStatus === 'awaiting_settlement' ||
+            payoutStatus === 'processing'
+              ? () =>
+                  goToScreen(Screens.TalentPaymentHistory, {
+                    initialTab: 'pending',
+                  })
+              : payoutStatus === 'paid'
+                ? () =>
+                    goToScreen(Screens.TalentPaymentHistory, {
+                      initialTab: 'paid',
+                    })
+                : payoutStatus === 'rejected' || payoutStatus === 'failed'
+                  ? () =>
+                      goToScreen(Screens.TalentPaymentHistory, {
+                        initialTab: 'rejected',
+                      })
+                  : undefined
+          }
+          activeOpacity={
+            payoutStatus === 'awaiting_settlement' ||
+            payoutStatus === 'processing' ||
+            payoutStatus === 'paid' ||
+            payoutStatus === 'rejected' ||
+            payoutStatus === 'failed'
+              ? 0.7
+              : 1
+          }
         >
           <AppText typography="bold_12" style={{ color: statusColor }}>
             {getStatusLabel(payoutStatus)}
           </AppText>
-        </View>
+        </TouchableOpacity>
         <IconButton
           icon={ICONS.dotsVertical()}
           iconSize={24}

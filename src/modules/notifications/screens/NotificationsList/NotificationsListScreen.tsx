@@ -28,7 +28,7 @@ export const NotificationsListScreen = () => {
   const { mutate: markAllAsRead, isPending: isMarkingAllAsRead } =
     useMarkAllAsRead();
   const { mutate: deleteNotification } = useDeleteNotification();
-  const { mutate: clearAll } = useClearAllNotifications();
+  const { mutateAsync: clearAllAsync } = useClearAllNotifications();
 
   const confirmModalRef = useRef<ActionConfirmationModalRef>(null);
 
@@ -58,9 +58,9 @@ export const NotificationsListScreen = () => {
       title: 'Clear all notifications',
       subtitle: 'Are you sure you want to delete all notifications?',
       confirmButtonText: 'Clear All',
-      onConfirm: () => clearAll(),
+      onConfirm: () => clearAllAsync(),
     });
-  }, [clearAll]);
+  }, [clearAllAsync]);
 
   const rightIcons =
     notifications.length > 0

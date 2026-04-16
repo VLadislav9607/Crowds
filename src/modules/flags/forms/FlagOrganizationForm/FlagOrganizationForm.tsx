@@ -11,12 +11,10 @@ import { FlagNoteWarningModal } from '../../modals';
 
 interface FlagOrganizationFormProps {
   eventId: string;
-  brandId: string;
 }
 
 export const FlagOrganizationForm = ({
   eventId,
-  brandId,
 }: FlagOrganizationFormProps) => {
   const {
     control,
@@ -29,15 +27,16 @@ export const FlagOrganizationForm = ({
     openNoteModal,
     closeNoteModal,
     confirmNoteModal,
-  } = useFlagOrganizationForm({ eventId, brandId });
+  } = useFlagOrganizationForm({ eventId });
 
   return (
     <>
       <View style={styles.selectFlagSection}>
-        <AppText typography="bold_16">Select flag</AppText>
+        <AppText typography="bold_16">Select coloured flag</AppText>
         <View style={styles.flagOptions}>
           {FLAG_COLORS.map(flag => (
             <Pressable
+              hitSlop={10}
               key={flag.value}
               onPress={() => setSelectedFlag(flag.value)}
               style={[
@@ -82,6 +81,7 @@ export const FlagOrganizationForm = ({
             multiline
             scrollEnabled
             textAlignVertical="top"
+            allowFontScaling={false}
           />
         )}
       />

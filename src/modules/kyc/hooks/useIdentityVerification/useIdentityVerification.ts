@@ -1,9 +1,10 @@
-import { useCallback } from 'react';
+import { useCallback, useState } from 'react';
 import { Alert } from 'react-native';
 import { useCreateKycSdkToken, useCreateKycChecks, useGetMe } from '@actions';
 import { startSafe } from '@complycube/react-native';
 import { APP_ID } from '@constants';
 import { goToScreen, Screens } from '@navigation';
+import { removeUserKycStatus } from '../../hooks/useIsUserVerified';
 
 type VerificationOrigin = 'talent_onboarding' | 'org_onboarding' | 'profile';
 
@@ -85,8 +86,9 @@ export const useIdentityVerification = (
   origin: VerificationOrigin = 'profile',
 ) => {
   const { me, talent } = useGetMe();
-  const { mutateAsync: createKycSdkToken, isPending } = useCreateKycSdkToken();
+  const { mutateAsync: createKycSdkToken, isPending: isCreatingToken } = useCreateKycSdkToken();
   const { mutateAsync: createKycChecks } = useCreateKycChecks();
+  const [isProcessingSdk, setIsProcessingSdk] = useState(false);
 
   const userId = me?.id || '';
 
@@ -118,12 +120,20 @@ export const useIdentityVerification = (
       if (outcome.status === 'success') {
         const { documentId, livePhotoId } = parseSdkResult(outcome.result);
 
-        // Navigate immediately, create checks in background
-        goToScreen(Screens.VerificationProcessing, { origin });
+        // Show loader immediately after SDK closes
+        setIsProcessingSdk(true);
 
-        createKycChecks({ clientId, documentId, livePhotoId }).catch(error => {
+        // Clear stale KYC cache
+        removeUserKycStatus(userId);
+
+        // Wait for checks to be created — this resets status to 'pending' in DB
+        // before we navigate, so VerificationProcessing never sees stale 'failed'
+        await createKycChecks({ clientId, documentId, livePhotoId }).catch(error => {
           console.error('[KYC] Failed to create checks:', error);
         });
+
+        goToScreen(Screens.VerificationProcessing, { origin });
+        setIsProcessingSdk(false);
       }
     },
     [createKycChecks, origin],
@@ -134,8 +144,9 @@ export const useIdentityVerification = (
       const response = await createKycSdkToken({
         userId,
         firstName: me?.first_name || '',
+        middleName: (talent as Record<string, unknown>)?.middle_name as string || undefined,
         lastName: me?.last_name || '',
-        dob: talent?.birth_date || '2000-01-01',
+        dob: talent?.birth_date || undefined,
         appId: APP_ID,
       });
 
@@ -150,6 +161,6 @@ export const useIdentityVerification = (
 
   return {
     goToVerification,
-    isPending,
+    isPending: isCreatingToken || isProcessingSdk,
   };
 };

@@ -25,6 +25,7 @@ export const useCreateEventForm = () => {
       tags: [],
       paymentMode: 'perHour',
       paymentAmount: undefined,
+      fixedRateTotalHours: undefined,
       eventBrief: '',
       ndaDocument: undefined,
       registrationClosingAt: undefined,

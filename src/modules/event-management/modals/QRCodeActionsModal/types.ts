@@ -6,6 +6,7 @@ export interface QRCodeActionsModalData {
   qrCodeId: string;
   eventId: string;
   eventStartAt: string;
+  checkinOpensAt?: string;
   timeZone?: string;
 }
 

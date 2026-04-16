@@ -93,18 +93,15 @@ export const DocumentPicker = ({
               height={titleIconSize}
             />
           </If>
-
-          <If condition={!!selectedDocumentName}>
-            <TouchableOpacity
-              onPress={onDocumentRemove}
-              hitSlop={{ top: 10, bottom: 10, left: 10, right: 10 }}
-            >
-              <SvgXml xml={ICONS.closeIcon('main')} width={16} height={16} />
-            </TouchableOpacity>
-          </If>
         </View>
 
-        <If condition={!!icon}>
+        <If condition={!!selectedDocumentName}>
+          <TouchableOpacity onPress={onDocumentRemove} hitSlop={10}>
+            <SvgXml xml={ICONS.closeIcon('main')} width={16} height={16} />
+          </TouchableOpacity>
+        </If>
+
+        <If condition={!!icon && !selectedDocumentName}>
           <SvgXml xml={icon!} width={iconSize} height={iconSize} />
         </If>
       </TouchableOpacity>

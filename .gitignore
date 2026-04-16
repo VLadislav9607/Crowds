@@ -82,3 +82,5 @@ CLAUDE.md
 .mcp.json
 
 .env.local
+.env.staging
+.env.prod

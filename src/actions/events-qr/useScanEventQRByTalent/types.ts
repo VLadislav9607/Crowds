@@ -10,6 +10,7 @@ export interface ScanQREventInfo {
   start_at: string;
   end_at: string;
   checkin_cutoff: string | null;
+  checkin_opens_at: string | null;
 }
 
 export interface ScanQRSessionInfo {

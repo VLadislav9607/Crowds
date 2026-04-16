@@ -44,8 +44,6 @@ export const TalentsList = ({
       renderItem={({ item }) => (
         <TalentProfileRow
           talent={item}
-          popUpItems={[{ label: 'Add flag', value: 'add_flag' }]}
-          onMenuSelect={() => {}}
           onPressCard={() =>
             goToScreen(Screens.TalentProfile, {
               talentId: item.talentId,

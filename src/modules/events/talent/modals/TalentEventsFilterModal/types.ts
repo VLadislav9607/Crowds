@@ -21,4 +21,6 @@ export interface TalentEventsFilterData {
   jobType?: 'urgent_24_hours' | 'urgent_3_days';
   paymentType?: 'hourly' | 'fixed';
   categoryId?: string;
+  subcategoryIds?: string[];
+  tagIds?: string[];
 }

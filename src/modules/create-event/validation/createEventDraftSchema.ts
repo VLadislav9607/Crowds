@@ -47,6 +47,16 @@ const validateRegistrationClosingDate = (data: {
   return true;
 };
 
+const validateCheckinOpensAt = (data: {
+  checkinOpensAt?: Date | null;
+  startAt?: Date | null;
+}) => {
+  if (data.checkinOpensAt && data.startAt) {
+    return data.checkinOpensAt < data.startAt;
+  }
+  return true;
+};
+
 const parsedLocationSchema = z.object(
   {
     autocomplete_description: z.string(),
@@ -139,14 +149,16 @@ export const createEventDraftSchema = z
     paymentMode: z.enum(['perHour', 'fixed']),
     paymentAmount: z
       .number()
-      .min(15, 'Minimum payment is $15')
+      .min(1, 'Payment is required')
       .optional()
       .nullable(),
+    fixedRateTotalHours: z.number().optional().nullable(),
     eventBrief: z.string().optional().nullable(),
     ndaDocument: pickedDocumentSchema.optional().nullable(),
     ndaDocumentName: z.string().optional().nullable(),
     ndaDocumentPath: z.string().optional().nullable(),
     registrationClosingAt: z.date().optional().nullable(),
+    checkinOpensAt: z.date().optional().nullable(),
     customTasks: z.array(z.string()).optional().nullable(),
   })
   .refine(validateStartBeforeEnd, {
@@ -160,6 +172,10 @@ export const createEventDraftSchema = z
   .refine(validateRegistrationClosingDate, {
     message: 'Registration closing date cannot be after start date',
     path: ['registrationClosingAt'],
+  })
+  .refine(validateCheckinOpensAt, {
+    message: 'Bump-in time must be before event start time',
+    path: ['checkinOpensAt'],
   })
   .superRefine((data, ctx) => {
     if (data.locationType === 'specific_location' && !data.location) {
@@ -175,6 +191,28 @@ export const createEventDraftSchema = z
         message: 'Please select a country',
         path: ['locationCountryCode'],
       });
+    }
+    if (data.paymentMode === 'perHour' && data.paymentAmount != null && data.paymentAmount < 15) {
+      ctx.addIssue({
+        code: z.ZodIssueCode.custom,
+        message: 'Minimum rate is $15.00 USD per hour',
+        path: ['paymentAmount'],
+      });
+    }
+    if (data.paymentMode === 'fixed' && data.paymentAmount != null && data.fixedRateTotalHours != null) {
+      if (data.fixedRateTotalHours <= 0) {
+        ctx.addIssue({
+          code: z.ZodIssueCode.custom,
+          message: 'Total hours of work is required for fixed rate',
+          path: ['fixedRateTotalHours'],
+        });
+      } else if (data.paymentAmount / data.fixedRateTotalHours < 9.5) {
+        ctx.addIssue({
+          code: z.ZodIssueCode.custom,
+          message: `Fixed rate falls below the minimum of $9.50 USD per hour (minimum total: $${(data.fixedRateTotalHours * 9.5).toFixed(2)} USD)`,
+          path: ['paymentAmount'],
+        });
+      }
     }
   });
 

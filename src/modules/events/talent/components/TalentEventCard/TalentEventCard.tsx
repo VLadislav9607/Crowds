@@ -333,12 +333,7 @@ export const TalentEventCard = ({
               onPress={handleDecline}
             />
           </If>
-          <If
-            condition={
-              eventCardType === 'proposed' ||
-              (eventCardType === 'denied' && !!event?.can_reaccept)
-            }
-          >
+          <If condition={eventCardType === 'proposed'}>
             <AppButton
               title="Accept"
               size="36"
@@ -369,7 +364,7 @@ export const TalentEventCard = ({
                   size="37"
                   icon={ICONS.chats('white')}
                   iconSize={20}
-                  title="Message"
+                  title="Chat"
                   wrapperStyles={styles.messageButtonWrapper}
                   onPress={handleOpenGroupChat}
                 />

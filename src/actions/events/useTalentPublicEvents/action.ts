@@ -16,6 +16,8 @@ export const searchPublicEventsAction = async (
     filter_date_to: params.filter_date_to,
     filter_payment_type: params.filter_payment_type,
     filter_category_id: params.filter_category_id,
+    filter_subcategory_ids: params.filter_subcategory_ids,
+    filter_tag_ids: params.filter_tag_ids,
   });
 
   if (error) throw error;

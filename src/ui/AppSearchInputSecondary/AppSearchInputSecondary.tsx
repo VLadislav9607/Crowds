@@ -29,6 +29,7 @@ export const AppSearchInputSecondary = ({
         numberOfLines={1}
         multiline={false}
         {...props}
+        allowFontScaling={false}
       />
     </Pressable>
   );

@@ -1,4 +1,4 @@
-import { AppDateInput, AppModal } from '@components';
+import { AppModal } from '@components';
 import { useImperativeModal } from '@hooks';
 import {
   EventQRCodeEditorFormValues,
@@ -37,10 +37,7 @@ export const EventQRCodeEditorModal = forwardRef<EventQRCodeEditorModalRef>(
     const { isVisible, close, refProps } =
       useImperativeModal<EventQRCodeEditorModalRefProps>(ref, {
         onRefClose: () => {
-          form.reset({
-            name: '',
-            checkIn: undefined as unknown as Date,
-          });
+          form.reset({ name: '' });
         },
       });
 
@@ -67,14 +64,9 @@ export const EventQRCodeEditorModal = forwardRef<EventQRCodeEditorModalRef>(
       resolver: zodResolver(eventQRCodeEditorSchema),
       defaultValues: {
         name: '',
-        checkIn: undefined as unknown as Date,
       },
       mode: 'onChange',
     });
-
-    const eventStartAt = refProps.eventStartAt
-      ? new Date(refProps.eventStartAt)
-      : undefined;
 
     const toMinutePrecisionISO = (date: Date) => {
       const d = new Date(date);
@@ -82,10 +74,18 @@ export const EventQRCodeEditorModal = forwardRef<EventQRCodeEditorModalRef>(
       return d.toISOString();
     };
 
+    // QR start_at is always set to checkinOpensAt (bump-in time)
+    const getStartAt = () => {
+      if (refProps.checkinOpensAt) {
+        return toMinutePrecisionISO(new Date(refProps.checkinOpensAt));
+      }
+      return toMinutePrecisionISO(new Date(refProps.eventStartAt));
+    };
+
     const onCreateEventQRCode = async (data: EventQRCodeEditorFormValues) =>
       createEventQRCodeMutate({
         name: data.name,
-        start_at: toMinutePrecisionISO(data.checkIn),
+        start_at: getStartAt(),
         event_id: refProps.eventId,
       });
 
@@ -93,7 +93,7 @@ export const EventQRCodeEditorModal = forwardRef<EventQRCodeEditorModalRef>(
       editEventQRCodeMutate({
         qr_id: refProps.editingQRCodeId!,
         name: data.name,
-        start_at: toMinutePrecisionISO(data.checkIn),
+        start_at: getStartAt(),
         event_id: refProps.eventId,
       });
 
@@ -106,20 +106,16 @@ export const EventQRCodeEditorModal = forwardRef<EventQRCodeEditorModalRef>(
     const showActionLoading = isCreatingEventQRCode || isEditingEventQRCode;
 
     useEffect(() => {
-      if (isVisible && !refProps.editingQRCodeId && refProps.eventStartAt) {
-        form.reset({
-          name: '',
-          checkIn: new Date(refProps.eventStartAt),
-        });
+      if (isVisible && !refProps.editingQRCodeId) {
+        form.reset({ name: '' });
       }
       // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [isVisible, refProps.eventStartAt, refProps.editingQRCodeId]);
+    }, [isVisible, refProps.editingQRCodeId]);
 
     useEffect(() => {
       if (qrCodeDetails && isVisible) {
         form.reset({
           name: qrCodeDetails.qr_code.name,
-          checkIn: new Date(qrCodeDetails.qr_code.start_at),
         });
       }
       // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -154,32 +150,8 @@ export const EventQRCodeEditorModal = forwardRef<EventQRCodeEditorModalRef>(
             )}
           />
 
-          <Controller
-            control={form.control}
-            name="checkIn"
-            render={({ field: { onChange, value }, fieldState }) => (
-              <AppDateInput
-                label="Check-in"
-                placeholder="Select Check-in date and time"
-                mode="datetime"
-                defaultIconColor="dark_gray"
-                labelProps={{
-                  typography: 'semibold_16',
-                  color: isLoadingQRCodeDetails ? 'black_40' : 'black',
-                }}
-                value={value}
-                onChange={onChange}
-                errorMessage={fieldState.error?.message}
-                minimumDate={new Date()}
-                maximumDate={eventStartAt}
-                skeleton={isLoadingQRCodeDetails}
-                timeZone={refProps.timeZone}
-              />
-            )}
-          />
-
           <AppText typography="medium_12" color="gray_primary">
-            Check-out will be available automatically after the event ends.
+            Check-in time is set by the event's bump-in time.
           </AppText>
         </View>
 

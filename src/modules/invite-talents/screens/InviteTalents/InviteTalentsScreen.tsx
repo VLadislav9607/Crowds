@@ -27,8 +27,8 @@ export const InviteTalentsScreen = () => {
 
   const tabOptions = [
     { label: 'My lists', value: 'my_lists' },
-    { label: 'Matching talents', value: 'matching_talent' },
-    { label: 'All talents', value: 'all_talent' },
+    { label: 'Matching', value: 'matching_talent' },
+    { label: 'All', value: 'all_talent' },
   ];
 
   return (
@@ -38,9 +38,7 @@ export const InviteTalentsScreen = () => {
       contentContainerStyle={styles.contentContainer}
       containerStyle={styles.noPaddingBottom}
       title="Invite Talents"
-      goBackCallback={() => {
-        goBack();
-      }}
+      goBackCallback={() => goBack()}
       customElement={
         <AppText style={styles.invitedText}>{invited} invited</AppText>
       }
@@ -65,11 +63,19 @@ export const InviteTalentsScreen = () => {
       </If>
 
       <If condition={selectedTab === 'matching_talent'}>
-        <MatchingTalentsTab eventId={eventId} hasLocation={hasLocation} isRegistrationClosed={isRegistrationClosed} />
+        <MatchingTalentsTab
+          eventId={eventId}
+          hasLocation={hasLocation}
+          isRegistrationClosed={isRegistrationClosed}
+        />
       </If>
 
       <If condition={selectedTab === 'all_talent'}>
-        <AllTalentsTab eventId={eventId} hasLocation={hasLocation} isRegistrationClosed={isRegistrationClosed} />
+        <AllTalentsTab
+          eventId={eventId}
+          hasLocation={hasLocation}
+          isRegistrationClosed={isRegistrationClosed}
+        />
       </If>
     </ScreenWrapper>
   );

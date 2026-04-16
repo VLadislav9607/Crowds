@@ -95,6 +95,17 @@ export const ProfileSetupHeader = ({
         />
       </View>
 
+      <If condition={showCamera}>
+        <AppText
+          typography="regular_12"
+          color="gray_primary"
+          margin={{ top: 6 }}
+          style={{ maxWidth: 200 }}
+        >
+          Please only use a profile facial picture
+        </AppText>
+      </If>
+
       <View>
         <View style={styles.nameContainer}>
           <AppText color="black" typography="semibold_20">

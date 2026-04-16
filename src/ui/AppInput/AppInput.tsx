@@ -62,6 +62,7 @@ export const AppInput = ({
             editable={!props.disabled}
             {...props}
             secureTextEntry={isHidden}
+            allowFontScaling={false}
           />
 
           {props.secureTextEntry && (
@@ -81,7 +82,7 @@ export const AppInput = ({
 
       <AppText
         renderIf={!!description && !errorMessage}
-        typography="medium_12"
+        typography="semibold_12"
         color="gray_primary"
         margin={{ top: 10 }}
       >

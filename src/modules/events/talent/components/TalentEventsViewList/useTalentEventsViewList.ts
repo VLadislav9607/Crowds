@@ -1,4 +1,4 @@
-import { useRef } from 'react';
+import { useRef, useState } from 'react';
 import {
   TalentEventAlreadyBookedModalRef,
   TalentEventApplyConfirmModalRef,
@@ -29,6 +29,9 @@ export const useTalentEventsViewList = ({
   const applyConfirmModalRef = useRef<TalentEventApplyConfirmModalRef>(null);
   const addEventToForderModalRef =
     useRef<BottomSheetModal<AddEventToForderModalData> | null>(null);
+
+  const [declineModalVisible, setDeclineModalVisible] = useState(false);
+  const [pendingDeclineId, setPendingDeclineId] = useState<string | null>(null);
 
   const removeEventFromEventsFolder = useRemoveEventFromEventsFolder({
     onSuccess: async () => {
@@ -181,8 +184,21 @@ export const useTalentEventsViewList = ({
     });
   };
 
-  const handleDecline = async (participationId: string) => {
-    await declineProposal.mutateAsync({ participationId });
+  const handleDecline = (participationId: string) => {
+    setPendingDeclineId(participationId);
+    setDeclineModalVisible(true);
+  };
+
+  const handleDeclineConfirm = async () => {
+    if (!pendingDeclineId) return;
+    await declineProposal.mutateAsync({ participationId: pendingDeclineId });
+    setDeclineModalVisible(false);
+    setPendingDeclineId(null);
+  };
+
+  const handleDeclineCancel = () => {
+    setDeclineModalVisible(false);
+    setPendingDeclineId(null);
   };
 
   const handleCancelApplication = async (participationId: string) => {
@@ -225,9 +241,13 @@ export const useTalentEventsViewList = ({
     applyConfirmModalRef,
     acceptProposal,
     declineProposal,
+    declineModalVisible,
+    pendingDeclineId,
     handleRemoveEventFromFolder,
     handleAccept,
     handleDecline,
+    handleDeclineConfirm,
+    handleDeclineCancel,
     handleCancelApplication,
     handleApply,
     handleReject,

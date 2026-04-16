@@ -47,7 +47,7 @@ const STATUS_CONFIG: Record<
     statusLabel: 'Not Connected',
     statusColor: '#FFF3E0',
     description:
-      'The Banking Process has been integrated with Stripe Connect; to ensure all your details stay safe on their platform.',
+      'The Banking Process has been integrated with Stripe Connect; to ensure all your details stay safe on their platform.\n\nIf you have an email address already linked to an existing bank account you can use that; alternatively you can use a new email address and Stripe will walk you through a validation process so you can add your preferred banking details.',
     boldWord: 'Stripe Connect',
     buttonTitle: 'Proceed to Add Details',
   },

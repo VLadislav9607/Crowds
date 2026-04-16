@@ -80,6 +80,8 @@ export const PlacesPredictionsInput = ({
       sessiontoken: sessionToken,
     });
 
+    console.log({ detailsResponse });
+
     if (
       types === PlaceAutocompleteType.address &&
       !detailsResponse.result.address_components?.some(component =>

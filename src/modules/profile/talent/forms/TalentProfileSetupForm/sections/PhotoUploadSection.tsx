@@ -42,8 +42,12 @@ export const PhotoUploadSection = ({
         }
       />
 
+      <AppText typography="regular_12" color="gray_primary" margin={{ top: 8 }}>
+        Please use a full length image — ensure you are fully clothed; no swimsuit images are permitted.
+      </AppText>
+
       <If condition={!!errorMessage}>
-        <AppText typography="medium_10" color="red" margin={{ top: 8 }}>
+        <AppText typography="medium_10" color="red" margin={{ top: 4 }}>
           {errorMessage || 'One Full Length Shot'}
         </AppText>
       </If>

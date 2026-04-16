@@ -13,12 +13,15 @@ import {
 } from '@actions';
 import { useRefetchQuery } from '@hooks';
 import { ITabOption } from '@components';
+import { useRoute, RouteProp } from '@react-navigation/native';
+import { RootStackParamList, Screens } from '@navigation';
 import { PaymentHistoryCard } from '../../components';
 import { styles } from './styles';
 
 const TAB_OPTIONS: ITabOption<PaymentHistoryTab>[] = [
   { label: 'Pending', value: 'pending' },
   { label: 'Paid', value: 'paid' },
+  { label: 'Rejected', value: 'rejected' },
 ];
 
 const PaymentSkeleton = () => (
@@ -32,7 +35,11 @@ const PaymentSkeleton = () => (
 );
 
 export const TalentPaymentHistoryScreen = () => {
-  const [activeTab, setActiveTab] = useState<PaymentHistoryTab>('pending');
+  const route =
+    useRoute<RouteProp<RootStackParamList, Screens.TalentPaymentHistory>>();
+  const [activeTab, setActiveTab] = useState<PaymentHistoryTab>(
+    route.params?.initialTab ?? 'pending',
+  );
 
   const { data, isLoading, hasNextPage, fetchNextPage, refetch } =
     useGetTalentPaymentHistory(activeTab);
@@ -63,7 +70,11 @@ export const TalentPaymentHistoryScreen = () => {
         keyExtractor={(item, index) => item.payout_id + index}
         contentContainerStyle={styles.contentContainer}
         emptyText={
-          activeTab === 'pending' ? 'No pending payments' : 'No paid events yet'
+          activeTab === 'pending'
+            ? 'No pending payments'
+            : activeTab === 'paid'
+              ? 'No paid events yet'
+              : 'No rejected payments'
         }
         skeleton={isLoading ? <PaymentSkeleton /> : undefined}
         showBottomLoader={!!hasNextPage}

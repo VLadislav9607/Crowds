@@ -15,6 +15,7 @@ export interface EventDetailsForTalentDto {
   end_at: string;
   registration_closes_at: string | null;
   checkin_cutoff: string | null;
+  checkin_opens_at: string | null;
   visibility: string;
   payment_mode: string;
   payment_amount: number;

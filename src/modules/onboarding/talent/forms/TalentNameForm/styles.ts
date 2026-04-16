@@ -5,7 +5,4 @@ export const styles = StyleSheet.create({
     flex: 1,
     gap: 24,
   },
-  dateInputContainer: {
-    marginBottom: 8,
-  },
 });

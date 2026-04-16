@@ -80,6 +80,7 @@ export const useSingleOrgRegister = ({
       headOfficeLocation: headOfficeLocation as ParsedLocation,
       location: location as ParsedLocation,
       creator: data.organizationCreatorInformationFormData!,
+      vat_number: data.primaryLocationFormData?.vat_number,
     });
   };
 
@@ -91,10 +92,6 @@ export const useSingleOrgRegister = ({
 
     console.log('data', data);
     if (step === 1) {
-      if (!data.image) {
-        showErrorToast('Please add your brand logo');
-        return;
-      }
       primaryLocationFormRef.current?.handleSubmit(
         handlePrimaryLocationFormSubmit,
         error => {

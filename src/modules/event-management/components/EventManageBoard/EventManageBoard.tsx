@@ -11,39 +11,43 @@ import { BoardItemType, IEventManageBoardProps } from './types';
 import { styles } from './styles';
 
 export const EventManageBoard = ({
-  checkinCutoff,
+  checkinOpensAt,
+  checkinClosesAt,
   timezone,
-  isCutoffPassed,
+  isBumpInPassed,
+  hasAnyCheckins,
   isUpdating,
-  onOpenEditCheckIn,
+  onOpenEditBumpIn,
 }: IEventManageBoardProps) => {
-  const boardConfig = getBoardConfig(checkinCutoff, timezone);
+  const boardConfig = getBoardConfig(checkinOpensAt, checkinClosesAt, timezone);
+
+  const isEditDisabled = isBumpInPassed || hasAnyCheckins;
 
   return (
     <View style={styles.container}>
       {boardConfig.map((item, index) => {
-        const isCutoffTile = item.type === BoardItemType.CHECK_IN_CUTOFF;
+        const isOpensTile = item.type === BoardItemType.CHECKIN_OPENS;
 
         return (
           <TouchableOpacity
             activeOpacity={0.8}
             key={index}
-            disabled={!isCutoffTile || isCutoffPassed || isUpdating}
-            onPress={() => onOpenEditCheckIn()}
+            disabled={!isOpensTile || isEditDisabled || isUpdating}
+            onPress={() => onOpenEditBumpIn()}
             style={[
               styles.borderItem,
               {
                 backgroundColor: item.bgColor,
                 borderColor: item.borderColor,
                 borderWidth: item.borderWidth || 0,
-                opacity: isCutoffTile && isCutoffPassed ? 0.5 : 1,
+                opacity: isOpensTile && isEditDisabled ? 0.5 : 1,
               },
             ]}
           >
-            <If condition={isCutoffTile && isUpdating}>
+            <If condition={isOpensTile && isUpdating}>
               <ActivityIndicator color={COLORS.white} size="small" />
             </If>
-            <If condition={!(isCutoffTile && isUpdating)}>
+            <If condition={!(isOpensTile && isUpdating)}>
               <AppText style={[styles.value, { color: item.textColor }]}>
                 {item.value}
               </AppText>
@@ -52,7 +56,7 @@ export const EventManageBoard = ({
               {item.label}
             </AppText>
 
-            <If condition={isCutoffTile && !isCutoffPassed && !isUpdating}>
+            <If condition={isOpensTile && !isEditDisabled && !isUpdating}>
               <SvgXml xml={ICONS.edit()} style={styles.editIcon} />
             </If>
           </TouchableOpacity>

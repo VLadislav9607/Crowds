@@ -9,6 +9,7 @@ import { styles } from './styles';
 
 interface TalentProfileHeaderProps {
   fullName: string;
+  username?: string;
   gender: string;
   age: number;
   avatarUri?: string;
@@ -17,6 +18,7 @@ interface TalentProfileHeaderProps {
 
 export const TalentProfileHeader = ({
   fullName,
+  username,
   gender,
   age,
   avatarUri,
@@ -42,6 +44,12 @@ export const TalentProfileHeader = ({
           </AppText>
         </View>
       </View>
+
+      {username ? (
+        <AppText color="gray" typography="regular_12">
+          @{username}
+        </AppText>
+      ) : null}
 
       <AppText
         color="gray"

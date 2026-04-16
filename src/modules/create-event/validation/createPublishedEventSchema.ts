@@ -52,6 +52,16 @@ const validateRegistrationClosingDate = (data: {
   return true;
 };
 
+const validateCheckinOpensAt = (data: {
+  checkinOpensAt: Date;
+  startAt: Date;
+}) => {
+  if (data.checkinOpensAt && data.startAt) {
+    return data.checkinOpensAt < data.startAt;
+  }
+  return true;
+};
+
 const pickedDocumentSchema = z.object({
   uri: z.string(),
   name: z.string(),
@@ -158,7 +168,8 @@ export const createPublishedEventSchema = z
     paymentMode: z.enum(['perHour', 'fixed']),
     paymentAmount: z
       .number('Payment is required')
-      .min(15, 'Minimum payment is $15'),
+      .min(1, 'Payment is required'),
+    fixedRateTotalHours: z.number().optional(),
     eventBrief: z.string().min(1, 'Event brief is required'),
     ndaDocument: pickedDocumentSchema.optional(),
     ndaDocumentName: z.string().optional(),
@@ -169,6 +180,13 @@ export const createPublishedEventSchema = z
       })
       .refine(validateEndDateNotInPast, {
         message: 'Registration closing date and time cannot be in the past',
+      }),
+    checkinOpensAt: z
+      .date({
+        message: 'Bump-in time is required',
+      })
+      .refine(validateEndDateNotInPast, {
+        message: 'Bump-in time cannot be in the past',
       }),
     customTasks: z.array(z.string()).optional(),
   })
@@ -183,6 +201,10 @@ export const createPublishedEventSchema = z
   .refine(validateRegistrationClosingDate, {
     message: 'Registration closing date cannot be after start date',
     path: ['registrationClosingAt'],
+  })
+  .refine(validateCheckinOpensAt, {
+    message: 'Bump-in time must be before event start time',
+    path: ['checkinOpensAt'],
   })
   .superRefine((data, ctx) => {
     if (data.locationType === 'specific_location' && !data.location) {
@@ -237,6 +259,38 @@ export const createPublishedEventSchema = z
         message: 'Event end date must be within the campaign period',
         path: ['endAt'],
       });
+    }
+    if (data.paymentMode === 'perHour' && data.paymentAmount < 15) {
+      ctx.addIssue({
+        code: z.ZodIssueCode.custom,
+        message: 'Minimum rate is $15.00 USD per hour',
+        path: ['paymentAmount'],
+      });
+    }
+    if (data.paymentMode === 'fixed') {
+      if (!data.fixedRateTotalHours || data.fixedRateTotalHours <= 0) {
+        ctx.addIssue({
+          code: z.ZodIssueCode.custom,
+          message: 'Total hours of work is required for fixed rate',
+          path: ['fixedRateTotalHours'],
+        });
+      } else if (data.paymentAmount / data.fixedRateTotalHours < 9.5) {
+        ctx.addIssue({
+          code: z.ZodIssueCode.custom,
+          message: `Fixed rate falls below the minimum of $9.50 USD per hour (minimum total: $${(data.fixedRateTotalHours * 9.5).toFixed(2)} USD)`,
+          path: ['paymentAmount'],
+        });
+      }
+      if (data.startAt && data.endAt) {
+        const diffHours = (new Date(data.endAt).getTime() - new Date(data.startAt).getTime()) / (1000 * 60 * 60);
+        if (diffHours < 24) {
+          ctx.addIssue({
+            code: z.ZodIssueCode.custom,
+            message: 'Fixed rate requires event duration longer than 1 day. Please adjust your Start and End dates, or switch to Per Hour.',
+            path: ['paymentMode'],
+          });
+        }
+      }
     }
   });
 

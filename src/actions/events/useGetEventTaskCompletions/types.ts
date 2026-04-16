@@ -15,6 +15,7 @@ export interface TaskCompletionTalentDto {
   payout_status: string | null;
   payout_amount_cents: number | null;
   settlement_status: string | null;
+  stripe_payouts_enabled: boolean;
 }
 
 export interface GetEventTaskCompletionsParams {

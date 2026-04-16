@@ -1,12 +1,12 @@
 import { Modal, StyleSheet, TouchableOpacity, View } from 'react-native';
-import { AppButton, AppText } from '@ui';
+import { AppText } from '@ui';
 import { TalentStripeSetupProps, TalentStripeSetupRef } from './types';
 import { IMAGES } from '@assets';
 import { Image } from 'react-native';
 import { forwardRef, useCallback, useImperativeHandle, useState } from 'react';
 import { WebView } from 'react-native-webview';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import { useCreateConnectAccount, useSyncConnectAccountStatus } from '@actions';
+import { useCreateConnectAccount, useCreateConnectAccountLink, useSyncConnectAccountStatus } from '@actions';
 import { showErrorToast } from '@helpers';
 import { SUPABASE_URL } from '@env';
 
@@ -17,6 +17,7 @@ export const TalentStripeSetup = forwardRef<
   TalentStripeSetupProps
 >(({ onSuccess }: TalentStripeSetupProps, ref) => {
   const [webViewUrl, setWebViewUrl] = useState<string | null>(null);
+  const [refreshAttempts, setRefreshAttempts] = useState(0);
 
   const { mutate: syncStatus } = useSyncConnectAccountStatus();
 
@@ -26,10 +27,24 @@ export const TalentStripeSetup = forwardRef<
     onSuccess?.();
   }, [syncStatus, onSuccess]);
 
+  const { mutate: createLink } = useCreateConnectAccountLink({
+    onSuccess: data => {
+      if (data.url) {
+        setWebViewUrl(data.url);
+      }
+    },
+    onError: () => {
+      showErrorToast(
+        'Could not connect to Stripe. You can finish setup later from Banking in your profile.',
+      );
+    },
+  });
+
   const { mutate: createAccount, isPending: isCreating } =
     useCreateConnectAccount({
       onSuccess: data => {
         if (data.onboardingUrl) {
+          setRefreshAttempts(0);
           setWebViewUrl(data.onboardingUrl);
         }
       },
@@ -56,7 +71,8 @@ export const TalentStripeSetup = forwardRef<
             <AppText typography="bold_14" color="main">
               Stripe Connect
             </AppText>
-            ; to ensure all your details stay safe on their platform.
+            ; to ensure all your details stay safe on their platform.{'\n\n'}
+            If you have an email address already linked to an existing bank account you can use that; alternatively you can use a new email address and Stripe will walk you through a validation process so you can add your preferred banking details.
           </AppText>
         </View>
 
@@ -76,16 +92,6 @@ export const TalentStripeSetup = forwardRef<
           />
         </View>
 
-        <View style={styles.bottomSection}>
-          <AppButton
-            title="Proceed to Add Details"
-            size="60"
-            onPress={() => createAccount({})}
-            isLoading={isCreating}
-            isDisabled={isCreating}
-            wrapperStyles={styles.buttonWrapper}
-          />
-        </View>
       </View>
 
       <Modal
@@ -120,7 +126,23 @@ export const TalentStripeSetup = forwardRef<
               startInLoadingState
               onShouldStartLoadWithRequest={request => {
                 if (request.url.startsWith(REDIRECT_URL_PREFIX)) {
-                  closeWebView();
+                  const urlObj = new URL(request.url);
+                  const type = urlObj.searchParams.get('type');
+                  if (type === 'refresh') {
+                    setWebViewUrl(null);
+                    if (refreshAttempts < 1) {
+                      setRefreshAttempts(prev => prev + 1);
+                      createLink({});
+                    } else {
+                      setRefreshAttempts(0);
+                      syncStatus();
+                      showErrorToast(
+                        'Could not connect to Stripe. You can finish setup later from Banking in your profile.',
+                      );
+                    }
+                  } else {
+                    closeWebView();
+                  }
                   return false;
                 }
                 return true;

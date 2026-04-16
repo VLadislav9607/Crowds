@@ -11,8 +11,6 @@ import {
 import { CreateTalentResDto, useCreateTalent } from '@actions';
 import { UINSaveConfirmationModalRef } from '../../../modals';
 import { supabase } from '@services';
-import { format } from 'date-fns';
-import { isAtLeastAge } from '@utils';
 import { showErrorToast, showMutationErrorToast } from '@helpers';
 import { useCheckUsernameExist } from '@actions';
 import { goBack, goToScreen, Screens } from '@navigation';
@@ -69,12 +67,6 @@ export const useOnboardingUnAuthTalentScreen = () => {
   };
 
   const handleTalentNameFormSubmit = async (formData: TalentNameFormData) => {
-    // Check if user is 18 or older
-    if (!isAtLeastAge(formData.dateOfBirth, 18)) {
-      showErrorToast('Sorry, but you must be over 18 to use this platform');
-      return;
-    }
-
     const isUserExists = await checkUsernameExistMutateAsync({
       username: formData.username.toLowerCase(),
     });
@@ -95,10 +87,10 @@ export const useOnboardingUnAuthTalentScreen = () => {
 
     createTalentMutate({
       first_name: data.talentNameFormData.firstName,
+      middle_name: data.talentNameFormData.middleName || undefined,
       last_name: data.talentNameFormData.lastName,
       username: data.talentNameFormData.username.toLowerCase(),
       gender: data.talentNameFormData.gender,
-      birth_date: format(data.talentNameFormData.dateOfBirth, 'yyyy-MM-dd'),
       password: formData.password,
     });
   };

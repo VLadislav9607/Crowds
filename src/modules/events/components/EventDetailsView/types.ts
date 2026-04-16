@@ -20,7 +20,8 @@ export type EventDetailsCardWithMapProps = {
   startTimeFormatted?: string;
   endTimeFormatted?: string;
   registrationClosesFormatted?: string;
-  checkinCutoffFormatted?: string;
+  checkinOpensAtFormatted?: string;
+  checkinClosesAtFormatted?: string;
 };
 
 export interface EventDetailsRequirementItem {

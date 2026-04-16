@@ -2,6 +2,7 @@ import { useState, useRef, useCallback } from 'react';
 import { useStripe } from '@stripe/stripe-react-native';
 import { useCreatePaymentIntent, useConfirmEventPublication } from '@actions';
 import { showErrorToast } from '@helpers';
+import { supabase } from '@services';
 import {
   PaymentConfirmationModalRef,
   PaymentConfirmationData,
@@ -20,7 +21,6 @@ export const usePaymentFlow = () => {
       try {
         setIsProcessing(true);
 
-        // Create payment intent on the server (no modal — shown before this)
         const paymentData = await createPaymentIntent({ eventId });
 
         setIsProcessing(false);
@@ -82,15 +82,61 @@ export const usePaymentFlow = () => {
         }
 
         // Confirm event publication on the server
-        await confirmPublication({
-          eventId: data.eventId,
-          paymentIntentId: paymentIntentId!,
-        });
+        // Wrapped separately: if network drops after Stripe charged but before
+        // we receive the response, we verify the event status as a fallback.
+        try {
+          const result = await confirmPublication({
+            eventId: data.eventId,
+            paymentIntentId: paymentIntentId!,
+          });
 
+          setIsProcessing(false);
+
+          if (
+            result.status === 'aml_pending' ||
+            result.status === 'aml_blocked'
+          ) {
+            return {
+              success: false,
+              amlStatus: result.status,
+              message:
+                result.message ||
+                'We are reviewing your compliance status. We will get back to you.',
+            };
+          }
+
+          return { success: true };
+        } catch (confirmError) {
+          // confirmPublication threw (network drop, timeout, etc.).
+          // The edge function may have already published the event — verify.
+          const { data: eventRow } = await supabase
+            .from('events')
+            .select('status')
+            .eq('id', data.eventId)
+            .single();
+
+          if (eventRow?.status === 'published') {
+            setIsProcessing(false);
+            return { success: true };
+          }
+
+          throw new Error('confirm_failed');
+        }
+      } catch (error: any) {
         setIsProcessing(false);
-        return { success: true };
-      } catch {
-        setIsProcessing(false);
+        const errorMessage =
+          error?.message || error?.error || 'Payment processing failed.';
+        if (
+          errorMessage.includes('compliance') ||
+          errorMessage.includes('aml')
+        ) {
+          return {
+            success: false,
+            amlStatus: 'aml_blocked',
+            message:
+              'We are reviewing your compliance status. We will get back to you.',
+          };
+        }
         showErrorToast('Payment processing failed. Please try again.');
         return { success: false };
       }

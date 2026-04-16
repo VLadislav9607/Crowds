@@ -26,7 +26,7 @@ export const NotificationItem = ({
     : undefined;
 
   const itemData = item.data as Record<string, unknown> | null;
-  const checkinCutoff = itemData?.checkin_cutoff as string | undefined;
+  const checkinOpensAt = itemData?.checkin_opens_at as string | undefined;
 
   return (
     <Pressable
@@ -70,10 +70,10 @@ export const NotificationItem = ({
             </AppText>
           </View>
         )}
-        {checkinCutoff && (
+        {checkinOpensAt && (
           <View style={styles.flagExpiresRow}>
             <AppText typography="regular_12" color="gray_primary">
-              New cutoff: {formatDate(checkinCutoff, 'MMM dd, h:mm a')}
+              Check-in opens at: {formatDate(checkinOpensAt, 'MMM dd, h:mm a')}
             </AppText>
           </View>
         )}

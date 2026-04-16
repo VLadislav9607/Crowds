@@ -115,7 +115,7 @@ export type RootStackParamList = {
   [Screens.AvailabilitySetup]: undefined;
   [Screens.TalentProfileSetup]: undefined;
   [Screens.TalentLocationSetup]: undefined;
-  [Screens.TalentPaymentHistory]: undefined;
+  [Screens.TalentPaymentHistory]: { initialTab?: 'pending' | 'paid' | 'rejected' } | undefined;
   [Screens.FlagOrganization]: {
     eventId: string;
     officeId: string | null;

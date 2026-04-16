@@ -52,6 +52,9 @@ export const styles = StyleSheet.create({
     gap: 14,
     overflow: 'hidden',
   },
+  withTitleAndImageBgWrapper: {
+    overflow: 'visible',
+  },
   backButton: {
     marginTop: -2,
   },

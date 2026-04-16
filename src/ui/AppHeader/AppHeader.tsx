@@ -14,6 +14,7 @@ import { styles } from './styles';
 export const AppHeader = ({
   title,
   customElement,
+  customElementOutside,
   headerImageBg,
   headerStyles,
   colorHeader,
@@ -69,27 +70,30 @@ export const AppHeader = ({
       </If>
 
       <If condition={headerVariant === 'withTitleAndImageBg'}>
-        <ImageBackground
-          resizeMode="stretch"
-          source={headerImageBgMap[headerImageBg || 'purple']}
-          style={[headerStyle, styles.withTitleAndImageBg, headerStyles]}
-        >
-          <View style={styles.overlay} />
-          <View style={[styles.contentWrapperColumn, styles.headerContainer]}>
-            <View style={styles.titleHeaderInner}>
-              <HeaderContent
-                title={title}
-                showBackButton={showBackButton}
-                onBackPress={handleBackPress}
-                titleProps={titleProps}
-                avatarUrl={avatarUrl}
-                bucket={bucket}
-              />
-              {rightIcons && <RightIcons rightIcons={rightIcons} />}
+        <View style={customElementOutside ? styles.withTitleAndImageBgWrapper : undefined}>
+          <ImageBackground
+            resizeMode="stretch"
+            source={headerImageBgMap[headerImageBg || 'purple']}
+            style={[headerStyle, styles.withTitleAndImageBg, headerStyles]}
+          >
+            <View style={styles.overlay} />
+            <View style={[styles.contentWrapperColumn, styles.headerContainer]}>
+              <View style={styles.titleHeaderInner}>
+                <HeaderContent
+                  title={title}
+                  showBackButton={showBackButton}
+                  onBackPress={handleBackPress}
+                  titleProps={titleProps}
+                  avatarUrl={avatarUrl}
+                  bucket={bucket}
+                />
+                {rightIcons && <RightIcons rightIcons={rightIcons} />}
+              </View>
             </View>
-          </View>
-          {customElement}
-        </ImageBackground>
+            {customElement}
+          </ImageBackground>
+          {customElementOutside}
+        </View>
       </If>
 
       <If condition={headerVariant === 'withLogoAndImageBg'}>

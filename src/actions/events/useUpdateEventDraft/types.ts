@@ -56,6 +56,7 @@ export interface UpdateDraftEventBodyDto {
   startAt?: string;
   endAt?: string;
   registrationClosingAt?: string;
+  checkinOpensAt?: string;
   payment_mode?: Enums<'EventPaymentMode'>;
   payment_amount?: number;
   eventBrief?: string;

@@ -6,7 +6,7 @@ import { styles } from './styles';
 import { TouchableOpacity, View } from 'react-native';
 import { useRef } from 'react';
 import { Screens } from '@navigation';
-import { goToScreen, goBack } from '@navigation';
+import { goToScreen } from '@navigation';
 import { useBoolean } from '@hooks';
 
 export const SignInScreen = () => {
@@ -51,7 +51,7 @@ export const SignInScreen = () => {
           onPress={handleSignIn}
         />
 
-        <TouchableOpacity style={styles.backButton} onPress={goBack}>
+        <TouchableOpacity style={styles.backButton} onPress={() => goToScreen(Screens.First)}>
           <AppText typography="regular_14" color="main">
             Go back
           </AppText>

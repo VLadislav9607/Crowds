@@ -56,6 +56,7 @@ export const cardStyles = StyleSheet.create({
   bottomButtons: {
     flexDirection: 'row',
     justifyContent: 'space-between',
+    alignItems: 'center',
   },
   primaryButton: {
     backgroundColor: COLORS.main_10,
@@ -64,7 +65,7 @@ export const cardStyles = StyleSheet.create({
     color: COLORS.main,
     textTransform: 'uppercase',
   },
-  transparentButton: {
+transparentButton: {
     backgroundColor: COLORS.transparent,
   },
   transparentButtonText: {

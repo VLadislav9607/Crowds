@@ -14,6 +14,7 @@ import {
 import { useBucketUpload, useGetMe, useUpdateBrand } from '@actions';
 import { showMutationErrorToast, showSuccessToast } from '@helpers';
 import { goBack } from '@navigation';
+import { calculateAge } from '@utils';
 
 export const OrgProfileSetupScreen = () => {
   const imageSourcePickerModalRef =
@@ -26,17 +27,6 @@ export const OrgProfileSetupScreen = () => {
   const [orgName, setOrgName] = useState(
     organizationMember?.current_context?.brand?.name,
   );
-
-  const { mutate: updateBrandMutate, isPending: isUpdatingBrand } =
-    useUpdateBrand({
-      onSuccess: async () => {
-        await refetch();
-        goBack();
-        showSuccessToast('Changes saved successfully');
-      },
-      onError: showMutationErrorToast,
-    });
-
   const { mutate: upsertTalentAvatarMutate, isPending: isUpsertingAvatar } =
     useBucketUpload({
       onError: showMutationErrorToast,
@@ -61,6 +51,16 @@ export const OrgProfileSetupScreen = () => {
       },
     });
   };
+
+  const { mutate: updateBrandMutate, isPending: isUpdatingBrand } =
+    useUpdateBrand({
+      onSuccess: async () => {
+        await refetch();
+        goBack();
+        showSuccessToast('Changes saved successfully');
+      },
+      onError: showMutationErrorToast,
+    });
 
   const handleSaveChanges = () => {
     updateBrandMutate({
@@ -125,6 +125,36 @@ export const OrgProfileSetupScreen = () => {
             value={orgName}
             onChangeText={setOrgName}
           />
+
+          <AppInput
+            disabled
+            label="First name"
+            labelProps={{ color: 'main', typography: 'regular_12' }}
+            value={organizationMember?.first_name}
+          />
+
+          <AppInput
+            disabled
+            label="Last name"
+            labelProps={{ color: 'main', typography: 'regular_12' }}
+            value={organizationMember?.last_name}
+          />
+
+          <AppInput
+            disabled
+            label="Username"
+            labelProps={{ color: 'main', typography: 'regular_12' }}
+            value={organizationMember?.username}
+          />
+
+          {organizationMember?.birth_date ? (
+            <AppInput
+              disabled
+              label="Age"
+              labelProps={{ color: 'main', typography: 'regular_12' }}
+              value={String(calculateAge(organizationMember.birth_date))}
+            />
+          ) : null}
 
           <AppInput
             disabled

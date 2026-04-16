@@ -1,4 +1,5 @@
 import { useRef, useState, useCallback } from 'react';
+import { Alert } from 'react-native';
 import {
   EventCreatedModalRef,
   EventCreatedModalRefProps,
@@ -20,12 +21,13 @@ import {
 import { CreateEventFormData } from '../../../validation';
 import { FieldErrors } from 'react-hook-form';
 import { Enums } from '@services';
-import { fromZonedTime } from 'date-fns-tz';
+
 import { UseEventControllProps } from '../types';
 import { Screens, useScreenNavigation } from '@navigation';
 import { findOfficeByCountryCode } from '../../../helpers/officeLocationHelpers';
 import { usePaymentFlow } from './usePaymentFlow';
 import { PaymentConfirmationData } from '../../../modals';
+import { supabase } from '@services';
 
 export const useEventControll = ({
   formData,
@@ -44,6 +46,7 @@ export const useEventControll = ({
   const pendingEventCreatedDataRef = useRef<EventCreatedModalRefProps | null>(
     null,
   );
+
 
   // Payment flow
   const { paymentConfirmationModalRef, startPaymentFlow, processPayment } =
@@ -88,8 +91,6 @@ export const useEventControll = ({
     values: CreateEventFormData,
   ): Promise<CreatePublishedEventBodyDto | null> => {
     let location;
-    const deviceTimezone = Intl.DateTimeFormat().resolvedOptions().timeZone;
-    let timezone = deviceTimezone;
 
     if (values.locationType === 'entire_country') {
       location = null;
@@ -97,7 +98,6 @@ export const useEventControll = ({
       if (!values.location) {
         return null;
       }
-      timezone = values.location.timezone || deviceTimezone;
       location = {
         ...values.location,
         coords: `POINT(${values.location.longitude} ${values.location.latitude})`,
@@ -140,10 +140,10 @@ export const useEventControll = ({
     delete values.ndaDocument;
 
     const campaignStartAt = values.campaignStartAt
-      ? fromZonedTime(values.campaignStartAt, timezone).toISOString()
+      ? values.campaignStartAt.toISOString()
       : undefined;
     const campaignEndAt = values.campaignEndAt
-      ? fromZonedTime(values.campaignEndAt, timezone).toISOString()
+      ? values.campaignEndAt.toISOString()
       : undefined;
 
     return {
@@ -158,12 +158,10 @@ export const useEventControll = ({
       visibility: values.visibility as Enums<'EventVisibility'>,
       campaignStartAt,
       campaignEndAt,
-      startAt: fromZonedTime(values.startAt, timezone).toISOString(),
-      endAt: fromZonedTime(values.endAt, timezone).toISOString(),
-      registrationClosingAt: fromZonedTime(
-        values.registrationClosingAt,
-        timezone,
-      ).toISOString(),
+      startAt: values.startAt.toISOString(),
+      endAt: values.endAt.toISOString(),
+      registrationClosingAt: values.registrationClosingAt.toISOString(),
+      checkinOpensAt: values.checkinOpensAt.toISOString(),
       payment_mode: (values.paymentMode === 'perHour'
         ? 'per_hour'
         : 'fixed') as Enums<'EventPaymentMode'>,
@@ -206,7 +204,6 @@ export const useEventControll = ({
   };
 
   const COMMISSION_RATE = 0.2;
-  const SURCHARGE_RATE = 0.05;
 
   const handleCreatePublishedEvent = () => {
     formData.handleSubmit(
@@ -254,11 +251,7 @@ export const useEventControll = ({
         }
 
         const commissionCents = Math.round(talentBudgetCents * COMMISSION_RATE);
-        const surchargeCents = Math.round(
-          (talentBudgetCents + commissionCents) * SURCHARGE_RATE,
-        );
-        const totalChargeCents =
-          talentBudgetCents + commissionCents + surchargeCents;
+        const totalChargeCents = talentBudgetCents + commissionCents;
 
         setShowFullScreenLoader(false);
 
@@ -270,7 +263,6 @@ export const useEventControll = ({
           eventId: params?.draftId ?? '',
           talentBudgetCents,
           commissionCents,
-          surchargeCents,
           totalChargeCents,
           totalHeadcount,
           eventDurationHours,
@@ -291,8 +283,25 @@ export const useEventControll = ({
     if (!pendingDto) return;
 
     try {
-      // 1. Save event to DB (create draft or update existing)
       const existingDraftId = params?.draftId || createdDraftId;
+
+      // 0. Check if event is already published (retry scenario after race condition)
+      if (existingDraftId) {
+        const { data: eventRow } = await supabase
+          .from('events')
+          .select('status')
+          .eq('id', existingDraftId)
+          .single();
+
+        if (eventRow?.status === 'published') {
+          setPendingDto(null);
+          paymentConfirmationModalRef.current?.close();
+          showSuccessToast('Event published successfully!');
+          return;
+        }
+      }
+
+      // 1. Save event to DB (create draft or update existing)
       let eventId: string;
 
       if (existingDraftId) {
@@ -309,7 +318,54 @@ export const useEventControll = ({
         setCreatedDraftId(eventId);
       }
 
-      // 2. Create payment intent on server
+      // 2. AML pre-check — verify compliance before payment
+      const officeId = pendingDto.officeId;
+      if (officeId) {
+        // Quick check — is AML already clear?
+        const { data: currentKyc } = await (supabase as any)
+          .from('office_kyc')
+          .select('status')
+          .eq('office_id', officeId)
+          .maybeSingle();
+
+        if (currentKyc?.status !== 'clear') {
+          const { data: amlResult, error: amlError } =
+            await supabase.functions.invoke('check-office-aml', {
+              body: { officeId },
+            });
+
+          if (amlError) {
+            showErrorToast('Compliance check failed. Please try again.');
+            return;
+          }
+
+          const amlStatus = amlResult?.status;
+
+          if (amlStatus === 'attention' || amlStatus === 'failed') {
+            paymentConfirmationModalRef.current?.close();
+            Alert.alert(
+              'Compliance Review in Progress',
+              'Your organization is currently undergoing a compliance review. This is a standard procedure to ensure regulatory requirements are met. You will be able to publish events once the review is complete. We appreciate your patience.',
+              [{ text: 'OK' }],
+            );
+            return;
+          }
+
+          if (amlStatus === 'pending') {
+            paymentConfirmationModalRef.current?.close();
+            Alert.alert(
+              'Compliance Check in Progress',
+              'We are currently verifying your organization\'s compliance status. This usually takes just a moment. Please try again shortly.',
+              [{ text: 'OK' }],
+            );
+            return;
+          }
+        }
+
+        // amlStatus === 'clear' — proceed to payment
+      }
+
+      // 3. Create payment intent on server
       const paymentData = await startPaymentFlow(eventId);
 
       // 3. Process Stripe payment
@@ -317,7 +373,6 @@ export const useEventControll = ({
         eventId,
         talentBudgetCents: paymentData.talentBudgetCents,
         commissionCents: paymentData.commissionCents,
-        surchargeCents: paymentData.surchargeCents,
         totalChargeCents: paymentData.totalChargeCents,
         totalHeadcount: paymentData.totalHeadcount,
         eventDurationHours: paymentData.eventDurationHours,
@@ -326,6 +381,15 @@ export const useEventControll = ({
         clientSecret: paymentData.clientSecret,
         paymentIntentId: paymentData.paymentIntentId,
       });
+
+      if ((result as any).amlStatus) {
+        showErrorToast(
+          (result as any).message ||
+            'We are reviewing your compliance status. We will get back to you.',
+          { visibilityTime: 5000 },
+        );
+        return;
+      }
 
       if (result.success) {
         setPendingDto(null);

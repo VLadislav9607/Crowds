@@ -47,9 +47,9 @@ export const ChatItem = ({
       <If condition={!hideEventLabel}>
         <View style={styles.eventRow}>
           <View style={styles.eventLabel}>
-            <AppText typography="bold_10" color="main" numberOfLines={1}>
+            <AppText typography="bold_12" color="main" numberOfLines={1}>
               Event:{' '}
-              <AppText typography="medium_10" color="main">
+              <AppText typography="medium_14" color="main">
                 {eventName}
               </AppText>
               <AppText

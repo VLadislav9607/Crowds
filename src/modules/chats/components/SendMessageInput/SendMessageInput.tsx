@@ -164,6 +164,7 @@ export const SendMessageInput = ({
         multiline
         textAlignVertical="top"
         autoFocus={isEditMode}
+        allowFontScaling={false}
       />
 
       <IconButton

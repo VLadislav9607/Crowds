@@ -1,5 +1,5 @@
 import { Platform } from 'react-native';
-import { TextInput, Text, StyleSheet } from 'react-native';
+import { StyleSheet } from 'react-native';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 import { QueryClientProvider } from '@tanstack/react-query';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
@@ -26,23 +26,7 @@ import { useEffect, useState } from 'react';
 import { onNavigateAfterAuth } from '@helpers';
 import { upsertPushDeviceAction } from './src/actions';
 
-interface TextWithDefaultProps extends Text {
-  defaultProps?: { allowFontScaling?: boolean };
-}
-interface TextInputWithDefaultProps extends TextInput {
-  defaultProps?: { allowFontScaling?: boolean };
-}
-
 const App = () => {
-  (Text as unknown as TextWithDefaultProps).defaultProps = {
-    ...((Text as unknown as TextWithDefaultProps).defaultProps ?? {}),
-    allowFontScaling: false,
-  };
-  (TextInput as unknown as TextInputWithDefaultProps).defaultProps = {
-    ...((TextInput as unknown as TextInputWithDefaultProps).defaultProps ?? {}),
-    allowFontScaling: false,
-  };
-
   const [shouldNavigateToFirst, setShouldNavigateToFirst] = useState(false);
 
   const handleNavigationReady = () => {

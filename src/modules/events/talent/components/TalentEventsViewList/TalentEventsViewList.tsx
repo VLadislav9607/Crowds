@@ -5,6 +5,7 @@ import {
   TalentEventAlreadyBookedModal,
   TalentEventUnavailableTimeModal,
   TalentEventApplyConfirmModal,
+  DeclineProposalModal,
 } from '../../modals';
 import { TalentEventsViewListProps } from './types';
 import { TalentEventCard, ITalentEventCard } from '../TalentEventCard';
@@ -30,8 +31,13 @@ export const TalentEventsViewList = ({
     alreadyBookedModalRef,
     applyConfirmModalRef,
     addEventToForderModalRef,
+    declineModalVisible,
+    pendingDeclineId,
+    declineProposal,
     handleAccept,
     handleDecline,
+    handleDeclineConfirm,
+    handleDeclineCancel,
     handleCancelApplication,
     handleApply,
     handleReject,
@@ -112,6 +118,13 @@ export const TalentEventsViewList = ({
       <TalentEventAlreadyBookedModal ref={alreadyBookedModalRef} />
       <TalentEventApplyConfirmModal ref={applyConfirmModalRef} />
       <AddEventToForderModal bottomSheetRef={addEventToForderModalRef} />
+      <DeclineProposalModal
+        participationId={pendingDeclineId}
+        isVisible={declineModalVisible}
+        onClose={handleDeclineCancel}
+        onConfirm={handleDeclineConfirm}
+        isLoading={declineProposal.isPending}
+      />
     </>
   );
 };
