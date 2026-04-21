@@ -86,7 +86,8 @@ export const useIdentityVerification = (
   origin: VerificationOrigin = 'profile',
 ) => {
   const { me, talent } = useGetMe();
-  const { mutateAsync: createKycSdkToken, isPending: isCreatingToken } = useCreateKycSdkToken();
+  const { mutateAsync: createKycSdkToken, isPending: isCreatingToken } =
+    useCreateKycSdkToken();
   const { mutateAsync: createKycChecks } = useCreateKycChecks();
   const [isProcessingSdk, setIsProcessingSdk] = useState(false);
 
@@ -107,12 +108,13 @@ export const useIdentityVerification = (
         },
         stages: [
           'intro',
-          'documentCapture',
+          { name: 'documentCapture', useMLAssistance: false },
           { name: 'faceCapture', options: { type: 'photo' } },
           {
             name: 'outro',
             heading: 'All Done!',
-            message: "We're now reviewing your submission. This usually takes a few moments.",
+            message:
+              "We're now reviewing your submission. This usually takes a few moments.",
           },
         ],
       });
@@ -128,15 +130,17 @@ export const useIdentityVerification = (
 
         // Wait for checks to be created — this resets status to 'pending' in DB
         // before we navigate, so VerificationProcessing never sees stale 'failed'
-        await createKycChecks({ clientId, documentId, livePhotoId }).catch(error => {
-          console.error('[KYC] Failed to create checks:', error);
-        });
+        await createKycChecks({ clientId, documentId, livePhotoId }).catch(
+          error => {
+            console.error('[KYC] Failed to create checks:', error);
+          },
+        );
 
         goToScreen(Screens.VerificationProcessing, { origin });
         setIsProcessingSdk(false);
       }
     },
-    [createKycChecks, origin],
+    [createKycChecks, origin, userId],
   );
 
   const goToVerification = useCallback(async () => {
@@ -144,7 +148,9 @@ export const useIdentityVerification = (
       const response = await createKycSdkToken({
         userId,
         firstName: me?.first_name || '',
-        middleName: (talent as Record<string, unknown>)?.middle_name as string || undefined,
+        middleName:
+          ((talent as Record<string, unknown>)?.middle_name as string) ||
+          undefined,
         lastName: me?.last_name || '',
         dob: talent?.birth_date || undefined,
         appId: APP_ID,
@@ -157,7 +163,7 @@ export const useIdentityVerification = (
       const message = error?.message || error?.error || 'Something went wrong';
       Alert.alert('Verification Error', message);
     }
-  }, [userId, me, createKycSdkToken, launchSdk, talent?.birth_date]);
+  }, [userId, me, createKycSdkToken, launchSdk, talent]);
 
   return {
     goToVerification,
