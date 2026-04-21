@@ -6,8 +6,6 @@ import { chatsCache } from '../../cache';
 
 let cachedAuthUid: string | null = null;
 
-let cachedAuthUid: string | null = null;
-
 export const useChatsRealtime = (enabled = true) => {
   const { me } = useGetMe();
 
